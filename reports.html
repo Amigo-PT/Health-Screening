@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التقارير والمكتبة - Health Screening</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --main-gradient: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+            --bg-body: #f0f9ff;
+            --text-main: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --radius: 24px;
+            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            background: var(--bg-body);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: var(--glass-border);
+            padding: 15px 0;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            font-weight: 700;
+            color: var(--text-main) !important;
+            margin-left: 20px;
+            transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .report-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            border-radius: var(--radius);
+            padding: 30px;
+            transition: 0.3s;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+        }
+        .report-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -10px rgba(14, 165, 233, 0.25); border-color: #0ea5e9; }
+
+        .report-icon-box {
+            width: 60px; height: 60px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin-bottom: 20px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+            color: #0ea5e9;
+        }
+
+        .report-type {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+            font-weight: 700; color: #64748b; margin-bottom: 10px; display: block;
+        }
+
+        .btn-download {
+            background: white; color: var(--text-main);
+            border: 1px solid #e2e8f0; border-radius: 12px;
+            padding: 10px 20px; font-weight: 600; transition: 0.3s;
+            width: 100%; margin-top: auto; text-decoration: none; text-align: center;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-download:hover {
+            background: var(--main-gradient); color: white; border-color: transparent;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 80px 0 40px;
+            margin-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        footer::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--main-gradient);
+        }
+        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
+        .footer-link:hover { color: #38bdf8; padding-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">الفحص والمؤشرات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">التدخلات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">الأنشطة</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="reports.html">التقارير</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 120px; margin-bottom: 80px;">
+        <div class="text-center mb-5" data-aos="fade-down">
+            <h2 class="fw-bold display-6">المكتبة والتقارير</h2>
+            <p class="text-muted">تصفح وحمل أحدث التقارير، الملخصات التنفيذية، والمواد العلمية</p>
+        </div>
+
+        <!-- Search -->
+        <div class="row justify-content-center mb-5" data-aos="fade-up">
+            <div class="col-md-6">
+                <div class="input-group shadow-sm rounded-pill overflow-hidden border bg-white">
+                    <span class="input-group-text bg-white border-0 ps-4"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-0 py-3" placeholder="ابحث عن تقرير...">
+                    <button class="btn btn-primary px-4 rounded-pill m-1" style="background: var(--main-gradient); border: none;">بحث</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="row g-4">
+            <!-- Report 1 -->
+            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="report-card">
+                    <div class="report-icon-box" style="background: #fef2f2; color: #ef4444;"><i class="bi bi-file-earmark-pdf"></i></div>
+                    <span class="report-type">تقرير سنوي</span>
+                    <h5 class="fw-bold mb-3">التقرير الختامي 2023</h5>
+                    <p class="text-muted small mb-4">ملخص شامل لجميع الأنشطة والنتائج التي تم تحقيقها خلال العام.</p>
+                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
+                        <span><i class="bi bi-calendar3 me-1"></i> ديسمبر 2023</span>
+                        <span>5.2 MB</span>
+                    </div>
+                    <a href="downloads/annual_report_2023.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                </div>
+            </div>
+
+            <!-- Report 2 -->
+            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="report-card">
+                    <div class="report-icon-box" style="background: #eff6ff; color: #3b82f6;"><i class="bi bi-file-earmark-text"></i></div>
+                    <span class="report-type">ملخص تنفيذي</span>
+                    <h5 class="fw-bold mb-3">ملخص الأثر السريع</h5>
+                    <p class="text-muted small mb-4">نسخة مختصرة موجهة لصناع القرار والشركاء المحتملين.</p>
+                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
+                        <span><i class="bi bi-calendar3 me-1"></i> نوفمبر 2023</span>
+                        <span>1.5 MB</span>
+                    </div>
+                    <a href="downloads/executive_summary.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                </div>
+            </div>
+
+            <!-- Report 3 -->
+            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="report-card">
+                    <div class="report-icon-box" style="background: #fff7ed; color: #f59e0b;"><i class="bi bi-easel"></i></div>
+                    <span class="report-type">ملصق علمي</span>
+                    <h5 class="fw-bold mb-3">نتائج المسح العضلي</h5>
+                    <p class="text-muted small mb-4">بوستر علمي يوضح إحصائيات مشاكل القوام لدى الطلاب.</p>
+                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
+                        <span><i class="bi bi-calendar3 me-1"></i> أكتوبر 2023</span>
+                        <span>8.0 MB</span>
+                    </div>
+                    <a href="downloads/muscle_survey_poster.zip" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل ZIP</a>
+                </div>
+            </div>
+
+            <!-- Report 4 -->
+            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="report-card">
+                    <div class="report-icon-box" style="background: #f0fdf4; color: #10b981;"><i class="bi bi-images"></i></div>
+                    <span class="report-type">مادة توعوية</span>
+                    <h5 class="fw-bold mb-3">دليل التمارين المكتبية</h5>
+                    <p class="text-muted small mb-4">كتيب مصور يحتوي على تمارين إطالة للموظفين.</p>
+                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
+                        <span><i class="bi bi-calendar3 me-1"></i> سبتمبر 2023</span>
+                        <span>3.2 MB</span>
+                    </div>
+                    <a href="downloads/office_exercises_guide.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                </div>
+            </div>
+
+             <!-- Report 5 -->
+             <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="500">
+                <div class="report-card">
+                    <div class="report-icon-box" style="background: #f0f9ff; color: #0ea5e9;"><i class="bi bi-file-medical"></i></div>
+                    <span class="report-type">دراسة حالة</span>
+                    <h5 class="fw-bold mb-3">تحليل بيئة العمل</h5>
+                    <p class="text-muted small mb-4">دراسة تفصيلية عن تأثير الأثاث المكتبي على صحة الموظفين.</p>
+                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
+                        <span><i class="bi bi-calendar3 me-1"></i> أغسطس 2023</span>
+                        <span>4.1 MB</span>
+                    </div>
+                    <a href="downloads/ergonomics_case_study.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <h4 class="text-white fw-bold mb-4">Health Screening</h4>
+                    <p class="small opacity-75">مركز الصحة التكاملية - جامعة هليوبوليس</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-white mb-4">روابط سريعة</h6>
+                    <a href="index.html" class="footer-link small">الرئيسية</a>
+                    <a href="screening.html" class="footer-link small">الفحص والمؤشرات</a>
+                    <a href="activities.html" class="footer-link small">الأنشطة</a>
+                    <a href="reports.html" class="footer-link small">التقارير</a>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white mb-4">تواصل معنا</h6>
+                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-primary"></i> info@hu.edu.eg</p>
+                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-primary"></i> جامعة هليوبوليس، القاهرة</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-5 opacity-10">
+            <div class="text-center small opacity-50">
+                <p class="mb-0">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abdelaziz</p>
+            </div>
+        </div>
+    </footer>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 800, once: true });</script>
+</body>
+</html>

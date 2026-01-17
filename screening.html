@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة الفحص والمؤشرات - Health Screening</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --main-gradient: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+            --bg-body: #f0f9ff;
+            --text-main: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --radius: 24px;
+            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            background: var(--bg-body);
+            background-image:
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            border-bottom: var(--glass-border);
+            padding: 15px 0;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            font-weight: 700;
+            color: var(--text-main) !important;
+            margin-left: 20px;
+            transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Stats Cards */
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            border-radius: var(--radius);
+            padding: 30px 20px;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -10px rgba(14, 165, 233, 0.25); }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--main-gradient);
+        }
+        .stat-number { font-size: 2.8rem; font-weight: 800; margin-bottom: 5px; color: var(--text-main); }
+        .stat-label { color: #64748b; font-size: 0.9rem; font-weight: 600; }
+
+        /* Category Cards */
+        .category-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: 0.3s;
+        }
+        .category-card:hover { transform: translateY(-5px); border-color: #0ea5e9; }
+        .category-icon {
+            width: 60px; height: 60px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px; font-size: 1.8rem;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+            color: #0ea5e9;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            height: 100%;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 80px 0 40px;
+            margin-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        footer::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--main-gradient);
+        }
+        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
+        .footer-link:hover { color: #38bdf8; padding-right: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">الفحص والمؤشرات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">التدخلات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">الأنشطة</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">التقارير</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 120px; margin-bottom: 80px;">
+        <div class="text-center mb-5" data-aos="fade-down">
+            <h2 class="fw-bold display-6">لوحة مؤشرات الفحص الشامل</h2>
+            <p class="text-muted">تحليل بيانات المسح الصحي للمجتمع الجامعي وشركات سيكم</p>
+        </div>
+
+        <!-- Global Stats -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="stat-card">
+                    <div class="stat-number" style="background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="total-participants">0</div>
+                    <div class="stat-label">إجمالي المفحوصين</div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="stat-card">
+                    <div class="stat-number text-primary">4</div>
+                    <div class="stat-label">قطاعات مستهدفة</div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="stat-card">
+                    <div class="stat-number text-warning">850</div>
+                    <div class="stat-label">حالات تتطلب متابعة</div>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="stat-card">
+                    <div class="stat-number text-danger">320</div>
+                    <div class="stat-label">إحالة للعلاج الطبيعي</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="row mb-4">
+            <div class="col-12"><h5 class="fw-bold text-primary"><i class="bi bi-grid me-2"></i>توزيع الفحص حسب الفئات</h5></div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="100">
+                <div class="category-card">
+                    <div class="category-icon"><i class="bi bi-mortarboard"></i></div>
+                    <h3 class="fw-bold" id="num-students">1,200</h3>
+                    <p class="text-muted small mb-2">طلاب الجامعة</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal">آلام الرقبة</span>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="200">
+                <div class="category-card">
+                    <div class="category-icon"><i class="bi bi-person-video3"></i></div>
+                    <h3 class="fw-bold" id="num-doctors">150</h3>
+                    <p class="text-muted small mb-2">أعضاء هيئة التدريس</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal">ضغط الدم</span>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="300">
+                <div class="category-card">
+                    <div class="category-icon"><i class="bi bi-person-gear"></i></div>
+                    <h3 class="fw-bold" id="num-workers">350</h3>
+                    <p class="text-muted small mb-2">عمال وموظفي الجامعة</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal">آلام الظهر</span>
+                </div>
+            </div>
+            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="400">
+                <div class="category-card">
+                    <div class="category-icon"><i class="bi bi-buildings"></i></div>
+                    <h3 class="fw-bold" id="num-sekem">800</h3>
+                    <p class="text-muted small mb-2">عمال شركات سيكم</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal">إجهاد عضلي</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-left">
+                <div class="chart-container">
+                    <h6 class="fw-bold mb-4 text-center text-muted">نسبة المشاركة</h6>
+                    <canvas id="populationChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-8" data-aos="fade-right">
+                <div class="chart-container">
+                    <h6 class="fw-bold mb-4 text-muted">مقارنة الشكاوى الصحية</h6>
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <h4 class="text-white fw-bold mb-4">Health Screening</h4>
+                    <p class="small opacity-75">مركز الصحة التكاملية - جامعة هليوبوليس</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-white mb-4">روابط سريعة</h6>
+                    <a href="index.html" class="footer-link small">الرئيسية</a>
+                    <a href="screening.html" class="footer-link small">الفحص والمؤشرات</a>
+                    <a href="activities.html" class="footer-link small">الأنشطة</a>
+                    <a href="reports.html" class="footer-link small">التقارير</a>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white mb-4">تواصل معنا</h6>
+                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-primary"></i> info@hu.edu.eg</p>
+                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-primary"></i> جامعة هليوبوليس، القاهرة</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-5 opacity-10">
+            <div class="text-center small opacity-50">
+                <p class="mb-0">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abdelaziz</p>
+            </div>
+        </div>
+    </footer>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        function getNumFromHTML(id) {
+            const element = document.getElementById(id);
+            return element ? (parseInt(element.innerText.replace(/,/g, '')) || 0) : 0;
+        }
+
+        const valStudents = getNumFromHTML('num-students');
+        const valDoctors = getNumFromHTML('num-doctors');
+        const valWorkers = getNumFromHTML('num-workers');
+        const valSekem = getNumFromHTML('num-sekem');
+
+        document.getElementById('total-participants').innerText = (valStudents + valDoctors + valWorkers + valSekem).toLocaleString();
+
+        new Chart(document.getElementById('populationChart').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['طلاب', 'سيكم', 'موظفين', 'تدريس'],
+                datasets: [{
+                    data: [valStudents, valSekem, valWorkers, valDoctors],
+                    backgroundColor: ['#3b82f6', '#f59e0b', '#64748b', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } }, cutout: '70%' }
+        });
+
+        new Chart(document.getElementById('comparisonChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['آلام الظهر', 'آلام الرقبة', 'الصداع', 'السمنة'],
+                datasets: [
+                    { label: 'طلاب', data: [200, 450, 300, 150], backgroundColor: '#3b82f6', borderRadius: 4 },
+                    { label: 'سيكم', data: [500, 100, 150, 200], backgroundColor: '#f59e0b', borderRadius: 4 },
+                    { label: 'موظفين', data: [150, 120, 80, 180], backgroundColor: '#64748b', borderRadius: 4 }
+                ]
+            },
+            options: { responsive: true, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { borderDash: [5, 5] } } }, plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true } } } }
+        });
+    </script>
+</body>
+</html>
