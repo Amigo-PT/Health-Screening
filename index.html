@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,42 +10,37 @@
 
     <style>
         :root {
-            /* Vibrant Blue-Green Gradient */
-            --main-gradient: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
-            --hover-gradient: linear-gradient(135deg, #0284c7 0%, #059669 100%);
-            --bg-body: #f0f9ff;
+            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+            --bg-body: #f8fafc;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
-            --radius: 24px;
-            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.7);
+            --radius: 28px;
+            --shadow: 0 20px 40px -10px rgba(6, 182, 212, 0.15);
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            background: var(--bg-body);
+            background-color: var(--bg-body);
             overflow-x: hidden;
             line-height: 1.8;
             background-image:
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
-        /* Navbar Glassmorphism */
         .navbar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
             border-bottom: var(--glass-border);
-            padding: 15px 0;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            padding: 18px 0;
         }
         .navbar-brand {
-            font-weight: 800;
-            font-size: 1.6rem;
+            font-weight: 900;
+            font-size: 1.7rem;
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -53,26 +48,41 @@
         .nav-link {
             font-weight: 700;
             color: var(--text-main) !important;
-            margin-left: 20px;
+            margin-right: 25px;
             transition: 0.3s;
-            position: relative;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            transform: translateY(-2px);
         }
 
-        /* Hero Section */
         .hero-section {
-            padding: 180px 0 120px;
+            padding: 180px 0 100px;
             position: relative;
+            overflow: hidden;
         }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+        }
+        .blob-1 { top: -10%; left: -5%; width: 400px; height: 400px; background: #06b6d4; animation-delay: 0s; }
+        .blob-2 { bottom: 10%; right: -5%; width: 300px; height: 300px; background: #10b981; animation-delay: 5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-20px, -20px); }
+        }
+
         .hero-title {
             font-weight: 900;
             line-height: 1.2;
-            margin-bottom: 25px;
-            color: var(--text-main);
+            font-size: 3.5rem;
         }
         .text-gradient {
             background: var(--main-gradient);
@@ -80,26 +90,24 @@
             -webkit-text-fill-color: transparent;
         }
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             color: var(--text-muted);
-            margin-bottom: 40px;
+            margin-bottom: 45px;
         }
 
-        /* Modern Buttons */
         .btn-gradient {
             background: var(--main-gradient);
             color: white;
             border: none;
-            padding: 12px 35px;
+            padding: 14px 40px;
             border-radius: 50px;
-            font-weight: 700;
-            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
-            transition: 0.3s;
+            font-weight: 800;
+            box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.4);
+            transition: 0.4s;
         }
         .btn-gradient:hover {
-            background: var(--hover-gradient);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.6);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.6);
             color: white;
         }
         .btn-outline-modern {
@@ -109,74 +117,100 @@
             background-image: linear-gradient(white, white), var(--main-gradient);
             background-origin: border-box;
             background-clip: padding-box, border-box;
-            padding: 12px 35px;
+            padding: 14px 40px;
             border-radius: 50px;
-            font-weight: 700;
-            transition: 0.3s;
+            font-weight: 800;
+            transition: 0.4s;
         }
         .btn-outline-modern:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px -5px rgba(14, 165, 233, 0.2);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2);
         }
 
-        /* Cards */
-        .modern-card {
+        /* Team 3D Carousel Section */
+        .team-carousel-container {
+            position: relative;
+            min-height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .team-carousel-3d {
+            position: relative;
+            width: 300px; /* Width of one card */
+            height: 420px; /* Increased height to accommodate larger image */
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .team-card-3d {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: var(--glass-border);
             border-radius: var(--radius);
-            padding: 40px 30px;
+            padding: 15px; /* Reduced padding */
+            text-align: center;
             box-shadow: var(--shadow);
-            transition: 0.4s;
-            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align to top */
         }
-        .modern-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.25);
-            border-color: rgba(16, 185, 129, 0.3);
+
+        .team-card-img {
+            width: auto; /* Allow width to adjust based on aspect ratio */
+            max-height: 200px; /* Max height for top half */
+            border-radius: 20px; /* Rounded corners */
+            object-fit: contain; /* Ensure entire image is visible */
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-        .icon-box {
-            width: 70px; height: 70px;
-            border-radius: 20px;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; margin: 0 auto 25px;
-            color: #0ea5e9;
-            transition: 0.3s;
+        .team-card-name { font-weight: 900; font-size: 1.4rem; color: var(--text-main); margin-bottom: 5px; }
+        .team-card-role { font-size: 0.9rem; color: #0891b2; font-weight: 700; display: block; margin-bottom: 10px; }
+        .team-card-bio { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin: 0; padding: 0 10px; }
+
+        .team-carousel-nav {
+            margin-top: 2rem;
         }
-        .modern-card:hover .icon-box {
+        .btn-nav {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            color: var(--text-main);
+            margin: 0 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        .btn-nav:hover {
             background: var(--main-gradient);
             color: white;
-            transform: rotate(10deg);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
         }
 
-        /* SDG Banner */
-        .sdg-banner {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            margin-top: -60px;
-            position: relative;
-            z-index: 10;
-            border: 1px solid rgba(0,0,0,0.05);
+        /* Other Sections */
+        .modern-card, .sdg-banner, footer {
+            /* Styles from previous version */
         }
+        .modern-card { background: var(--card-bg); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: var(--radius); padding: 45px 35px; box-shadow: var(--shadow); transition: 0.5s; height: 100%; }
+        .modern-card:hover { transform: translateY(-15px); box-shadow: 0 30px 60px -12px rgba(6, 182, 212, 0.25); }
+        .icon-box { width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 25px; color: #0891b2; transition: 0.5s; }
+        .modern-card:hover .icon-box { background: var(--main-gradient); color: white; transform: rotate(15deg) scale(1.1); }
+        .sdg-banner { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); border-radius: 24px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-top: -70px; position: relative; z-index: 10; border: var(--glass-border); }
+        footer { background: #0f172a; color: #94a3b8; padding: 100px 0 50px; margin-top: 120px; position: relative; overflow: hidden; }
+        footer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--main-gradient); }
+        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 12px; }
+        .footer-link:hover { background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; padding-left: 8px; }
 
-        /* Footer */
-        footer {
-            background: #0f172a;
-            color: #94a3b8;
-            padding: 80px 0 40px;
-            margin-top: 100px;
-            position: relative;
-            overflow: hidden;
-        }
-        footer::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
-            background: var(--main-gradient);
-        }
-        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover { color: #38bdf8; padding-right: 5px; }
     </style>
 </head>
 <body>
@@ -184,19 +218,15 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="bi bi-activity me-2"></i>Health Screening
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">الفحص والمؤشرات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="intervention.html">التدخلات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="activities.html">الأنشطة</a></li>
-                    <li class="nav-item"><a class="nav-link" href="reports.html">التقارير</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
@@ -204,107 +234,91 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero-section d-flex align-items-center">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000">
-                    <div class="d-inline-block px-3 py-1 rounded-pill fw-bold mb-3 shadow-sm"
-                         style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; border: 1px solid rgba(14, 165, 233, 0.2);">
-                        <i class="bi bi-stars me-2"></i>مبادرة صحية ذكية
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1200">
+                    <div class="d-inline-block px-4 py-2 rounded-pill fw-bold mb-4 shadow-sm" style="background: rgba(255, 255, 255, 0.8); color: #0891b2;">
+                        <i class="bi bi-stars me-2 text-warning"></i>A Smart Health Initiative
                     </div>
-                    <h1 class="hero-title display-4">مشروع <span class="text-gradient">Health Screening</span><br>لجودة حياة مستدامة</h1>
-                    <p class="hero-subtitle">نهج وقائي علمي يهدف إلى الاكتشاف المبكر للمشكلات الصحية وتعزيز نمط الحياة الصحي داخل المجتمع الجامعي.</p>
+                    <h1 class="hero-title display-4">The <span class="text-gradient">Health Screening</span> Project</h1>
+                    <p class="hero-subtitle">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="screening.html" class="btn btn-gradient btn-lg">استكشف النتائج <i class="bi bi-arrow-left ms-2"></i></a>
-                        <a href="reports.html" class="btn btn-outline-modern btn-lg">تحميل التقرير <i class="bi bi-download ms-2"></i></a>
+                        <a href="screening.html" class="btn btn-gradient btn-lg">Explore Results <i class="bi bi-arrow-right ms-2"></i></a>
+                        <a href="reports.html" class="btn btn-outline-modern btn-lg">Download Report <i class="bi bi-download ms-2"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-6 mt-5 mt-lg-0 text-center" data-aos="fade-right" data-aos-duration="1000">
-                    <div style="position: relative;">
-                        <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: var(--main-gradient); border-radius: 50%; filter: blur(40px); opacity: 0.5; z-index: -1;"></div>
-                        <img src="https://img.freepik.com/free-vector/health-professional-team-concept-illustration_114360-1618.jpg" alt="Health Screening" class="img-fluid rounded-5 shadow-lg" style="border: 10px solid rgba(255,255,255,0.5);">
-                        <div style="position: absolute; bottom: -20px; left: -20px; width: 150px; height: 150px; background: #3b82f6; border-radius: 50%; filter: blur(50px); opacity: 0.4; z-index: -1;"></div>
+
+                <!-- Team 3D Carousel Section -->
+                <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-left" data-aos-duration="1200">
+                    <div class="team-carousel-container" style="perspective: 1500px;">
+                        <div class="team-carousel-3d" id="team-carousel">
+                            <!-- Cards will be injected by JS -->
+                        </div>
+                        <div class="team-carousel-nav">
+                            <button id="prev-btn" class="btn-nav"><i class="bi bi-arrow-left"></i></button>
+                            <button id="next-btn" class="btn-nav"><i class="bi bi-arrow-right"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SDG Banner -->
-    <div class="container" data-aos="fade-up" data-aos-offset="-50">
+    <!-- Other sections -->
+    <div class="container" data-aos="fade-up" data-aos-offset="-80" data-aos-duration="1000">
         <div class="sdg-banner">
             <div class="row align-items-center g-4">
                 <div class="col-md-5">
-                    <h5 class="fw-bold mb-0 text-muted text-center text-md-end">
-                        <i class="bi bi-globe-americas me-2 text-primary"></i>مشروعنا يدعم أهداف التنمية المستدامة:
+                    <h5 class="fw-bold mb-0 text-muted text-center text-md-start">
+                        <i class="bi bi-globe-americas me-2 text-primary"></i>Our project supports the SDGs:
                     </h5>
                 </div>
                 <div class="col-md-3">
-                    <div class="d-flex align-items-center p-2 rounded-3" style="background: #f8fafc;">
-                        <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3" style="width: 40px; height: 40px; background: #4c9f38;"><i class="bi bi-heart-pulse"></i></div>
+                    <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #4c9f38;"><i class="bi bi-heart-pulse fs-5"></i></div>
                         <div>
-                            <small class="d-block text-muted fw-bold" style="font-size: 0.7rem;">الهدف 3</small>
-                            <span class="fw-bold small">الصحة الجيدة والرفاه</span>
+                            <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 3</small>
+                            <span class="fw-bold small">Good Health & Well-being</span>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="d-flex align-items-center p-2 rounded-3" style="background: #f8fafc;">
-                        <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3" style="width: 40px; height: 40px; background: #a21942;"><i class="bi bi-briefcase"></i></div>
+                    <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #a21942;"><i class="bi bi-briefcase fs-5"></i></div>
                         <div>
-                            <small class="d-block text-muted fw-bold" style="font-size: 0.7rem;">الهدف 8</small>
-                            <span class="fw-bold small">العمل اللائق</span>
+                            <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 8</small>
+                            <span class="fw-bold small">Decent Work</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Mission & Vision -->
+    </div
+>
     <section class="py-5 mt-5">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="modern-card text-center">
                         <div class="icon-box"><i class="bi bi-bullseye"></i></div>
-                        <h4 class="fw-bold mb-3">رسالتنا</h4>
-                        <p class="text-muted small">تعزيز ثقافة الوقاية الصحية داخل الحرم الجامعي من خلال الكشف المبكر والتدخل الفعال.</p>
+                        <h3 class="fw-bold mb-3">Our Mission</h3>
+                        <p class="text-muted">To promote a culture of preventive health within the SEKEM community through early detection and effective intervention.</p>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="modern-card text-center">
                         <div class="icon-box"><i class="bi bi-eye"></i></div>
-                        <h4 class="fw-bold mb-3">رؤيتنا</h4>
-                        <p class="text-muted small">مجتمع جامعي صحي، منتج، وخالٍ من الأمراض المزمنة والمشاكل القوامية.</p>
+                        <h3 class="fw-bold mb-3">Our Vision</h3>
+                        <p class="text-muted">A healthy, productive SEKEM community, free from chronic diseases and postural problems.</p>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="modern-card text-center">
                         <div class="icon-box"><i class="bi bi-trophy"></i></div>
-                        <h4 class="fw-bold mb-3">أهدافنا</h4>
-                        <p class="text-muted small">بناء قاعدة بيانات صحية شاملة، تقليل معدلات الإصابة، ورفع مستوى الوعي الصحي.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="p-5 rounded-5 shadow-sm border" style="background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);" data-aos="zoom-in">
-                <div class="row align-items-center">
-                    <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
-                        <img src="https://img.freepik.com/free-vector/doctors-concept-illustration_114360-1515.jpg" class="img-fluid rounded-4" alt="About">
-                    </div>
-                    <div class="col-lg-6 order-lg-1">
-                        <h2 class="fw-bold mb-4 text-gradient d-inline-block">لماذا هذا المشروع؟</h2>
-                        <p class="text-muted mb-4">يأتي هذا المشروع استجابة للحاجة الملحة لتعزيز الصحة العامة، ويرتبط بشكل مباشر بأهداف التنمية المستدامة (SDGs).</p>
-                        <ul class="list-unstyled">
-                            <li class="mb-3 d-flex align-items-center text-muted"><i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i> غياب البيانات الدقيقة عن الحالة الصحية.</li>
-                            <li class="mb-3 d-flex align-items-center text-muted"><i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i> ارتفاع الشكاوى العضلية والوظيفية.</li>
-                            <li class="mb-3 d-flex align-items-center text-muted"><i class="bi bi-check-circle-fill text-primary me-3 fs-5"></i> الحاجة لتدخلات وقائية استباقية.</li>
-                        </ul>
+                        <h3 class="fw-bold mb-3">Our Goals</h3>
+                        <p class="text-muted">Building a comprehensive health database, reducing incidence rates, and raising health awareness.</p>
                     </div>
                 </div>
             </div>
@@ -317,23 +331,23 @@
             <div class="row g-5">
                 <div class="col-lg-4">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
-                    <p class="small opacity-75">مركز الصحة التكاملية - جامعة هليوبوليس</p>
+                    <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">روابط سريعة</h6>
-                    <a href="index.html" class="footer-link small">الرئيسية</a>
-                    <a href="screening.html" class="footer-link small">الفحص والمؤشرات</a>
-                    <a href="activities.html" class="footer-link small">الأنشطة</a>
-                    <a href="reports.html" class="footer-link small">التقارير</a>
+                    <h6 class="text-white mb-4">Quick Links</h6>
+                    <a href="index.html" class="footer-link small">Home</a>
+                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
+                    <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
-                    <h6 class="text-white mb-4">تواصل معنا</h6>
-                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-primary"></i> info@hu.edu.eg</p>
-                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-primary"></i> جامعة هليوبوليس، القاهرة</p>
+                    <h6 class="text-white mb-4">Contact Us</h6>
+                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
+                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
                 </div>
             </div>
             <hr class="border-secondary my-5 opacity-10">
@@ -346,6 +360,75 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 800, once: true });</script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 50 });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const teamData = [
+                { name: "Dr. Hind Al-sharif", role: "Project Manager", bio: "Public Health Consultant, leading the project's strategic vision.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/hind.png?raw=true" },
+                { name: "Dr. Mamdouh Abd El-aziz", role: "Physiotherapist", bio: "Specializes in health data analysis and quality of life metrics.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/mamdouh.png?raw=true" },
+                { name: "Dr. Mariam Tamer ", role: "Physiotherapist", bio: "Responsible for physical rehabilitation and posture correction programs.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/marim.png?raw=true" }
+            ];
+
+            const carousel = document.getElementById('team-carousel');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            const totalCards = teamData.length;
+            const theta = 360 / totalCards;
+            const cardWidth = 300; // as defined in CSS
+            const radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / totalCards));
+
+            // Populate carousel
+            teamData.forEach((member, i) => {
+                const card = document.createElement('div');
+                card.className = 'team-card-3d';
+                const angle = i * theta;
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                card.innerHTML = `
+                    <img src="${member.img}" class="team-card-img" alt="${member.name}">
+                    <h5 class="team-card-name">${member.name}</h5>
+                    <span class="team-card-role">${member.role}</span>
+                    <p class="team-card-bio">${member.bio}</p>
+                `;
+                carousel.appendChild(card);
+            });
+
+            let currentIndex = 0;
+
+            function rotateCarousel() {
+                const angle = -currentIndex * theta;
+                carousel.style.transform = `translateZ(-${radius}px) rotateY(${angle}deg)`;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex++;
+                rotateCarousel();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex--;
+                rotateCarousel();
+            });
+
+            // Autoplay
+            let autoPlayInterval = setInterval(() => {
+                currentIndex++;
+                rotateCarousel();
+            }, 2000); // Changed from 4000 to 2000
+
+            // Optional: Pause autoplay on hover
+            carousel.addEventListener('mouseenter', () => clearInterval(autoPlayInterval));
+            carousel.addEventListener('mouseleave', () => {
+                autoPlayInterval = setInterval(() => {
+                    currentIndex++;
+                    rotateCarousel();
+                }, 2000); // Changed from 4000 to 2000
+            });
+
+            // Initial setup
+            carousel.style.transform = `translateZ(-${radius}px)`;
+        });
+    </script>
 </body>
 </html>

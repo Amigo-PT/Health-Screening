@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة الفحص والمؤشرات - Health Screening</title>
+    <title>Screening Dashboard - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -11,33 +11,33 @@
 
     <style>
         :root {
-            --main-gradient: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
-            --bg-body: #f0f9ff;
+            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+            --bg-body: #f8fafc;
             --text-main: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.6);
             --radius: 24px;
-            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+            --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.1);
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            background: var(--bg-body);
+            background-color: var(--bg-body);
             background-image:
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
             border-bottom: var(--glass-border);
             padding: 15px 0;
         }
         .navbar-brand {
-            font-weight: 800;
+            font-weight: 900;
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -45,65 +45,76 @@
         .nav-link {
             font-weight: 700;
             color: var(--text-main) !important;
-            margin-left: 20px;
+            margin-right: 20px; /* Changed from margin-left */
             transition: 0.3s;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            transform: translateY(-2px);
         }
 
         /* Stats Cards */
         .stat-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: var(--glass-border);
             border-radius: var(--radius);
             padding: 30px 20px;
             box-shadow: var(--shadow);
-            transition: 0.3s;
+            transition: 0.4s;
             position: relative;
             overflow: hidden;
+            height: 100%;
         }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -10px rgba(14, 165, 233, 0.25); }
+        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(6, 182, 212, 0.2); }
         .stat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
             background: var(--main-gradient);
         }
-        .stat-number { font-size: 2.8rem; font-weight: 800; margin-bottom: 5px; color: var(--text-main); }
-        .stat-label { color: #64748b; font-size: 0.9rem; font-weight: 600; }
+        .stat-number { font-size: 3rem; font-weight: 800; margin-bottom: 5px; color: var(--text-main); }
+        .stat-label { color: #64748b; font-size: 0.95rem; font-weight: 600; }
 
         /* Category Cards */
         .category-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: var(--glass-border);
             border-radius: var(--radius);
-            padding: 25px;
+            padding: 30px 20px;
             box-shadow: var(--shadow);
             text-align: center;
-            transition: 0.3s;
+            transition: 0.4s;
+            height: 100%;
         }
-        .category-card:hover { transform: translateY(-5px); border-color: #0ea5e9; }
+        .category-card:hover { transform: translateY(-8px); border-color: #06b6d4; }
         .category-icon {
-            width: 60px; height: 60px; border-radius: 16px;
+            width: 70px; height: 70px; border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px; font-size: 1.8rem;
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
-            color: #0ea5e9;
+            margin: 0 auto 20px; font-size: 2rem;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: #0891b2;
+            transition: 0.4s;
+        }
+        .category-card:hover .category-icon {
+            background: var(--main-gradient);
+            color: white;
+            transform: rotate(10deg) scale(1.1);
         }
 
         /* Charts */
         .chart-container {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: var(--glass-border);
-            padding: 30px;
+            padding: 35px;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             height: 100%;
+            transition: 0.4s;
         }
+        .chart-container:hover { transform: translateY(-5px); }
 
         /* Footer */
         footer {
@@ -115,11 +126,16 @@
             overflow: hidden;
         }
         footer::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
             background: var(--main-gradient);
         }
         .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover { color: #38bdf8; padding-right: 5px; }
+        .footer-link:hover {
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-left: 5px; /* Changed from padding-right */
+        }
     </style>
 </head>
 <body>
@@ -131,101 +147,101 @@
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="screening.html">الفحص والمؤشرات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="intervention.html">التدخلات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="activities.html">الأنشطة</a></li>
-                    <li class="nav-item"><a class="nav-link" href="reports.html">التقارير</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 120px; margin-bottom: 80px;">
-        <div class="text-center mb-5" data-aos="fade-down">
-            <h2 class="fw-bold display-6">لوحة مؤشرات الفحص الشامل</h2>
-            <p class="text-muted">تحليل بيانات المسح الصحي للمجتمع الجامعي وشركات سيكم</p>
+    <div class="container" style="margin-top: 140px; margin-bottom: 80px;">
+        <div class="text-center mb-5" data-aos="fade-down" data-aos-duration="1000">
+            <h2 class="fw-bold display-5 mb-3">Comprehensive Screening Dashboard</h2>
+            <p class="text-muted lead">Analysis of health survey data for the SEKEM community and companies</p>
         </div>
 
         <!-- Global Stats -->
         <div class="row g-4 mb-5">
-            <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
                 <div class="stat-card">
                     <div class="stat-number" style="background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="total-participants">0</div>
-                    <div class="stat-label">إجمالي المفحوصين</div>
+                    <div class="stat-label">Total Screened</div>
                 </div>
             </div>
-            <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
                 <div class="stat-card">
                     <div class="stat-number text-primary">4</div>
-                    <div class="stat-label">قطاعات مستهدفة</div>
+                    <div class="stat-label">Targeted Sectors</div>
                 </div>
             </div>
-            <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
                 <div class="stat-card">
                     <div class="stat-number text-warning">850</div>
-                    <div class="stat-label">حالات تتطلب متابعة</div>
+                    <div class="stat-label">Cases Requiring Follow-up</div>
                 </div>
             </div>
-            <div class="col-md-3" data-aos="fade-up" data-aos-delay="400">
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
                 <div class="stat-card">
                     <div class="stat-number text-danger">320</div>
-                    <div class="stat-label">إحالة للعلاج الطبيعي</div>
+                    <div class="stat-label">Referrals for Physiotherapy</div>
                 </div>
             </div>
         </div>
 
         <!-- Breakdown -->
         <div class="row mb-4">
-            <div class="col-12"><h5 class="fw-bold text-primary"><i class="bi bi-grid me-2"></i>توزيع الفحص حسب الفئات</h5></div>
+            <div class="col-12" data-aos="fade-right"><h4 class="fw-bold text-primary border-bottom pb-2 d-inline-block">Screening Breakdown by Categories</h4></div>
         </div>
 
         <div class="row g-4 mb-5">
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="100">
+            <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="100" data-aos-duration="1000">
                 <div class="category-card">
                     <div class="category-icon"><i class="bi bi-mortarboard"></i></div>
                     <h3 class="fw-bold" id="num-students">1,200</h3>
-                    <p class="text-muted small mb-2">طلاب الجامعة</p>
-                    <span class="badge bg-light text-dark border rounded-pill fw-normal">آلام الرقبة</span>
+                    <p class="text-muted mb-3">University Students</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Neck Pain</span>
                 </div>
             </div>
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="200">
+            <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="200" data-aos-duration="1000">
                 <div class="category-card">
                     <div class="category-icon"><i class="bi bi-person-video3"></i></div>
                     <h3 class="fw-bold" id="num-doctors">150</h3>
-                    <p class="text-muted small mb-2">أعضاء هيئة التدريس</p>
-                    <span class="badge bg-light text-dark border rounded-pill fw-normal">ضغط الدم</span>
+                    <p class="text-muted mb-3">Faculty Members</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">High Blood Pressure</span>
                 </div>
             </div>
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="300">
+            <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="300" data-aos-duration="1000">
                 <div class="category-card">
                     <div class="category-icon"><i class="bi bi-person-gear"></i></div>
                     <h3 class="fw-bold" id="num-workers">350</h3>
-                    <p class="text-muted small mb-2">عمال وموظفي الجامعة</p>
-                    <span class="badge bg-light text-dark border rounded-pill fw-normal">آلام الظهر</span>
+                    <p class="text-muted mb-3">University Staff</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Back Pain</span>
                 </div>
             </div>
-            <div class="col-md-3" data-aos="zoom-in" data-aos-delay="400">
+            <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="400" data-aos-duration="1000">
                 <div class="category-card">
                     <div class="category-icon"><i class="bi bi-buildings"></i></div>
                     <h3 class="fw-bold" id="num-sekem">800</h3>
-                    <p class="text-muted small mb-2">عمال شركات سيكم</p>
-                    <span class="badge bg-light text-dark border rounded-pill fw-normal">إجهاد عضلي</span>
+                    <p class="text-muted mb-3">SEKEM Company Workers</p>
+                    <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Muscle Strain</span>
                 </div>
             </div>
         </div>
 
         <!-- Charts -->
         <div class="row g-4">
-            <div class="col-md-4" data-aos="fade-left">
+            <div class="col-md-4" data-aos="fade-right" data-aos-duration="1000">
                 <div class="chart-container">
-                    <h6 class="fw-bold mb-4 text-center text-muted">نسبة المشاركة</h6>
+                    <h6 class="fw-bold mb-4 text-center text-muted">Participation Rate</h6>
                     <canvas id="populationChart"></canvas>
                 </div>
             </div>
-            <div class="col-md-8" data-aos="fade-right">
+            <div class="col-md-8" data-aos="fade-left" data-aos-duration="1000">
                 <div class="chart-container">
-                    <h6 class="fw-bold mb-4 text-muted">مقارنة الشكاوى الصحية</h6>
+                    <h6 class="fw-bold mb-4 text-muted">Comparison of Health Complaints</h6>
                     <canvas id="comparisonChart"></canvas>
                 </div>
             </div>
@@ -238,23 +254,23 @@
             <div class="row g-5">
                 <div class="col-lg-4">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
-                    <p class="small opacity-75">مركز الصحة التكاملية - جامعة هليوبوليس</p>
+                    <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">روابط سريعة</h6>
-                    <a href="index.html" class="footer-link small">الرئيسية</a>
-                    <a href="screening.html" class="footer-link small">الفحص والمؤشرات</a>
-                    <a href="activities.html" class="footer-link small">الأنشطة</a>
-                    <a href="reports.html" class="footer-link small">التقارير</a>
+                    <h6 class="text-white mb-4">Quick Links</h6>
+                    <a href="index.html" class="footer-link small">Home</a>
+                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
+                    <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
-                    <h6 class="text-white mb-4">تواصل معنا</h6>
-                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-primary"></i> info@hu.edu.eg</p>
-                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-primary"></i> جامعة هليوبوليس، القاهرة</p>
+                    <h6 class="text-white mb-4">Contact Us</h6>
+                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
+                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
                 </div>
             </div>
             <hr class="border-secondary my-5 opacity-10">
@@ -268,7 +284,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true });
+        AOS.init({ duration: 1000, once: true, offset: 50 });
 
         function getNumFromHTML(id) {
             const element = document.getElementById(id);
@@ -285,7 +301,7 @@
         new Chart(document.getElementById('populationChart').getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: ['طلاب', 'سيكم', 'موظفين', 'تدريس'],
+                labels: ['Students', 'SEKEM Workers', 'University Staff', 'Faculty Members'],
                 datasets: [{
                     data: [valStudents, valSekem, valWorkers, valDoctors],
                     backgroundColor: ['#3b82f6', '#f59e0b', '#64748b', '#10b981'],
@@ -298,11 +314,11 @@
         new Chart(document.getElementById('comparisonChart').getContext('2d'), {
             type: 'bar',
             data: {
-                labels: ['آلام الظهر', 'آلام الرقبة', 'الصداع', 'السمنة'],
+                labels: ['Back Pain', 'Neck Pain', 'Headache', 'Obesity'],
                 datasets: [
-                    { label: 'طلاب', data: [200, 450, 300, 150], backgroundColor: '#3b82f6', borderRadius: 4 },
-                    { label: 'سيكم', data: [500, 100, 150, 200], backgroundColor: '#f59e0b', borderRadius: 4 },
-                    { label: 'موظفين', data: [150, 120, 80, 180], backgroundColor: '#64748b', borderRadius: 4 }
+                    { label: 'Students', data: [200, 450, 300, 150], backgroundColor: '#3b82f6', borderRadius: 6 },
+                    { label: 'SEKEM Workers', data: [500, 100, 150, 200], backgroundColor: '#f59e0b', borderRadius: 6 },
+                    { label: 'University Staff', data: [150, 120, 80, 180], backgroundColor: '#64748b', borderRadius: 6 }
                 ]
             },
             options: { responsive: true, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { borderDash: [5, 5] } } }, plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true } } } }

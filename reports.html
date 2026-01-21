@@ -1,42 +1,44 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التقارير والمكتبة - Health Screening</title>
+    <title>Reports & Library - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
-            --main-gradient: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
-            --bg-body: #f0f9ff;
+            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+            --bg-body: #f8fafc;
             --text-main: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.8);
             --radius: 24px;
-            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+            --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.15);
+            --timeline-color: #06b6d4;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            background: var(--bg-body);
+            background-color: var(--bg-body);
             background-image:
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
             border-bottom: var(--glass-border);
             padding: 15px 0;
+            z-index: 1000;
         }
         .navbar-brand {
-            font-weight: 800;
+            font-weight: 900;
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -44,54 +46,216 @@
         .nav-link {
             font-weight: 700;
             color: var(--text-main) !important;
-            margin-left: 20px;
+            margin-right: 20px;
             transition: 0.3s;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            transform: translateY(-2px);
         }
 
-        .report-card {
+        /* Timeline Styles */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* The vertical line */
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(to bottom, #2563eb, #06b6d4, #10b981);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+            opacity: 0.3;
+        }
+
+        /* Year Separator */
+        .timeline-year {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin: 50px 0;
+            transition: all 0.3s ease;
+        }
+        .timeline-year span {
+            background: var(--main-gradient);
+            color: white;
+            padding: 10px 35px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .timeline-container {
+            padding: 10px 50px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+
+        /* The dots on the timeline */
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: #fff;
+            border: 4px solid var(--timeline-color);
+            top: 35px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-container:hover::after {
+            background-color: var(--timeline-color);
+            transform: scale(1.2);
+            box-shadow: 0 0 0 8px rgba(6, 182, 212, 0.3);
+        }
+
+        .left { left: 0; }
+        .right { left: 50%; }
+
+        /* Arrows pointing to the timeline */
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 38px;
+            width: 0;
+            z-index: 1;
+            right: 40px;
+            border: medium solid white;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 38px;
+            width: 0;
+            z-index: 1;
+            left: 40px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .right::after { left: -10px; }
+
+        /* Card Content */
+        .timeline-content {
+            padding: 25px;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: var(--glass-border);
             border-radius: var(--radius);
-            padding: 30px;
-            transition: 0.3s;
-            height: 100%;
+            box-shadow: var(--shadow);
             position: relative;
-            overflow: hidden;
+            transition: 0.4s;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.25);
+            border-color: #06b6d4;
+        }
+
+        /* Date Box Styling */
+        .date-box {
             display: flex;
             flex-direction: column;
-            box-shadow: var(--shadow);
+            align-items: center;
+            justify-content: center;
+            background: rgba(6, 182, 212, 0.08);
+            color: #0891b2;
+            padding: 12px 5px;
+            border-radius: 18px;
+            min-width: 75px;
+            text-align: center;
+            border: 1px solid rgba(6, 182, 212, 0.15);
         }
-        .report-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -10px rgba(14, 165, 233, 0.25); border-color: #0ea5e9; }
+        .date-box .month {
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .date-box .year-small {
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+
+        .content-body {
+            flex: 1;
+        }
 
         .report-icon-box {
-            width: 60px; height: 60px; border-radius: 16px;
+            width: 50px; height: 50px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; margin-bottom: 20px;
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
-            color: #0ea5e9;
+            font-size: 1.5rem; margin-bottom: 15px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: #0891b2;
+            transition: 0.4s;
+            float: right; /* Icon on the right inside the card */
+        }
+
+        .timeline-content:hover .report-icon-box {
+            background: var(--main-gradient);
+            color: white;
+            transform: rotate(10deg) scale(1.1);
         }
 
         .report-type {
-            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
-            font-weight: 700; color: #64748b; margin-bottom: 10px; display: block;
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+            font-weight: 700; color: #64748b; margin-bottom: 5px; display: block;
         }
 
         .btn-download {
             background: white; color: var(--text-main);
-            border: 1px solid #e2e8f0; border-radius: 12px;
-            padding: 10px 20px; font-weight: 600; transition: 0.3s;
-            width: 100%; margin-top: auto; text-decoration: none; text-align: center;
-            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 12px;
+            padding: 8px 18px; font-weight: 700; transition: 0.3s;
+            text-decoration: none; text-align: center;
+            display: inline-flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            margin-top: 10px;
+            font-size: 0.9rem;
         }
         .btn-download:hover {
             background: var(--main-gradient); color: white; border-color: transparent;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline::after { left: 31px; }
+            .timeline-container { width: 100%; padding-left: 80px; padding-right: 25px; }
+            .timeline-container::before { left: 70px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
+            .left::after, .right::after { left: 21px; }
+            .right { left: 0%; }
+            .timeline-year { text-align: left; padding-left: 80px; }
+            .timeline-year span { font-size: 1.2rem; padding: 8px 25px; }
         }
 
         /* Footer */
@@ -104,11 +268,16 @@
             overflow: hidden;
         }
         footer::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
             background: var(--main-gradient);
         }
         .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover { color: #38bdf8; padding-right: 5px; }
+        .footer-link:hover {
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -120,109 +289,166 @@
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">الفحص والمؤشرات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="intervention.html">التدخلات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="activities.html">الأنشطة</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="reports.html">التقارير</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 120px; margin-bottom: 80px;">
-        <div class="text-center mb-5" data-aos="fade-down">
-            <h2 class="fw-bold display-6">المكتبة والتقارير</h2>
-            <p class="text-muted">تصفح وحمل أحدث التقارير، الملخصات التنفيذية، والمواد العلمية</p>
+    <div class="container" style="margin-top: 140px; margin-bottom: 80px;">
+        <div class="text-center mb-5" data-aos="fade-down" data-aos-duration="1000">
+            <h2 class="fw-bold display-5 mb-3">Reports Timeline</h2>
+            <p class="text-muted lead">A chronological journey through our reports and publications</p>
         </div>
 
         <!-- Search -->
-        <div class="row justify-content-center mb-5" data-aos="fade-up">
+        <div class="row justify-content-center mb-5" data-aos="fade-up" data-aos-duration="1000">
             <div class="col-md-6">
-                <div class="input-group shadow-sm rounded-pill overflow-hidden border bg-white">
+                <div class="input-group shadow-sm rounded-pill overflow-hidden border bg-white p-1">
                     <span class="input-group-text bg-white border-0 ps-4"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" class="form-control border-0 py-3" placeholder="ابحث عن تقرير...">
-                    <button class="btn btn-primary px-4 rounded-pill m-1" style="background: var(--main-gradient); border: none;">بحث</button>
+                    <input type="text" id="searchInput" class="form-control border-0 py-3" placeholder="Search by name, year, or month...">
+                    <button class="btn btn-primary px-4 rounded-pill fw-bold" onclick="document.getElementById('searchInput').focus()" style="background: var(--main-gradient); border: none; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);">Search</button>
                 </div>
             </div>
         </div>
 
-        <!-- Reports Grid -->
-        <div class="row g-4">
-            <!-- Report 1 -->
-            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                <div class="report-card">
-                    <div class="report-icon-box" style="background: #fef2f2; color: #ef4444;"><i class="bi bi-file-earmark-pdf"></i></div>
-                    <span class="report-type">تقرير سنوي</span>
-                    <h5 class="fw-bold mb-3">التقرير الختامي 2023</h5>
-                    <p class="text-muted small mb-4">ملخص شامل لجميع الأنشطة والنتائج التي تم تحقيقها خلال العام.</p>
-                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
-                        <span><i class="bi bi-calendar3 me-1"></i> ديسمبر 2023</span>
-                        <span>5.2 MB</span>
+        <!-- Timeline -->
+        <div class="timeline" id="reportsTimeline">
+
+            <!-- Year 2023 -->
+            <div class="timeline-year" data-aos="zoom-in">
+                <span>2023</span>
+            </div>
+
+            <!-- Report 1 (Dec) -->
+            <div class="timeline-container left" data-aos="fade-right" data-aos-duration="1000">
+                <div class="timeline-content">
+                    <div class="date-box">
+                        <span class="month">Dec</span>
+                        <span class="year-small">2023</span>
                     </div>
-                    <a href="downloads/annual_report_2023.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                    <div class="content-body">
+                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); color: #ef4444;"><i class="bi bi-file-earmark-pdf"></i></div>
+                        <span class="report-type">Annual Report</span>
+                        <h4 class="fw-bold mb-2">Final Report 2023</h4>
+                        <p class="text-muted mb-3 small">A comprehensive summary of all activities and achievements during the year.</p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 5.2 MB</span>
+                            <a href="downloads/annual_report_2023.pdf" class="btn-download" download>Download PDF</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Report 2 -->
-            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-                <div class="report-card">
-                    <div class="report-icon-box" style="background: #eff6ff; color: #3b82f6;"><i class="bi bi-file-earmark-text"></i></div>
-                    <span class="report-type">ملخص تنفيذي</span>
-                    <h5 class="fw-bold mb-3">ملخص الأثر السريع</h5>
-                    <p class="text-muted small mb-4">نسخة مختصرة موجهة لصناع القرار والشركاء المحتملين.</p>
-                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
-                        <span><i class="bi bi-calendar3 me-1"></i> نوفمبر 2023</span>
-                        <span>1.5 MB</span>
+            <!-- Report 2 (Nov) -->
+            <div class="timeline-container right" data-aos="fade-left" data-aos-duration="1000">
+                <div class="timeline-content">
+                    <div class="date-box">
+                        <span class="month">Nov</span>
+                        <span class="year-small">2023</span>
                     </div>
-                    <a href="downloads/executive_summary.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                    <div class="content-body">
+                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); color: #3b82f6;"><i class="bi bi-file-earmark-text"></i></div>
+                        <span class="report-type">Executive Summary</span>
+                        <h4 class="fw-bold mb-2">Rapid Impact Summary</h4>
+                        <p class="text-muted mb-3 small">A concise version for decision-makers focusing on immediate outcomes.</p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 1.5 MB</span>
+                            <a href="downloads/executive_summary.pdf" class="btn-download" download>Download PDF</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Report 3 -->
-            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-                <div class="report-card">
-                    <div class="report-icon-box" style="background: #fff7ed; color: #f59e0b;"><i class="bi bi-easel"></i></div>
-                    <span class="report-type">ملصق علمي</span>
-                    <h5 class="fw-bold mb-3">نتائج المسح العضلي</h5>
-                    <p class="text-muted small mb-4">بوستر علمي يوضح إحصائيات مشاكل القوام لدى الطلاب.</p>
-                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
-                        <span><i class="bi bi-calendar3 me-1"></i> أكتوبر 2023</span>
-                        <span>8.0 MB</span>
+            <!-- Report 3 (Oct) -->
+            <div class="timeline-container left" data-aos="fade-right" data-aos-duration="1000">
+                <div class="timeline-content">
+                    <div class="date-box">
+                        <span class="month">Oct</span>
+                        <span class="year-small">2023</span>
                     </div>
-                    <a href="downloads/muscle_survey_poster.zip" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل ZIP</a>
+                    <div class="content-body">
+                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1)); color: #f59e0b;"><i class="bi bi-easel"></i></div>
+                        <span class="report-type">Scientific Poster</span>
+                        <h4 class="fw-bold mb-2">Musculoskeletal Survey</h4>
+                        <p class="text-muted mb-3 small">Statistics on postural problems among students presented at the Annual Conference.</p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 8.0 MB</span>
+                            <a href="downloads/muscle_survey_poster.zip" class="btn-download" download>Download ZIP</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Report 4 -->
-            <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="400">
-                <div class="report-card">
-                    <div class="report-icon-box" style="background: #f0fdf4; color: #10b981;"><i class="bi bi-images"></i></div>
-                    <span class="report-type">مادة توعوية</span>
-                    <h5 class="fw-bold mb-3">دليل التمارين المكتبية</h5>
-                    <p class="text-muted small mb-4">كتيب مصور يحتوي على تمارين إطالة للموظفين.</p>
-                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
-                        <span><i class="bi bi-calendar3 me-1"></i> سبتمبر 2023</span>
-                        <span>3.2 MB</span>
+            <!-- Report 4 (Sep) -->
+            <div class="timeline-container right" data-aos="fade-left" data-aos-duration="1000">
+                <div class="timeline-content">
+                    <div class="date-box">
+                        <span class="month">Sep</span>
+                        <span class="year-small">2023</span>
                     </div>
-                    <a href="downloads/office_exercises_guide.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                    <div class="content-body">
+                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); color: #10b981;"><i class="bi bi-images"></i></div>
+                        <span class="report-type">Awareness Material</span>
+                        <h4 class="fw-bold mb-2">Office Exercises Guide</h4>
+                        <p class="text-muted mb-3 small">Illustrated booklet containing stretching exercises for employees.</p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 3.2 MB</span>
+                            <a href="downloads/office_exercises_guide.pdf" class="btn-download" download>Download PDF</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-             <!-- Report 5 -->
-             <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="500">
-                <div class="report-card">
-                    <div class="report-icon-box" style="background: #f0f9ff; color: #0ea5e9;"><i class="bi bi-file-medical"></i></div>
-                    <span class="report-type">دراسة حالة</span>
-                    <h5 class="fw-bold mb-3">تحليل بيئة العمل</h5>
-                    <p class="text-muted small mb-4">دراسة تفصيلية عن تأثير الأثاث المكتبي على صحة الموظفين.</p>
-                    <div class="d-flex justify-content-between align-items-center text-muted small mb-3 mt-auto">
-                        <span><i class="bi bi-calendar3 me-1"></i> أغسطس 2023</span>
-                        <span>4.1 MB</span>
+             <!-- Report 5 (Aug) -->
+             <div class="timeline-container left" data-aos="fade-right" data-aos-duration="1000">
+                <div class="timeline-content">
+                    <div class="date-box">
+                        <span class="month">Aug</span>
+                        <span class="year-small">2023</span>
                     </div>
-                    <a href="downloads/ergonomics_case_study.pdf" class="btn-download" download><i class="bi bi-download me-2"></i> تحميل PDF</a>
+                    <div class="content-body">
+                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.1)); color: #06b6d4;"><i class="bi bi-file-medical"></i></div>
+                        <span class="report-type">Case Study</span>
+                        <h4 class="fw-bold mb-2">Work Environment Analysis</h4>
+                        <p class="text-muted mb-3 small">Detailed study on the impact of office furniture on employee health.</p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 4.1 MB</span>
+                            <a href="downloads/ergonomics_case_study.pdf" class="btn-download" download>Download PDF</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <!-- Year 2022 (Example) -->
+            <div class="timeline-year" data-aos="zoom-in" style="margin-top: 80px;">
+                <span>2022</span>
+            </div>
+
+            <!-- Report 2022 Example -->
+            <div class="timeline-container right" data-aos="fade-left" data-aos-duration="1000">
+                <div class="timeline-content">
+                    <div class="date-box">
+                        <span class="month">Dec</span>
+                        <span class="year-small">2022</span>
+                    </div>
+                    <div class="content-body">
+                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(71, 85, 105, 0.1)); color: #64748b;"><i class="bi bi-archive"></i></div>
+                        <span class="report-type">Archive</span>
+                        <h4 class="fw-bold mb-2">Annual Report 2022</h4>
+                        <p class="text-muted mb-3 small">Archived annual report from the previous year.</p>
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 4.8 MB</span>
+                            <a href="#" class="btn-download" download>Download PDF</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -232,23 +458,23 @@
             <div class="row g-5">
                 <div class="col-lg-4">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
-                    <p class="small opacity-75">مركز الصحة التكاملية - جامعة هليوبوليس</p>
+                    <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">روابط سريعة</h6>
-                    <a href="index.html" class="footer-link small">الرئيسية</a>
-                    <a href="screening.html" class="footer-link small">الفحص والمؤشرات</a>
-                    <a href="activities.html" class="footer-link small">الأنشطة</a>
-                    <a href="reports.html" class="footer-link small">التقارير</a>
+                    <h6 class="text-white mb-4">Quick Links</h6>
+                    <a href="index.html" class="footer-link small">Home</a>
+                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
+                    <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
-                    <h6 class="text-white mb-4">تواصل معنا</h6>
-                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-primary"></i> info@hu.edu.eg</p>
-                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-primary"></i> جامعة هليوبوليس، القاهرة</p>
+                    <h6 class="text-white mb-4">Contact Us</h6>
+                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
+                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
                 </div>
             </div>
             <hr class="border-secondary my-5 opacity-10">
@@ -261,6 +487,66 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 800, once: true });</script>
+    <script>AOS.init({ duration: 1000, once: true, offset: 50 });</script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const reportItems = document.querySelectorAll('.timeline-container');
+            const yearSeparators = document.querySelectorAll('.timeline-year');
+
+            searchInput.addEventListener('keyup', function(e) {
+                const term = e.target.value.toLowerCase().trim();
+
+                // 1. Filter Reports
+                reportItems.forEach(item => {
+                    const title = item.querySelector('h4').textContent.toLowerCase();
+                    const type = item.querySelector('.report-type').textContent.toLowerCase();
+                    const month = item.querySelector('.month').textContent.toLowerCase();
+                    const year = item.querySelector('.year-small').textContent.toLowerCase();
+
+                    // Combine all searchable text
+                    const combinedText = `${title} ${type} ${month} ${year}`;
+
+                    if (combinedText.includes(term)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // 2. Smart Hide Year Separators
+                // Logic: Iterate through years, check if any sibling reports until the next year are visible.
+                const timelineChildren = document.getElementById('reportsTimeline').children;
+                let currentYearSeparator = null;
+                let hasVisibleReports = false;
+
+                for (let i = 0; i < timelineChildren.length; i++) {
+                    const child = timelineChildren[i];
+
+                    if (child.classList.contains('timeline-year')) {
+                        // If we were processing a previous year, update its visibility
+                        if (currentYearSeparator) {
+                            currentYearSeparator.style.display = hasVisibleReports ? 'block' : 'none';
+                        }
+
+                        // Start new year group
+                        currentYearSeparator = child;
+                        hasVisibleReports = false;
+                    } else if (child.classList.contains('timeline-container')) {
+                        // Check if this report is visible
+                        if (child.style.display !== 'none') {
+                            hasVisibleReports = true;
+                        }
+                    }
+                }
+
+                // Handle the last year separator
+                if (currentYearSeparator) {
+                    currentYearSeparator.style.display = hasVisibleReports ? 'block' : 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

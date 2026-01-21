@@ -1,42 +1,42 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التدخلات والنتائج - Health Screening</title>
+    <title>Interventions & Outcomes - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
-            --main-gradient: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
-            --bg-body: #f0f9ff;
+            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+            --bg-body: #f8fafc;
             --text-main: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.6);
             --radius: 24px;
-            --shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.15);
+            --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.1);
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
-            background: var(--bg-body);
+            background-color: var(--bg-body);
             background-image:
-                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
             border-bottom: var(--glass-border);
             padding: 15px 0;
         }
         .navbar-brand {
-            font-weight: 800;
+            font-weight: 900;
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -44,51 +44,58 @@
         .nav-link {
             font-weight: 700;
             color: var(--text-main) !important;
-            margin-left: 20px;
+            margin-right: 20px; /* Changed from margin-left */
             transition: 0.3s;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            transform: translateY(-2px);
         }
 
         .intervention-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: var(--glass-border);
             border-radius: var(--radius);
-            padding: 35px;
+            padding: 40px;
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
-            transition: 0.3s;
+            margin-bottom: 35px;
+            transition: 0.4s;
             position: relative;
             overflow: hidden;
         }
-        .intervention-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px -10px rgba(14, 165, 233, 0.25); }
+        .intervention-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.2); }
         .intervention-card::before {
             content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 6px;
             background: var(--main-gradient);
         }
 
         .outcome-box {
-            background: rgba(255,255,255,0.5);
-            border-radius: 16px;
-            padding: 20px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px;
+            padding: 25px;
             text-align: center;
             height: 100%;
-            border: 1px solid rgba(255,255,255,0.6);
-            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.8);
+            transition: 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
+        .outcome-box:hover { transform: translateY(-3px); }
         .outcome-box.success { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
-        .outcome-value { font-size: 2.2rem; font-weight: 800; color: var(--text-main); line-height: 1.2; }
-        .outcome-label { font-size: 0.85rem; color: #64748b; font-weight: 600; margin-top: 5px; }
+        .outcome-value { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1.2; } /* Increased font size */
+        .outcome-label { font-size: 0.95rem; color: #64748b; font-weight: 600; margin-top: 5px; } /* Increased font size */
 
         .arrow-icon {
-            font-size: 1.5rem; color: #cbd5e1;
-            background: #fff; width: 40px; height: 40px; border-radius: 50%;
+            font-size: 1.8rem; color: #cbd5e1;
+            background: #fff; width: 50px; height: 50px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: 0.4s;
+        }
+        .intervention-card:hover .arrow-icon {
+            color: #06b6d4; transform: scale(1.1);
         }
 
         /* Footer */
@@ -101,11 +108,16 @@
             overflow: hidden;
         }
         footer::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
             background: var(--main-gradient);
         }
         .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover { color: #38bdf8; padding-right: 5px; }
+        .footer-link:hover {
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -117,48 +129,48 @@
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">الفحص والمؤشرات</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="intervention.html">التدخلات</a></li>
-                    <li class="nav-item"><a class="nav-link" href="activities.html">الأنشطة</a></li>
-                    <li class="nav-item"><a class="nav-link" href="reports.html">التقارير</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 120px; margin-bottom: 80px;">
-        <div class="text-center mb-5" data-aos="fade-down">
-            <h2 class="fw-bold display-6">التدخلات وقياس الأثر</h2>
-            <p class="text-muted">مقارنة النتائج قبل وبعد تطبيق البرامج العلاجية والوقائية</p>
+    <div class="container" style="margin-top: 140px; margin-bottom: 80px;">
+        <div class="text-center mb-5" data-aos="fade-down" data-aos-duration="1000">
+            <h2 class="fw-bold display-5 mb-3">Interventions & Outcomes</h2>
+            <p class="text-muted lead">Comparing results before and after applying therapeutic and preventive programs</p>
         </div>
 
         <!-- Intervention 1 -->
-        <div class="intervention-card" data-aos="fade-up">
+        <div class="intervention-card" data-aos="fade-up" data-aos-duration="1000">
             <div class="row align-items-center">
                 <div class="col-lg-5 mb-4 mb-lg-0">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary me-3"><i class="bi bi-person-walking fs-4"></i></div>
-                        <h4 class="fw-bold m-0">برنامج علاج آلام الظهر</h4>
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-4 text-primary me-3"><i class="bi bi-person-walking fs-3"></i></div>
+                        <h3 class="fw-bold m-0">Back Pain Treatment Program</h3>
                     </div>
-                    <p class="text-muted small mb-3">برنامج مكثف لمدة 6 أسابيع يتضمن تمارين تقوية عضلات الجذع وتصحيح القوام للموظفين الذين يعانون من آلام مزمنة.</p>
-                    <span class="badge bg-light text-dark border rounded-pill px-3 py-2">عدد المستفيدين: 45</span>
+                    <p class="text-muted mb-4">An intensive 6-week program including core strengthening exercises and posture correction for employees suffering from chronic pain.</p>
+                    <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: 45</span>
                 </div>
                 <div class="col-lg-7">
                     <div class="row align-items-center g-3">
                         <div class="col-5">
                             <div class="outcome-box">
                                 <div class="outcome-value text-danger">7.8</div>
-                                <div class="outcome-label">مستوى الألم (قبل)</div>
+                                <div class="outcome-label">Pain Level (Before)</div>
                             </div>
                         </div>
                         <div class="col-2 text-center">
-                            <div class="arrow-icon"><i class="bi bi-arrow-left"></i></div>
+                            <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
                         </div>
                         <div class="col-5">
                             <div class="outcome-box success">
                                 <div class="outcome-value text-success">3.2</div>
-                                <div class="outcome-label">مستوى الألم (بعد)</div>
+                                <div class="outcome-label">Pain Level (After)</div>
                             </div>
                         </div>
                     </div>
@@ -167,31 +179,31 @@
         </div>
 
         <!-- Intervention 2 -->
-        <div class="intervention-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="intervention-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
             <div class="row align-items-center">
                 <div class="col-lg-5 mb-4 mb-lg-0">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-warning bg-opacity-10 p-2 rounded-3 text-warning me-3"><i class="bi bi-laptop fs-4"></i></div>
-                        <h4 class="fw-bold m-0">تحسين بيئة العمل</h4>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-4 text-warning me-3"><i class="bi bi-laptop fs-3"></i></div>
+                        <h3 class="fw-bold m-0">Work Environment Improvement (Ergonomics)</h3>
                     </div>
-                    <p class="text-muted small mb-3">تعديل كراسي المكاتب، ضبط ارتفاع الشاشات، وتوفير مساند للقدمين لتقليل الإجهاد البدني.</p>
-                    <span class="badge bg-light text-dark border rounded-pill px-3 py-2">عدد المستفيدين: 120</span>
+                    <p class="text-muted mb-4">Adjusting office chairs, screen heights, and providing footrests to reduce physical strain.</p>
+                    <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: 120</span>
                 </div>
                 <div class="col-lg-7">
                     <div class="row align-items-center g-3">
                         <div class="col-5">
                             <div class="outcome-box">
                                 <div class="outcome-value text-warning">40%</div>
-                                <div class="outcome-label">شكاوى الإجهاد (قبل)</div>
+                                <div class="outcome-label">Strain Complaints (Before)</div>
                             </div>
                         </div>
                         <div class="col-2 text-center">
-                            <div class="arrow-icon"><i class="bi bi-arrow-left"></i></div>
+                            <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
                         </div>
                         <div class="col-5">
                             <div class="outcome-box success">
                                 <div class="outcome-value text-success">15%</div>
-                                <div class="outcome-label">شكاوى الإجهاد (بعد)</div>
+                                <div class="outcome-label">Strain Complaints (After)</div>
                             </div>
                         </div>
                     </div>
@@ -200,31 +212,31 @@
         </div>
 
         <!-- Intervention 3 -->
-        <div class="intervention-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="intervention-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
             <div class="row align-items-center">
                 <div class="col-lg-5 mb-4 mb-lg-0">
                     <div class="d-flex align-items-center mb-3">
-                        <div class="bg-info bg-opacity-10 p-2 rounded-3 text-info me-3"><i class="bi bi-heart-pulse fs-4"></i></div>
-                        <h4 class="fw-bold m-0">اللياقة البدنية للطلاب</h4>
+                        <div class="bg-info bg-opacity-10 p-3 rounded-4 text-info me-3"><i class="bi bi-heart-pulse fs-3"></i></div>
+                        <h3 class="fw-bold m-0">Student Fitness Program</h3>
                     </div>
-                    <p class="text-muted small mb-3">جلسات تدريبية صباحية لرفع مستوى اللياقة البدنية وتقليل مؤشر كتلة الجسم (BMI).</p>
-                    <span class="badge bg-light text-dark border rounded-pill px-3 py-2">عدد المستفيدين: 80</span>
+                    <p class="text-muted mb-4">Morning training sessions to improve physical fitness and reduce Body Mass Index (BMI).</p>
+                    <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: 80</span>
                 </div>
                 <div class="col-lg-7">
                     <div class="row align-items-center g-3">
                         <div class="col-5">
                             <div class="outcome-box">
                                 <div class="outcome-value text-danger">28.5</div>
-                                <div class="outcome-label">متوسط BMI (قبل)</div>
+                                <div class="outcome-label">Average BMI (Before)</div>
                             </div>
                         </div>
                         <div class="col-2 text-center">
-                            <div class="arrow-icon"><i class="bi bi-arrow-left"></i></div>
+                            <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
                         </div>
                         <div class="col-5">
                             <div class="outcome-box success">
                                 <div class="outcome-value text-success">26.1</div>
-                                <div class="outcome-label">متوسط BMI (بعد)</div>
+                                <div class="outcome-label">Average BMI (After)</div>
                             </div>
                         </div>
                     </div>
@@ -240,23 +252,23 @@
             <div class="row g-5">
                 <div class="col-lg-4">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
-                    <p class="small opacity-75">مركز الصحة التكاملية - جامعة هليوبوليس</p>
+                    <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">روابط سريعة</h6>
-                    <a href="index.html" class="footer-link small">الرئيسية</a>
-                    <a href="screening.html" class="footer-link small">الفحص والمؤشرات</a>
-                    <a href="activities.html" class="footer-link small">الأنشطة</a>
-                    <a href="reports.html" class="footer-link small">التقارير</a>
+                    <h6 class="text-white mb-4">Quick Links</h6>
+                    <a href="index.html" class="footer-link small">Home</a>
+                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
+                    <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
-                    <h6 class="text-white mb-4">تواصل معنا</h6>
-                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-primary"></i> info@hu.edu.eg</p>
-                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-primary"></i> جامعة هليوبوليس، القاهرة</p>
+                    <h6 class="text-white mb-4">Contact Us</h6>
+                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
+                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
                 </div>
             </div>
             <hr class="border-secondary my-5 opacity-10">
@@ -269,6 +281,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 800, once: true });</script>
+    <script>AOS.init({ duration: 1000, once: true, offset: 50 });</script>
 </body>
 </html>
