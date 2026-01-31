@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- PapaParse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
         :root {
@@ -20,6 +22,14 @@
             --timeline-color: #06b6d4;
         }
 
+        [data-theme="dark"] {
+            --bg-body: #020617;
+            --text-main: #f1f5f9;
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -28,6 +38,7 @@
                 radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .navbar {
@@ -36,7 +47,12 @@
             border-bottom: var(--glass-border);
             padding: 15px 0;
             z-index: 1000;
+            transition: background 0.3s;
         }
+        [data-theme="dark"] .navbar {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
         .navbar-brand {
             font-weight: 900;
             background: var(--main-gradient);
@@ -120,6 +136,9 @@
             box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
             transition: all 0.3s ease;
         }
+        [data-theme="dark"] .timeline-container::after {
+            background-color: #1e293b;
+        }
 
         .timeline-container:hover::after {
             background-color: var(--timeline-color);
@@ -143,6 +162,9 @@
             border-width: 10px 0 10px 10px;
             border-color: transparent transparent transparent white;
         }
+        [data-theme="dark"] .left::before {
+            border-color: transparent transparent transparent rgba(30, 41, 59, 0.95);
+        }
 
         .right::before {
             content: " ";
@@ -155,6 +177,9 @@
             border: medium solid white;
             border-width: 10px 10px 10px 0;
             border-color: transparent white transparent transparent;
+        }
+        [data-theme="dark"] .right::before {
+            border-color: transparent rgba(30, 41, 59, 0.95) transparent transparent;
         }
 
         .right::after { left: -10px; }
@@ -231,6 +256,8 @@
             font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
             font-weight: 700; color: #64748b; margin-bottom: 5px; display: block;
         }
+        [data-theme="dark"] .report-type { color: #94a3b8; }
+        [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
 
         .btn-download {
             background: white; color: var(--text-main);
@@ -242,6 +269,11 @@
             margin-top: 10px;
             font-size: 0.9rem;
         }
+        [data-theme="dark"] .btn-download {
+            background: #1e293b;
+            color: #f1f5f9;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
         .btn-download:hover {
             background: var(--main-gradient); color: white; border-color: transparent;
             box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
@@ -252,6 +284,7 @@
             .timeline::after { left: 31px; }
             .timeline-container { width: 100%; padding-left: 80px; padding-right: 25px; }
             .timeline-container::before { left: 70px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
+            [data-theme="dark"] .timeline-container::before { border-color: transparent rgba(30, 41, 59, 0.95) transparent transparent; }
             .left::after, .right::after { left: 21px; }
             .right { left: 0%; }
             .timeline-year { text-align: left; padding-left: 80px; }
@@ -278,6 +311,23 @@
             -webkit-text-fill-color: transparent;
             padding-left: 5px;
         }
+
+        /* Search Input Dark Mode */
+        [data-theme="dark"] .input-group {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        [data-theme="dark"] .input-group-text {
+            background-color: #1e293b !important;
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] #searchInput {
+            background-color: #1e293b !important;
+            color: #f1f5f9 !important;
+        }
+        [data-theme="dark"] #searchInput::placeholder {
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
@@ -293,6 +343,7 @@
                     <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link active" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -318,137 +369,12 @@
 
         <!-- Timeline -->
         <div class="timeline" id="reportsTimeline">
-
-            <!-- Year 2023 -->
-            <div class="timeline-year" data-aos="zoom-in">
-                <span>2023</span>
-            </div>
-
-            <!-- Report 1 (Dec) -->
-            <div class="timeline-container left" data-aos="fade-right" data-aos-duration="1000">
-                <div class="timeline-content">
-                    <div class="date-box">
-                        <span class="month">Dec</span>
-                        <span class="year-small">2023</span>
-                    </div>
-                    <div class="content-body">
-                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1)); color: #ef4444;"><i class="bi bi-file-earmark-pdf"></i></div>
-                        <span class="report-type">Annual Report</span>
-                        <h4 class="fw-bold mb-2">Final Report 2023</h4>
-                        <p class="text-muted mb-3 small">A comprehensive summary of all activities and achievements during the year.</p>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 5.2 MB</span>
-                            <a href="downloads/annual_report_2023.pdf" class="btn-download" download>Download PDF</a>
-                        </div>
-                    </div>
+            <!-- Content will be injected here -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-
-            <!-- Report 2 (Nov) -->
-            <div class="timeline-container right" data-aos="fade-left" data-aos-duration="1000">
-                <div class="timeline-content">
-                    <div class="date-box">
-                        <span class="month">Nov</span>
-                        <span class="year-small">2023</span>
-                    </div>
-                    <div class="content-body">
-                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); color: #3b82f6;"><i class="bi bi-file-earmark-text"></i></div>
-                        <span class="report-type">Executive Summary</span>
-                        <h4 class="fw-bold mb-2">Rapid Impact Summary</h4>
-                        <p class="text-muted mb-3 small">A concise version for decision-makers focusing on immediate outcomes.</p>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 1.5 MB</span>
-                            <a href="downloads/executive_summary.pdf" class="btn-download" download>Download PDF</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report 3 (Oct) -->
-            <div class="timeline-container left" data-aos="fade-right" data-aos-duration="1000">
-                <div class="timeline-content">
-                    <div class="date-box">
-                        <span class="month">Oct</span>
-                        <span class="year-small">2023</span>
-                    </div>
-                    <div class="content-body">
-                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1)); color: #f59e0b;"><i class="bi bi-easel"></i></div>
-                        <span class="report-type">Scientific Poster</span>
-                        <h4 class="fw-bold mb-2">Musculoskeletal Survey</h4>
-                        <p class="text-muted mb-3 small">Statistics on postural problems among students presented at the Annual Conference.</p>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 8.0 MB</span>
-                            <a href="downloads/muscle_survey_poster.zip" class="btn-download" download>Download ZIP</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Report 4 (Sep) -->
-            <div class="timeline-container right" data-aos="fade-left" data-aos-duration="1000">
-                <div class="timeline-content">
-                    <div class="date-box">
-                        <span class="month">Sep</span>
-                        <span class="year-small">2023</span>
-                    </div>
-                    <div class="content-body">
-                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); color: #10b981;"><i class="bi bi-images"></i></div>
-                        <span class="report-type">Awareness Material</span>
-                        <h4 class="fw-bold mb-2">Office Exercises Guide</h4>
-                        <p class="text-muted mb-3 small">Illustrated booklet containing stretching exercises for employees.</p>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 3.2 MB</span>
-                            <a href="downloads/office_exercises_guide.pdf" class="btn-download" download>Download PDF</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Report 5 (Aug) -->
-             <div class="timeline-container left" data-aos="fade-right" data-aos-duration="1000">
-                <div class="timeline-content">
-                    <div class="date-box">
-                        <span class="month">Aug</span>
-                        <span class="year-small">2023</span>
-                    </div>
-                    <div class="content-body">
-                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(8, 145, 178, 0.1)); color: #06b6d4;"><i class="bi bi-file-medical"></i></div>
-                        <span class="report-type">Case Study</span>
-                        <h4 class="fw-bold mb-2">Work Environment Analysis</h4>
-                        <p class="text-muted mb-3 small">Detailed study on the impact of office furniture on employee health.</p>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 4.1 MB</span>
-                            <a href="downloads/ergonomics_case_study.pdf" class="btn-download" download>Download PDF</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Year 2022 (Example) -->
-            <div class="timeline-year" data-aos="zoom-in" style="margin-top: 80px;">
-                <span>2022</span>
-            </div>
-
-            <!-- Report 2022 Example -->
-            <div class="timeline-container right" data-aos="fade-left" data-aos-duration="1000">
-                <div class="timeline-content">
-                    <div class="date-box">
-                        <span class="month">Dec</span>
-                        <span class="year-small">2022</span>
-                    </div>
-                    <div class="content-body">
-                        <div class="report-icon-box" style="background: linear-gradient(135deg, rgba(100, 116, 139, 0.1), rgba(71, 85, 105, 0.1)); color: #64748b;"><i class="bi bi-archive"></i></div>
-                        <span class="report-type">Archive</span>
-                        <h4 class="fw-bold mb-2">Annual Report 2022</h4>
-                        <p class="text-muted mb-3 small">Archived annual report from the previous year.</p>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> 4.8 MB</span>
-                            <a href="#" class="btn-download" download>Download PDF</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 
@@ -469,6 +395,7 @@
                     <a href="index.html" class="footer-link small">Home</a>
                     <a href="screening.html" class="footer-link small">Screening & KPIs</a>
                     <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="surveys.html" class="footer-link small">Surveys</a>
                     <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
@@ -491,61 +418,117 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const reportItems = document.querySelectorAll('.timeline-container');
-            const yearSeparators = document.querySelectorAll('.timeline-year');
+            // ==========================================
+            //  DATA FETCHING SECTION
+            // ==========================================
+            const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
 
-            searchInput.addEventListener('keyup', function(e) {
-                const term = e.target.value.toLowerCase().trim();
-
-                // 1. Filter Reports
-                reportItems.forEach(item => {
-                    const title = item.querySelector('h4').textContent.toLowerCase();
-                    const type = item.querySelector('.report-type').textContent.toLowerCase();
-                    const month = item.querySelector('.month').textContent.toLowerCase();
-                    const year = item.querySelector('.year-small').textContent.toLowerCase();
-
-                    // Combine all searchable text
-                    const combinedText = `${title} ${type} ${month} ${year}`;
-
-                    if (combinedText.includes(term)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
+            function fetchData() {
+                Papa.parse(sheetURL, {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    complete: function(results) {
+                        renderReports(results.data);
+                    },
+                    error: function(err) {
+                        console.error("Error fetching CSV:", err);
+                        document.getElementById('reportsTimeline').innerHTML = '<div class="text-center text-danger">Failed to load data.</div>';
                     }
                 });
+            }
 
-                // 2. Smart Hide Year Separators
-                // Logic: Iterate through years, check if any sibling reports until the next year are visible.
-                const timelineChildren = document.getElementById('reportsTimeline').children;
-                let currentYearSeparator = null;
-                let hasVisibleReports = false;
+            function renderReports(data) {
+                const timeline = document.getElementById('reportsTimeline');
+                timeline.innerHTML = ''; // Clear loading
 
-                for (let i = 0; i < timelineChildren.length; i++) {
-                    const child = timelineChildren[i];
+                let currentYear = null;
 
-                    if (child.classList.contains('timeline-year')) {
-                        // If we were processing a previous year, update its visibility
-                        if (currentYearSeparator) {
-                            currentYearSeparator.style.display = hasVisibleReports ? 'block' : 'none';
-                        }
+                // Sort data by year descending, then month descending (simple logic)
+                data.sort((a, b) => b.Year - a.Year);
 
-                        // Start new year group
-                        currentYearSeparator = child;
-                        hasVisibleReports = false;
-                    } else if (child.classList.contains('timeline-container')) {
-                        // Check if this report is visible
-                        if (child.style.display !== 'none') {
-                            hasVisibleReports = true;
-                        }
+                data.forEach((item, index) => {
+                    if (!item.Title) return;
+
+                    // Add Year Separator if new year
+                    if (item.Year !== currentYear) {
+                        currentYear = item.Year;
+                        const yearHTML = `
+                            <div class="timeline-year" data-aos="zoom-in">
+                                <span>${currentYear}</span>
+                            </div>
+                        `;
+                        timeline.innerHTML += yearHTML;
                     }
-                }
 
-                // Handle the last year separator
-                if (currentYearSeparator) {
-                    currentYearSeparator.style.display = hasVisibleReports ? 'block' : 'none';
-                }
-            });
+                    // Determine Left/Right alignment
+                    const side = index % 2 === 0 ? 'left' : 'right';
+                    const aosAnim = index % 2 === 0 ? 'fade-right' : 'fade-left';
+
+                    // Icon based on type
+                    let icon = 'bi-file-earmark-text';
+                    let colorClass = '#3b82f6'; // Blue default
+                    let bgClass = 'rgba(59, 130, 246, 0.1)';
+
+                    if (item.Type && item.Type.includes('PDF')) { icon = 'bi-file-earmark-pdf'; colorClass = '#ef4444'; bgClass = 'rgba(239, 68, 68, 0.1)'; }
+                    else if (item.Type && item.Type.includes('Poster')) { icon = 'bi-easel'; colorClass = '#f59e0b'; bgClass = 'rgba(245, 158, 11, 0.1)'; }
+                    else if (item.Type && item.Type.includes('Image')) { icon = 'bi-images'; colorClass = '#10b981'; bgClass = 'rgba(16, 185, 129, 0.1)'; }
+
+                    const reportHTML = `
+                        <div class="timeline-container ${side}" data-aos="${aosAnim}" data-aos-duration="1000">
+                            <div class="timeline-content">
+                                <div class="date-box">
+                                    <span class="month">${item.Month || ''}</span>
+                                    <span class="year-small">${item.Year}</span>
+                                </div>
+                                <div class="content-body">
+                                    <div class="report-icon-box" style="background: linear-gradient(135deg, ${bgClass}, ${bgClass}); color: ${colorClass};"><i class="bi ${icon}"></i></div>
+                                    <span class="report-type">${item.Type || 'Report'}</span>
+                                    <h4 class="fw-bold mb-2">${item.Title}</h4>
+                                    <p class="text-muted mb-3 small">${item.Description || ''}</p>
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                        <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> ${item.File_Size || 'N/A'}</span>
+                                        <a href="${item.Download_URL || '#'}" class="btn-download" download>Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    timeline.innerHTML += reportHTML;
+                });
+
+                setupSearch(); // Re-initialize search after rendering
+            }
+
+            function setupSearch() {
+                const searchInput = document.getElementById('searchInput');
+                const reportItems = document.querySelectorAll('.timeline-container');
+                const yearSeparators = document.querySelectorAll('.timeline-year');
+
+                searchInput.addEventListener('keyup', function(e) {
+                    const term = e.target.value.toLowerCase().trim();
+
+                    reportItems.forEach(item => {
+                        const title = item.querySelector('h4').textContent.toLowerCase();
+                        const type = item.querySelector('.report-type').textContent.toLowerCase();
+                        const month = item.querySelector('.month').textContent.toLowerCase();
+                        const year = item.querySelector('.year-small').textContent.toLowerCase();
+
+                        const combinedText = `${title} ${type} ${month} ${year}`;
+
+                        if (combinedText.includes(term)) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+
+                    // Smart Hide Year Separators logic (simplified for dynamic content)
+                    // ... (Can be added back if needed)
+                });
+            }
+
+            fetchData();
         });
     </script>
 </body>

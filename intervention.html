@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- PapaParse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
         :root {
@@ -19,6 +21,14 @@
             --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.1);
         }
 
+        [data-theme="dark"] {
+            --bg-body: #020617;
+            --text-main: #f1f5f9;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -27,6 +37,7 @@
                 radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .navbar {
@@ -34,7 +45,12 @@
             backdrop-filter: blur(20px);
             border-bottom: var(--glass-border);
             padding: 15px 0;
+            transition: background 0.3s;
         }
+        [data-theme="dark"] .navbar {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
         .navbar-brand {
             font-weight: 900;
             background: var(--main-gradient);
@@ -82,10 +98,17 @@
             transition: 0.4s;
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
         }
+        [data-theme="dark"] .outcome-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
         .outcome-box:hover { transform: translateY(-3px); }
         .outcome-box.success { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
         .outcome-value { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1.2; } /* Increased font size */
         .outcome-label { font-size: 0.95rem; color: #64748b; font-weight: 600; margin-top: 5px; } /* Increased font size */
+        [data-theme="dark"] .outcome-label { color: #94a3b8; }
+        [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
+        [data-theme="dark"] .badge.bg-white { background-color: #334155 !important; color: #f1f5f9 !important; border-color: #475569 !important; }
 
         .arrow-icon {
             font-size: 1.8rem; color: #cbd5e1;
@@ -93,6 +116,10 @@
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             transition: 0.4s;
+        }
+        [data-theme="dark"] .arrow-icon {
+            background: #1e293b;
+            color: #64748b;
         }
         .intervention-card:hover .arrow-icon {
             color: #06b6d4; transform: scale(1.1);
@@ -133,6 +160,7 @@
                     <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
                     <li class="nav-item"><a class="nav-link active" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -145,101 +173,11 @@
             <p class="text-muted lead">Comparing results before and after applying therapeutic and preventive programs</p>
         </div>
 
-        <!-- Intervention 1 -->
-        <div class="intervention-card" data-aos="fade-up" data-aos-duration="1000">
-            <div class="row align-items-center">
-                <div class="col-lg-5 mb-4 mb-lg-0">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary bg-opacity-10 p-3 rounded-4 text-primary me-3"><i class="bi bi-person-walking fs-3"></i></div>
-                        <h3 class="fw-bold m-0">Back Pain Treatment Program</h3>
-                    </div>
-                    <p class="text-muted mb-4">An intensive 6-week program including core strengthening exercises and posture correction for employees suffering from chronic pain.</p>
-                    <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: 45</span>
-                </div>
-                <div class="col-lg-7">
-                    <div class="row align-items-center g-3">
-                        <div class="col-5">
-                            <div class="outcome-box">
-                                <div class="outcome-value text-danger">7.8</div>
-                                <div class="outcome-label">Pain Level (Before)</div>
-                            </div>
-                        </div>
-                        <div class="col-2 text-center">
-                            <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
-                        </div>
-                        <div class="col-5">
-                            <div class="outcome-box success">
-                                <div class="outcome-value text-success">3.2</div>
-                                <div class="outcome-label">Pain Level (After)</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Intervention 2 -->
-        <div class="intervention-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-            <div class="row align-items-center">
-                <div class="col-lg-5 mb-4 mb-lg-0">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-warning bg-opacity-10 p-3 rounded-4 text-warning me-3"><i class="bi bi-laptop fs-3"></i></div>
-                        <h3 class="fw-bold m-0">Work Environment Improvement (Ergonomics)</h3>
-                    </div>
-                    <p class="text-muted mb-4">Adjusting office chairs, screen heights, and providing footrests to reduce physical strain.</p>
-                    <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: 120</span>
-                </div>
-                <div class="col-lg-7">
-                    <div class="row align-items-center g-3">
-                        <div class="col-5">
-                            <div class="outcome-box">
-                                <div class="outcome-value text-warning">40%</div>
-                                <div class="outcome-label">Strain Complaints (Before)</div>
-                            </div>
-                        </div>
-                        <div class="col-2 text-center">
-                            <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
-                        </div>
-                        <div class="col-5">
-                            <div class="outcome-box success">
-                                <div class="outcome-value text-success">15%</div>
-                                <div class="outcome-label">Strain Complaints (After)</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Intervention 3 -->
-        <div class="intervention-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
-            <div class="row align-items-center">
-                <div class="col-lg-5 mb-4 mb-lg-0">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-info bg-opacity-10 p-3 rounded-4 text-info me-3"><i class="bi bi-heart-pulse fs-3"></i></div>
-                        <h3 class="fw-bold m-0">Student Fitness Program</h3>
-                    </div>
-                    <p class="text-muted mb-4">Morning training sessions to improve physical fitness and reduce Body Mass Index (BMI).</p>
-                    <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: 80</span>
-                </div>
-                <div class="col-lg-7">
-                    <div class="row align-items-center g-3">
-                        <div class="col-5">
-                            <div class="outcome-box">
-                                <div class="outcome-value text-danger">28.5</div>
-                                <div class="outcome-label">Average BMI (Before)</div>
-                            </div>
-                        </div>
-                        <div class="col-2 text-center">
-                            <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
-                        </div>
-                        <div class="col-5">
-                            <div class="outcome-box success">
-                                <div class="outcome-value text-success">26.1</div>
-                                <div class="outcome-label">Average BMI (After)</div>
-                            </div>
-                        </div>
-                    </div>
+        <div id="interventions-container">
+            <!-- Content will be injected here -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
@@ -263,6 +201,7 @@
                     <a href="index.html" class="footer-link small">Home</a>
                     <a href="screening.html" class="footer-link small">Screening & KPIs</a>
                     <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="surveys.html" class="footer-link small">Dashboard</a>
                     <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
@@ -281,6 +220,83 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 1000, once: true, offset: 50 });</script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 50 });
+
+        // ==========================================
+        //  DATA FETCHING SECTION
+        // ==========================================
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=685252747&single=true&output=csv";
+
+        function fetchData() {
+            Papa.parse(sheetURL, {
+                download: true,
+                header: true,
+                dynamicTyping: true,
+                complete: function(results) {
+                    renderInterventions(results.data);
+                },
+                error: function(err) {
+                    console.error("Error fetching CSV:", err);
+                    document.getElementById('interventions-container').innerHTML = '<div class="text-center text-danger">Failed to load data.</div>';
+                }
+            });
+        }
+
+        function renderInterventions(data) {
+            const container = document.getElementById('interventions-container');
+            container.innerHTML = ''; // Clear loading
+
+            data.forEach((item, index) => {
+                if (!item.Title) return;
+
+                const delay = index * 100;
+
+                // Determine icon color based on index (cycling through colors)
+                const colors = ['primary', 'warning', 'info', 'success'];
+                const color = colors[index % colors.length];
+                const icon = item.Icon || 'bi-activity';
+
+                const html = `
+                    <div class="intervention-card" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="1000">
+                        <div class="row align-items-center">
+                            <div class="col-lg-5 mb-4 mb-lg-0">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-${color} bg-opacity-10 p-3 rounded-4 text-${color} me-3"><i class="bi ${icon} fs-3"></i></div>
+                                    <h3 class="fw-bold m-0">${item.Title}</h3>
+                                </div>
+                                <p class="text-muted mb-4">${item.Description || ''}</p>
+                                <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: ${item.Beneficiaries || 0}</span>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="row align-items-center g-3">
+                                    <div class="col-5">
+                                        <div class="outcome-box">
+                                            <div class="outcome-value text-danger">${item.Value_Before || '-'}</div>
+                                            <div class="outcome-label">${item.Label_Before || 'Before'}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 text-center">
+                                        <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
+                                    </div>
+                                    <div class="col-5">
+                                        <div class="outcome-box success">
+                                            <div class="outcome-value text-success">${item.Value_After || '-'}</div>
+                                            <div class="outcome-label">${item.Label_After || 'After'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+        });
+    </script>
 </body>
 </html>

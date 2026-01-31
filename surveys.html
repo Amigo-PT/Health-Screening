@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Screening Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- SheetJS Library for Excel Export -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <!-- PapaParse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <style>
+        :root {
+            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+
+            /* Dark Mode Colors (Default) */
+            --bg-body: #020617;
+            --text-main: #f1f5f9;
+            --text-muted: #cbd5e1;
+            --card-bg: #1e293b;
+            --radius: 12px;
+            --table-head-text: #60a5fa;
+            --table-border: #334155;
+            --table-hover: #334155;
+            --table-th-bg: #0f172a;
+
+            /* Status Colors */
+            --status-idle: #94a3b8;
+            --status-wip: #f59e0b;    /* Yellow */
+            --status-track: #10b981;  /* Green */
+            --status-done: #2563eb;   /* Blue */
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-body);
+            padding-bottom: 60px; /* Space for bottom bar */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--table-border);
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            transition: background 0.3s;
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link { font-weight: 700; color: var(--text-main) !important; margin-right: 15px; }
+        .nav-link.active { color: #60a5fa !important; }
+
+        /* Header Section */
+        .dashboard-header {
+            background: var(--card-bg);
+            padding: 30px 0;
+            border-bottom: 1px solid var(--table-border);
+            margin-top: 70px;
+            transition: background 0.3s;
+        }
+
+        .page-title { font-weight: 800; font-size: 1.8rem; margin-bottom: 5px; color: var(--text-main); }
+
+        /* Legend */
+        .legend-item {
+            display: inline-flex; align-items: center; margin-right: 15px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+        }
+
+        /* Diamond Shape for Legend */
+        .legend-dot {
+            width: 10px; height: 10px;
+            border-radius: 2px;
+            transform: rotate(45deg);
+            margin-right: 8px;
+            display: inline-block;
+            margin-left: 4px; /* Adjust spacing due to rotation */
+        }
+
+        /* Tables Section */
+        .section-title {
+            font-weight: 700; font-size: 1.2rem; margin-bottom: 15px; padding-left: 10px;
+            border-left: 4px solid #2563eb; color: var(--text-main);
+        }
+
+        .custom-table-card {
+            background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+            border: 1px solid var(--table-border); box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            margin-bottom: 30px;
+            transition: background 0.3s;
+        }
+
+        .table { margin-bottom: 0; --bs-table-bg: transparent; }
+        .table th {
+            background: var(--table-th-bg);
+            color: var(--text-muted);
+            font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+            padding: 15px; border-bottom: 1px solid var(--table-border);
+        }
+
+        /* Specific color for first two headers */
+        .table th.highlight-header {
+            color: var(--table-head-text) !important;
+        }
+
+        .table td {
+            padding: 15px; vertical-align: middle; color: var(--text-main); font-weight: 600; font-size: 0.95rem;
+            border-bottom: 1px solid var(--table-border);
+        }
+
+        .table tr:last-child td { border-bottom: none; }
+        .table tr:hover { background-color: var(--table-hover); }
+
+        /* Status Dots in Table (Diamond Shape) */
+        .status-dot {
+            width: 12px; height: 12px;
+            border-radius: 2px;
+            display: inline-block;
+            transform: rotate(45deg);
+            box-shadow: 0 0 0 2px #1e293b; /* Dark mode ring */
+            margin: 4px; /* Spacing for rotation */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .status-dot:hover {
+            transform: rotate(45deg) scale(1.3);
+        }
+
+        /* Specific Colors & Outer Rings */
+        .dot-risk { background: var(--status-risk); outline: 2px solid rgba(239, 68, 68, 0.3); outline-offset: 2px; }
+        .dot-idle { background: var(--status-idle); }
+        .dot-wip { background: var(--status-wip); outline: 2px solid rgba(245, 158, 11, 0.3); outline-offset: 2px; }
+        .dot-track { background: var(--status-track); outline: 2px solid rgba(16, 185, 129, 0.3); outline-offset: 2px; }
+        .dot-done { background: var(--status-done); outline: 2px solid rgba(37, 99, 235, 0.3); outline-offset: 2px; }
+
+        /* Bottom Status Bar */
+        .bottom-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #0f172a;
+            border-top: 1px solid #334155;
+            color: white;
+            padding: 10px 0; font-size: 0.9rem;
+            z-index: 1050; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .live-indicator {
+            width: 8px; height: 8px; background: #10b981; border-radius: 50%; display: inline-block; margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Modal Styling */
+        .modal-dialog {
+            max-width: 700px;
+        }
+
+        .modal-content {
+            border-radius: 24px;
+            border: 1px solid var(--table-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background: var(--card-bg);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--table-border);
+            padding: 25px 30px;
+            background: linear-gradient(to right, rgba(37, 99, 235, 0.05), transparent);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            font-weight: 600;
+            margin-bottom: 0;
+        }
+
+        .status-badge-modal {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .description-box {
+            background-color: #0f172a;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--table-border);
+            margin-top: 25px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--table-border);
+            background-color: var(--bg-body);
+        }
+
+        .text-muted {
+            color: #cbd5e1 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header & Controls -->
+    <section class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-6">
+                    <h1 class="page-title">Data and Delivery for Impact</h1>
+                    <p class="text-muted mb-0">Healthier Population Milestones</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="d-flex gap-2 justify-content-lg-end">
+                        <button class="btn btn-dark rounded-pill px-3" onclick="exportToExcel()">
+                            <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export to Excel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="mt-4 pt-3 border-top d-flex flex-wrap gap-3">
+                <span class="legend-item"><span class="legend-dot" style="background: var(--status-idle);"></span>Not Started</span>
+                <span class="legend-item"><span class="legend-dot" style="background: var(--status-wip);"></span>In Progress</span>
+                <span class="legend-item"><span class="legend-dot" style="background: var(--status-track);"></span>On Track</span>
+                <span class="legend-item"><span class="legend-dot" style="background: var(--status-done);"></span>Completed</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="container py-5">
+
+        <!-- Section 1: Preventive Basics -->
+        <div class="mb-5" data-aos="fade-up" data-aos-delay="100">
+            <h4 class="section-title">HU Screening</h4>
+            <div class="custom-table-card">
+                <div class="table-responsive">
+                    <table class="table" id="screeningTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;" class="text-center highlight-header">Program Name</th>
+                                <th style="width: 25%;" class="text-center highlight-header">SDG / Health Indicator</th>
+                                <th class="text-center">Acceleration</th>
+                                <th class="text-center">Population</th>
+                                <th class="text-center">Analysis</th>
+                                <th class="text-center">Delivery Plans </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Data will be injected here -->
+                            <tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Status Bar -->
+    <div class="bottom-bar">
+        <div class="container d-flex justify-content-center">
+            <span class="fs-6">Active Programs: <strong id="programCount">0</strong></span>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="modalStageTitle">Stage Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Header with Icon -->
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                             style="width: 50px; height: 50px; background: var(--main-gradient); color: white; font-size: 1.5rem; flex-shrink: 0;">
+                            <i class="bi bi-clipboard-data"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1" id="modalProgram" style="font-size: 1.1rem;">Loading...</h5>
+                            <small class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.75rem;">Program Overview</small>
+                        </div>
+                    </div>
+
+                    <!-- Grid for Status and Date -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-center align-items-center text-center" style="background-color: var(--bg-body);">
+                                <small class="text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 1px;">Current Status</small>
+                                <span id="modalStatusBadge" class="status-badge-modal">Completed</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 rounded-4 h-100 d-flex flex-column justify-content-center align-items-center text-center" style="background-color: var(--bg-body);">
+                                <small class="text-muted text-uppercase fw-bold mb-2" style="font-size: 0.7rem; letter-spacing: 1px;">Timeline</small>
+                                <div class="d-flex align-items-center" style="color: var(--text-main);">
+                                    <i class="bi bi-calendar-week me-2 text-primary"></i>
+                                    <span class="fw-bold" id="modalDate">Jan 2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="p-4 rounded-4" style="background-color: var(--bg-body);">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-card-text me-2 text-primary fs-5"></i>
+                            <span class="fw-bold text-uppercase" style="font-size: 0.8rem; letter-spacing: 1px;">Description & Achievements</span>
+                        </div>
+                        <p class="mb-0 text-muted" id="modalDesc" style="line-height: 1.8; font-size: 0.95rem;">
+                            Loading details...
+                        </p>
+                    </div>
+                </div>
+                <!-- Footer removed -->
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // ==========================================
+        //  DATA FETCHING SECTION
+        // ==========================================
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=86792494&single=true&output=csv";
+
+        function fetchData() {
+            Papa.parse(sheetURL, {
+                download: true,
+                header: true,
+                dynamicTyping: true,
+                complete: function(results) {
+                    renderTable(results.data);
+                },
+                error: function(err) {
+                    console.error("Error fetching CSV:", err);
+                    document.getElementById('table-body').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data.</td></tr>';
+                }
+            });
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = ''; // Clear loading
+
+            data.forEach(row => {
+                if (!row.Program_Name) return;
+
+                const tr = document.createElement('tr');
+
+                // Helper to get dot class
+                const getDotClass = (status) => {
+                    if (!status) return 'dot-idle';
+                    const s = status.toLowerCase();
+                    if (s.includes('complete')) return 'dot-done';
+                    if (s.includes('track')) return 'dot-track';
+                    if (s.includes('progress')) return 'dot-wip';
+                    return 'dot-idle';
+                };
+
+                tr.innerHTML = `
+                    <td class="fw-bold text-center">${row.Program_Name}</td>
+                    <td class="text-muted small fw-bold text-center">${row.Indicator || ''}</td>
+
+                    <!-- Acceleration -->
+                    <td class="text-center">
+                        <span class="status-dot ${getDotClass(row.Accel_Status)}"
+                              data-bs-toggle="modal" data-bs-target="#detailModal"
+                              data-program="${row.Program_Name}" data-stage="Acceleration Phase"
+                              data-status="${row.Accel_Status || 'Not Started'}"
+                              data-date="${row.Accel_Date || 'TBD'}"
+                              data-desc="${row.Accel_Desc || 'No details available.'}">
+                        </span>
+                    </td>
+
+                    <!-- Population -->
+                    <td class="text-center">
+                        <span class="status-dot ${getDotClass(row.Pop_Status)}"
+                              data-bs-toggle="modal" data-bs-target="#detailModal"
+                              data-program="${row.Program_Name}" data-stage="Population Phase"
+                              data-status="${row.Pop_Status || 'Not Started'}"
+                              data-date="${row.Pop_Date || 'TBD'}"
+                              data-desc="${row.Pop_Desc || 'No details available.'}">
+                        </span>
+                    </td>
+
+                    <!-- Analysis -->
+                    <td class="text-center">
+                        <span class="status-dot ${getDotClass(row.Analysis_Status)}"
+                              data-bs-toggle="modal" data-bs-target="#detailModal"
+                              data-program="${row.Program_Name}" data-stage="Data Analysis"
+                              data-status="${row.Analysis_Status || 'Not Started'}"
+                              data-date="${row.Analysis_Date || 'TBD'}"
+                              data-desc="${row.Analysis_Desc || 'No details available.'}">
+                        </span>
+                    </td>
+
+                    <!-- Delivery -->
+                    <td class="text-center">
+                        <span class="status-dot ${getDotClass(row.Delivery_Status)}"
+                              data-bs-toggle="modal" data-bs-target="#detailModal"
+                              data-program="${row.Program_Name}" data-stage="Delivery Plans"
+                              data-status="${row.Delivery_Status || 'Not Started'}"
+                              data-date="${row.Delivery_Date || 'TBD'}"
+                              data-desc="${row.Delivery_Desc || 'No details available.'}">
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            updateProgramCount();
+        }
+
+        // Function to update the Active Programs count dynamically
+        function updateProgramCount() {
+            const rows = document.querySelectorAll('.custom-table-card table tbody tr');
+            const count = rows.length;
+            const counterElement = document.getElementById('programCount');
+            if(counterElement) {
+                counterElement.innerText = count;
+            }
+        }
+
+        // Modal Logic
+        const detailModal = document.getElementById('detailModal');
+        detailModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+
+            // Extract info from data-* attributes
+            const program = button.getAttribute('data-program');
+            const stage = button.getAttribute('data-stage');
+            const status = button.getAttribute('data-status');
+            const date = button.getAttribute('data-date');
+            const desc = button.getAttribute('data-desc');
+
+            // Update the modal's content
+            const modalTitle = detailModal.querySelector('#modalStageTitle');
+            const modalProgram = detailModal.querySelector('#modalProgram');
+            const modalStatus = detailModal.querySelector('#modalStatusBadge');
+            const modalDate = detailModal.querySelector('#modalDate');
+            const modalDesc = detailModal.querySelector('#modalDesc');
+
+            modalTitle.textContent = stage;
+            modalProgram.textContent = program;
+            modalDate.textContent = date;
+            modalDesc.textContent = desc;
+            modalStatus.textContent = status;
+
+            // Update Badge Color based on status
+            modalStatus.className = 'status-badge-modal';
+            if (status.includes('Completed')) {
+                modalStatus.classList.add('bg-primary', 'bg-opacity-10', 'text-primary');
+            } else if (status.includes('On Track')) {
+                modalStatus.classList.add('bg-success', 'bg-opacity-10', 'text-success');
+            } else if (status.includes('In Progress')) {
+                modalStatus.classList.add('bg-warning', 'bg-opacity-10', 'text-warning');
+            } else {
+                modalStatus.classList.add('bg-secondary', 'bg-opacity-10', 'text-secondary');
+            }
+        });
+
+        // Export to Excel Logic
+        function exportToExcel() {
+            const data = [];
+            data.push(["Program Name", "SDG / Health Indicator", "Acceleration", "Population", "Analysis", "Delivery Plans"]);
+
+            const rows = document.querySelectorAll(".custom-table-card table tbody tr");
+            rows.forEach(row => {
+                const cols = row.querySelectorAll("td");
+                const rowData = [];
+
+                rowData.push(cols[0].innerText.trim()); // Program Name
+                rowData.push(cols[1].innerText.trim()); // Indicator
+
+                for(let i=2; i<6; i++) {
+                    const dot = cols[i].querySelector(".status-dot");
+                    const status = dot ? dot.getAttribute("data-status") : "Not Started";
+                    rowData.push(status);
+                }
+                data.push(rowData);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Screening Data");
+
+            XLSX.writeFile(wb, "Health_Screening_Dashboard.xlsx");
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchData();
+        });
+    </script>
+</body>
+</html>

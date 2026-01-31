@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- PapaParse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
         :root {
@@ -19,6 +21,14 @@
             --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.1);
         }
 
+        [data-theme="dark"] {
+            --bg-body: #020617;
+            --text-main: #f1f5f9;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -27,6 +37,7 @@
                 radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .navbar {
@@ -34,7 +45,12 @@
             backdrop-filter: blur(20px);
             border-bottom: var(--glass-border);
             padding: 15px 0;
+            transition: background 0.3s;
         }
+        [data-theme="dark"] .navbar {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
         .navbar-brand {
             font-weight: 900;
             background: var(--main-gradient);
@@ -98,6 +114,10 @@
             font-weight: 700; color: #0ea5e9; font-size: 0.9rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+        [data-theme="dark"] .activity-date {
+            background: rgba(15, 23, 42, 0.9);
+            color: #38bdf8;
+        }
 
         .badge-category {
             background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(16, 185, 129, 0.1));
@@ -106,6 +126,7 @@
             display: inline-block; margin-bottom: 15px;
             border: 1px solid rgba(6, 182, 212, 0.2);
         }
+        [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
 
         .btn-link-custom {
             background: var(--main-gradient);
@@ -151,6 +172,7 @@
                     <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link active" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -163,68 +185,11 @@
             <p class="text-muted lead">Documenting all initiatives, workshops, and field campaigns</p>
         </div>
 
-        <div class="row g-4">
-            <!-- Activity 1 -->
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100" data-aos-duration="1000">
-                <div class="activity-card">
-                    <div class="activity-img-wrapper">
-                        <img src="https://img.freepik.com/free-photo/doctor-measuring-blood-pressure-patient_23-2148752345.jpg" class="activity-img" alt="Screening">
-                        <div class="activity-date"><i class="bi bi-calendar-event me-2"></i>October 15, 2023</div>
-                    </div>
-                    <div class="p-4">
-                        <span class="badge-category">Field Campaign</span>
-                        <h5 class="fw-bold mb-3">Comprehensive Health Screening Week</h5>
-                        <p class="text-muted small mb-4">Conducting blood pressure, sugar, and body measurements for over 300 students and staff in the main university square.</p>
-                        <a href="#" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Activity 2 -->
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000">
-                <div class="activity-card">
-                    <div class="activity-img-wrapper">
-                        <img src="https://img.freepik.com/free-photo/physiotherapist-doing-healing-treatment-patient_23-2149099940.jpg" class="activity-img" alt="Workshop">
-                        <div class="activity-date"><i class="bi bi-calendar-event me-2"></i>November 02, 2023</div>
-                    </div>
-                    <div class="p-4">
-                        <span class="badge-category" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(234, 88, 12, 0.1)); color: #f59e0b;">Workshop</span>
-                        <h5 class="fw-bold mb-3">"Your Posture, Your Health" Workshop</h5>
-                        <p class="text-muted small mb-4">An interactive workshop teaching employees office stretching exercises and correcting sitting postures to prevent back pain.</p>
-                        <a href="#" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Activity 3 -->
-            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300" data-aos-duration="1000">
-                <div class="activity-card">
-                    <div class="activity-img-wrapper">
-                        <img src="https://img.freepik.com/free-vector/seminar-concept-illustration_114360-7480.jpg" class="activity-img" alt="Seminar">
-                        <div class="activity-date"><i class="bi bi-calendar-event me-2"></i>November 20, 2023</div>
-                    </div>
-                    <div class="p-4">
-                        <span class="badge-category" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)); color: #3b82f6;">Scientific Seminar</span>
-                        <h5 class="fw-bold mb-3">Nutrition and Immunity Seminar</h5>
-                        <p class="text-muted small mb-4">An awareness lecture on the importance of proper nutrition in boosting immunity and preventing chronic diseases.</p>
-                        <a href="#" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Activity 4 -->
-             <div class="col-md-4" data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000">
-                <div class="activity-card">
-                    <div class="activity-img-wrapper">
-                        <img src="https://img.freepik.com/free-photo/group-people-working-out-business-environment_23-2149346623.jpg" class="activity-img" alt="Yoga">
-                        <div class="activity-date"><i class="bi bi-calendar-event me-2"></i>December 05, 2023</div>
-                    </div>
-                    <div class="p-4">
-                        <span class="badge-category" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); color: #10b981;">Sports Activity</span>
-                        <h5 class="fw-bold mb-3">Open Yoga Day</h5>
-                        <p class="text-muted small mb-4">Outdoor yoga and breathing sessions to reduce stress and improve mental health for students.</p>
-                        <a href="#" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
-                    </div>
+        <div class="row g-4" id="activities-container">
+            <!-- Activities will be injected here -->
+            <div class="col-12 text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
@@ -247,6 +212,7 @@
                     <a href="index.html" class="footer-link small">Home</a>
                     <a href="screening.html" class="footer-link small">Screening & KPIs</a>
                     <a href="activities.html" class="footer-link small">Activities</a>
+                    <a href="surveys.html" class="footer-link small">Dashboard</a>
                     <a href="reports.html" class="footer-link small">Reports</a>
                 </div>
                 <div class="col-lg-4">
@@ -265,6 +231,65 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 1000, once: true, offset: 50 });</script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 50 });
+
+        // ==========================================
+        //  DATA FETCHING SECTION
+        // ==========================================
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=375204157&single=true&output=csv";
+
+        function fetchData() {
+            Papa.parse(sheetURL, {
+                download: true,
+                header: true,
+                dynamicTyping: true,
+                complete: function(results) {
+                    renderActivities(results.data);
+                },
+                error: function(err) {
+                    console.error("Error fetching CSV:", err);
+                    document.getElementById('activities-container').innerHTML = '<div class="col-12 text-center text-danger">Failed to load data.</div>';
+                }
+            });
+        }
+
+        function renderActivities(data) {
+            const container = document.getElementById('activities-container');
+            container.innerHTML = ''; // Clear loading spinner
+
+            data.forEach((item, index) => {
+                if (!item.Title) return; // Skip empty rows
+
+                const delay = (index + 1) * 100; // Staggered animation
+
+                // Fallback image if none provided
+                const imgUrl = item.Image_URL || 'https://via.placeholder.com/400x300?text=No+Image';
+                const linkUrl = item.Link_URL || '#';
+
+                const cardHTML = `
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="1000">
+                        <div class="activity-card">
+                            <div class="activity-img-wrapper">
+                                <img src="${imgUrl}" class="activity-img" alt="${item.Title}">
+                                <div class="activity-date"><i class="bi bi-calendar-event me-2"></i>${item.Date || 'TBD'}</div>
+                            </div>
+                            <div class="p-4">
+                                <span class="badge-category">${item.Category || 'General'}</span>
+                                <h5 class="fw-bold mb-3">${item.Title}</h5>
+                                <p class="text-muted small mb-4">${item.Description || ''}</p>
+                                <a href="${linkUrl}" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+        });
+    </script>
 </body>
 </html>
