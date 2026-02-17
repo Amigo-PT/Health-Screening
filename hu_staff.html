@@ -30,6 +30,24 @@
             --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
         }
 
+        /* Motion UI Keyframes */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -39,6 +57,7 @@
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
             transition: background-color 0.3s, color 0.3s;
+            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
         }
 
         .navbar {
@@ -63,6 +82,20 @@
             color: var(--text-main) !important;
             margin-right: 20px;
             transition: 0.3s;
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--main-gradient);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
@@ -78,12 +111,15 @@
             border-radius: var(--radius);
             padding: 30px 20px;
             box-shadow: var(--shadow);
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Elastic transition */
             position: relative;
             overflow: hidden;
             height: 100%;
         }
-        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(6, 182, 212, 0.2); }
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.25);
+        }
         .stat-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
             background: var(--main-gradient);
@@ -100,10 +136,13 @@
             padding: 30px 20px;
             box-shadow: var(--shadow);
             text-align: center;
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             height: 100%;
         }
-        .category-card:hover { transform: translateY(-8px); border-color: #06b6d4; }
+        .category-card:hover {
+            transform: translateY(-10px);
+            border-color: #06b6d4;
+        }
         .category-icon {
             width: 70px; height: 70px; border-radius: 20px;
             display: flex; align-items: center; justify-content: center;
@@ -111,11 +150,13 @@
             background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
             color: #0891b2;
             transition: 0.4s;
+            animation: float 6s ease-in-out infinite; /* Floating Animation */
         }
         .category-card:hover .category-icon {
             background: var(--main-gradient);
             color: white;
             transform: rotate(10deg) scale(1.1);
+            animation: none; /* Stop floating on hover for stability */
         }
         [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
         [data-theme="dark"] .badge.bg-light { background-color: #334155 !important; color: #f1f5f9 !important; border-color: #475569 !important; }
@@ -172,6 +213,9 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3);
         }
+        .month-btn.active {
+            animation: pulse-glow 2s infinite;
+        }
         #monthContainer::-webkit-scrollbar {
             height: 6px;
         }
@@ -194,10 +238,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -278,7 +322,7 @@
             <!-- Students -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="100" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-mortarboard"></i></div>
+                    <div class="category-icon" style="animation-delay: 0s;"><i class="bi bi-mortarboard"></i></div>
                     <h3 class="fw-bold" id="num-students">0</h3>
                     <p class="text-muted mb-3">Students</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Neck Pain</span>
@@ -287,7 +331,7 @@
             <!-- Faculty of Physical Therapy -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="200" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-heart-pulse"></i></div>
+                    <div class="category-icon" style="animation-delay: 0.2s;"><i class="bi bi-heart-pulse"></i></div>
                     <h3 class="fw-bold" id="num-pt">0</h3>
                     <p class="text-muted mb-3">Faculty of Physical Therapy</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Back Pain</span>
@@ -296,7 +340,7 @@
             <!-- Faculty of Pharmacy -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="300" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-capsule"></i></div>
+                    <div class="category-icon" style="animation-delay: 0.4s;"><i class="bi bi-capsule"></i></div>
                     <h3 class="fw-bold" id="num-pharmacy">0</h3>
                     <p class="text-muted mb-3">Faculty of Pharmacy</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Headache</span>
@@ -305,7 +349,7 @@
             <!-- Faculty of Engineering -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="400" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-gear"></i></div>
+                    <div class="category-icon" style="animation-delay: 0.6s;"><i class="bi bi-gear"></i></div>
                     <h3 class="fw-bold" id="num-eng">0</h3>
                     <p class="text-muted mb-3">Faculty of Engineering</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Eye Strain</span>
@@ -314,7 +358,7 @@
             <!-- Faculty of Business -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="500" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-briefcase"></i></div>
+                    <div class="category-icon" style="animation-delay: 0.8s;"><i class="bi bi-briefcase"></i></div>
                     <h3 class="fw-bold" id="num-business">0</h3>
                     <p class="text-muted mb-3">Faculty of Business</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Stress</span>
@@ -323,7 +367,7 @@
             <!-- Faculty of Agriculture -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="600" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-flower1"></i></div>
+                    <div class="category-icon" style="animation-delay: 1s;"><i class="bi bi-flower1"></i></div>
                     <h3 class="fw-bold" id="num-agri">0</h3>
                     <p class="text-muted mb-3">Faculty of Agriculture</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Sun Exposure</span>
@@ -332,7 +376,7 @@
             <!-- University Workers -->
             <div class="col-md-3" data-aos="zoom-in-up" data-aos-delay="700" data-aos-duration="1000">
                 <div class="category-card">
-                    <div class="category-icon"><i class="bi bi-person-gear"></i></div>
+                    <div class="category-icon" style="animation-delay: 1.2s;"><i class="bi bi-person-gear"></i></div>
                     <h3 class="fw-bold" id="num-workers">0</h3>
                     <p class="text-muted mb-3">University Workers</p>
                     <span class="badge bg-light text-dark border rounded-pill fw-normal px-3 py-2">Muscle Strain</span>
@@ -359,7 +403,7 @@
     <footer>
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
                     <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
@@ -367,15 +411,7 @@
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">Quick Links</h6>
-                    <a href="index.html" class="footer-link small">Home</a>
-                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
-                    <a href="activities.html" class="footer-link small">Activities</a>
-                    <a href="surveys.html" class="footer-link small">Dashboard</a>
-                    <a href="reports.html" class="footer-link small">Reports</a>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h6 class="text-white mb-4">Contact Us</h6>
                     <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
                     <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
@@ -434,9 +470,9 @@
                         sectors: { students: 0, pt: 0, pharmacy: 0, eng: 0, business: 0, agri: 0, workers: 0 },
                         stats: { cases: 0, referrals: 0 },
                         complaints: {
-                            students: [0,0,0,0],
-                            workers: [0,0,0,0],
-                            faculties: [0,0,0,0]
+                            students: Array(20).fill(0),
+                            workers: Array(20).fill(0),
+                            faculties: Array(20).fill(0)
                         }
                     };
                     facultyCounts[key] = 0;
@@ -458,12 +494,28 @@
                     screeningData[key].sectors[sectorKey] = row.Total_Count || 0;
                 }
 
-                // Complaints Data: [Back, Neck, Headache, Obesity]
+                // Complaints Data: [No_Dx, Diabetes, Thyroid_Disorder, HTN, COPD, Asthma, OA, Heart_Disease, CKD, Low_Back_Pain, Fibromyalgia, Multiple_Sclerosis, Parkinson’s_Disease, Stroke, Epilepsy, Mental_Health_Disorders, CLD, Schistosomiasis, Anemia, GIT_Disorders]
                 const complaints = [
-                    row.Back_Pain || 0,
-                    row.Neck_Pain || 0,
-                    row.Headache || 0,
-                    row.Obesity || 0
+                    row.No_Dx || 0,
+                    row.Diabetes || 0,
+                    row.Thyroid_Disorder || 0,
+                    row.HTN || 0,
+                    row.COPD || 0,
+                    row.Asthma || 0,
+                    row.OA || 0,
+                    row.Heart_Disease || 0,
+                    row.CKD || 0,
+                    row.Low_Back_Pain || 0,
+                    row.Fibromyalgia || 0,
+                    row.Multiple_Sclerosis || 0,
+                    row.Parkinson_s_Disease || 0,
+                    row.Stroke || 0,
+                    row.Epilepsy || 0,
+                    row.Mental_Health_Disorders || 0,
+                    row.CLD || 0,
+                    row.Schistosomiasis || 0,
+                    row.Anemia || 0,
+                    row.GIT_Disorders || 0
                 ];
 
                 if (sectorKey === "students") {
@@ -472,7 +524,7 @@
                     screeningData[key].complaints.workers = complaints;
                 } else if (["pt", "pharmacy", "eng", "business", "agri"].includes(sectorKey)) {
                     // Accumulate for faculties
-                    for(let i=0; i<4; i++) {
+                    for(let i=0; i<20; i++) {
                         screeningData[key].complaints.faculties[i] += complaints[i];
                     }
                     facultyCounts[key]++;
@@ -483,7 +535,7 @@
             Object.keys(screeningData).forEach(k => {
                  const count = facultyCounts[k] || 1; // Avoid division by zero
                  if (count > 0) {
-                     for(let i=0; i<4; i++) {
+                     for(let i=0; i<20; i++) {
                          screeningData[k].complaints.faculties[i] = Math.round(screeningData[k].complaints.faculties[i] / count);
                      }
                  }
@@ -503,12 +555,29 @@
                     sectors: { students: 0, pt: 0, pharmacy: 0, eng: 0, business: 0, agri: 0, workers: 0 },
                     stats: { cases: 0, referrals: 0 },
                     complaints: {
-                        students: [0,0,0,0],
-                        workers: [0,0,0,0],
-                        faculties: [0,0,0,0]
+                        students: Array(20).fill(0),
+                        workers: Array(20).fill(0),
+                        faculties: Array(20).fill(0)
                     }
                 };
             }
+        }
+
+        // Motion UI: Animate Number Counting
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
         }
 
         function updateDashboard() {
@@ -517,18 +586,18 @@
 
             const data = getDataForDate(year, month);
 
-            // Update Sector Numbers
-            document.getElementById('num-students').innerText = data.sectors.students;
-            document.getElementById('num-pt').innerText = data.sectors.pt;
-            document.getElementById('num-pharmacy').innerText = data.sectors.pharmacy;
-            document.getElementById('num-eng').innerText = data.sectors.eng;
-            document.getElementById('num-business').innerText = data.sectors.business;
-            document.getElementById('num-agri').innerText = data.sectors.agri;
-            document.getElementById('num-workers').innerText = data.sectors.workers;
+            // Update Sector Numbers with Animation
+            animateValue('num-students', 0, data.sectors.students, 1000);
+            animateValue('num-pt', 0, data.sectors.pt, 1000);
+            animateValue('num-pharmacy', 0, data.sectors.pharmacy, 1000);
+            animateValue('num-eng', 0, data.sectors.eng, 1000);
+            animateValue('num-business', 0, data.sectors.business, 1000);
+            animateValue('num-agri', 0, data.sectors.agri, 1000);
+            animateValue('num-workers', 0, data.sectors.workers, 1000);
 
-            // Update Total Screened
+            // Update Total Screened with Animation
             const total = Object.values(data.sectors).reduce((a, b) => a + b, 0);
-            document.getElementById('total-participants').innerText = total.toLocaleString();
+            animateValue('total-participants', 0, total, 1500);
 
             // Update Charts
             updateCharts(data);
@@ -539,10 +608,10 @@
             const textColor = isDark ? '#f1f5f9' : '#666';
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 
-            // Population Chart
+            // Population Chart - Polar Area for better interactivity
             if (popChart) popChart.destroy();
             popChart = new Chart(document.getElementById('populationChart').getContext('2d'), {
-                type: 'doughnut',
+                type: 'polarArea',
                 data: {
                     labels: ['Students', 'Physical Therapy', 'Pharmacy', 'Engineering', 'Business', 'Agriculture', 'Workers'],
                     datasets: [{
@@ -555,35 +624,79 @@
                             data.sectors.agri,
                             data.sectors.workers
                         ],
-                        backgroundColor: ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#84cc16', '#64748b'],
-                        borderWidth: 0
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(132, 204, 22, 0.7)',
+                            'rgba(100, 116, 139, 0.7)'
+                        ],
+                        borderWidth: 1,
+                        borderColor: isDark ? '#1e293b' : '#fff'
                     }]
                 },
                 options: {
+                    responsive: true,
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    },
+                    scales: {
+                        r: {
+                            grid: { color: gridColor },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    },
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: { usePointStyle: true, padding: 20, color: textColor }
                         }
-                    },
-                    cutout: '70%'
+                    }
                 }
             });
 
-            // Comparison Chart
+            // Comparison Chart - Line Chart with Fill for better interactivity
             if (compChart) compChart.destroy();
             compChart = new Chart(document.getElementById('comparisonChart').getContext('2d'), {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: ['Back Pain', 'Neck Pain', 'Headache', 'Obesity'],
+                    labels: ['No Dx', 'Diabetes', 'Thyroid', 'HTN', 'COPD', 'Asthma', 'OA', 'Heart Disease', 'CKD', 'Low Back Pain', 'Fibromyalgia', 'MS', 'Parkinson\'s', 'Stroke', 'Epilepsy', 'Mental Health', 'CLD', 'Schistosomiasis', 'Anemia', 'GIT'],
                     datasets: [
-                        { label: 'Students', data: data.complaints.students, backgroundColor: '#3b82f6', borderRadius: 6 },
-                        { label: 'Workers', data: data.complaints.workers, backgroundColor: '#64748b', borderRadius: 6 },
-                        { label: 'Faculties (Avg)', data: data.complaints.faculties, backgroundColor: '#10b981', borderRadius: 6 }
+                        {
+                            label: 'Students',
+                            data: data.complaints.students,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Workers',
+                            data: data.complaints.workers,
+                            borderColor: '#64748b',
+                            backgroundColor: 'rgba(100, 116, 139, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Faculties (Avg)',
+                            data: data.complaints.faculties,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        }
                     ]
                 },
                 options: {
                     responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
                     scales: {
                         x: {
                             grid: { display: false },
@@ -600,6 +713,10 @@
                             position: 'top',
                             align: 'end',
                             labels: { usePointStyle: true, color: textColor }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
                         }
                     }
                 }

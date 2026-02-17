@@ -34,12 +34,19 @@
             --status-done: #2563eb;   /* Blue */
         }
 
+        /* Motion UI Keyframes */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
             background-color: var(--bg-body);
             padding-bottom: 60px; /* Space for bottom bar */
             transition: background-color 0.3s, color 0.3s;
+            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
         }
 
         /* Navbar */
@@ -96,7 +103,11 @@
             background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
             border: 1px solid var(--table-border); box-shadow: 0 2px 5px rgba(0,0,0,0.02);
             margin-bottom: 30px;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+        }
+        .custom-table-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .table { margin-bottom: 0; --bs-table-bg: transparent; }
@@ -249,10 +260,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>

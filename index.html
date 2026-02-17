@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="dark">
 <head>
+    <script>
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health Screening Project</title>
@@ -29,6 +34,24 @@
             --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
         }
 
+        /* Motion UI Keyframes */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -40,6 +63,7 @@
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
             transition: background-color 0.3s, color 0.3s;
+            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
         }
 
         .navbar {
@@ -65,6 +89,20 @@
             color: var(--text-main) !important;
             margin-right: 25px;
             transition: 0.3s;
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--main-gradient);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
@@ -88,11 +126,6 @@
         }
         .blob-1 { top: -10%; left: -5%; width: 400px; height: 400px; background: #06b6d4; animation-delay: 0s; }
         .blob-2 { bottom: 10%; right: -5%; width: 300px; height: 300px; background: #10b981; animation-delay: 5s; }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-20px, -20px); }
-        }
 
         .hero-title {
             font-weight: 900;
@@ -257,10 +290,40 @@
         }
 
         /* Other Sections */
-        .modern-card { background: var(--card-bg); backdrop-filter: blur(15px); border: var(--glass-border); border-radius: var(--radius); padding: 45px 35px; box-shadow: var(--shadow); transition: 0.5s; height: 100%; }
-        .modern-card:hover { transform: translateY(-15px); box-shadow: 0 30px 60px -12px rgba(6, 182, 212, 0.25); }
-        .icon-box { width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 25px; color: #0891b2; transition: 0.5s; }
-        .modern-card:hover .icon-box { background: var(--main-gradient); color: white; transform: rotate(15deg) scale(1.1); }
+        .modern-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: var(--glass-border);
+            border-radius: var(--radius);
+            padding: 45px 35px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 100%;
+        }
+        .modern-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 30px 60px -12px rgba(6, 182, 212, 0.25);
+        }
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 25px;
+            color: #0891b2;
+            transition: 0.5s;
+            animation: float 6s ease-in-out infinite;
+        }
+        .modern-card:hover .icon-box {
+            background: var(--main-gradient);
+            color: white;
+            transform: rotate(15deg) scale(1.1);
+            animation: none;
+        }
         .sdg-banner { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px); border-radius: 24px; padding: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); margin-top: -70px; position: relative; z-index: 10; border: var(--glass-border); }
         [data-theme="dark"] .sdg-banner {
             background: rgba(30, 41, 59, 0.8);
@@ -290,10 +353,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -336,26 +399,39 @@
     <div class="container" data-aos="fade-up" data-aos-offset="-80" data-aos-duration="1000">
         <div class="sdg-banner">
             <div class="row align-items-center g-4">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <h5 class="fw-bold mb-0 text-muted text-center text-md-start">
                         <i class="bi bi-globe-americas me-2 text-primary"></i>Our project supports the SDGs:
                     </h5>
                 </div>
-                <div class="col-md-3">
-                    <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
-                        <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #4c9f38;"><i class="bi bi-heart-pulse fs-5"></i></div>
-                        <div>
-                            <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 3</small>
-                            <span class="fw-bold small">Good Health & Well-being</span>
+                <div class="col-md-8">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #4c9f38;"><i class="bi bi-heart-pulse fs-5"></i></div>
+                                <div>
+                                    <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 3</small>
+                                    <span class="fw-bold small">Good Health</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
-                        <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #a21942;"><i class="bi bi-briefcase fs-5"></i></div>
-                        <div>
-                            <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 8</small>
-                            <span class="fw-bold small">Decent Work</span>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #a21942;"><i class="bi bi-briefcase fs-5"></i></div>
+                                <div>
+                                    <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 8</small>
+                                    <span class="fw-bold small">Decent Work</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-flex align-items-center p-2 rounded-4" style="background: #f1f5f9;">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center text-white me-3 shadow-sm" style="width: 45px; height: 45px; background: #00558a;"><i class="bi bi-bank fs-5"></i></div>
+                                <div>
+                                    <small class="d-block text-muted fw-bold" style="font-size: 0.75rem;">Goal 16</small>
+                                    <span class="fw-bold small">Peace & Justice</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -367,21 +443,21 @@
             <div class="row g-4">
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="modern-card text-center">
-                        <div class="icon-box"><i class="bi bi-bullseye"></i></div>
+                        <div class="icon-box" style="animation-delay: 0s;"><i class="bi bi-bullseye"></i></div>
                         <h3 class="fw-bold mb-3">Our Mission</h3>
                         <p class="text-muted">To promote a culture of preventive health within the SEKEM community through early detection and effective intervention.</p>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="modern-card text-center">
-                        <div class="icon-box"><i class="bi bi-eye"></i></div>
+                        <div class="icon-box" style="animation-delay: 0.5s;"><i class="bi bi-eye"></i></div>
                         <h3 class="fw-bold mb-3">Our Vision</h3>
                         <p class="text-muted">A healthy, productive SEKEM community, free from chronic diseases and postural problems.</p>
                     </div>
                 </div>
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="modern-card text-center">
-                        <div class="icon-box"><i class="bi bi-trophy"></i></div>
+                        <div class="icon-box" style="animation-delay: 1s;"><i class="bi bi-trophy"></i></div>
                         <h3 class="fw-bold mb-3">Our Goals</h3>
                         <p class="text-muted">Building a comprehensive health database, reducing incidence rates, and raising health awareness.</p>
                     </div>
@@ -394,7 +470,7 @@
     <footer>
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
                     <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
@@ -402,15 +478,7 @@
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">Quick Links</h6>
-                    <a href="index.html" class="footer-link small">Home</a>
-                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
-                    <a href="activities.html" class="footer-link small">Activities</a>
-                    <a href="surveys.html" class="footer-link small">Dashboard</a>
-                    <a href="reports.html" class="footer-link small">Reports</a>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h6 class="text-white mb-4">Contact Us</h6>
                     <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
                     <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
@@ -431,7 +499,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const teamData = [
-                { name: "Dr. Gehan Fathy Attia", role: "Director of Integrative Health Center", bio: "Professor of Pharmaceutics, Vice Dean for Community Service, and Director of the Integrative Health Center at Heliopolis University.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true" },
+                { name: "Dr. Gehan Fathy Attia", role: "Project Director", bio: "Professor of Pharmaceutics, Vice Dean for Community Service, and Director of the Integrative Health Center at Heliopolis University.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true" },
                 { name: "Dr. Hind Al-sharif", role: "Project Manager", bio: "Physiotherapy Consultant, leading the project's strategic vision.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/h.png?raw=true" },
                 { name: "Dr. Mamdouh Abd El-aziz", role: "Physiotherapist / Project Coordinator", bio: "Physiotherapist experienced in clinical practice, research, and digital health solutions, with expertise in health screening and healthcare app development.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/amigo.png?raw=true" },
                 { name: "Dr. Sham ammar kalaji", role: "Project Coordinator", bio: "Pharmacy graduate pursuing a Master’s in Pharmacoeconomics and working as a Project Coordinator at Heliopolis University.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/s.png?raw=true" },

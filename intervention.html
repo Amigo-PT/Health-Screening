@@ -29,6 +29,18 @@
             --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
         }
 
+        /* Motion UI Keyframes */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -38,6 +50,7 @@
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
             transition: background-color 0.3s, color 0.3s;
+            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
         }
 
         .navbar {
@@ -78,11 +91,14 @@
             padding: 40px;
             box-shadow: var(--shadow);
             margin-bottom: 35px;
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
         }
-        .intervention-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.2); }
+        .intervention-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.2);
+        }
         .intervention-card::before {
             content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 6px;
             background: var(--main-gradient);
@@ -157,10 +173,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link active" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -188,7 +204,7 @@
     <footer>
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
                     <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
@@ -196,15 +212,7 @@
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">Quick Links</h6>
-                    <a href="index.html" class="footer-link small">Home</a>
-                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
-                    <a href="activities.html" class="footer-link small">Activities</a>
-                    <a href="surveys.html" class="footer-link small">Dashboard</a>
-                    <a href="reports.html" class="footer-link small">Reports</a>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h6 class="text-white mb-4">Contact Us</h6>
                     <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
                     <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>

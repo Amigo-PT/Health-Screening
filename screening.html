@@ -27,6 +27,18 @@
             --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
         }
 
+        /* Motion UI Keyframes */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -36,6 +48,7 @@
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
             transition: background-color 0.3s, color 0.3s;
+            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
         }
 
         .navbar {
@@ -60,6 +73,20 @@
             color: var(--text-main) !important;
             margin-right: 20px;
             transition: 0.3s;
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--main-gradient);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--main-gradient);
@@ -76,7 +103,7 @@
             padding: 50px 30px;
             box-shadow: var(--shadow);
             text-align: center;
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             height: 100%;
             cursor: pointer;
             text-decoration: none;
@@ -84,7 +111,7 @@
             color: var(--text-main);
         }
         .selection-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) scale(1.02);
             box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.2);
             border-color: #06b6d4;
         }
@@ -95,11 +122,13 @@
             background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
             color: #0891b2;
             transition: 0.4s;
+            animation: float 6s ease-in-out infinite;
         }
         .selection-card:hover .selection-icon {
             background: var(--main-gradient);
             color: white;
             transform: rotate(10deg) scale(1.1);
+            animation: none;
         }
         .selection-title {
             font-size: 2rem;
@@ -147,10 +176,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -166,14 +195,14 @@
         <div class="row g-5 justify-content-center">
             <div class="col-md-5" data-aos="fade-right" data-aos-delay="100" data-aos-duration="1000">
                 <a href="hu_staff.html" class="selection-card">
-                    <div class="selection-icon"><i class="bi bi-mortarboard-fill"></i></div>
+                    <div class="selection-icon" style="animation-delay: 0s;"><i class="bi bi-mortarboard-fill"></i></div>
                     <h3 class="selection-title">HU Staff</h3>
                     <p class="selection-desc">Detailed analysis for University Students, Faculty Members, and Staff.</p>
                 </a>
             </div>
             <div class="col-md-5" data-aos="fade-left" data-aos-delay="200" data-aos-duration="1000">
                 <a href="sekem.html" class="selection-card">
-                    <div class="selection-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%); color: #f97316;"><i class="bi bi-buildings-fill"></i></div>
+                    <div class="selection-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%); color: #f97316; animation-delay: 0.5s;"><i class="bi bi-buildings-fill"></i></div>
                     <h3 class="selection-title">Sekem</h3>
                     <p class="selection-desc">Detailed analysis for SEKEM Company Workers and related sectors.</p>
                 </a>
@@ -184,7 +213,7 @@
     <footer>
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h4 class="text-white fw-bold mb-4">Health Screening</h4>
                     <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
                     <div class="d-flex gap-3 mt-4">
@@ -192,15 +221,7 @@
                         <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">Quick Links</h6>
-                    <a href="index.html" class="footer-link small">Home</a>
-                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
-                    <a href="activities.html" class="footer-link small">Activities</a>
-                    <a href="surveys.html" class="footer-link small">Dashboard</a>
-                    <a href="reports.html" class="footer-link small">Reports</a>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <h6 class="text-white mb-4">Contact Us</h6>
                     <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
                     <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>

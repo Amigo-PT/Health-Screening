@@ -30,6 +30,12 @@
             --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
         }
 
+        /* Motion UI Keyframes */
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             color: var(--text-main);
@@ -39,6 +45,7 @@
                 radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
             background-attachment: fixed;
             transition: background-color 0.3s, color 0.3s;
+            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
         }
 
         .navbar {
@@ -193,7 +200,7 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             position: relative;
-            transition: 0.4s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             gap: 20px;
             align-items: flex-start;
@@ -340,10 +347,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link active" href="reports.html">Reports</a></li>
                 </ul>
             </div>
