@@ -444,11 +444,11 @@
                         companies: { isis: 0, atos: 0, naturetex: 0, lotus: 0, school: 0 },
                         stats: { cases: 0, referrals: 0 },
                         complaints: {
-                            isis: Array(20).fill(0),
-                            atos: Array(20).fill(0),
-                            naturetex: Array(20).fill(0),
-                            lotus: Array(20).fill(0),
-                            school: Array(20).fill(0)
+                            isis: Array(23).fill(0),
+                            atos: Array(23).fill(0),
+                            naturetex: Array(23).fill(0),
+                            lotus: Array(23).fill(0),
+                            school: Array(23).fill(0)
                         }
                     };
                 }
@@ -466,28 +466,31 @@
                 if (companyKey) {
                     screeningData[key].companies[companyKey] = row.Total_Count || 0;
 
-                    // Complaints Data: [No_Dx, Diabetes, Thyroid_Disorder, HTN, COPD, Asthma, OA, Heart_Disease, CKD, Low_Back_Pain, Fibromyalgia, Multiple_Sclerosis, Parkinson’s_Disease, Stroke, Epilepsy, Mental_Health_Disorders, CLD, Schistosomiasis, Anemia, GIT_Disorders]
+                    // Complaints Data: [No_diagnosis, Acute_Gastritis, Frequent_Headache, Upper_Respiratory_Tract_Infection, Dental_Problems, Eye_Problems, Anemia, Acute_Tonsillitis, Acute_Sinusitis, Environmental_Allergy, Food_Allergy, Diabetes, Thyroid_dysfunction, Hypertension, Asthma, Heart_Disease, Urinary_Tract_Problems, Chronic_Pain_Disorders, Multiple_Sclerosis, Mental_Health_Disorders, Liver_Diseases, Rheumatoid_Arthritis, Other]
                     screeningData[key].complaints[companyKey] = [
-                        row.No_Dx || 0,
-                        row.Diabetes || 0,
-                        row.Thyroid_Disorder || 0,
-                        row.HTN || 0,
-                        row.COPD || 0,
-                        row.Asthma || 0,
-                        row.OA || 0,
-                        row.Heart_Disease || 0,
-                        row.CKD || 0,
-                        row.Low_Back_Pain || 0,
-                        row.Fibromyalgia || 0,
-                        row.Multiple_Sclerosis || 0,
-                        row.Parkinson_s_Disease || 0,
-                        row.Stroke || 0,
-                        row.Epilepsy || 0,
-                        row.Mental_Health_Disorders || 0,
-                        row.CLD || 0,
-                        row.Schistosomiasis || 0,
+                        row.No_diagnosis || 0,
+                        row.Acute_Gastritis || 0,
+                        row.Frequent_Headache || 0,
+                        row.Upper_Respiratory_Tract_Infection || 0,
+                        row.Dental_Problems || 0,
+                        row.Eye_Problems || 0,
                         row.Anemia || 0,
-                        row.GIT_Disorders || 0
+                        row.Acute_Tonsillitis || 0,
+                        row.Acute_Sinusitis || 0,
+                        row.Environmental_Allergy || 0,
+                        row.Food_Allergy || 0,
+                        row.Diabetes || 0,
+                        row.Thyroid_dysfunction || 0,
+                        row.Hypertension || 0,
+                        row.Asthma || 0,
+                        row.Heart_Disease || 0,
+                        row.Urinary_Tract_Problems || 0,
+                        row.Chronic_Pain_Disorders || 0,
+                        row.Multiple_Sclerosis || 0,
+                        row.Mental_Health_Disorders || 0,
+                        row.Liver_Diseases || 0,
+                        row.Rheumatoid_Arthritis || 0,
+                        row.Other || 0
                     ];
                 }
             });
@@ -506,11 +509,11 @@
                     companies: { isis: 0, atos: 0, naturetex: 0, lotus: 0, school: 0 },
                     stats: { cases: 0, referrals: 0 },
                     complaints: {
-                        isis: Array(20).fill(0),
-                        atos: Array(20).fill(0),
-                        naturetex: Array(20).fill(0),
-                        lotus: Array(20).fill(0),
-                        school: Array(20).fill(0)
+                        isis: Array(23).fill(0),
+                        atos: Array(23).fill(0),
+                        naturetex: Array(23).fill(0),
+                        lotus: Array(23).fill(0),
+                        school: Array(23).fill(0)
                     }
                 };
             }
@@ -604,7 +607,7 @@
             compChart = new Chart(document.getElementById('comparisonChart').getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: ['No Dx', 'Diabetes', 'Thyroid', 'HTN', 'COPD', 'Asthma', 'OA', 'Heart Disease', 'CKD', 'Low Back Pain', 'Fibromyalgia', 'MS', 'Parkinson\'s', 'Stroke', 'Epilepsy', 'Mental Health', 'CLD', 'Schistosomiasis', 'Anemia', 'GIT'],
+                    labels: ['No diagnosis', 'Acute Gastritis', 'Frequent Headache', 'Upper Respiratory Tract Infection', 'Dental Problems', 'Eye Problems', 'Anemia', 'Acute Tonsillitis', 'Acute Sinusitis', 'Environmental Allergy', 'Food Allergy', 'Diabetes', 'Thyroid dysfunction', 'Hypertension', 'Asthma', 'Heart Disease', 'Urinary Tract Problems', 'Chronic Pain Disorders', 'Multiple Sclerosis', 'Mental Health Disorders', 'Liver Diseases', 'Rheumatoid Arthritis', 'Other'],
                     datasets: [
                         {
                             label: 'Isis',
