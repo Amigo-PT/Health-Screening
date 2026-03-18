@@ -179,10 +179,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">Screening & KPIs</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
                     <li class="nav-item"><a class="nav-link active" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
                     <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
@@ -267,7 +267,8 @@
 
                 // Fallback image if none provided
                 const imgUrl = item.Image_URL || 'https://via.placeholder.com/400x300?text=No+Image';
-                const linkUrl = item.Link_URL || '#';
+                // Link to the photos page passing the title
+                const galleryUrl = `activity_photos.html?title=${encodeURIComponent(item.Title)}&desc=${encodeURIComponent(item.Description || '')}`;
 
                 const cardHTML = `
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="1000">
@@ -280,7 +281,7 @@
                                 <span class="badge-category">${item.Category || 'General'}</span>
                                 <h5 class="fw-bold mb-3">${item.Title}</h5>
                                 <p class="text-muted small mb-4">${item.Description || ''}</p>
-                                <a href="${linkUrl}" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
+                                <a href="${galleryUrl}" class="btn-link-custom">View Photos <i class="bi bi-arrow-right ms-2"></i></a>
                             </div>
                         </div>
                     </div>
