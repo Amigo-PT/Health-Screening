@@ -1,0 +1,18 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules (if you add npm later)
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
