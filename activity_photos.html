@@ -245,6 +245,31 @@
             z-index: 2005;
         }
 
+        /* Skeleton Loading Styles */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            background: var(--glass-bg);
+            border: var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 100%;
+        }
+        .skeleton-img {
+            width: 100%;
+            height: 280px;
+        }
+
         .footer {
             margin-top: auto;
             padding: 40px 0;
@@ -287,7 +312,7 @@
 
         <!-- Photos Grid -->
         <div class="row g-4" id="photos-container">
-            <!-- Photos will be injected here -->
+            <!-- Skeletons will be injected here initially -->
         </div>
 
         <div id="error-message" class="text-center mt-5" style="display: none; animation: fadeInUp 0.5s;"></div>
@@ -334,9 +359,12 @@
                 return;
             }
 
+            showSkeletons(); // Show skeletons immediately
+
+            // Small delay to simulate smooth loading and show skeleton
             setTimeout(() => {
                 renderPage(activityTitle, activityDesc);
-            }, 300);
+            }, 800);
 
             // Keyboard navigation for lightbox
             document.addEventListener('keydown', function(event) {
@@ -348,6 +376,20 @@
             });
         });
 
+        function showSkeletons() {
+            const container = document.getElementById('photos-container');
+            container.innerHTML = '';
+            for(let i=0; i<6; i++) {
+                container.innerHTML += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-img"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         function renderPage(title, description) {
             const titleElem = document.getElementById('activity-title');
             const descElem = document.getElementById('activity-description');
@@ -356,7 +398,7 @@
 
             titleElem.innerHTML = title;
             descElem.innerText = description || '';
-            container.innerHTML = '';
+            // Don't clear container yet, we will replace skeletons when checks are done
 
             const folderName = title.trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
             const baseFolderPath = `activity_images/${folderName}/`;
@@ -388,6 +430,7 @@
             }
 
             Promise.all(checkPromises).then(() => {
+                 container.innerHTML = ''; // Clear skeletons now
                  if (validImages.length === 0) {
                     showNoImagesError(baseFolderPath, errorDiv);
                 } else {

@@ -3,342 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reports & Library - Health Screening</title>
+    <title>Reports Timeline - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- PapaParse for CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
         :root {
-            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-            --bg-body: #f8fafc;
-            --text-main: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.8);
-            --radius: 24px;
-            --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.15);
-            --timeline-color: #06b6d4;
-        }
-
-        [data-theme="dark"] {
+            --primary-color: #38bdf8;
+            --secondary-color: #818cf8;
+            --accent-color: #2dd4bf;
             --bg-body: #020617;
-            --text-main: #f1f5f9;
-            --card-bg: rgba(30, 41, 59, 0.95);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Motion UI Keyframes */
-        @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            --glass-bg: rgba(30, 41, 59, 0.4);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --timeline-line-color: rgba(56, 189, 248, 0.2);
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            color: var(--text-main);
+            color: #f8fafc;
             background-color: var(--bg-body);
             background-image:
-                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(129, 140, 248, 0.08) 0%, transparent 40%);
             background-attachment: fixed;
-            transition: background-color 0.3s, color 0.3s;
-            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Override text-muted for dark mode consistency */
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        /* Navbar */
         .navbar {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: var(--glass-border);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             padding: 15px 0;
             z-index: 1000;
-            transition: background 0.3s;
         }
-        [data-theme="dark"] .navbar {
-            background: rgba(15, 23, 42, 0.8);
-        }
-
         .navbar-brand {
             font-weight: 900;
-            background: var(--main-gradient);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
         }
         .nav-link {
             font-weight: 700;
-            color: var(--text-main) !important;
-            margin-right: 20px;
+            color: #cbd5e1 !important;
             transition: 0.3s;
+            margin-left: 15px;
         }
         .nav-link:hover, .nav-link.active {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary-color) !important;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
             transform: translateY(-2px);
         }
+
+        /* Filter Section */
+        .filter-container {
+            position: sticky;
+            top: 80px; /* Below navbar */
+            z-index: 900;
+            margin-bottom: 60px;
+            padding: 20px 0;
+            background: transparent;
+        }
+
+        .filter-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 10px 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            background: transparent !important;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            width: 100%;
+            outline: none;
+            font-weight: 500;
+        }
+        .search-input::placeholder { color: #94a3b8; }
+
+        .custom-select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            transition: 0.3s;
+        }
+        .custom-select:hover, .custom-select:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+        }
+        .custom-select option { background: #0f172a; color: #fff; }
 
         /* Timeline Styles */
         .timeline {
             position: relative;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px 0;
+            padding: 40px 0;
         }
 
-        /* The vertical line */
-        .timeline::after {
+        /* The Center Line */
+        .timeline::before {
             content: '';
             position: absolute;
-            width: 4px;
-            background: linear-gradient(to bottom, #2563eb, #06b6d4, #10b981);
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--timeline-line-color) 10%, var(--timeline-line-color) 90%, transparent);
             top: 0;
             bottom: 0;
             left: 50%;
-            margin-left: -2px;
-            border-radius: 2px;
-            opacity: 0.3;
+            transform: translateX(-50%);
         }
 
-        /* Year Separator */
-        .timeline-year {
+        .timeline-item {
+            padding: 10px 40px;
             position: relative;
-            z-index: 2;
-            text-align: center;
-            margin: 50px 0;
-            transition: all 0.3s ease;
-        }
-        .timeline-year span {
-            background: var(--main-gradient);
-            color: white;
-            padding: 10px 35px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 1.4rem;
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
-            letter-spacing: 1px;
-            display: inline-block;
-        }
-
-        .timeline-container {
-            padding: 10px 50px;
-            position: relative;
-            background-color: inherit;
             width: 50%;
+            opacity: 0;
+            animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
-        /* The dots on the timeline */
-        .timeline-container::after {
-            content: '';
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; text-align: left; }
+
+        /* Timeline Dot (Date Badge) */
+        .timeline-date-badge {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            right: -10px;
-            background-color: #fff;
-            border: 4px solid var(--timeline-color);
-            top: 35px;
+            top: 20px;
+            width: 60px;
+            height: 60px;
+            background: #0f172a;
+            border: 2px solid var(--primary-color);
             border-radius: 50%;
-            z-index: 1;
-            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
-            transition: all 0.3s ease;
-        }
-        [data-theme="dark"] .timeline-container::after {
-            background-color: #1e293b;
-        }
-
-        .timeline-container:hover::after {
-            background-color: var(--timeline-color);
-            transform: scale(1.2);
-            box-shadow: 0 0 0 8px rgba(6, 182, 212, 0.3);
-        }
-
-        .left { left: 0; }
-        .right { left: 50%; }
-
-        /* Arrows pointing to the timeline */
-        .left::before {
-            content: " ";
-            height: 0;
-            position: absolute;
-            top: 38px;
-            width: 0;
-            z-index: 1;
-            right: 40px;
-            border: medium solid white;
-            border-width: 10px 0 10px 10px;
-            border-color: transparent transparent transparent white;
-        }
-        [data-theme="dark"] .left::before {
-            border-color: transparent transparent transparent rgba(30, 41, 59, 0.95);
-        }
-
-        .right::before {
-            content: " ";
-            height: 0;
-            position: absolute;
-            top: 38px;
-            width: 0;
-            z-index: 1;
-            left: 40px;
-            border: medium solid white;
-            border-width: 10px 10px 10px 0;
-            border-color: transparent white transparent transparent;
-        }
-        [data-theme="dark"] .right::before {
-            border-color: transparent rgba(30, 41, 59, 0.95) transparent transparent;
-        }
-
-        .right::after { left: -10px; }
-
-        /* Card Content */
-        .timeline-content {
-            padding: 25px;
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: var(--glass-border);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .timeline-content:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.25);
-            border-color: #06b6d4;
-        }
-
-        /* Date Box Styling */
-        .date-box {
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(6, 182, 212, 0.08);
-            color: #0891b2;
-            padding: 12px 5px;
-            border-radius: 18px;
-            min-width: 75px;
-            text-align: center;
-            border: 1px solid rgba(6, 182, 212, 0.15);
-        }
-        .date-box .month {
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 1.1rem;
-            line-height: 1;
-            margin-bottom: 2px;
-        }
-        .date-box .year-small {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+            font-weight: bold;
             font-size: 0.75rem;
-            font-weight: 600;
+            line-height: 1.1;
+            transition: 0.3s;
+        }
+
+        .left .timeline-date-badge { right: -30px; }
+        .right .timeline-date-badge { left: -30px; }
+
+        .timeline-item:hover .timeline-date-badge {
+            background: var(--primary-color);
+            color: #0f172a;
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+        }
+
+        /* Content Card */
+        .timeline-content {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(56, 189, 248, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Type Badge */
+        .type-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-content:hover .type-badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary-color);
+            border-color: rgba(56, 189, 248, 0.2);
+        }
+
+        .report-title {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .report-desc {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
             opacity: 0.8;
         }
 
-        .content-body {
-            flex: 1;
-        }
-
-        .report-icon-box {
-            width: 50px; height: 50px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 15px;
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-            color: #0891b2;
-            transition: 0.4s;
-            float: right; /* Icon on the right inside the card */
-        }
-
-        .timeline-content:hover .report-icon-box {
-            background: var(--main-gradient);
-            color: white;
-            transform: rotate(10deg) scale(1.1);
-        }
-
-        .report-type {
-            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
-            font-weight: 700; color: #64748b; margin-bottom: 5px; display: block;
-        }
-        [data-theme="dark"] .report-type { color: #94a3b8; }
-        [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
-
-        .btn-download {
-            background: white; color: var(--text-main);
-            border: 1px solid rgba(6, 182, 212, 0.2); border-radius: 12px;
-            padding: 8px 18px; font-weight: 700; transition: 0.3s;
-            text-decoration: none; text-align: center;
-            display: inline-flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            margin-top: 10px;
+        .btn-download-card {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
             font-size: 0.9rem;
-        }
-        [data-theme="dark"] .btn-download {
-            background: #1e293b;
-            color: #f1f5f9;
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .btn-download:hover {
-            background: var(--main-gradient); color: white; border-color: transparent;
-            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
-            transform: translateY(-2px);
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
         }
 
+        .btn-download-card:hover {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
+            color: #0f172a;
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-left: auto;
+        }
+
+        /* Skeleton Loading Styles */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-content {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .skeleton-badge { height: 20px; width: 60px; margin-bottom: 15px; border-radius: 12px; }
+        .skeleton-title { height: 25px; width: 80%; margin-bottom: 15px; }
+        .skeleton-desc { height: 15px; width: 100%; margin-bottom: 8px; }
+        .skeleton-desc-last { height: 15px; width: 60%; margin-bottom: 20px; }
+        .skeleton-btn { height: 40px; width: 100%; border-radius: 12px; }
+        .skeleton-date { width: 60px; height: 60px; border-radius: 50%; }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
         @media screen and (max-width: 768px) {
-            .timeline::after { left: 31px; }
-            .timeline-container { width: 100%; padding-left: 80px; padding-right: 25px; }
-            .timeline-container::before { left: 70px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
-            [data-theme="dark"] .timeline-container::before { border-color: transparent rgba(30, 41, 59, 0.95) transparent transparent; }
-            .left::after, .right::after { left: 21px; }
-            .right { left: 0%; }
-            .timeline-year { text-align: left; padding-left: 80px; }
-            .timeline-year span { font-size: 1.2rem; padding: 8px 25px; }
+            .timeline::before { left: 30px; }
+            .timeline-item { width: 100%; padding-left: 80px; padding-right: 0; margin-bottom: 20px; }
+            .left, .right { text-align: left; }
+            .left { left: 0; }
+            .right { left: 0; }
+
+            .left .timeline-date-badge, .right .timeline-date-badge {
+                left: 0;
+                right: auto;
+            }
+
+            .filter-card {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 24px;
+            }
         }
 
         /* Footer */
-        footer {
-            background: #0f172a;
+        .footer {
+            margin-top: auto;
+            padding: 40px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
             color: #94a3b8;
-            padding: 80px 0 40px;
-            margin-top: 100px;
-            position: relative;
-            overflow: hidden;
-        }
-        footer::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: var(--main-gradient);
-        }
-        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            padding-left: 5px;
-        }
-
-        /* Search Input Dark Mode */
-        [data-theme="dark"] .input-group {
-            background-color: #1e293b !important;
-            border-color: #334155 !important;
-        }
-        [data-theme="dark"] .input-group-text {
-            background-color: #1e293b !important;
-            color: #94a3b8 !important;
-        }
-        [data-theme="dark"] #searchInput {
-            background-color: #1e293b !important;
-            color: #f1f5f9 !important;
-        }
-        [data-theme="dark"] #searchInput::placeholder {
-            color: #64748b;
         }
     </style>
 </head>
 <body>
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -357,186 +349,244 @@
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 140px; margin-bottom: 80px;">
-        <div class="text-center mb-5" data-aos="fade-down" data-aos-duration="1000">
-            <h2 class="fw-bold display-5 mb-3">Reports Timeline</h2>
-            <p class="text-muted lead">A chronological journey through our reports and publications</p>
+    <div class="container" style="margin-top: 100px; margin-bottom: 80px;">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold display-4 mb-3 text-white">Project Reports</h1>
+            <!-- Reverted to text-muted to match Activities page color -->
+            <p class="text-muted lead mx-auto" style="max-width: 600px;">
+                Comprehensive archive of our progress, monthly updates, and official documentation.
+            </p>
         </div>
 
-        <!-- Search -->
-        <div class="row justify-content-center mb-5" data-aos="fade-up" data-aos-duration="1000">
-            <div class="col-md-6">
-                <div class="input-group shadow-sm rounded-pill overflow-hidden border bg-white p-1">
-                    <span class="input-group-text bg-white border-0 ps-4"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" id="searchInput" class="form-control border-0 py-3" placeholder="Search by name, year, or month...">
-                    <button class="btn btn-primary px-4 rounded-pill fw-bold" onclick="document.getElementById('searchInput').focus()" style="background: var(--main-gradient); border: none; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);">Search</button>
+        <!-- Sticky Filter -->
+        <div class="filter-container">
+            <div class="container">
+                <div class="filter-card mx-auto" style="max-width: 800px;">
+                    <div style="flex: 1; min-width: 200px; display: flex; align-items: center; gap: 10px;">
+                        <i class="bi bi-search text-secondary"></i>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by title...">
+                    </div>
+                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1); display: none; margin: 0 10px;" class="d-md-block"></div>
+
+                    <select id="yearFilter" class="custom-select" style="min-width: 120px;">
+                        <option value="all" selected>All Years</option>
+                    </select>
+
+                    <select id="monthFilter" class="custom-select" style="min-width: 130px;">
+                        <option value="all" selected>All Months</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
                 </div>
             </div>
         </div>
 
         <!-- Timeline -->
-        <div class="timeline" id="reportsTimeline">
-            <!-- Content will be injected here -->
-            <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
+        <div class="timeline" id="timeline-container">
+            <!-- Skeletons will be injected here -->
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
+    <div class="footer">
         <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <h4 class="text-white fw-bold mb-4">Health Screening</h4>
-                    <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
-                    <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-6">
-                    <h6 class="text-white mb-4">Quick Links</h6>
-                    <a href="index.html" class="footer-link small">Home</a>
-                    <a href="screening.html" class="footer-link small">Screening & KPIs</a>
-                    <a href="activities.html" class="footer-link small">Activities</a>
-                    <a href="surveys.html" class="footer-link small">Surveys</a>
-                    <a href="reports.html" class="footer-link small">Reports</a>
-                </div>
-                <div class="col-lg-4">
-                    <h6 class="text-white mb-4">Contact Us</h6>
-                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
-                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
-                </div>
-            </div>
-            <hr class="border-secondary my-5 opacity-10">
-            <div class="text-center small opacity-50">
-                <p class="mb-0">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abdelaziz</p>
-            </div>
+            <p class="mb-0">&copy; 2026 Health Screening Project. All rights reserved.</p>
         </div>
-    </footer>
+    </div>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 1000, once: true, offset: 50 });</script>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ==========================================
-            //  DATA FETCHING SECTION
-            // ==========================================
-            const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
 
-            function fetchData() {
+        let allReports = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+
+            // Add Event Listeners for filters
+            document.getElementById('searchInput').addEventListener('input', filterReports);
+            document.getElementById('yearFilter').addEventListener('change', filterReports);
+            document.getElementById('monthFilter').addEventListener('change', filterReports);
+        });
+
+        function showSkeletons() {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+            for(let i=0; i<4; i++) {
+                const side = i % 2 === 0 ? 'left' : 'right';
+                container.innerHTML += `
+                    <div class="timeline-item ${side}">
+                        <div class="timeline-date-badge skeleton"></div>
+                        <div class="skeleton-content">
+                            <div class="skeleton skeleton-badge"></div>
+                            <div class="skeleton skeleton-title"></div>
+                            <div class="skeleton skeleton-desc"></div>
+                            <div class="skeleton skeleton-desc"></div>
+                            <div class="skeleton skeleton-desc-last"></div>
+                            <div class="skeleton skeleton-btn"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function fetchData() {
+            showSkeletons();
+
+            // Artificial delay to show skeleton
+            const minDelay = new Promise(resolve => setTimeout(resolve, 800));
+            const dataFetch = new Promise((resolve, reject) => {
                 Papa.parse(sheetURL, {
                     download: true,
                     header: true,
                     dynamicTyping: true,
                     complete: function(results) {
-                        renderReports(results.data);
+                        resolve(results.data);
                     },
                     error: function(err) {
-                        console.error("Error fetching CSV:", err);
-                        document.getElementById('reportsTimeline').innerHTML = '<div class="text-center text-danger">Failed to load data.</div>';
+                        reject(err);
                     }
                 });
+            });
+
+            Promise.all([minDelay, dataFetch])
+                .then(([_, data]) => {
+                    processData(data);
+                })
+                .catch(err => {
+                    console.error("Error fetching CSV:", err);
+                    document.getElementById('timeline-container').innerHTML = '<div class="text-center text-danger">Failed to load data.</div>';
+                });
+        }
+
+        // Helper to convert any month input (1, "1", "01", "January", "Jan") to a number 1-12
+        function getMonthNumber(m) {
+            if (!m) return 0;
+            // If it's a number directly
+            if (!isNaN(m)) return parseInt(m);
+
+            const monthMap = {
+                "jan": 1, "january": 1, "feb": 2, "february": 2, "mar": 3, "march": 3,
+                "apr": 4, "april": 4, "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
+                "aug": 8, "august": 8, "sep": 9, "september": 9, "oct": 10, "october": 10,
+                "nov": 11, "november": 11, "dec": 12, "december": 12
+            };
+            return monthMap[m.toString().toLowerCase()] || 0;
+        }
+
+        // Helper to get short display name (e.g. 1 -> Jan)
+        function getMonthDisplayName(m) {
+            const num = getMonthNumber(m);
+            const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            if (num >= 1 && num <= 12) return monthNames[num];
+            return "---";
+        }
+
+        function processData(data) {
+            // Filter valid rows and sort by Year then Month (Newest first)
+            allReports = data.filter(item => item.Title).sort((a, b) => {
+                if (b.Year !== a.Year) return b.Year - a.Year;
+                return getMonthNumber(b.Month) - getMonthNumber(a.Month);
+            });
+
+            populateYearFilter();
+            renderTimeline(allReports);
+        }
+
+        function populateYearFilter() {
+            const yearSelect = document.getElementById('yearFilter');
+            const years = new Set();
+
+            allReports.forEach(item => {
+                if (item.Year) years.add(item.Year);
+            });
+
+            Array.from(years).sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.innerText = year;
+                yearSelect.appendChild(option);
+            });
+        }
+
+        function filterReports() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const selectedYear = document.getElementById('yearFilter').value;
+            const selectedMonth = document.getElementById('monthFilter').value;
+
+            const filtered = allReports.filter(item => {
+                const titleMatch = item.Title && item.Title.toString().toLowerCase().includes(searchText);
+
+                const yearMatch = (selectedYear === 'all') || (item.Year && item.Year.toString() === selectedYear);
+
+                let monthMatch = true;
+                if (selectedMonth !== 'all') {
+                    // Compare numeric values of months to handle "1" vs "01" vs "January"
+                    monthMatch = getMonthNumber(item.Month) === parseInt(selectedMonth);
+                }
+
+                return titleMatch && yearMatch && monthMatch;
+            });
+
+            renderTimeline(filtered);
+        }
+
+        function renderTimeline(data) {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-search display-1 text-secondary opacity-25"></i>
+                        <p class="text-secondary mt-3">No matching reports found.</p>
+                    </div>`;
+                return;
             }
 
-            function renderReports(data) {
-                const timeline = document.getElementById('reportsTimeline');
-                timeline.innerHTML = ''; // Clear loading
+            data.forEach((item, index) => {
+                const side = index % 2 === 0 ? 'left' : 'right';
 
-                let currentYear = null;
+                // Construct PDF filename
+                const safeTitle = item.Title.toString().trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
+                const pdfUrl = `reports_files/${safeTitle}.pdf`;
 
-                // Sort data by year descending, then month descending (simple logic)
-                data.sort((a, b) => b.Year - a.Year);
+                // Convert month to name (e.g. 1 -> Jan, "January" -> Jan)
+                const shortMonth = getMonthDisplayName(item.Month);
+                const year = item.Year || '----';
 
-                data.forEach((item, index) => {
-                    if (!item.Title) return;
+                const html = `
+                    <div class="timeline-item ${side}" style="animation-delay: ${index * 100}ms">
+                        <div class="timeline-date-badge">
+                            <span style="font-size: 0.9em; opacity: 0.9;">${shortMonth}</span>
+                            <span style="font-size: 1.1em;">${year}</span>
+                        </div>
+                        <div class="timeline-content">
+                            <span class="type-badge">${item.Type || 'Report'}</span>
+                            <h4 class="report-title">${item.Title}</h4>
+                            <p class="report-desc">${item.Description || ''}</p>
 
-                    // Add Year Separator if new year
-                    if (item.Year !== currentYear) {
-                        currentYear = item.Year;
-                        const yearHTML = `
-                            <div class="timeline-year" data-aos="zoom-in">
-                                <span>${currentYear}</span>
-                            </div>
-                        `;
-                        timeline.innerHTML += yearHTML;
-                    }
-
-                    // Determine Left/Right alignment
-                    const side = index % 2 === 0 ? 'left' : 'right';
-                    const aosAnim = index % 2 === 0 ? 'fade-right' : 'fade-left';
-
-                    // Icon based on type
-                    let icon = 'bi-file-earmark-text';
-                    let colorClass = '#3b82f6'; // Blue default
-                    let bgClass = 'rgba(59, 130, 246, 0.1)';
-
-                    if (item.Type && item.Type.includes('PDF')) { icon = 'bi-file-earmark-pdf'; colorClass = '#ef4444'; bgClass = 'rgba(239, 68, 68, 0.1)'; }
-                    else if (item.Type && item.Type.includes('Poster')) { icon = 'bi-easel'; colorClass = '#f59e0b'; bgClass = 'rgba(245, 158, 11, 0.1)'; }
-                    else if (item.Type && item.Type.includes('Image')) { icon = 'bi-images'; colorClass = '#10b981'; bgClass = 'rgba(16, 185, 129, 0.1)'; }
-
-                    const reportHTML = `
-                        <div class="timeline-container ${side}" data-aos="${aosAnim}" data-aos-duration="1000">
-                            <div class="timeline-content">
-                                <div class="date-box">
-                                    <span class="month">${item.Month || ''}</span>
-                                    <span class="year-small">${item.Year}</span>
-                                </div>
-                                <div class="content-body">
-                                    <div class="report-icon-box" style="background: linear-gradient(135deg, ${bgClass}, ${bgClass}); color: ${colorClass};"><i class="bi ${icon}"></i></div>
-                                    <span class="report-type">${item.Type || 'Report'}</span>
-                                    <h4 class="fw-bold mb-2">${item.Title}</h4>
-                                    <p class="text-muted mb-3 small">${item.Description || ''}</p>
-                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
-                                        <span class="text-muted small me-2"><i class="bi bi-hdd me-1"></i> ${item.File_Size || 'N/A'}</span>
-                                        <a href="${item.Download_URL || '#'}" class="btn-download" download>Download</a>
-                                    </div>
-                                </div>
+                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-secondary border-opacity-25">
+                                <a href="${pdfUrl}" target="_blank" class="btn-download-card" download>
+                                    <i class="bi bi-file-earmark-arrow-down me-2"></i> Download PDF
+                                </a>
+                                ${item.File_Size ? `<span class="file-size ms-3"><i class="bi bi-hdd me-1"></i>${item.File_Size}</span>` : ''}
                             </div>
                         </div>
-                    `;
-                    timeline.innerHTML += reportHTML;
-                });
-
-                setupSearch(); // Re-initialize search after rendering
-            }
-
-            function setupSearch() {
-                const searchInput = document.getElementById('searchInput');
-                const reportItems = document.querySelectorAll('.timeline-container');
-                const yearSeparators = document.querySelectorAll('.timeline-year');
-
-                searchInput.addEventListener('keyup', function(e) {
-                    const term = e.target.value.toLowerCase().trim();
-
-                    reportItems.forEach(item => {
-                        const title = item.querySelector('h4').textContent.toLowerCase();
-                        const type = item.querySelector('.report-type').textContent.toLowerCase();
-                        const month = item.querySelector('.month').textContent.toLowerCase();
-                        const year = item.querySelector('.year-small').textContent.toLowerCase();
-
-                        const combinedText = `${title} ${type} ${month} ${year}`;
-
-                        if (combinedText.includes(term)) {
-                            item.style.display = 'block';
-                        } else {
-                            item.style.display = 'none';
-                        }
-                    });
-
-                    // Smart Hide Year Separators logic (simplified for dynamic content)
-                    // ... (Can be added back if needed)
-                });
-            }
-
-            fetchData();
-        });
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
     </script>
 </body>
 </html>

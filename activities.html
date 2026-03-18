@@ -147,6 +147,35 @@
         }
         .btn-link-custom:hover { transform: translateX(-8px); }
 
+        /* Skeleton Loading Styles */
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+        [data-theme="dark"] .skeleton {
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.02) 75%);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            background: var(--card-bg);
+            border: var(--glass-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            height: 100%;
+        }
+        .skeleton-img { height: 260px; width: 100%; }
+        .skeleton-text { height: 1em; margin-bottom: 0.5em; border-radius: 4px; }
+        .skeleton-title { height: 1.5em; width: 70%; margin-bottom: 1em; }
+        .skeleton-desc { height: 4em; width: 100%; margin-bottom: 1em; }
+        .skeleton-btn { height: 2em; width: 40%; border-radius: 8px; }
+
         /* Footer */
         footer {
             background: #0f172a;
@@ -196,12 +225,7 @@
         </div>
 
         <div class="row g-4" id="activities-container">
-            <!-- Activities will be injected here -->
-            <div class="col-12 text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
+            <!-- Skeletons will be injected here initially -->
         </div>
     </div>
 
@@ -241,24 +265,61 @@
         // ==========================================
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=375204157&single=true&output=csv";
 
+        function showSkeletons() {
+            const container = document.getElementById('activities-container');
+            container.innerHTML = '';
+            // Create 3 skeleton cards
+            for (let i = 0; i < 3; i++) {
+                container.innerHTML += `
+                    <div class="col-md-4">
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-img"></div>
+                            <div class="p-4">
+                                <div class="skeleton skeleton-text" style="width: 30%;"></div>
+                                <div class="skeleton skeleton-title"></div>
+                                <div class="skeleton skeleton-desc"></div>
+                                <div class="skeleton skeleton-btn"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         function fetchData() {
-            Papa.parse(sheetURL, {
-                download: true,
-                header: true,
-                dynamicTyping: true,
-                complete: function(results) {
-                    renderActivities(results.data);
-                },
-                error: function(err) {
+            showSkeletons();
+
+            // Simulating a small delay to see the skeleton effect (remove in production if not needed)
+            // But PapaParse is usually fast, so skeleton might flicker without a min delay.
+            // Using a Promise to ensure skeleton shows for at least 500ms for smoothness
+            const minDelay = new Promise(resolve => setTimeout(resolve, 800));
+            const dataFetch = new Promise((resolve, reject) => {
+                Papa.parse(sheetURL, {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    complete: function(results) {
+                        resolve(results.data);
+                    },
+                    error: function(err) {
+                        reject(err);
+                    }
+                });
+            });
+
+            Promise.all([minDelay, dataFetch])
+                .then(([_, data]) => {
+                    renderActivities(data);
+                })
+                .catch(err => {
                     console.error("Error fetching CSV:", err);
                     document.getElementById('activities-container').innerHTML = '<div class="col-12 text-center text-danger">Failed to load data.</div>';
-                }
-            });
+                });
         }
 
         function renderActivities(data) {
             const container = document.getElementById('activities-container');
-            container.innerHTML = ''; // Clear loading spinner
+            container.innerHTML = ''; // Clear skeletons
 
             data.forEach((item, index) => {
                 if (!item.Title) return; // Skip empty rows
