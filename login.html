@@ -5,292 +5,388 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- PapaParse for CSV -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        (function() {
+            var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv";
+            function checkAndRedirect() {
+                var apiUrl = localStorage.getItem('healthScreening_API');
+                function handleResult(m) { if (m) window.location.replace('maintenance.html'); }
+                function csvFallback() {
+                    Papa.parse(CSV_URL, { download:true, header:true,
+                        complete: function(r) { var s=''; if(r.data&&r.data.length>0){var row=r.data[0];s=row.Status||row.status||row.Maintenance||row.maintenance||Object.values(row)[0]||'';} handleResult(s.toString().toUpperCase()==='ON'||s.toString().toUpperCase()==='TRUE'); },
+                        error: function(){}
+                    });
+                }
+                if(apiUrl){fetch(apiUrl+'?checkMaintenance=true').then(function(r){return r.json();}).then(function(res){handleResult(res.maintenance===true);}).catch(csvFallback);}else{csvFallback();}
+            }
+            checkAndRedirect(); setInterval(checkAndRedirect,30000);
+        })();
+    </script>
 
     <style>
         :root {
             --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-            --bg-body: #020617;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+            --bg: #020617;
+            --card-bg: rgba(15, 23, 42, 0.65);
+            --border: rgba(255, 255, 255, 0.07);
+            --text: #f1f5f9;
+            --muted: #64748b;
         }
 
-        /* Motion UI Keyframes */
-        @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-12px); }
+        }
+        @keyframes spin-arc {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes pulse-ring {
+            0%, 100% { transform: scale(1);    opacity: .6; }
+            50%       { transform: scale(1.08); opacity: .25; }
+        }
+        @keyframes blobMove {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33%       { transform: translate(30px,-20px) scale(1.05); }
+            66%       { transform: translate(-20px,15px) scale(.97); }
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            color: var(--text-main);
-            background-color: var(--bg-body);
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
-            background-attachment: fixed;
-            height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            animation: fadeInPage 0.8s ease-out;
+            position: relative;
+        }
+
+        /* Ambient blobs */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .18;
+            pointer-events: none;
+            animation: blobMove 14s ease-in-out infinite;
+        }
+        .blob-1 { width: 520px; height: 520px; background: #2563eb; top: -15%; left: -12%; animation-delay: 0s; }
+        .blob-2 { width: 400px; height: 400px; background: #06b6d4; bottom: -12%; right: -8%; animation-delay: 5s; }
+        .blob-3 { width: 280px; height: 280px; background: #10b981; top: 55%; left: 55%; animation-delay: 9s; }
+
+        /* Grid */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(6,182,212,.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6,182,212,.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none; z-index: 0;
+        }
+
+        /* Card */
+        .login-wrap {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 460px;
+            padding: 20px;
+            animation: fadeIn .85s cubic-bezier(.23,1,.32,1) both;
         }
 
         .login-card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: var(--glass-border);
-            border-radius: 24px;
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: var(--shadow);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 52px 44px 44px;
+            box-shadow: 0 40px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04);
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s;
         }
 
+        /* top gradient line */
         .login-card::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
+            position: absolute; top: 0; left: 15%; right: 15%; height: 2px;
             background: var(--main-gradient);
+            border-radius: 100%;
         }
 
-        .login-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 2.5rem;
-            color: #06b6d4;
+        /* Icon */
+        .icon-wrap {
+            position: relative;
+            width: 96px; height: 96px;
+            margin: 0 auto 32px;
+        }
+        .icon-ring {
+            position: absolute; inset: -10px; border-radius: 50%;
+            border: 1.5px solid rgba(6,182,212,.3);
+            animation: pulse-ring 3s ease-in-out infinite;
+        }
+        .icon-ring-2 {
+            position: absolute; inset: -22px; border-radius: 50%;
+            border: 1px solid rgba(6,182,212,.12);
+            animation: pulse-ring 3s 1.2s ease-in-out infinite;
+        }
+        .icon-arc {
+            position: absolute; inset: -6px; border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #06b6d4;
+            border-right-color: rgba(6,182,212,.25);
+            animation: spin-arc 3.5s linear infinite;
+        }
+        .icon-circle {
+            width: 96px; height: 96px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(6,182,212,.15));
+            border: 1px solid rgba(6,182,212,.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: #22d3ee;
             animation: float 6s ease-in-out infinite;
         }
 
-        .login-title {
-            font-weight: 800;
-            margin-bottom: 5px;
+        /* Brand label */
+        .brand-label {
+            text-align: center;
+            font-size: .75rem; font-weight: 700;
+            letter-spacing: .12em; text-transform: uppercase;
             background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
 
-        .login-subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 30px;
+        h2.login-title {
+            text-align: center;
+            font-size: 2rem; font-weight: 900;
+            color: var(--text); margin-bottom: 6px;
         }
+
+        .login-sub {
+            text-align: center;
+            font-size: .9rem; color: var(--muted);
+            margin-bottom: 36px; line-height: 1.6;
+        }
+
+        /* Divider */
+        .form-divider {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 24px; color: #1e293b; font-size: .78rem; font-weight: 600;
+        }
+        .form-divider::before, .form-divider::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.06);
+        }
+
+        /* Fields */
+        .field-wrap { margin-bottom: 20px; }
+
+        .field-label {
+            display: block;
+            font-size: .78rem; font-weight: 700;
+            letter-spacing: .06em; text-transform: uppercase;
+            color: #475569; margin-bottom: 8px;
+        }
+
+        .field-inner {
+            position: relative;
+        }
+        .field-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: #334155; font-size: 1rem;
+            transition: color .25s;
+        }
+        .field-inner:focus-within .field-icon { color: #22d3ee; }
 
         .form-control {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.9rem;
-        }
-
-        .form-control:focus {
-            background: rgba(15, 23, 42, 0.9);
-            border-color: #06b6d4;
-            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
-            color: #ffffff;
-        }
-
-        .form-label {
-            font-size: 0.9rem;
-            color: #e2e8f0;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .btn-login {
-            background: var(--main-gradient);
-            border: none;
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 800;
-            font-size: 1.1rem;
-            margin-top: 10px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 14px;
+            color: var(--text);
+            padding: 13px 16px 13px 44px;
+            font-family: 'Cairo', sans-serif;
+            font-size: .95rem;
+            transition: all .25s;
+            outline: none;
+        }
+        .form-control::placeholder { color: #334155; }
+        .form-control:focus {
+            background: rgba(2, 6, 23, 0.85);
+            border-color: rgba(6,182,212,.4);
+            box-shadow: 0 0 0 3px rgba(6,182,212,.1);
+            color: var(--text);
         }
 
-        .btn-login:hover {
+        /* Login button */
+        .btn-login {
+            width: 100%; padding: 14px;
+            background: var(--main-gradient);
+            border: none; border-radius: 14px;
+            color: #fff; font-family: 'Cairo', sans-serif;
+            font-size: 1rem; font-weight: 800;
+            cursor: pointer; margin-top: 8px;
+            transition: all .3s;
+            box-shadow: 0 6px 20px rgba(6,182,212,.25);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-login:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5);
-            color: white;
+            box-shadow: 0 12px 30px rgba(6,182,212,.4);
         }
+        .btn-login:active:not(:disabled) { transform: translateY(0); }
+        .btn-login:disabled { opacity: .65; cursor: not-allowed; }
 
-        .btn-login:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
+        .spinner-border { width: 1.3rem; height: 1.3rem; border-width: 2px; }
 
-        .error-msg {
-            color: #fca5a5;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 20px;
+        /* Error */
+        .error-box {
             display: none;
-            font-weight: 600;
-            background: rgba(239, 68, 68, 0.15);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            animation: fadeInPage 0.3s ease-out;
-            line-height: 1.5;
+            margin-top: 20px;
+            background: rgba(239,68,68,.1);
+            border: 1px solid rgba(239,68,68,.25);
+            border-radius: 14px; padding: 16px 18px;
+            font-size: .87rem; color: #fca5a5; line-height: 1.6;
+            animation: fadeIn .3s ease-out;
+        }
+        .error-box .err-title {
+            display: flex; align-items: center; gap: 8px;
+            font-weight: 700; margin-bottom: 6px; color: #f87171;
         }
 
-        .spinner-border {
-            width: 1.5rem;
-            height: 1.5rem;
+        /* Footer note */
+        .login-footer {
+            text-align: center; margin-top: 28px;
+            font-size: .75rem; color: #1e293b;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-card" data-aos="zoom-in" data-aos-duration="1000">
-        <div class="login-icon">
-            <i class="bi bi-shield-lock"></i>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="login-wrap">
+        <div class="login-card">
+
+            <!-- Icon -->
+            <div class="icon-wrap">
+                <div class="icon-ring-2"></div>
+                <div class="icon-ring"></div>
+                <div class="icon-arc"></div>
+                <div class="icon-circle"><i class="bi bi-shield-lock-fill"></i></div>
+            </div>
+
+            <!-- Heading -->
+            <div class="brand-label"><i class="bi bi-activity me-1"></i> Health Screening</div>
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-sub">Enter your credentials to access the dashboard</p>
+
+            <div class="form-divider">Secure Login</div>
+
+            <!-- Form -->
+            <form id="loginForm" autocomplete="off">
+
+                <div class="field-wrap">
+                    <label class="field-label" for="username">Username</label>
+                    <div class="field-inner">
+                        <i class="bi bi-person-fill field-icon"></i>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="field-wrap">
+                    <label class="field-label" for="password">Password</label>
+                    <div class="field-inner">
+                        <i class="bi bi-lock-fill field-icon"></i>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span id="btnText"><i class="bi bi-box-arrow-in-right me-1"></i> Login</span>
+                    <span id="btnSpinner" class="spinner-border text-white d-none" role="status"></span>
+                </button>
+
+                <div class="error-box" id="errorMsg">
+                    <div class="err-title"><i class="bi bi-shield-exclamation"></i> Access Denied</div>
+                    <span id="errDetail"></span>
+                    <div style="margin-top:8px;font-size:.82rem;color:#9ca3af;">Please verify your credentials. If you believe this is a system error, kindly contact the developer.</div>
+                </div>
+
+            </form>
+
+            <p class="login-footer">&copy; 2026 Health Screening &mdash; Heliopolis University</p>
         </div>
-        <h3 class="text-center login-title">Welcome Back</h3>
-        <p class="text-center login-subtitle">Please enter your credentials to access the dashboard.</p>
-
-        <form id="loginForm">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
-            </div>
-            <div class="mb-4">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-            </div>
-
-            <button type="submit" class="btn btn-login" id="loginBtn">
-                <span id="btnText">Login</span>
-                <span id="btnSpinner" class="spinner-border text-white d-none" role="status"></span>
-            </button>
-
-            <div id="errorMsg" class="error-msg">
-                <!-- Error message will be injected here -->
-            </div>
-        </form>
     </div>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Check if already logged in
-        if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            window.location.href = 'index.html';
-        }
-
-        AOS.init();
+        if (sessionStorage.getItem('isLoggedIn') === 'true') window.location.href = 'index.html';
 
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vROSvg9xVSBLkqDfzLCKOr0Fvb0k_CeAQT9PDQHJMWDCmjYswPUSjXmE0YkfX836Npy0ivzOY5y8iIZ/pub?gid=0&single=true&output=csv";
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            const btn = document.getElementById('loginBtn');
+            const user    = document.getElementById('username').value.trim();
+            const pass    = document.getElementById('password').value.trim();
+            const btn     = document.getElementById('loginBtn');
             const btnText = document.getElementById('btnText');
-            const btnSpinner = document.getElementById('btnSpinner');
-            const errorMsg = document.getElementById('errorMsg');
+            const spinner = document.getElementById('btnSpinner');
+            const errBox  = document.getElementById('errorMsg');
+            const errDetail = document.getElementById('errDetail');
 
-            // UI Loading State
             btn.disabled = true;
             btnText.classList.add('d-none');
-            btnSpinner.classList.remove('d-none');
-            errorMsg.style.display = 'none';
+            spinner.classList.remove('d-none');
+            errBox.style.display = 'none';
 
             Papa.parse(sheetURL, {
-                download: true,
-                header: true,
+                download: true, header: true,
                 complete: function(results) {
                     const data = results.data;
-                    let userFound = false;
-                    let passwordCorrect = false;
+                    let userFound = false, passOk = false;
 
-                    // Check credentials
                     for (let i = 0; i < data.length; i++) {
-                        const rowUser = data[i].username ? data[i].username.toString().trim() : "";
-                        const rowPass = data[i].password ? data[i].password.toString().trim() : "";
-
-                        if (rowUser === user) {
+                        const ru = (data[i].username || '').toString().trim();
+                        const rp = (data[i].password || '').toString().trim();
+                        if (ru === user) {
                             userFound = true;
-                            if (rowPass === pass) {
-                                passwordCorrect = true;
-                            }
-                            break; // Stop searching once username is found
+                            if (rp === pass) passOk = true;
+                            break;
                         }
                     }
 
-                    if (userFound && passwordCorrect) {
-                        // Success: Save session and Redirect
+                    if (userFound && passOk) {
                         sessionStorage.setItem('isLoggedIn', 'true');
                         window.location.href = 'index.html';
                     } else {
-                        // Failure: Determine specific error
-                        let specificError = "";
-                        if (!userFound) {
-                            specificError = "Could not find an account matching that username.";
-                        } else {
-                            specificError = "The password you entered is incorrect.";
-                        }
-
-                        // Professional Contact Message (Singular)
-                        const contactMsg = "<br><span style='font-size: 0.85rem; opacity: 0.9; display: block; margin-top: 8px; font-weight: 400;'>Please verify your credentials. If you believe this is a system error, kindly contact the developer.</span>";
-
-                        errorMsg.innerHTML = `<div class="d-flex align-items-center justify-content-center mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Access Denied</strong></div>${specificError}${contactMsg}`;
-                        errorMsg.style.display = 'block';
-
-                        // Reset Button
+                        errDetail.textContent = !userFound
+                            ? 'Could not find an account matching that username.'
+                            : 'The password you entered is incorrect.';
+                        errBox.style.display = 'block';
                         btn.disabled = false;
                         btnText.classList.remove('d-none');
-                        btnSpinner.classList.add('d-none');
+                        spinner.classList.add('d-none');
                     }
                 },
-                error: function(err) {
-                    console.error("Error fetching CSV:", err);
-                    errorMsg.innerHTML = `<i class="bi bi-wifi-off me-2"></i>Connection Error. Please check your internet and try again.`;
-                    errorMsg.style.display = 'block';
+                error: function() {
+                    errDetail.textContent = 'Connection error. Please check your internet and try again.';
+                    errBox.style.display = 'block';
                     btn.disabled = false;
                     btnText.classList.remove('d-none');
-                    btnSpinner.classList.add('d-none');
+                    spinner.classList.add('d-none');
                 }
             });
         });

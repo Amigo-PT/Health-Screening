@@ -5,165 +5,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interventions & Outcomes - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- PapaParse for CSV -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        (function() {
+            var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv";
+            function checkAndRedirect() {
+                var apiUrl = localStorage.getItem('healthScreening_API');
+                function handleResult(m) { if (m) window.location.replace('maintenance.html'); }
+                function csvFallback() {
+                    Papa.parse(CSV_URL, { download:true, header:true,
+                        complete: function(r) { var s=''; if(r.data&&r.data.length>0){var row=r.data[0];s=row.Status||row.status||row.Maintenance||row.maintenance||Object.values(row)[0]||'';} handleResult(s.toString().toUpperCase()==='ON'||s.toString().toUpperCase()==='TRUE'); },
+                        error: function(){}
+                    });
+                }
+                if(apiUrl){fetch(apiUrl+'?checkMaintenance=true').then(function(r){return r.json();}).then(function(res){handleResult(res.maintenance===true);}).catch(csvFallback);}else{csvFallback();}
+            }
+            checkAndRedirect(); setInterval(checkAndRedirect,30000);
+        })();
+    </script>
 
     <style>
         :root {
             --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-            --bg-body: #f8fafc;
-            --text-main: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+            --bg: #020617;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --card-bg: rgba(15,23,42,0.6);
+            --border: rgba(255,255,255,0.07);
             --radius: 24px;
-            --shadow: 0 15px 35px -5px rgba(6, 182, 212, 0.1);
         }
 
-        [data-theme="dark"] {
-            --bg-body: #020617;
-            --text-main: #f1f5f9;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5);
-        }
+        * { box-sizing: border-box; }
 
-        /* Motion UI Keyframes */
-        @keyframes fadeInPage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+        @keyframes countUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
         body {
-            font-family: 'Cairo', sans-serif;
-            color: var(--text-main);
-            background-color: var(--bg-body);
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
-            background-attachment: fixed;
-            transition: background-color 0.3s, color 0.3s;
-            animation: fadeInPage 0.8s ease-out; /* Page Load Animation */
+            font-family:'Cairo',sans-serif; color:var(--text);
+            background:var(--bg); min-height:100vh;
+            animation:fadeInPage .8s ease-out;
+        }
+        body::before {
+            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+            background-image:linear-gradient(rgba(6,182,212,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,.03) 1px,transparent 1px);
+            background-size:60px 60px;
         }
 
-        .navbar {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(20px);
-            border-bottom: var(--glass-border);
-            padding: 15px 0;
-            transition: background 0.3s;
-        }
-        [data-theme="dark"] .navbar {
-            background: rgba(15, 23, 42, 0.8);
-        }
+        /* Ambient */
+        .ambient { position:fixed; border-radius:50%; filter:blur(90px); opacity:.12; pointer-events:none; z-index:0; }
+        .amb-1 { width:500px;height:500px;background:#2563eb;top:-15%;left:-10%; }
+        .amb-2 { width:380px;height:380px;background:#10b981;bottom:-10%;right:-8%; }
 
-        .navbar-brand {
-            font-weight: 900;
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* NAVBAR */
+        .navbar { background:rgba(2,6,23,.85); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); padding:16px 0; z-index:100; }
+        .navbar-brand { font-weight:900; font-size:1.3rem; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .nav-link { font-weight:700; color:#64748b !important; padding:6px 14px !important; border-radius:10px; transition:all .25s; font-size:.9rem; margin-right:4px; }
+        .nav-link:hover { background:rgba(6,182,212,.08); color:#e2e8f0 !important; }
+        .nav-link.active { background:rgba(6,182,212,.12); color:#22d3ee !important; border:1px solid rgba(6,182,212,.2); }
+
+        /* HERO */
+        .page-hero { position:relative; z-index:1; padding:150px 0 70px; text-align:center; }
+        .hero-eyebrow {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
+            border-radius:50px; padding:8px 20px; font-size:.8rem; font-weight:700;
+            color:#22d3ee; letter-spacing:.08em; text-transform:uppercase; margin-bottom:20px;
         }
-        .nav-link {
-            font-weight: 700;
-            color: var(--text-main) !important;
-            margin-right: 20px; /* Changed from margin-left */
-            transition: 0.3s;
-        }
-        .nav-link:hover, .nav-link.active {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transform: translateY(-2px);
-        }
+        .page-title { font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; line-height:1.15; margin-bottom:14px; }
+        .title-gradient { background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-sub { font-size:1rem; color:var(--muted); max-width:500px; margin:0 auto; line-height:1.7; }
+
+        /* CARDS */
+        .cards-section { position:relative; z-index:1; padding-bottom:100px; }
 
         .intervention-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: var(--glass-border);
-            border-radius: var(--radius);
-            padding: 40px;
-            box-shadow: var(--shadow);
-            margin-bottom: 35px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            background:var(--card-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+            border:1px solid var(--border); border-radius:var(--radius);
+            padding:0; margin-bottom:28px; overflow:hidden;
+            transition:all .45s cubic-bezier(.23,1,.32,1);
+            position:relative;
         }
         .intervention-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -10px rgba(6, 182, 212, 0.2);
+            transform:translateY(-8px);
+            box-shadow:0 28px 56px -14px rgba(6,182,212,.18), 0 0 0 1px rgba(6,182,212,.1);
         }
-        .intervention-card::before {
-            content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 6px;
-            background: var(--main-gradient);
+
+        /* accent left bar */
+        .card-accent {
+            position:absolute; left:0; top:0; bottom:0; width:4px;
+            background:var(--main-gradient);
+        }
+
+        .card-inner { padding:36px 36px 36px 48px; }
+
+        /* Left side */
+        .card-icon-wrap {
+            width:56px; height:56px; border-radius:16px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.5rem; flex-shrink:0;
+            transition:.4s;
+        }
+        .intervention-card:hover .card-icon-wrap { transform:rotate(8deg) scale(1.08); }
+
+        .card-title { font-size:1.3rem; font-weight:800; color:var(--text); margin:0; }
+        .card-desc { font-size:.9rem; color:var(--muted); line-height:1.7; margin:12px 0 20px; }
+
+        .beneficiaries-badge {
+            display:inline-flex; align-items:center; gap:7px;
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.18);
+            border-radius:50px; padding:7px 16px;
+            font-size:.82rem; font-weight:700; color:#22d3ee;
+        }
+
+        /* Right side – outcome boxes */
+        .outcome-wrap {
+            display:flex; align-items:center; gap:12px; height:100%;
         }
 
         .outcome-box {
-            background: rgba(255,255,255,0.6);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            height: 100%;
-            border: 1px solid rgba(255,255,255,0.8);
-            transition: 0.4s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            flex:1; border-radius:18px; padding:24px 16px;
+            text-align:center; transition:.35s; position:relative; overflow:hidden;
         }
-        [data-theme="dark"] .outcome-box {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .outcome-box.before {
+            background:rgba(239,68,68,.06);
+            border:1px solid rgba(239,68,68,.15);
         }
-        .outcome-box:hover { transform: translateY(-3px); }
-        .outcome-box.success { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
-        .outcome-value { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1.2; } /* Increased font size */
-        .outcome-label { font-size: 0.95rem; color: #64748b; font-weight: 600; margin-top: 5px; } /* Increased font size */
-        [data-theme="dark"] .outcome-label { color: #94a3b8; }
-        [data-theme="dark"] .text-muted { color: #94a3b8 !important; }
-        [data-theme="dark"] .badge.bg-white { background-color: #334155 !important; color: #f1f5f9 !important; border-color: #475569 !important; }
+        .outcome-box.after {
+            background:rgba(16,185,129,.07);
+            border:1px solid rgba(16,185,129,.18);
+        }
+        .outcome-box:hover { transform:translateY(-4px); }
 
-        .arrow-icon {
-            font-size: 1.8rem; color: #cbd5e1;
-            background: #fff; width: 50px; height: 50px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: 0.4s;
+        .outcome-box.before::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,#ef4444,#f97316);
         }
-        [data-theme="dark"] .arrow-icon {
-            background: #1e293b;
-            color: #64748b;
-        }
-        .intervention-card:hover .arrow-icon {
-            color: #06b6d4; transform: scale(1.1);
+        .outcome-box.after::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:2px;
+            background:linear-gradient(90deg,#10b981,#06b6d4);
         }
 
-        /* Footer */
-        footer {
-            background: #0f172a;
-            color: #94a3b8;
-            padding: 80px 0 40px;
-            margin-top: 100px;
-            position: relative;
-            overflow: hidden;
+        .outcome-val {
+            font-size:2.2rem; font-weight:900; line-height:1.1;
+            margin-bottom:6px;
         }
-        footer::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
-            background: var(--main-gradient);
+        .before .outcome-val { color:#f87171; }
+        .after  .outcome-val { color:#34d399; }
+
+        .outcome-lbl { font-size:.8rem; font-weight:700; color:var(--muted); letter-spacing:.04em; text-transform:uppercase; }
+
+        /* Arrow */
+        .arrow-wrap {
+            width:44px; height:44px; border-radius:12px; flex-shrink:0;
+            background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+            display:flex; align-items:center; justify-content:center;
+            color:#334155; font-size:1.1rem; transition:.4s;
         }
-        .footer-link { color: #94a3b8; text-decoration: none; transition: 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover {
-            background: var(--main-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            padding-left: 5px;
-        }
+        .intervention-card:hover .arrow-wrap { background:rgba(6,182,212,.1); border-color:rgba(6,182,212,.25); color:#22d3ee; }
+
+        /* divider between left/right on large */
+        .card-divider { width:1px; background:rgba(255,255,255,.06); align-self:stretch; }
+
+        /* SKELETON */
+        .skeleton { background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
+        .skel-card { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:36px; margin-bottom:28px; }
+        .skel-line { height:14px; margin-bottom:10px; }
+        .skel-title { height:22px; width:40%; margin-bottom:16px; }
+        .skel-desc { height:50px; margin-bottom:20px; }
+        .skel-outcomes { display:flex; gap:12px; }
+        .skel-box { flex:1; height:100px; border-radius:18px; }
+
+        /* EMPTY */
+        .empty-state { text-align:center; padding:80px 20px; color:var(--muted); }
+        .empty-state i { font-size:3.5rem; opacity:.2; display:block; margin-bottom:16px; }
+
+        /* FOOTER */
+        footer { position:relative; z-index:1; background:#030712; color:#475569; padding:80px 0 40px; }
+        footer::before { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background:var(--main-gradient); }
+        .footer-brand { font-size:1.1rem; font-weight:900; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
     </style>
 </head>
 <body>
+
+    <div class="ambient amb-1"></div>
+    <div class="ambient amb-2"></div>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
@@ -183,128 +213,156 @@
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 140px; margin-bottom: 80px;">
-        <div class="text-center mb-5" data-aos="fade-down" data-aos-duration="1000">
-            <h2 class="fw-bold display-5 mb-3">Interventions & Outcomes</h2>
-            <p class="text-muted lead">Comparing results before and after applying therapeutic and preventive programs</p>
-        </div>
-
-        <div id="interventions-container">
-            <!-- Content will be injected here -->
-            <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
+    <!-- Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <div data-aos="fade-down" data-aos-duration="900">
+                <div class="hero-eyebrow"><i class="bi bi-arrow-left-right"></i> Before & After</div>
+                <h1 class="page-title">Interventions &<br><span class="title-gradient">Outcomes</span></h1>
+                <p class="page-sub">Comparing results before and after applying therapeutic and preventive programs across the community.</p>
             </div>
         </div>
+    </section>
 
-    </div>
+    <!-- Cards -->
+    <section class="cards-section">
+        <div class="container">
+            <div id="interventions-container">
+                <!-- Skeletons injected by JS -->
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-6">
-                    <h4 class="text-white fw-bold mb-4">Health Screening</h4>
-                    <p class="small opacity-75">Integrative Health Center - Heliopolis University</p>
-                    <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-white fs-5 opacity-75 hover-opacity-100"><i class="bi bi-twitter"></i></a>
-                    </div>
+                    <div class="footer-brand"><i class="bi bi-activity me-2"></i>Health Screening</div>
+                    <p class="small mb-0" style="color:#1e293b;">Integrative Health Center &mdash; Heliopolis University</p>
                 </div>
                 <div class="col-lg-6">
-                    <h6 class="text-white mb-4">Contact Us</h6>
-                    <p class="small opacity-75 mb-2"><i class="bi bi-envelope me-2 text-info"></i> info@hu.edu.eg</p>
-                    <p class="small opacity-75"><i class="bi bi-geo-alt me-2 text-info"></i> Heliopolis University, Cairo</p>
+                    <h6 class="text-white mb-3" style="font-size:.85rem;letter-spacing:.05em;text-transform:uppercase;">Contact</h6>
+                    <p class="small mb-2" style="color:#334155;"><i class="bi bi-envelope me-2 text-info"></i>info@hu.edu.eg</p>
+                    <p class="small mb-0" style="color:#334155;"><i class="bi bi-geo-alt me-2 text-info"></i>Heliopolis University, Cairo</p>
                 </div>
             </div>
-            <hr class="border-secondary my-5 opacity-10">
-            <div class="text-center small opacity-50">
-                <p class="mb-0">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abdelaziz</p>
-            </div>
+            <hr style="border-color:rgba(255,255,255,.05);margin:40px 0 24px;">
+           <p class="text-center mb-0" style="font-size:0.8rem;color:#ffffff;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz</p>
         </div>
     </footer>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 1000, once: true, offset: 50 });
+        AOS.init({ duration:900, once:true, offset:40 });
 
-        // ==========================================
-        //  DATA FETCHING SECTION
-        // ==========================================
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=685252747&single=true&output=csv";
 
-        function fetchData() {
-            Papa.parse(sheetURL, {
-                download: true,
-                header: true,
-                dynamicTyping: true,
-                complete: function(results) {
-                    renderInterventions(results.data);
-                },
-                error: function(err) {
-                    console.error("Error fetching CSV:", err);
-                    document.getElementById('interventions-container').innerHTML = '<div class="text-center text-danger">Failed to load data.</div>';
-                }
-            });
+        // Icon color palettes cycling
+        const palettes = [
+            { bg:'rgba(37,99,235,.12)',  color:'#60a5fa' },
+            { bg:'rgba(245,158,11,.12)', color:'#fbbf24' },
+            { bg:'rgba(6,182,212,.12)',  color:'#22d3ee' },
+            { bg:'rgba(16,185,129,.12)', color:'#34d399' },
+            { bg:'rgba(168,85,247,.12)', color:'#c084fc' },
+        ];
+
+        function showSkeletons() {
+            const c = document.getElementById('interventions-container');
+            c.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                c.innerHTML += `
+                    <div class="skel-card">
+                        <div class="skeleton skel-line" style="width:20%;margin-bottom:14px;"></div>
+                        <div class="skeleton skel-title"></div>
+                        <div class="skeleton skel-desc"></div>
+                        <div class="skel-outcomes">
+                            <div class="skeleton skel-box"></div>
+                            <div style="width:44px;flex-shrink:0;"></div>
+                            <div class="skeleton skel-box"></div>
+                        </div>
+                    </div>`;
+            }
         }
 
         function renderInterventions(data) {
             const container = document.getElementById('interventions-container');
-            container.innerHTML = ''; // Clear loading
+            container.innerHTML = '';
 
-            data.forEach((item, index) => {
-                if (!item.Title) return;
+            const valid = data.filter(d => d.Title);
+            if (!valid.length) {
+                container.innerHTML = `<div class="empty-state"><i class="bi bi-clipboard-x"></i><h5 style="color:#475569;">No interventions found</h5></div>`;
+                return;
+            }
 
-                const delay = index * 100;
+            valid.forEach((item, index) => {
+                const delay = index * 90;
+                const pal   = palettes[index % palettes.length];
+                const icon  = item.Icon || 'bi-activity';
 
-                // Determine icon color based on index (cycling through colors)
-                const colors = ['primary', 'warning', 'info', 'success'];
-                const color = colors[index % colors.length];
-                const icon = item.Icon || 'bi-activity';
+                container.innerHTML += `
+                    <div class="intervention-card" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="900">
+                        <div class="card-accent"></div>
+                        <div class="card-inner">
+                            <div class="row align-items-center g-4">
 
-                const html = `
-                    <div class="intervention-card" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="1000">
-                        <div class="row align-items-center">
-                            <div class="col-lg-5 mb-4 mb-lg-0">
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="bg-${color} bg-opacity-10 p-3 rounded-4 text-${color} me-3"><i class="bi ${icon} fs-3"></i></div>
-                                    <h3 class="fw-bold m-0">${item.Title}</h3>
-                                </div>
-                                <p class="text-muted mb-4">${item.Description || ''}</p>
-                                <span class="badge bg-white text-dark border rounded-pill px-4 py-2 shadow-sm">Beneficiaries: ${item.Beneficiaries || 0}</span>
-                            </div>
-                            <div class="col-lg-7">
-                                <div class="row align-items-center g-3">
-                                    <div class="col-5">
-                                        <div class="outcome-box">
-                                            <div class="outcome-value text-danger">${item.Value_Before || '-'}</div>
-                                            <div class="outcome-label">${item.Label_Before || 'Before'}</div>
+                                <!-- LEFT -->
+                                <div class="col-lg-5">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <div class="card-icon-wrap" style="background:${pal.bg};color:${pal.color};">
+                                            <i class="bi ${icon}"></i>
                                         </div>
+                                        <h3 class="card-title">${item.Title}</h3>
                                     </div>
-                                    <div class="col-2 text-center">
-                                        <div class="arrow-icon"><i class="bi bi-arrow-right"></i></div>
-                                    </div>
-                                    <div class="col-5">
-                                        <div class="outcome-box success">
-                                            <div class="outcome-value text-success">${item.Value_After || '-'}</div>
-                                            <div class="outcome-label">${item.Label_After || 'After'}</div>
-                                        </div>
+                                    <p class="card-desc">${item.Description || ''}</p>
+                                    <div class="beneficiaries-badge">
+                                        <i class="bi bi-people-fill"></i>
+                                        Beneficiaries: <strong>${item.Beneficiaries || 0}</strong>
                                     </div>
                                 </div>
+
+                                <!-- DIVIDER -->
+                                <div class="d-none d-lg-flex col-lg-auto px-0" style="padding:0 8px;">
+                                    <div class="card-divider"></div>
+                                </div>
+
+                                <!-- RIGHT -->
+                                <div class="col-lg">
+                                    <div class="outcome-wrap">
+                                        <div class="outcome-box before">
+                                            <div class="outcome-val">${item.Value_Before || '-'}</div>
+                                            <div class="outcome-lbl">${item.Label_Before || 'Before'}</div>
+                                        </div>
+                                        <div class="arrow-wrap">
+                                            <i class="bi bi-arrow-right"></i>
+                                        </div>
+                                        <div class="outcome-box after">
+                                            <div class="outcome-val">${item.Value_After || '-'}</div>
+                                            <div class="outcome-lbl">${item.Label_After || 'After'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                    </div>
-                `;
-                container.innerHTML += html;
+                    </div>`;
             });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchData();
-        });
+        function fetchData() {
+            showSkeletons();
+            Papa.parse(sheetURL, {
+                download:true, header:true, dynamicTyping:true,
+                complete: r => renderInterventions(r.data),
+                error: () => {
+                    document.getElementById('interventions-container').innerHTML =
+                        `<div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5><p style="font-size:.9rem;color:#1e293b;">Could not load data. Please check your connection.</p></div>`;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchData);
     </script>
 </body>
 </html>

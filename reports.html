@@ -5,332 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports Timeline - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <!-- PapaParse for CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        (function() {
+            var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv";
+            function checkAndRedirect() {
+                var apiUrl = localStorage.getItem('healthScreening_API');
+                function handleResult(m) { if (m) window.location.replace('maintenance.html'); }
+                function csvFallback() {
+                    Papa.parse(CSV_URL, { download:true, header:true,
+                        complete:function(r){var s='';if(r.data&&r.data.length>0){var row=r.data[0];s=row.Status||row.status||row.Maintenance||row.maintenance||Object.values(row)[0]||'';}handleResult(s.toString().toUpperCase()==='ON'||s.toString().toUpperCase()==='TRUE');},
+                        error:function(){}
+                    });
+                }
+                if(apiUrl){fetch(apiUrl+'?checkMaintenance=true').then(function(r){return r.json();}).then(function(res){handleResult(res.maintenance===true);}).catch(csvFallback);}else{csvFallback();}
+            }
+            checkAndRedirect(); setInterval(checkAndRedirect,30000);
+        })();
+    </script>
 
     <style>
         :root {
-            --primary-color: #38bdf8;
-            --secondary-color: #818cf8;
-            --accent-color: #2dd4bf;
-            --bg-body: #020617;
-            --glass-bg: rgba(30, 41, 59, 0.4);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
-            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-            --timeline-line-color: rgba(56, 189, 248, 0.2);
+            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+            --bg: #020617;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --card-bg: rgba(15,23,42,0.6);
+            --border: rgba(255,255,255,0.07);
+            --radius: 20px;
+            --line-color: rgba(6,182,212,0.18);
         }
+
+        * { box-sizing: border-box; }
+
+        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes shimmer    { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+        @keyframes slideUp    { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
 
         body {
-            font-family: 'Cairo', sans-serif;
-            color: #f8fafc;
-            background-color: var(--bg-body);
+            font-family:'Cairo',sans-serif; color:var(--text);
+            background:var(--bg); min-height:100vh;
+            display:flex; flex-direction:column;
+            animation:fadeInPage .8s ease-out;
+        }
+        body::before {
+            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
             background-image:
-                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(129, 140, 248, 0.08) 0%, transparent 40%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+                linear-gradient(rgba(6,182,212,.03) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(6,182,212,.03) 1px,transparent 1px);
+            background-size:60px 60px;
         }
 
-        /* Override text-muted for dark mode consistency */
-        .text-muted {
-            color: #94a3b8 !important;
-        }
+        .amb { position:fixed; border-radius:50%; filter:blur(90px); opacity:.12; pointer-events:none; z-index:0; }
+        .amb-1 { width:480px;height:480px;background:#2563eb;top:-15%;left:-10%; }
+        .amb-2 { width:360px;height:360px;background:#10b981;bottom:-10%;right:-8%; }
 
-        /* Navbar */
-        .navbar {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 15px 0;
-            z-index: 1000;
-        }
-        .navbar-brand {
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 1.5rem;
-        }
-        .nav-link {
-            font-weight: 700;
-            color: #cbd5e1 !important;
-            transition: 0.3s;
-            margin-left: 15px;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary-color) !important;
-            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
-            transform: translateY(-2px);
-        }
+        /* NAVBAR */
+        .navbar { background:rgba(2,6,23,.85); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); padding:16px 0; z-index:200; }
+        .navbar-brand { font-weight:900; font-size:1.3rem; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .nav-link { font-weight:700; color:#64748b !important; padding:6px 14px !important; border-radius:10px; transition:all .25s; font-size:.9rem; margin-right:4px; }
+        .nav-link:hover { background:rgba(6,182,212,.08); color:#e2e8f0 !important; }
+        .nav-link.active { background:rgba(6,182,212,.12); color:#22d3ee !important; border:1px solid rgba(6,182,212,.2); }
 
-        /* Filter Section */
-        .filter-container {
-            position: sticky;
-            top: 80px; /* Below navbar */
-            z-index: 900;
-            margin-bottom: 60px;
-            padding: 20px 0;
-            background: transparent;
+        /* HERO */
+        .page-hero { position:relative; z-index:1; padding:150px 0 60px; text-align:center; }
+        .hero-eyebrow {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
+            border-radius:50px; padding:8px 20px; font-size:.8rem; font-weight:700;
+            color:#22d3ee; letter-spacing:.08em; text-transform:uppercase; margin-bottom:20px;
         }
+        .page-title { font-size:clamp(2rem,4.5vw,3.2rem); font-weight:900; line-height:1.15; margin-bottom:14px; }
+        .title-gradient { background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-sub { font-size:1rem; color:var(--muted); max-width:500px; margin:0 auto; line-height:1.7; }
 
-        .filter-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            padding: 10px 25px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
+        /* FILTER BAR */
+        .filter-bar {
+            position:sticky; top:76px; z-index:150;
+            padding:16px 0; background:transparent;
         }
-
+        .filter-inner {
+            background:rgba(15,23,42,.8);
+            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,.08);
+            border-radius:50px; padding:10px 24px;
+            display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+            max-width:860px; margin:0 auto;
+            box-shadow:0 8px 32px rgba(0,0,0,.3);
+        }
+        .search-wrap {
+            flex:1; min-width:180px; display:flex; align-items:center; gap:10px;
+            border-right:1px solid rgba(255,255,255,.07); padding-right:16px;
+        }
+        .search-wrap i { color:#334155; font-size:1rem; }
         .search-input {
-            background: transparent !important;
-            border: none;
-            color: #fff;
-            padding: 10px;
-            width: 100%;
-            outline: none;
-            font-weight: 500;
+            background:transparent; border:none; color:var(--text);
+            font-family:'Cairo',sans-serif; font-size:.9rem; outline:none; width:100%;
         }
-        .search-input::placeholder { color: #94a3b8; }
+        .search-input::placeholder { color:#334155; }
+        .filter-select {
+            background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
+            color:var(--text); border-radius:20px; padding:7px 14px;
+            font-family:'Cairo',sans-serif; font-size:.85rem; cursor:pointer; outline:none;
+            transition:.25s;
+        }
+        .filter-select:hover, .filter-select:focus { background:rgba(6,182,212,.08); border-color:rgba(6,182,212,.3); }
+        .filter-select option { background:#0f172a; color:var(--text); }
 
-        .custom-select {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            outline: none;
-            transition: 0.3s;
-        }
-        .custom-select:hover, .custom-select:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-color);
-        }
-        .custom-select option { background: #0f172a; color: #fff; }
+        /* TIMELINE CONTAINER */
+        .timeline-section { position:relative; z-index:1; flex:1; padding-bottom:100px; }
 
-        /* Timeline Styles */
         .timeline {
-            position: relative;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 0;
+            position:relative;
+            max-width:960px;
+            margin:0 auto;
+            padding:40px 0;
         }
 
-        /* The Center Line */
+        /* center line */
         .timeline::before {
-            content: '';
-            position: absolute;
-            width: 2px;
-            background: linear-gradient(to bottom, transparent, var(--timeline-line-color) 10%, var(--timeline-line-color) 90%, transparent);
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            content:''; position:absolute;
+            left:50%; top:0; bottom:0; width:2px;
+            transform:translateX(-50%);
+            background:linear-gradient(to bottom, transparent, var(--line-color) 8%, var(--line-color) 92%, transparent);
         }
 
         .timeline-item {
-            padding: 10px 40px;
-            position: relative;
-            width: 50%;
-            opacity: 0;
-            animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            position:relative; width:50%; padding:10px 48px 10px 0;
+            opacity:0; animation:slideUp .6s ease forwards;
+        }
+        .timeline-item.right { left:50%; padding:10px 0 10px 48px; text-align:left; }
+        .timeline-item.left { text-align:right; }
+
+        /* Date dot */
+        .tl-dot {
+            position:absolute; top:18px;
+            width:62px; height:62px; border-radius:50%;
+            background:rgba(15,23,42,.95);
+            border:2px solid rgba(6,182,212,.35);
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            z-index:10; font-weight:800; line-height:1.15;
+            transition:all .35s;
+            box-shadow:0 0 18px rgba(6,182,212,.15);
+        }
+        .tl-dot .dot-month { font-size:.68rem; color:#22d3ee; text-transform:uppercase; letter-spacing:.04em; }
+        .tl-dot .dot-year  { font-size:.95rem; color:var(--text); }
+
+        .timeline-item.left  .tl-dot { right:-31px; }
+        .timeline-item.right .tl-dot { left:-31px; }
+
+        .timeline-item:hover .tl-dot {
+            background:rgba(6,182,212,.15);
+            border-color:#22d3ee;
+            box-shadow:0 0 28px rgba(6,182,212,.35);
+            transform:scale(1.1);
         }
 
-        .left { left: 0; text-align: right; }
-        .right { left: 50%; text-align: left; }
+        /* Card */
+        .tl-card {
+            background:var(--card-bg);
+            backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+            border:1px solid var(--border);
+            border-radius:var(--radius);
+            padding:24px;
+            transition:all .4s cubic-bezier(.23,1,.32,1);
+            position:relative; overflow:hidden;
+            text-align:left;
+        }
+        .tl-card::before {
+            content:''; position:absolute;
+            top:0; left:0; right:0; height:2px;
+            background:var(--main-gradient);
+            transform:scaleX(0); transition:transform .4s; transform-origin:left;
+        }
+        .timeline-item:hover .tl-card { transform:translateY(-6px); border-color:rgba(6,182,212,.18); box-shadow:0 20px 40px -10px rgba(0,0,0,.5); }
+        .timeline-item:hover .tl-card::before { transform:scaleX(1); }
 
-        /* Timeline Dot (Date Badge) */
-        .timeline-date-badge {
-            position: absolute;
-            top: 20px;
-            width: 60px;
-            height: 60px;
-            background: #0f172a;
-            border: 2px solid var(--primary-color);
-            border-radius: 50%;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-            font-weight: bold;
-            font-size: 0.75rem;
-            line-height: 1.1;
-            transition: 0.3s;
+        .type-pill {
+            display:inline-flex; align-items:center; gap:6px;
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.15);
+            border-radius:50px; padding:4px 12px;
+            font-size:.72rem; font-weight:700; color:#22d3ee;
+            letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px;
+        }
+        .report-title { font-size:1.1rem; font-weight:800; color:var(--text); margin-bottom:8px; line-height:1.4; }
+        .report-desc  { font-size:.87rem; color:var(--muted); line-height:1.7; margin-bottom:18px; }
+
+        .card-footer-row {
+            display:flex; align-items:center; gap:10px;
+            padding-top:16px; border-top:1px solid rgba(255,255,255,.06);
         }
 
-        .left .timeline-date-badge { right: -30px; }
-        .right .timeline-date-badge { left: -30px; }
+        .btn-download {
+            flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
+            border-radius:12px; padding:10px 16px;
+            font-size:.87rem; font-weight:700; color:#22d3ee;
+            text-decoration:none; transition:all .3s;
+            font-family:'Cairo',sans-serif;
+        }
+        .btn-download:hover { background:rgba(6,182,212,.18); color:#67e8f9; transform:translateY(-2px); }
 
-        .timeline-item:hover .timeline-date-badge {
-            background: var(--primary-color);
-            color: #0f172a;
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+        .file-size-badge {
+            display:inline-flex; align-items:center; gap:5px;
+            background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.15);
+            border-radius:10px; padding:6px 12px;
+            font-size:.78rem; font-weight:700; color:#34d399; white-space:nowrap;
         }
 
-        /* Content Card */
-        .timeline-content {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 25px;
-            position: relative;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* SKELETON */
+        .skeleton { background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
+        .skel-dot  { width:62px;height:62px;border-radius:50%; }
+        .skel-card { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:24px; }
+        .skel-line { height:12px; margin-bottom:10px; }
+        .skel-title{ height:20px; width:70%; margin-bottom:12px; }
+        .skel-desc { height:40px; margin-bottom:16px; }
+        .skel-btn  { height:40px; border-radius:12px; }
+
+        /* EMPTY */
+        .empty-state { text-align:center; padding:80px 20px; color:var(--muted); }
+        .empty-state i { font-size:3.5rem; opacity:.2; display:block; margin-bottom:16px; }
+
+        /* RESPONSIVE */
+        @media(max-width:768px) {
+            .timeline::before { left:28px; }
+            .timeline-item, .timeline-item.right { width:100%; left:0; padding:10px 0 10px 72px; text-align:left; }
+            .timeline-item.left .tl-dot,
+            .timeline-item.right .tl-dot { left:0; right:auto; }
+            .search-wrap { border-right:none; padding-right:0; border-bottom:1px solid rgba(255,255,255,.07); padding-bottom:10px; }
+            .filter-inner { border-radius:20px; flex-direction:column; align-items:stretch; }
         }
 
-        .timeline-content:hover {
-            transform: translateY(-5px);
-            background: rgba(30, 41, 59, 0.6);
-            border-color: rgba(56, 189, 248, 0.3);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Type Badge */
-        .type-badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #94a3b8;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .timeline-content:hover .type-badge {
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--primary-color);
-            border-color: rgba(56, 189, 248, 0.2);
-        }
-
-        .report-title {
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            line-height: 1.4;
-        }
-
-        .report-desc {
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-            line-height: 1.6;
-            opacity: 0.8;
-        }
-
-        .btn-download-card {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));
-            color: #fff;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            width: 100%;
-        }
-
-        .btn-download-card:hover {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-color: transparent;
-            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
-            color: #0f172a;
-        }
-
-        .file-size {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-left: auto;
-        }
-
-        /* Skeleton Loading Styles */
-        .skeleton {
-            background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 4px;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        .skeleton-content {
-            background: rgba(255,255,255,0.02);
-            border-radius: 20px;
-            padding: 25px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .skeleton-badge { height: 20px; width: 60px; margin-bottom: 15px; border-radius: 12px; }
-        .skeleton-title { height: 25px; width: 80%; margin-bottom: 15px; }
-        .skeleton-desc { height: 15px; width: 100%; margin-bottom: 8px; }
-        .skeleton-desc-last { height: 15px; width: 60%; margin-bottom: 20px; }
-        .skeleton-btn { height: 40px; width: 100%; border-radius: 12px; }
-        .skeleton-date { width: 60px; height: 60px; border-radius: 50%; }
-
-        /* Animations */
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media screen and (max-width: 768px) {
-            .timeline::before { left: 30px; }
-            .timeline-item { width: 100%; padding-left: 80px; padding-right: 0; margin-bottom: 20px; }
-            .left, .right { text-align: left; }
-            .left { left: 0; }
-            .right { left: 0; }
-
-            .left .timeline-date-badge, .right .timeline-date-badge {
-                left: 0;
-                right: auto;
-            }
-
-            .filter-card {
-                flex-direction: column;
-                align-items: stretch;
-                border-radius: 24px;
-            }
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: auto;
-            padding: 40px 0;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            font-size: 0.9rem;
-            color: #94a3b8;
-        }
+        /* FOOTER */
+        footer { position:relative; z-index:1; background:#030712; color:#475569; padding:60px 0 32px; }
+        footer::before { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background:var(--main-gradient); }
+        .footer-brand { font-size:1.1rem; font-weight:900; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
     </style>
 </head>
 <body>
+
+    <div class="amb amb-1"></div>
+    <div class="amb amb-2"></div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -349,242 +268,182 @@
         </div>
     </nav>
 
-    <div class="container" style="margin-top: 100px; margin-bottom: 80px;">
-        <div class="text-center mb-5">
-            <h1 class="fw-bold display-4 mb-3 text-white">Project Reports</h1>
-            <!-- Reverted to text-muted to match Activities page color -->
-            <p class="text-muted lead mx-auto" style="max-width: 600px;">
-                Comprehensive archive of our progress, monthly updates, and official documentation.
-            </p>
-        </div>
-
-        <!-- Sticky Filter -->
-        <div class="filter-container">
-            <div class="container">
-                <div class="filter-card mx-auto" style="max-width: 800px;">
-                    <div style="flex: 1; min-width: 200px; display: flex; align-items: center; gap: 10px;">
-                        <i class="bi bi-search text-secondary"></i>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search by title...">
-                    </div>
-                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1); display: none; margin: 0 10px;" class="d-md-block"></div>
-
-                    <select id="yearFilter" class="custom-select" style="min-width: 120px;">
-                        <option value="all" selected>All Years</option>
-                    </select>
-
-                    <select id="monthFilter" class="custom-select" style="min-width: 130px;">
-                        <option value="all" selected>All Months</option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-                    </select>
-                </div>
+    <!-- Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <div data-aos="fade-down" data-aos-duration="900">
+                <div class="hero-eyebrow"><i class="bi bi-file-earmark-text"></i> Documentation</div>
+                <h1 class="page-title">Project <span class="title-gradient">Reports</span></h1>
+                <p class="page-sub">Comprehensive archive of our progress, monthly updates, and official documentation.</p>
             </div>
         </div>
+    </section>
 
-        <!-- Timeline -->
-        <div class="timeline" id="timeline-container">
-            <!-- Skeletons will be injected here -->
-        </div>
-    </div>
-
-    <div class="footer">
+    <!-- Filter -->
+    <div class="filter-bar">
         <div class="container">
-            <p class="mb-0">&copy; 2026 Health Screening Project. All rights reserved.</p>
+            <div class="filter-inner">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search reports...">
+                </div>
+                <select id="yearFilter"  class="filter-select"><option value="all">All Years</option></select>
+                <select id="monthFilter" class="filter-select"><option value="all">All Months</option></select>
+            </div>
         </div>
     </div>
+
+    <!-- Timeline -->
+    <section class="timeline-section">
+        <div class="container">
+            <div class="timeline" id="timeline-container"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="footer-brand"><i class="bi bi-activity me-2"></i>Health Screening</div>
+                    <p class="small mb-0" style="color:#1e293b;">Integrative Health Center &mdash; Heliopolis University</p>
+                </div>
+                <div class="col-lg-6">
+                    <p class="small mb-2" style="color:#334155;"><i class="bi bi-envelope me-2 text-info"></i>info@hu.edu.eg</p>
+                    <p class="small mb-0" style="color:#334155;"><i class="bi bi-geo-alt me-2 text-info"></i>Heliopolis University, Cairo</p>
+                </div>
+            </div>
+            <hr style="border-color:rgba(255,255,255,.04);margin:32px 0 20px;">
+            <p class="text-center mb-0" style="font-size:0.8rem;color:#ffffff;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
-
         let allReports = [];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchData();
+        const MONTH_MAP = { "jan":1,"january":1,"feb":2,"february":2,"mar":3,"march":3,"apr":4,"april":4,"may":5,"jun":6,"june":6,"jul":7,"july":7,"aug":8,"august":8,"sep":9,"september":9,"oct":10,"october":10,"nov":11,"november":11,"dec":12,"december":12 };
+        const MONTH_SHORT = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        const MONTH_FULL  = ["","January","February","March","April","May","June","July","August","September","October","November","December"];
 
-            // Add Event Listeners for filters
-            document.getElementById('searchInput').addEventListener('input', filterReports);
-            document.getElementById('yearFilter').addEventListener('change', filterReports);
-            document.getElementById('monthFilter').addEventListener('change', filterReports);
+        function toMonthNum(m) { if(!m) return 0; if(!isNaN(m)) return parseInt(m); return MONTH_MAP[m.toString().toLowerCase()]||0; }
+        function shortMonth(m) { const n=toMonthNum(m); return(n>=1&&n<=12)?MONTH_SHORT[n]:'---'; }
+        function fullMonth(m)  { const n=toMonthNum(m); return(n>=1&&n<=12)?MONTH_FULL[n]:'Unknown'; }
+
+        function formatBytes(b,d=2){if(!+b)return'–';const k=1024,s=['B','KB','MB','GB'],i=Math.floor(Math.log(b)/Math.log(k));return`${parseFloat((b/Math.pow(k,i)).toFixed(d))} ${s[i]}`;}
+
+        async function fetchFileSize(url,id){
+            try{const r=await fetch(url,{method:'HEAD'});if(r.ok){const s=r.headers.get('content-length');const el=document.getElementById(id);if(el){el.innerHTML=s?`<i class="bi bi-hdd me-1"></i>${formatBytes(s)}`:'';if(!s)el.style.display='none';}}}catch(e){const el=document.getElementById(id);if(el)el.style.display='none';}
+        }
+
+        document.addEventListener('DOMContentLoaded',()=>{
+            fetchData();
+            document.getElementById('searchInput').addEventListener('input',filterReports);
+            document.getElementById('yearFilter').addEventListener('change',()=>{populateMonthFilter();filterReports();});
+            document.getElementById('monthFilter').addEventListener('change',filterReports);
         });
 
-        function showSkeletons() {
-            const container = document.getElementById('timeline-container');
-            container.innerHTML = '';
-            for(let i=0; i<4; i++) {
-                const side = i % 2 === 0 ? 'left' : 'right';
-                container.innerHTML += `
-                    <div class="timeline-item ${side}">
-                        <div class="timeline-date-badge skeleton"></div>
-                        <div class="skeleton-content">
-                            <div class="skeleton skeleton-badge"></div>
-                            <div class="skeleton skeleton-title"></div>
-                            <div class="skeleton skeleton-desc"></div>
-                            <div class="skeleton skeleton-desc"></div>
-                            <div class="skeleton skeleton-desc-last"></div>
-                            <div class="skeleton skeleton-btn"></div>
+        function showSkeletons(){
+            const c=document.getElementById('timeline-container'); c.innerHTML='';
+            for(let i=0;i<4;i++){
+                const side=i%2===0?'left':'right';
+                c.innerHTML+=`
+                    <div class="timeline-item ${side}" style="opacity:1;">
+                        <div class="tl-dot skeleton skel-dot"></div>
+                        <div class="skel-card">
+                            <div class="skeleton skel-line" style="width:25%;margin-bottom:12px;"></div>
+                            <div class="skeleton skel-title"></div>
+                            <div class="skeleton skel-desc"></div>
+                            <div class="skeleton skel-btn"></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
-        function fetchData() {
+        function fetchData(){
             showSkeletons();
-
-            // Artificial delay to show skeleton
-            const minDelay = new Promise(resolve => setTimeout(resolve, 800));
-            const dataFetch = new Promise((resolve, reject) => {
-                Papa.parse(sheetURL, {
-                    download: true,
-                    header: true,
-                    dynamicTyping: true,
-                    complete: function(results) {
-                        resolve(results.data);
-                    },
-                    error: function(err) {
-                        reject(err);
-                    }
-                });
-            });
-
-            Promise.all([minDelay, dataFetch])
-                .then(([_, data]) => {
-                    processData(data);
-                })
-                .catch(err => {
-                    console.error("Error fetching CSV:", err);
-                    document.getElementById('timeline-container').innerHTML = '<div class="text-center text-danger">Failed to load data.</div>';
-                });
-        }
-
-        // Helper to convert any month input (1, "1", "01", "January", "Jan") to a number 1-12
-        function getMonthNumber(m) {
-            if (!m) return 0;
-            // If it's a number directly
-            if (!isNaN(m)) return parseInt(m);
-
-            const monthMap = {
-                "jan": 1, "january": 1, "feb": 2, "february": 2, "mar": 3, "march": 3,
-                "apr": 4, "april": 4, "may": 5, "jun": 6, "june": 6, "jul": 7, "july": 7,
-                "aug": 8, "august": 8, "sep": 9, "september": 9, "oct": 10, "october": 10,
-                "nov": 11, "november": 11, "dec": 12, "december": 12
-            };
-            return monthMap[m.toString().toLowerCase()] || 0;
-        }
-
-        // Helper to get short display name (e.g. 1 -> Jan)
-        function getMonthDisplayName(m) {
-            const num = getMonthNumber(m);
-            const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            if (num >= 1 && num <= 12) return monthNames[num];
-            return "---";
-        }
-
-        function processData(data) {
-            // Filter valid rows and sort by Year then Month (Newest first)
-            allReports = data.filter(item => item.Title).sort((a, b) => {
-                if (b.Year !== a.Year) return b.Year - a.Year;
-                return getMonthNumber(b.Month) - getMonthNumber(a.Month);
-            });
-
-            populateYearFilter();
-            renderTimeline(allReports);
-        }
-
-        function populateYearFilter() {
-            const yearSelect = document.getElementById('yearFilter');
-            const years = new Set();
-
-            allReports.forEach(item => {
-                if (item.Year) years.add(item.Year);
-            });
-
-            Array.from(years).sort((a, b) => b - a).forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.innerText = year;
-                yearSelect.appendChild(option);
+            const t=new Promise(r=>setTimeout(r,700));
+            const d=new Promise((res,rej)=>{Papa.parse(sheetURL,{download:true,header:true,dynamicTyping:true,complete:r=>res(r.data),error:e=>rej(e)});});
+            Promise.all([t,d]).then(([_,data])=>processData(data)).catch(()=>{
+                document.getElementById('timeline-container').innerHTML='<div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5></div>';
             });
         }
 
-        function filterReports() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const selectedYear = document.getElementById('yearFilter').value;
-            const selectedMonth = document.getElementById('monthFilter').value;
-
-            const filtered = allReports.filter(item => {
-                const titleMatch = item.Title && item.Title.toString().toLowerCase().includes(searchText);
-
-                const yearMatch = (selectedYear === 'all') || (item.Year && item.Year.toString() === selectedYear);
-
-                let monthMatch = true;
-                if (selectedMonth !== 'all') {
-                    // Compare numeric values of months to handle "1" vs "01" vs "January"
-                    monthMatch = getMonthNumber(item.Month) === parseInt(selectedMonth);
-                }
-
-                return titleMatch && yearMatch && monthMatch;
+        function processData(data){
+            allReports=data.filter(d=>d.Title).sort((a,b)=>{
+                if(b.Year!==a.Year) return b.Year-a.Year;
+                return toMonthNum(b.Month)-toMonthNum(a.Month);
             });
-
-            renderTimeline(filtered);
+            populateYearFilter(); populateMonthFilter(); renderTimeline(allReports);
         }
 
-        function renderTimeline(data) {
-            const container = document.getElementById('timeline-container');
-            container.innerHTML = '';
+        function populateYearFilter(){
+            const sel=document.getElementById('yearFilter');
+            sel.innerHTML='<option value="all">All Years</option>';
+            [...new Set(allReports.map(r=>r.Year).filter(Boolean))].sort((a,b)=>b-a).forEach(y=>{
+                sel.innerHTML+=`<option value="${y}">${y}</option>`;
+            });
+        }
 
-            if (data.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-5">
-                        <i class="bi bi-search display-1 text-secondary opacity-25"></i>
-                        <p class="text-secondary mt-3">No matching reports found.</p>
-                    </div>`;
+        function populateMonthFilter(){
+            const yr=document.getElementById('yearFilter').value;
+            const sel=document.getElementById('monthFilter');
+            const prev=sel.value; sel.innerHTML='<option value="all">All Months</option>';
+            const months=new Set();
+            allReports.forEach(r=>{ if(yr==='all'||String(r.Year)===yr){const n=toMonthNum(r.Month);if(n>0)months.add(n);} });
+            [...months].sort((a,b)=>a-b).forEach(n=>{ sel.innerHTML+=`<option value="${n}">${fullMonth(n)}</option>`; });
+            if([...sel.options].some(o=>o.value===prev)) sel.value=prev;
+        }
+
+        function filterReports(){
+            const q=document.getElementById('searchInput').value.toLowerCase();
+            const yr=document.getElementById('yearFilter').value;
+            const mo=document.getElementById('monthFilter').value;
+            renderTimeline(allReports.filter(r=>{
+                const t=r.Title&&r.Title.toString().toLowerCase().includes(q);
+                const y=yr==='all'||String(r.Year)===yr;
+                const m=mo==='all'||toMonthNum(r.Month)===parseInt(mo);
+                return t&&y&&m;
+            }));
+        }
+
+        function renderTimeline(data){
+            const c=document.getElementById('timeline-container');
+            c.innerHTML='';
+            if(!data.length){
+                c.innerHTML='<div class="empty-state"><i class="bi bi-search"></i><h5 style="color:#475569;">No reports found</h5><p style="color:#1e293b;font-size:.9rem;">Try adjusting your search or filters.</p></div>';
                 return;
             }
+            data.forEach((item,i)=>{
+                const side=i%2===0?'left':'right';
+                const safe=item.Title.toString().trim().replace(/\s+/g,'_').replace(/[^\w-]/g,'');
+                const pdf=`reports_files/${safe}.pdf`;
+                const sizeId=`sz-${i}`;
+                let sizeHtml=item.File_Size
+                    ?`<span class="file-size-badge"><i class="bi bi-hdd"></i>${item.File_Size}</span>`
+                    :`<span class="file-size-badge" id="${sizeId}"><span class="spinner-border" style="width:.75rem;height:.75rem;border-width:2px;"></span></span>`;
 
-            data.forEach((item, index) => {
-                const side = index % 2 === 0 ? 'left' : 'right';
-
-                // Construct PDF filename
-                const safeTitle = item.Title.toString().trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
-                const pdfUrl = `reports_files/${safeTitle}.pdf`;
-
-                // Convert month to name (e.g. 1 -> Jan, "January" -> Jan)
-                const shortMonth = getMonthDisplayName(item.Month);
-                const year = item.Year || '----';
-
-                const html = `
-                    <div class="timeline-item ${side}" style="animation-delay: ${index * 100}ms">
-                        <div class="timeline-date-badge">
-                            <span style="font-size: 0.9em; opacity: 0.9;">${shortMonth}</span>
-                            <span style="font-size: 1.1em;">${year}</span>
+                c.innerHTML+=`
+                    <div class="timeline-item ${side}" style="animation-delay:${i*80}ms;">
+                        <div class="tl-dot">
+                            <span class="dot-month">${shortMonth(item.Month)}</span>
+                            <span class="dot-year">${item.Year||'--'}</span>
                         </div>
-                        <div class="timeline-content">
-                            <span class="type-badge">${item.Type || 'Report'}</span>
+                        <div class="tl-card">
+                            <span class="type-pill"><i class="bi bi-file-earmark-text"></i>${item.Type||'Report'}</span>
                             <h4 class="report-title">${item.Title}</h4>
-                            <p class="report-desc">${item.Description || ''}</p>
-
-                            <div class="d-flex align-items-center mt-3 pt-3 border-top border-secondary border-opacity-25">
-                                <a href="${pdfUrl}" target="_blank" class="btn-download-card" download>
-                                    <i class="bi bi-file-earmark-arrow-down me-2"></i> Download PDF
+                            <p class="report-desc">${item.Description||''}</p>
+                            <div class="card-footer-row">
+                                <a href="${pdf}" target="_blank" download class="btn-download">
+                                    <i class="bi bi-file-earmark-arrow-down"></i> Download PDF
                                 </a>
-                                ${item.File_Size ? `<span class="file-size ms-3"><i class="bi bi-hdd me-1"></i>${item.File_Size}</span>` : ''}
+                                ${sizeHtml}
                             </div>
                         </div>
-                    </div>
-                `;
-                container.innerHTML += html;
+                    </div>`;
+
+                if(!item.File_Size) fetchFileSize(pdf,sizeId);
             });
         }
     </script>
