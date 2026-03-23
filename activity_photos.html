@@ -434,10 +434,10 @@
                 return new Promise(resolve => {
                     if (extIndex >= exts.length) { resolve(null); return; }
                     const url = `${basePath}${num}.${exts[extIndex]}`;
-                    const img = new Image();
-                    img.onload  = () => resolve(url);
-                    img.onerror = () => resolve(tryImage(num, extIndex + 1));
-                    img.src = url;
+                    // Use fetch HEAD to avoid browser console 404 errors
+                    fetch(url, {method:'HEAD'})
+                        .then(r => r.ok ? resolve(url) : resolve(tryImage(num, extIndex + 1)))
+                        .catch(()  => resolve(tryImage(num, extIndex + 1)));
                 });
             }
 
