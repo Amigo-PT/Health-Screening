@@ -1,507 +1,910 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr" data-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Screening Project</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Health Screening Project</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap"
+            rel="stylesheet" />
+        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+        <script>
+        // Maintenance Mode Check
         (function() {
-            var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv";
-            function checkAndRedirect() {
-                var apiUrl = localStorage.getItem('healthScreening_API');
-                function handleResult(m) { if (m) window.location.replace('maintenance.html'); }
-                function csvFallback() {
-                    Papa.parse(CSV_URL, { download:true, header:true,
-                        complete: function(r) { var s=''; if(r.data&&r.data.length>0){var row=r.data[0];s=row.Status||row.status||row.Maintenance||row.maintenance||Object.values(row)[0]||'';} handleResult(s.toString().toUpperCase()==='ON'||s.toString().toUpperCase()==='TRUE'); },
-                        error: function(){}
-                    });
-                }
-                if(apiUrl){fetch(apiUrl+'?checkMaintenance=true').then(function(r){return r.json();}).then(function(res){handleResult(res.maintenance===true);}).catch(csvFallback);}else{csvFallback();}
+            // Check session storage first
+            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+                 // Check if maintenance mode is enabled - NEW LINK
+                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
+                    download: true,
+                    header: true,
+                    complete: function(results) {
+                        if (results.data && results.data.length > 0) {
+                            const row = results.data[0];
+                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
+                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
+                                window.location.href = 'maintenance.html';
+                            } else {
+                                // If not maintenance, check login
+                                if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+                                    window.location.href = 'login.html';
+                                }
+                            }
+                        } else {
+                             // Fallback if sheet fails or is empty
+                             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+                                window.location.href = 'login.html';
+                            }
+                        }
+                    },
+                    error: function(err) {
+                        console.error("Maintenance check failed", err);
+                         // Fallback on error
+                         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+                            window.location.href = 'login.html';
+                        }
+                    }
+                });
             }
-            checkAndRedirect(); setInterval(checkAndRedirect,30000);
         })();
     </script>
 
-    <style>
-        :root {
-            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-            --bg: #020617;
-            --text: #f1f5f9;
-            --muted: #94a3b8;
-            --card-bg: rgba(15,23,42,0.6);
-            --border: rgba(255,255,255,0.07);
-            --radius: 24px;
-        }
+        <style>
+            :root {
+                --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
+                --bg: #020617;
+                --text: #f1f5f9;
+                --muted: #94a3b8;
+                --card-bg: rgba(15, 23, 42, 0.6);
+                --border: rgba(255, 255, 255, 0.07);
+                --radius: 24px;
+            }
 
-        * { box-sizing: border-box; }
+            * {
+                box-sizing: border-box;
+            }
 
-        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        @keyframes blobDrift { 0%,100%{transform:translate(0,0) scale(1)} 40%{transform:translate(30px,-25px) scale(1.05)} 70%{transform:translate(-20px,15px) scale(.97)} }
-        @keyframes slideInRight { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes slideInLeft  { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes countUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+            @keyframes fadeInPage {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes float {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-12px);
+                }
+            }
+            @keyframes blobDrift {
+                0%,
+                100% {
+                    transform: translate(0, 0) scale(1);
+                }
+                40% {
+                    transform: translate(30px, -25px) scale(1.05);
+                }
+                70% {
+                    transform: translate(-20px, 15px) scale(0.97);
+                }
+            }
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(40px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            @keyframes slideInLeft {
+                from {
+                    opacity: 0;
+                    transform: translateX(-40px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            @keyframes countUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            color: var(--text);
-            background: var(--bg);
-            overflow-x: hidden;
-            animation: fadeInPage .8s ease-out;
-        }
+            body {
+                font-family: "Cairo", sans-serif;
+                color: var(--text);
+                background: var(--bg);
+                overflow-x: hidden;
+                animation: fadeInPage 0.8s ease-out;
+            }
 
-        /* Grid bg */
-        body::before {
-            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-            background-image:
-                linear-gradient(rgba(6,182,212,.03) 1px, transparent 1px),
-                linear-gradient(90deg,rgba(6,182,212,.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
+            /* Grid bg */
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                z-index: 0;
+                background-image: linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+                background-size: 60px 60px;
+            }
 
-        /* Blobs */
-        .blob { position:absolute; border-radius:50%; filter:blur(80px); opacity:.2; animation:blobDrift 16s ease-in-out infinite; pointer-events:none; z-index:0; }
-        .blob-1 { width:500px;height:500px;background:#2563eb;top:-15%;left:-10%; animation-delay:0s; }
-        .blob-2 { width:380px;height:380px;background:#06b6d4;bottom:-10%;right:-8%; animation-delay:6s; }
-        .blob-3 { width:280px;height:280px;background:#10b981;top:40%;left:55%; animation-delay:11s; }
+            /* Blobs */
+            .blob {
+                position: absolute;
+                border-radius: 50%;
+                filter: blur(80px);
+                opacity: 0.2;
+                animation: blobDrift 16s ease-in-out infinite;
+                pointer-events: none;
+                z-index: 0;
+            }
+            .blob-1 {
+                width: 500px;
+                height: 500px;
+                background: #2563eb;
+                top: -15%;
+                left: -10%;
+                animation-delay: 0s;
+            }
+            .blob-2 {
+                width: 380px;
+                height: 380px;
+                background: #06b6d4;
+                bottom: -10%;
+                right: -8%;
+                animation-delay: 6s;
+            }
+            .blob-3 {
+                width: 280px;
+                height: 280px;
+                background: #10b981;
+                top: 40%;
+                left: 55%;
+                animation-delay: 11s;
+            }
 
-        /* ===== NAVBAR ===== */
-        .navbar {
-            background: rgba(2,6,23,.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(255,255,255,.06);
-            padding: 16px 0; z-index:100;
-        }
-        .navbar-brand {
-            font-weight:900; font-size:1.4rem;
-            background:var(--main-gradient);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        }
-        .nav-link {
-            font-weight:700; color:#64748b !important;
-            padding:6px 14px !important; border-radius:10px;
-            transition:all .25s; font-size:.9rem; margin-right:4px;
-        }
-        .nav-link:hover { background:rgba(6,182,212,.08); color:#e2e8f0 !important; }
-        .nav-link.active {
-            background:rgba(6,182,212,.12); color:#22d3ee !important;
-            border:1px solid rgba(6,182,212,.2);
-        }
+            /* ===== NAVBAR ===== */
+            .navbar {
+                background: rgba(2, 6, 23, 0.85);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                padding: 16px 0;
+                z-index: 100;
+            }
+            .navbar-brand {
+                font-weight: 900;
+                font-size: 1.4rem;
+                background: var(--main-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            .nav-link {
+                font-weight: 700;
+                color: #64748b !important;
+                padding: 6px 14px !important;
+                border-radius: 10px;
+                transition: all 0.25s;
+                font-size: 0.9rem;
+                margin-right: 4px;
+            }
+            .nav-link:hover {
+                background: rgba(6, 182, 212, 0.08);
+                color: #e2e8f0 !important;
+            }
+            .nav-link.active {
+                background: rgba(6, 182, 212, 0.12);
+                color: #22d3ee !important;
+                border: 1px solid rgba(6, 182, 212, 0.2);
+            }
 
-        /* ===== HERO ===== */
-        .hero-section {
-            position:relative; overflow:hidden;
-            padding:160px 0 120px; min-height:100vh;
-            display:flex; align-items:center;
-        }
+            /* ===== HERO ===== */
+            .hero-section {
+                position: relative;
+                overflow: hidden;
+                padding: 160px 0 120px;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+            }
 
-        .hero-eyebrow {
-            display:inline-flex; align-items:center; gap:8px;
-            background:rgba(6,182,212,.08);
-            border:1px solid rgba(6,182,212,.2);
-            border-radius:50px; padding:8px 20px;
-            font-size:.8rem; font-weight:700; color:#22d3ee;
-            letter-spacing:.08em; text-transform:uppercase; margin-bottom:24px;
-        }
+            .hero-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(6, 182, 212, 0.08);
+                border: 1px solid rgba(6, 182, 212, 0.2);
+                border-radius: 50px;
+                padding: 8px 20px;
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #22d3ee;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 24px;
+            }
 
-        .hero-title {
-            font-size: clamp(2.4rem,5.5vw,4rem);
-            font-weight:900; line-height:1.12; margin-bottom:20px;
-        }
-        .text-gradient {
-            background:var(--main-gradient);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-        }
-        .hero-sub {
-            font-size:1.1rem; color:var(--muted); line-height:1.75;
-            max-width:480px; margin-bottom:40px;
-        }
+            .hero-title {
+                font-size: clamp(2.4rem, 5.5vw, 4rem);
+                font-weight: 900;
+                line-height: 1.12;
+                margin-bottom: 20px;
+            }
+            .text-gradient {
+                background: var(--main-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            .hero-sub {
+                font-size: 1.1rem;
+                color: var(--muted);
+                line-height: 1.75;
+                max-width: 480px;
+                margin-bottom: 40px;
+            }
 
-        .btn-primary-glow {
-            display:inline-flex; align-items:center; gap:10px;
-            background:var(--main-gradient); border:none;
-            padding:14px 36px; border-radius:50px;
-            color:#fff; font-weight:800; font-size:1rem;
-            font-family:'Cairo',sans-serif;
-            box-shadow:0 10px 30px -5px rgba(6,182,212,.4);
-            transition:all .35s; cursor:pointer; text-decoration:none;
-        }
-        .btn-primary-glow:hover {
-            transform:translateY(-4px) scale(1.02);
-            box-shadow:0 18px 40px -5px rgba(6,182,212,.55);
-            color:#fff;
-        }
+            .btn-primary-glow {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                background: var(--main-gradient);
+                border: none;
+                padding: 14px 36px;
+                border-radius: 50px;
+                color: #fff;
+                font-weight: 800;
+                font-size: 1rem;
+                font-family: "Cairo", sans-serif;
+                box-shadow: 0 10px 30px -5px rgba(6, 182, 212, 0.4);
+                transition: all 0.35s;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .btn-primary-glow:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 0 18px 40px -5px rgba(6, 182, 212, 0.55);
+                color: #fff;
+            }
 
-        .btn-outline-glow {
-            display:inline-flex; align-items:center; gap:10px;
-            background:rgba(255,255,255,.04);
-            border:1px solid rgba(255,255,255,.12);
-            padding:14px 36px; border-radius:50px;
-            color:#e2e8f0; font-weight:800; font-size:1rem;
-            font-family:'Cairo',sans-serif;
-            transition:all .35s; cursor:pointer; text-decoration:none;
-        }
-        .btn-outline-glow:hover {
-            background:rgba(6,182,212,.1);
-            border-color:rgba(6,182,212,.35); color:#22d3ee;
-            transform:translateY(-4px);
-        }
+            .btn-outline-glow {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                background: rgba(255, 255, 255, 0.04);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                padding: 14px 36px;
+                border-radius: 50px;
+                color: #e2e8f0;
+                font-weight: 800;
+                font-size: 1rem;
+                font-family: "Cairo", sans-serif;
+                transition: all 0.35s;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .btn-outline-glow:hover {
+                background: rgba(6, 182, 212, 0.1);
+                border-color: rgba(6, 182, 212, 0.35);
+                color: #22d3ee;
+                transform: translateY(-4px);
+            }
 
-        /* ===== TEAM SLIDER ===== */
-        .team-slider-wrapper {
-            position:relative; height:440px;
-            display:flex; justify-content:center; align-items:center;
-            perspective:1200px;
-        }
+            /* ===== TEAM SLIDER ===== */
+            .team-slider-wrapper {
+                position: relative;
+                height: 440px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                perspective: 1200px;
+            }
 
-        .team-card-modern {
-            position:absolute; width:320px;
-            background:rgba(15,23,42,.75);
-            backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,.08);
-            border-radius:28px; overflow:hidden;
-            text-align:center;
-            transition:all .65s cubic-bezier(.23,1,.32,1);
-            opacity:0; transform:translateX(60px) scale(.85) rotateY(-10deg);
-            box-shadow:0 20px 50px -12px rgba(0,0,0,.5);
-            z-index:0;
-        }
-        .team-card-modern.active {
-            opacity:1; transform:translateX(0) scale(1) rotateY(0);
-            z-index:10;
-            box-shadow:0 30px 60px -15px rgba(6,182,212,.25), 0 0 0 1px rgba(6,182,212,.1);
-        }
-        .team-card-modern.next {
-            opacity:.5; transform:translateX(52px) scale(.88) rotateY(-5deg);
-            z-index:5; filter:blur(1px);
-        }
+            .team-card-modern {
+                position: absolute;
+                width: 320px;
+                background: rgba(15, 23, 42, 0.75);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 28px;
+                overflow: hidden;
+                text-align: center;
+                transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+                opacity: 0;
+                transform: translateX(60px) scale(0.85) rotateY(-10deg);
+                box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+                z-index: 0;
+            }
+            .team-card-modern.active {
+                opacity: 1;
+                transform: translateX(0) scale(1) rotateY(0);
+                z-index: 10;
+                box-shadow:
+                    0 30px 60px -15px rgba(6, 182, 212, 0.25),
+                    0 0 0 1px rgba(6, 182, 212, 0.1);
+            }
+            .team-card-modern.next {
+                opacity: 0.5;
+                transform: translateX(52px) scale(0.88) rotateY(-5deg);
+                z-index: 5;
+                filter: blur(1px);
+            }
 
-        .team-img-container { width:100%; height:220px; overflow:hidden; position:relative; }
-        .team-img-container::after {
-            content:''; position:absolute; bottom:0; left:0; right:0; height:80px;
-            background:linear-gradient(to top, rgba(15,23,42,.9), transparent);
-        }
-        .team-img-modern {
-            width:100%; height:100%; object-fit:cover; object-position:top;
-            transition:transform .5s ease;
-        }
-        .team-card-modern:hover .team-img-modern { transform:scale(1.06); }
+            .team-img-container {
+                width: 100%;
+                height: 220px;
+                overflow: hidden;
+                position: relative;
+            }
+            .team-img-container::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 80px;
+                background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+            }
+            .team-img-modern {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: top;
+                transition: transform 0.5s ease;
+            }
+            .team-card-modern:hover .team-img-modern {
+                transform: scale(1.06);
+            }
 
-        .team-info { padding:20px 22px 24px; background:rgba(15,23,42,.95); }
-        .team-role { color:#22d3ee; font-size:.82rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:6px; }
-        .team-name { font-size:1.05rem; font-weight:800; color:var(--text); margin-bottom:8px; }
-        .team-bio { font-size:.82rem; color:var(--muted); line-height:1.65; }
+            .team-info {
+                padding: 20px 22px 24px;
+                background: rgba(15, 23, 42, 0.95);
+            }
+            .team-role {
+                color: #22d3ee;
+                font-size: 0.82rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .team-name {
+                font-size: 1.05rem;
+                font-weight: 800;
+                color: var(--text);
+                margin-bottom: 8px;
+            }
+            .team-bio {
+                font-size: 0.82rem;
+                color: var(--muted);
+                line-height: 1.65;
+            }
 
-        .btn-nav-modern {
-            width:48px; height:48px; border-radius:14px;
-            background:rgba(255,255,255,.05);
-            border:1px solid rgba(255,255,255,.08);
-            color:var(--muted); font-size:1.1rem;
-            display:flex; align-items:center; justify-content:center;
-            transition:all .25s; cursor:pointer;
-        }
-        .btn-nav-modern:hover {
-            background:rgba(6,182,212,.12);
-            border-color:rgba(6,182,212,.3); color:#22d3ee;
-            transform:translateY(-2px);
-        }
+            .btn-nav-modern {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                color: var(--muted);
+                font-size: 1.1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.25s;
+                cursor: pointer;
+            }
+            .btn-nav-modern:hover {
+                background: rgba(6, 182, 212, 0.12);
+                border-color: rgba(6, 182, 212, 0.3);
+                color: #22d3ee;
+                transform: translateY(-2px);
+            }
 
-        /* ===== STATS BAR ===== */
-        .stats-bar {
-            position:relative; z-index:10;
-            background:rgba(15,23,42,.7);
-            backdrop-filter:blur(20px);
-            border:1px solid rgba(255,255,255,.07);
-            border-radius:24px; padding:32px 40px;
-            margin-top:-60px;
-        }
-        .stat-item { text-align:center; }
-        .stat-val {
-            font-size:2.2rem; font-weight:900;
-            background:var(--main-gradient);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-            line-height:1.1;
-        }
-        .stat-label { font-size:.82rem; color:var(--muted); font-weight:600; margin-top:4px; }
-        .stat-divider { width:1px; background:rgba(255,255,255,.07); }
+            /* ===== STATS BAR ===== */
+            .stats-bar {
+                position: relative;
+                z-index: 10;
+                background: rgba(15, 23, 42, 0.7);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.07);
+                border-radius: 24px;
+                padding: 32px 40px;
+                margin-top: -60px;
+            }
+            .stat-item {
+                text-align: center;
+            }
+            .stat-val {
+                font-size: 2.2rem;
+                font-weight: 900;
+                background: var(--main-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                line-height: 1.1;
+            }
+            .stat-label {
+                font-size: 0.82rem;
+                color: var(--muted);
+                font-weight: 600;
+                margin-top: 4px;
+            }
+            .stat-divider {
+                width: 1px;
+                background: rgba(255, 255, 255, 0.07);
+            }
 
-        /* ===== SDG SECTION ===== */
-        .sdg-section { position:relative; z-index:1; padding:80px 0; }
-        .section-eyebrow {
-            display:inline-flex; align-items:center; gap:8px;
-            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
-            border-radius:50px; padding:6px 16px;
-            font-size:.78rem; font-weight:700; color:#22d3ee;
-            letter-spacing:.08em; text-transform:uppercase; margin-bottom:16px;
-        }
-        .section-title { font-size:clamp(1.6rem,3vw,2.4rem); font-weight:900; margin-bottom:12px; }
-        .section-sub { color:var(--muted); font-size:.95rem; line-height:1.7; max-width:500px; }
+            /* ===== SDG SECTION ===== */
+            .sdg-section {
+                position: relative;
+                z-index: 1;
+                padding: 80px 0;
+            }
+            .section-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(6, 182, 212, 0.08);
+                border: 1px solid rgba(6, 182, 212, 0.2);
+                border-radius: 50px;
+                padding: 6px 16px;
+                font-size: 0.78rem;
+                font-weight: 700;
+                color: #22d3ee;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 16px;
+            }
+            .section-title {
+                font-size: clamp(1.6rem, 3vw, 2.4rem);
+                font-weight: 900;
+                margin-bottom: 12px;
+            }
+            .section-sub {
+                color: var(--muted);
+                font-size: 0.95rem;
+                line-height: 1.7;
+                max-width: 500px;
+            }
 
-        .sdg-card {
-            background:var(--card-bg); backdrop-filter:blur(12px);
-            border:var(--border) solid rgba(255,255,255,.07);
-            border-radius:20px; padding:28px 24px;
-            display:flex; align-items:flex-start; gap:16px;
-            transition:all .35s; height:100%;
-            border:1px solid rgba(255,255,255,.07);
-        }
-        .sdg-card:hover {
-            transform:translateY(-6px);
-            box-shadow:0 20px 40px -10px rgba(0,0,0,.4);
-            border-color:rgba(6,182,212,.2);
-        }
-        .sdg-icon {
-            width:52px; height:52px; border-radius:14px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:1.4rem; color:#fff; flex-shrink:0;
-        }
-        .sdg-num { font-size:.7rem; font-weight:700; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
-        .sdg-name { font-size:1rem; font-weight:800; color:var(--text); margin-top:2px; }
-        .sdg-desc { font-size:.82rem; color:var(--muted); margin-top:6px; line-height:1.6; }
+            .sdg-card {
+                background: var(--card-bg);
+                backdrop-filter: blur(12px);
+                border: var(--border) solid rgba(255, 255, 255, 0.07);
+                border-radius: 20px;
+                padding: 28px 24px;
+                display: flex;
+                align-items: flex-start;
+                gap: 16px;
+                transition: all 0.35s;
+                height: 100%;
+                border: 1px solid rgba(255, 255, 255, 0.07);
+            }
+            .sdg-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+                border-color: rgba(6, 182, 212, 0.2);
+            }
+            .sdg-icon {
+                width: 52px;
+                height: 52px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                color: #fff;
+                flex-shrink: 0;
+            }
+            .sdg-num {
+                font-size: 0.7rem;
+                font-weight: 700;
+                color: var(--muted);
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+            .sdg-name {
+                font-size: 1rem;
+                font-weight: 800;
+                color: var(--text);
+                margin-top: 2px;
+            }
+            .sdg-desc {
+                font-size: 0.82rem;
+                color: var(--muted);
+                margin-top: 6px;
+                line-height: 1.6;
+            }
 
-        /* ===== MVG CARDS ===== */
-        .mvg-section { position:relative; z-index:1; padding:80px 0; }
-        .mvg-card {
-            background:var(--card-bg); backdrop-filter:blur(12px);
-            border:1px solid rgba(255,255,255,.07);
-            border-radius:var(--radius); padding:40px 32px;
-            text-align:center; height:100%;
-            transition:all .4s cubic-bezier(.175,.885,.32,1.275);
-            position:relative; overflow:hidden;
-        }
-        .mvg-card::before {
-            content:''; position:absolute; top:0; left:0; right:0; height:2px;
-            background:var(--main-gradient); transform:scaleX(0);
-            transition:transform .4s; transform-origin:left;
-        }
-        .mvg-card:hover::before { transform:scaleX(1); }
-        .mvg-card:hover {
-            transform:translateY(-12px);
-            box-shadow:0 25px 50px -12px rgba(6,182,212,.2);
-            border-color:rgba(6,182,212,.15);
-        }
-        .mvg-icon {
-            width:80px; height:80px; border-radius:22px;
-            background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(16,185,129,.1));
-            border:1px solid rgba(6,182,212,.15);
-            display:flex; align-items:center; justify-content:center;
-            font-size:2.2rem; color:#22d3ee;
-            margin:0 auto 24px;
-            animation:float 6s ease-in-out infinite;
-        }
-        .mvg-card:hover .mvg-icon {
-            background:var(--main-gradient); color:#fff;
-            transform:rotate(12deg) scale(1.1); animation:none;
-        }
-        .mvg-title { font-size:1.3rem; font-weight:800; margin-bottom:12px; }
-        .mvg-text { font-size:.9rem; color:var(--muted); line-height:1.75; }
+            /* ===== MVG CARDS ===== */
+            .mvg-section {
+                position: relative;
+                z-index: 1;
+                padding: 80px 0;
+            }
+            .mvg-card {
+                background: var(--card-bg);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.07);
+                border-radius: var(--radius);
+                padding: 40px 32px;
+                text-align: center;
+                height: 100%;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                position: relative;
+                overflow: hidden;
+            }
+            .mvg-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: var(--main-gradient);
+                transform: scaleX(0);
+                transition: transform 0.4s;
+                transform-origin: left;
+            }
+            .mvg-card:hover::before {
+                transform: scaleX(1);
+            }
+            .mvg-card:hover {
+                transform: translateY(-12px);
+                box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.2);
+                border-color: rgba(6, 182, 212, 0.15);
+            }
+            .mvg-icon {
+                width: 80px;
+                height: 80px;
+                border-radius: 22px;
+                background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(16, 185, 129, 0.1));
+                border: 1px solid rgba(6, 182, 212, 0.15);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.2rem;
+                color: #22d3ee;
+                margin: 0 auto 24px;
+                animation: float 6s ease-in-out infinite;
+            }
+            .mvg-card:hover .mvg-icon {
+                background: var(--main-gradient);
+                color: #fff;
+                transform: rotate(12deg) scale(1.1);
+                animation: none;
+            }
+            .mvg-title {
+                font-size: 1.3rem;
+                font-weight: 800;
+                margin-bottom: 12px;
+            }
+            .mvg-text {
+                font-size: 0.9rem;
+                color: var(--muted);
+                line-height: 1.75;
+            }
 
-        /* ===== FOOTER ===== */
-        footer {
-            position:relative; z-index:1;
-            background:#030712; color:#475569;
-            padding:80px 0 40px;
-        }
-        footer::before {
-            content:''; position:absolute; top:0; left:0;
-            width:100%; height:2px; background:var(--main-gradient);
-        }
-        .footer-brand {
-            font-size:1.2rem; font-weight:900;
-            background:var(--main-gradient);
-            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-            margin-bottom:10px;
-        }
-        .footer-link { color:#334155; text-decoration:none; font-size:.88rem; transition:.25s; display:block; margin-bottom:8px; }
-        .footer-link:hover { color:#64748b; padding-left:6px; }
-    </style>
-</head>
-<body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
-                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
-                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
-                </ul>
+            /* ===== FOOTER ===== */
+            footer {
+                position: relative;
+                z-index: 1;
+                background: #030712;
+                color: #475569;
+                padding: 80px 0 40px;
+            }
+            footer::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: var(--main-gradient);
+            }
+            .footer-brand {
+                font-size: 1.2rem;
+                font-weight: 900;
+                background: var(--main-gradient);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 10px;
+            }
+            .footer-link {
+                color: #334155;
+                text-decoration: none;
+                font-size: 0.88rem;
+                transition: 0.25s;
+                display: block;
+                margin-bottom: 8px;
+            }
+            .footer-link:hover {
+                color: #64748b;
+                padding-left: 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
+                <button
+                    class="navbar-toggler border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                        <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                        <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- Hero -->
-    <section class="hero-section">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="container position-relative" style="z-index:1;">
-            <div class="row align-items-center g-5">
-                <!-- Left -->
-                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1100">
-                    <div class="hero-eyebrow"><i class="bi bi-stars"></i> A Smart Health Initiative</div>
-                    <h1 class="hero-title">
-                        The <span class="text-gradient">Health Screening</span> Project
-                    </h1>
-                    <p class="hero-sub">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
-                    <div class="d-flex gap-3 flex-wrap">
-                        <a href="screening.html" class="btn-primary-glow">Explore Results <i class="bi bi-arrow-right"></i></a>
-                        <a href="reports.html" class="btn-outline-glow">Download Report <i class="bi bi-download"></i></a>
+        <!-- Hero -->
+        <section class="hero-section">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+            <div class="container position-relative" style="z-index: 1">
+                <div class="row align-items-center g-5">
+                    <!-- Left -->
+                    <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1100">
+                        <div class="hero-eyebrow"><i class="bi bi-stars"></i> A Smart Health Initiative</div>
+                        <h1 class="hero-title">The <span class="text-gradient">Health Screening</span> Project</h1>
+                        <p class="hero-sub">
+                            A scientific preventive approach for a sustainable quality of life within the SEKEM
+                            community.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="screening.html" class="btn-primary-glow"
+                                >Explore Results <i class="bi bi-arrow-right"></i
+                            ></a>
+                            <a href="reports.html" class="btn-outline-glow"
+                                >Download Report <i class="bi bi-download"></i
+                            ></a>
+                        </div>
+                    </div>
+
+                    <!-- Right – Team Slider -->
+                    <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1100" data-aos-delay="100">
+                        <div class="team-slider-wrapper" id="team-slider"></div>
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+                            <button class="btn-nav-modern" id="prev-btn"><i class="bi bi-arrow-left"></i></button>
+                            <button class="btn-nav-modern" id="next-btn"><i class="bi bi-arrow-right"></i></button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Right – Team Slider -->
-                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1100" data-aos-delay="100">
-                    <div class="team-slider-wrapper" id="team-slider"></div>
-                    <div class="d-flex justify-content-center gap-3 mt-3">
-                        <button class="btn-nav-modern" id="prev-btn"><i class="bi bi-arrow-left"></i></button>
-                        <button class="btn-nav-modern" id="next-btn"><i class="bi bi-arrow-right"></i></button>
-                    </div>
-                </div>
             </div>
-        </div>
-    </section>
-    <!-- SDG Section -->
-    <section class="sdg-section">
-        <div class="container" style="position:relative;z-index:1;">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-4" data-aos="fade-right" data-aos-duration="900">
-                    <div class="section-eyebrow"><i class="bi bi-globe-americas"></i> Global Goals</div>
-                    <h2 class="section-title">Supporting the <span class="text-gradient">SDGs</span></h2>
-                    <p class="section-sub">Our project is aligned with the United Nations Sustainable Development Goals, driving meaningful impact.</p>
-                </div>
-                <div class="col-lg-8">
-                    <div class="row g-3">
-                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                            <div class="sdg-card">
-                                <div class="sdg-icon" style="background:#4c9f38;"><i class="bi bi-heart-pulse-fill"></i></div>
-                                <div>
-                                    <div class="sdg-num">Goal 3</div>
-                                    <div class="sdg-name">Good Health & Well-Being</div>
-                                    <div class="sdg-desc">Promoting preventive healthcare and early detection programs.</div>
+        </section>
+        <!-- SDG Section -->
+        <section class="sdg-section">
+            <div class="container" style="position: relative; z-index: 1">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-4" data-aos="fade-right" data-aos-duration="900">
+                        <div class="section-eyebrow"><i class="bi bi-globe-americas"></i> Global Goals</div>
+                        <h2 class="section-title">Supporting the <span class="text-gradient">SDGs</span></h2>
+                        <p class="section-sub">
+                            Our project is aligned with the United Nations Sustainable Development Goals, driving
+                            meaningful impact.
+                        </p>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="row g-3">
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                                <div class="sdg-card">
+                                    <div class="sdg-icon" style="background: #4c9f38">
+                                        <i class="bi bi-heart-pulse-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div class="sdg-num">Goal 3</div>
+                                        <div class="sdg-name">Good Health & Well-Being</div>
+                                        <div class="sdg-desc">
+                                            Promoting preventive healthcare and early detection programs.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="180">
+                                <div class="sdg-card">
+                                    <div class="sdg-icon" style="background: #a21942">
+                                        <i class="bi bi-briefcase-fill"></i>
+                                    </div>
+                                    <div>
+                                        <div class="sdg-num">Goal 8</div>
+                                        <div class="sdg-name">Decent Work & Growth</div>
+                                        <div class="sdg-desc">
+                                            Improving worker health to enhance productivity and quality of life.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="260">
+                                <div class="sdg-card">
+                                    <div class="sdg-icon" style="background: #00558a"><i class="bi bi-bank2"></i></div>
+                                    <div>
+                                        <div class="sdg-num">Goal 16</div>
+                                        <div class="sdg-name">Peace, Justice & Institutions</div>
+                                        <div class="sdg-desc">
+                                            Building accountable health systems within the community.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="180">
-                            <div class="sdg-card">
-                                <div class="sdg-icon" style="background:#a21942;"><i class="bi bi-briefcase-fill"></i></div>
-                                <div>
-                                    <div class="sdg-num">Goal 8</div>
-                                    <div class="sdg-name">Decent Work & Growth</div>
-                                    <div class="sdg-desc">Improving worker health to enhance productivity and quality of life.</div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission / Vision / Goals -->
+        <section class="mvg-section">
+            <div class="container" style="position: relative; z-index: 1">
+                <div class="text-center mb-5" data-aos="fade-down">
+                    <div class="section-eyebrow" style="margin: 0 auto 16px">
+                        <i class="bi bi-compass"></i> Our Foundation
+                    </div>
+                    <h2 class="section-title">What Drives Us</h2>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
+                        <div class="mvg-card">
+                            <div class="mvg-icon" style="animation-delay: 0s"><i class="bi bi-bullseye"></i></div>
+                            <h3 class="mvg-title">Our Mission</h3>
+                            <p class="mvg-text">
+                                To promote a culture of preventive health within the SEKEM community through early
+                                detection and effective intervention.
+                            </p>
                         </div>
-                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="260">
-                            <div class="sdg-card">
-                                <div class="sdg-icon" style="background:#00558a;"><i class="bi bi-bank2"></i></div>
-                                <div>
-                                    <div class="sdg-num">Goal 16</div>
-                                    <div class="sdg-name">Peace, Justice & Institutions</div>
-                                    <div class="sdg-desc">Building accountable health systems within the community.</div>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
+                        <div class="mvg-card">
+                            <div class="mvg-icon" style="animation-delay: 0.5s"><i class="bi bi-eye-fill"></i></div>
+                            <h3 class="mvg-title">Our Vision</h3>
+                            <p class="mvg-text">
+                                A healthy, productive SEKEM community, free from chronic diseases and postural problems.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="240">
+                        <div class="mvg-card">
+                            <div class="mvg-icon" style="animation-delay: 1s"><i class="bi bi-trophy-fill"></i></div>
+                            <h3 class="mvg-title">Our Goals</h3>
+                            <p class="mvg-text">
+                                Building a comprehensive health database, reducing incidence rates, and raising health
+                                awareness.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Mission / Vision / Goals -->
-    <section class="mvg-section">
-        <div class="container" style="position:relative;z-index:1;">
-            <div class="text-center mb-5" data-aos="fade-down">
-                <div class="section-eyebrow" style="margin:0 auto 16px;"><i class="bi bi-compass"></i> Our Foundation</div>
-                <h2 class="section-title">What Drives Us</h2>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
-                    <div class="mvg-card">
-                        <div class="mvg-icon" style="animation-delay:0s;"><i class="bi bi-bullseye"></i></div>
-                        <h3 class="mvg-title">Our Mission</h3>
-                        <p class="mvg-text">To promote a culture of preventive health within the SEKEM community through early detection and effective intervention.</p>
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row g-5">
+                    <div class="col-lg-5">
+                        <div class="footer-brand"><i class="bi bi-activity me-2"></i>Health Screening</div>
+                        <p class="small mb-3" style="color: #1e293b; line-height: 1.7">
+                            Integrative Health Center &mdash; Heliopolis University.
+                        </p>
+                    </div>
+                    <div class="col-lg-3">
+                        <h6
+                            style="
+                                font-size: 0.78rem;
+                                letter-spacing: 0.08em;
+                                text-transform: uppercase;
+                                color: #334155;
+                                margin-bottom: 16px;
+                            ">
+                            Navigation
+                        </h6>
+                        <a class="footer-link" href="screening.html">Dashboard</a>
+                        <a class="footer-link" href="intervention.html">Interventions</a>
+                        <a class="footer-link" href="activities.html">Activities</a>
+                        <a class="footer-link" href="surveys.html">Data</a>
+                        <a class="footer-link" href="reports.html">Reports</a>
+                    </div>
+                    <div class="col-lg-4">
+                        <h6
+                            style="
+                                font-size: 0.78rem;
+                                letter-spacing: 0.08em;
+                                text-transform: uppercase;
+                                color: #334155;
+                                margin-bottom: 16px;
+                            ">
+                            Contact
+                        </h6>
+                        <p class="small mb-2" style="color: #334155">
+                            <i class="bi bi-envelope me-2 text-info"></i>info@hu.edu.eg
+                        </p>
+                        <p class="small mb-0" style="color: #334155">
+                            <i class="bi bi-geo-alt me-2 text-info"></i>Heliopolis University, Cairo, Egypt
+                        </p>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
-                    <div class="mvg-card">
-                        <div class="mvg-icon" style="animation-delay:.5s;"><i class="bi bi-eye-fill"></i></div>
-                        <h3 class="mvg-title">Our Vision</h3>
-                        <p class="mvg-text">A healthy, productive SEKEM community, free from chronic diseases and postural problems.</p>
-                    </div>
-                </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="240">
-                    <div class="mvg-card">
-                        <div class="mvg-icon" style="animation-delay:1s;"><i class="bi bi-trophy-fill"></i></div>
-                        <h3 class="mvg-title">Our Goals</h3>
-                        <p class="mvg-text">Building a comprehensive health database, reducing incidence rates, and raising health awareness.</p>
-                    </div>
-                </div>
+                <hr style="border-color: rgba(255, 255, 255, 0.04); margin: 48px 0 24px" />
+                <p class="text-center mb-0" style="font-size: 0.8rem; color: #ffffff">
+                    &copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz
+                </p>
             </div>
-        </div>
-    </section>
+        </footer>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-5">
-                    <div class="footer-brand"><i class="bi bi-activity me-2"></i>Health Screening</div>
-                    <p class="small mb-3" style="color:#1e293b;line-height:1.7;">Integrative Health Center &mdash; Heliopolis University.</p>
-                </div>
-                <div class="col-lg-3">
-                    <h6 style="font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:#334155;margin-bottom:16px;">Navigation</h6>
-                    <a class="footer-link" href="screening.html">Dashboard</a>
-                    <a class="footer-link" href="intervention.html">Interventions</a>
-                    <a class="footer-link" href="activities.html">Activities</a>
-                    <a class="footer-link" href="surveys.html">Data</a>
-                    <a class="footer-link" href="reports.html">Reports</a>
-                </div>
-                <div class="col-lg-4">
-                    <h6 style="font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:#334155;margin-bottom:16px;">Contact</h6>
-                    <p class="small mb-2" style="color:#334155;"><i class="bi bi-envelope me-2 text-info"></i>info@hu.edu.eg</p>
-                    <p class="small mb-0" style="color:#334155;"><i class="bi bi-geo-alt me-2 text-info"></i>Heliopolis University, Cairo, Egypt</p>
-                </div>
-            </div>
-            <hr style="border-color:rgba(255,255,255,.04);margin:48px 0 24px;">
-            <p class="text-center mb-0" style="font-size:0.8rem;color:#ffffff;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz</p>
-        </div>
-    </footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            AOS.init({ duration: 950, once: true, offset: 40 });
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ duration:950, once:true, offset:40 });
+            document.addEventListener("DOMContentLoaded", function () {
+                const teamData = [
+                    {
+                        name: "Dr. Gehan Fathy Attia",
+                        role: "Project Director",
+                        bio: "Professor of Pharmaceutics, Vice Dean for Community Service, and Director of the Integrative Health Center at Heliopolis University.",
+                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true"
+                    },
+                    {
+                        name: "Dr. Hind Al-sharif",
+                        role: "Project Manager",
+                        bio: "Physiotherapy Consultant, leading the project's strategic vision.",
+                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/h.png?raw=true"
+                    },
+                    {
+                        name: "Dr. Mamdouh Abd El-aziz",
+                        role: "Physiotherapist / Coordinator",
+                        bio: "Physiotherapist experienced in clinical practice, research, and digital health solutions, with expertise in health screening and healthcare app development.",
+                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/amigo.png?raw=true"
+                    },
+                    {
+                        name: "Dr. Sham Ammar Kalaji",
+                        role: "Project Coordinator",
+                        bio: "Pharmacy graduate pursuing a Master's in Pharmacoeconomics and working as a Project Coordinator at Heliopolis University.",
+                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/s.png?raw=true"
+                    },
+                    {
+                        name: "Dr. Mariam Tamer",
+                        role: "Physiotherapist",
+                        bio: "Responsible for physical rehabilitation and posture correction programs.",
+                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/m.png?raw=true"
+                    }
+                ];
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const teamData = [
-                { name:"Dr. Gehan Fathy Attia", role:"Project Director", bio:"Professor of Pharmaceutics, Vice Dean for Community Service, and Director of the Integrative Health Center at Heliopolis University.", img:"https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true" },
-                { name:"Dr. Hind Al-sharif", role:"Project Manager", bio:"Physiotherapy Consultant, leading the project's strategic vision.", img:"https://github.com/Amigo-PT/Health-Screening/blob/main/h.png?raw=true" },
-                { name:"Dr. Mamdouh Abd El-aziz", role:"Physiotherapist / Coordinator", bio:"Physiotherapist experienced in clinical practice, research, and digital health solutions, with expertise in health screening and healthcare app development.", img:"https://github.com/Amigo-PT/Health-Screening/blob/main/amigo.png?raw=true" },
-                { name:"Dr. Sham Ammar Kalaji", role:"Project Coordinator", bio:"Pharmacy graduate pursuing a Master's in Pharmacoeconomics and working as a Project Coordinator at Heliopolis University.", img:"https://github.com/Amigo-PT/Health-Screening/blob/main/s.png?raw=true" },
-                { name:"Dr. Mariam Tamer", role:"Physiotherapist", bio:"Responsible for physical rehabilitation and posture correction programs.", img:"https://github.com/Amigo-PT/Health-Screening/blob/main/m.png?raw=true" }
-            ];
+                const wrapper = document.getElementById("team-slider");
 
-            const wrapper = document.getElementById('team-slider');
-
-            teamData.forEach(m => {
-                const card = document.createElement('div');
-                card.className = 'team-card-modern';
-                card.innerHTML = `
+                teamData.forEach((m) => {
+                    const card = document.createElement("div");
+                    card.className = "team-card-modern";
+                    card.innerHTML = `
                     <div class="team-img-container">
                         <img src="${m.img}" class="team-img-modern" alt="${m.name}" loading="lazy">
                     </div>
@@ -510,31 +913,39 @@
                         <div class="team-name">${m.name}</div>
                         <div class="team-bio">${m.bio}</div>
                     </div>`;
-                wrapper.appendChild(card);
-            });
-
-            let active = 0;
-            const cards = wrapper.querySelectorAll('.team-card-modern');
-
-            function update() {
-                cards.forEach((c,i) => {
-                    c.className = 'team-card-modern';
-                    if (i === active) c.classList.add('active');
-                    else if (i === (active+1) % teamData.length) c.classList.add('next');
+                    wrapper.appendChild(card);
                 });
-            }
-            update();
 
-            const next = () => { active = (active+1) % teamData.length; update(); };
-            const prev = () => { active = (active-1+teamData.length) % teamData.length; update(); };
+                let active = 0;
+                const cards = wrapper.querySelectorAll(".team-card-modern");
 
-            document.getElementById('next-btn').addEventListener('click', next);
-            document.getElementById('prev-btn').addEventListener('click', prev);
+                function update() {
+                    cards.forEach((c, i) => {
+                        c.className = "team-card-modern";
+                        if (i === active) c.classList.add("active");
+                        else if (i === (active + 1) % teamData.length) c.classList.add("next");
+                    });
+                }
+                update();
 
-            let timer = setInterval(next, 3200);
-            wrapper.addEventListener('mouseenter', () => clearInterval(timer));
-            wrapper.addEventListener('mouseleave', () => { timer = setInterval(next, 3200); });
-        });
-    </script>
-</body>
+                const next = () => {
+                    active = (active + 1) % teamData.length;
+                    update();
+                };
+                const prev = () => {
+                    active = (active - 1 + teamData.length) % teamData.length;
+                    update();
+                };
+
+                document.getElementById("next-btn").addEventListener("click", next);
+                document.getElementById("prev-btn").addEventListener("click", prev);
+
+                let timer = setInterval(next, 3200);
+                wrapper.addEventListener("mouseenter", () => clearInterval(timer));
+                wrapper.addEventListener("mouseleave", () => {
+                    timer = setInterval(next, 3200);
+                });
+            });
+        </script>
+    </body>
 </html>
