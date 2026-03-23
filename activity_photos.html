@@ -9,42 +9,31 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // Maintenance Mode Check
         (function() {
-            // Check session storage first
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 // Check if maintenance mode is enabled - NEW LINK
-                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true,
-                    header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.href = 'maintenance.html';
-                            } else {
-                                // If not maintenance, check login
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                    window.location.href = 'login.html';
-                                }
-                            }
-                        } else {
-                             // Fallback if sheet fails or is empty
-                             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                window.location.href = 'login.html';
-                            }
-                        }
-                    },
-                    error: function(err) {
-                        console.error("Maintenance check failed", err);
-                         // Fallback on error
-                         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                            window.location.href = 'login.html';
-                        }
-                    }
-                });
+            var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv";
+            function checkAndRedirect() {
+                if (localStorage.getItem('adminToken') === 'dfdf1ff8c7028b387c19303fad3e1bce4c036ff0cee712108902be87b6e14d04') return;
+                var apiUrl = localStorage.getItem('healthScreening_API');
+                function handleResult(m) {
+                if (m) {
+                    fetch('maintenance.html', {method:'HEAD'})
+                        .then(function(r){ if(r.ok) window.location.replace('maintenance.html'); })
+                        .catch(function(){});
+                }
             }
+                function csvFallback() {
+                    Papa.parse(CSV_URL, { download: true, header: true,
+                        complete: function(r) {
+                            var s = '';
+                            if (r.data && r.data.length > 0) { var row = r.data[0]; s = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0] || ''; }
+                            handleResult(s.toString().toUpperCase() === 'ON' || s.toString().toUpperCase() === 'TRUE');
+                        }, error: function() {}
+                    });
+                }
+                if (apiUrl) { fetch(apiUrl + '?checkMaintenance=true').then(function(r) { return r.json(); }).then(function(res) { handleResult(res.maintenance === true); }).catch(csvFallback); } else { csvFallback(); }
+            }
+            checkAndRedirect();
+            setInterval(checkAndRedirect, 30000);
         })();
     </script>
 
@@ -377,7 +366,7 @@
     <!-- Footer -->
     <footer>
         <div class="container text-center">
-            <p class="text-center mb-0" style="font-size:0.8rem;color:#ffffff;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz</p>
+            <p class="mb-0" style="font-size:0.8rem;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abdelaziz</p>
         </div>
     </footer>
 
@@ -425,11 +414,9 @@
         }
 
         function renderPage(title, description) {
-            // Title
             const titleEl = document.getElementById('activity-title');
             titleEl.innerHTML = `<span class="title-gradient">${title}</span>`;
 
-            // Description
             if (description) {
                 document.getElementById('activity-description').innerHTML =
                     `<p class="desc-box">${description}</p>`;
@@ -437,50 +424,60 @@
 
             const folderName = title.trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
             const basePath = `activity_images/${folderName}/`;
-            const exts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-            const maxCheck = 50;
-            let promises = [], validImages = [];
 
-            for (let i = 1; i <= maxCheck; i++) {
-                const num = i.toString().padStart(3, '0');
-                exts.forEach(ext => {
-                    const url = `${basePath}${num}.${ext}`;
-                    promises.push(new Promise(resolve => {
-                        const img = new Image();
-                        img.src = url;
-                        img.onload = () => { validImages.push({ url, num: i }); resolve(); };
-                        img.onerror = resolve;
-                    }));
+            // Load sequentially: try 001, 002, 003...
+            // Stop as soon as a number has NO image in any extension
+            // This means: rename your images 001.jpg, 002.jpg etc (no gaps)
+            const exts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+            function tryImage(num, extIndex) {
+                return new Promise(resolve => {
+                    if (extIndex >= exts.length) { resolve(null); return; }
+                    const url = `${basePath}${num}.${exts[extIndex]}`;
+                    const img = new Image();
+                    img.onload  = () => resolve(url);
+                    img.onerror = () => resolve(tryImage(num, extIndex + 1));
+                    img.src = url;
                 });
             }
 
-            Promise.all(promises).then(() => {
+            function loadSequential(num, found) {
+                const padded = num.toString().padStart(3, '0');
+                tryImage(padded, 0).then(url => {
+                    if (url) {
+                        found.push(url);
+                        loadSequential(num + 1, found); // try next
+                    } else {
+                        // No image for this number — stop and render
+                        renderGallery(found);
+                    }
+                });
+            }
+
+            function renderGallery(images) {
                 const container = document.getElementById('photos-container');
                 container.innerHTML = '';
 
-                if (validImages.length === 0) {
+                if (images.length === 0) {
                     document.getElementById('error-message').innerHTML = `
                         <div class="empty-state">
                             <i class="bi bi-images"></i>
                             <h5>No photos found</h5>
-                            <p>We couldn't find any photos for this activity yet.</p>
+                            <p>No photos have been added for this activity yet.</p>
                         </div>`;
                     return;
                 }
 
-                validImages.sort((a, b) => a.num - b.num);
-                galleryImages = validImages.map(v => v.url);
-
-                // Show stats
-                document.getElementById('photo-count').textContent = galleryImages.length;
+                galleryImages = images;
+                document.getElementById('photo-count').textContent = images.length;
                 document.getElementById('stats-row').style.cssText = 'display:flex!important;';
 
-                validImages.forEach(({ url }, index) => {
-                    const delay = index * 45;
+                images.forEach((url, index) => {
                     const col = document.createElement('div');
                     col.className = 'col-md-6 col-lg-4';
+                    col.style.animation = `fadeInUp .6s ${index * 60}ms ease both`;
                     col.innerHTML = `
-                        <div class="photo-card" style="animation-delay:${delay}ms" onclick="openLightbox(${index})">
+                        <div class="photo-card" onclick="openLightbox(${index})">
                             <img src="${url}" class="gallery-img" alt="Photo ${index+1}" loading="lazy">
                             <div class="overlay">
                                 <div class="overlay-icon"><i class="bi bi-zoom-in"></i></div>
@@ -488,7 +485,10 @@
                         </div>`;
                     container.appendChild(col);
                 });
-            });
+            }
+
+            // Start from image 1
+            loadSequential(1, []);
         }
 
         function openLightbox(index) {
