@@ -188,9 +188,8 @@
             overflow: hidden;
             cursor: pointer;
             height: 100%;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0;
-            animation: fadeInUp 0.7s forwards;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+            animation: fadeInUp 0.6s ease both;
             position: relative;
         }
         .photo-card:hover {
@@ -427,7 +426,6 @@
             }
 
             // Try folder name as-is first, then with underscores, then with spaces replaced
-            console.log('[Gallery] Activity title:', title);
             const folderOriginal = title.trim();
             const folderUnderscore = folderOriginal.replace(/\s+/g, '_');
             const folderEncoded = encodeURIComponent(folderOriginal);
@@ -435,7 +433,6 @@
 
             function fetchFolder(encodedName) {
                 const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/activity_images/${encodedName}?ref=${GITHUB_BRANCH}`;
-                console.log('[Gallery] Trying URL:', apiUrl);
                 return fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
                     .then(r => { console.log('[Gallery] Response:', r.status, encodedName); return r.ok ? r.json() : Promise.reject('not found'); });
             }
@@ -477,7 +474,7 @@
                 const col = document.createElement('div');
                 col.className = 'col-md-6 col-lg-4';
                 col.innerHTML = `
-                    <div class="photo-card" style="animation-delay:${index * 50}ms" onclick="openLightbox(${index})">
+                    <div class="photo-card" style="animation-delay:${index * 60}ms;animation-fill-mode:both;" onclick="openLightbox(${index})">
                         <img src="${url}" class="gallery-img" alt="Photo ${index + 1}" loading="lazy">
                         <div class="overlay">
                             <div class="overlay-icon"><i class="bi bi-zoom-in"></i></div>
