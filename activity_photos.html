@@ -394,7 +394,7 @@
             if (!title) { showError('Activity not specified.'); return; }
 
             showSkeletons();
-            setTimeout(() => renderPage(title, desc), 800);
+            renderPage(title, desc);
 
             document.addEventListener('keydown', e => {
                 if (document.getElementById('lightbox').style.display === 'block') {
@@ -413,6 +413,10 @@
             }
         }
 
+        const GITHUB_USER = 'Amigo-PT';
+        const GITHUB_REPO = 'Health-Screening';
+        const GITHUB_BRANCH = 'main';
+
         function renderPage(title, description) {
             const titleEl = document.getElementById('activity-title');
             titleEl.innerHTML = `<span class="title-gradient">${title}</span>`;
@@ -423,72 +427,51 @@
             }
 
             const folderName = title.trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
-            const basePath = `activity_images/${folderName}/`;
+            const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/activity_images/${encodeURIComponent(folderName)}?ref=${GITHUB_BRANCH}`;
 
-            // Load sequentially: try 001, 002, 003...
-            // Stop as soon as a number has NO image in any extension
-            // This means: rename your images 001.jpg, 002.jpg etc (no gaps)
-            const exts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
+                .then(r => r.ok ? r.json() : Promise.reject('not found'))
+                .then(files => {
+                    const imgExts = ['jpg','jpeg','png','webp','gif'];
+                    const images = files
+                        .filter(f => f.type === 'file' && imgExts.some(e => f.name.toLowerCase().endsWith('.' + e)))
+                        .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
+                        .map(f => f.download_url);
+                    renderGallery(images);
+                })
+                .catch(() => renderGallery([]));
+        }
 
-            function tryImage(num, extIndex) {
-                return new Promise(resolve => {
-                    if (extIndex >= exts.length) { resolve(null); return; }
-                    const url = `${basePath}${num}.${exts[extIndex]}`;
-                    // Use fetch HEAD to avoid browser console 404 errors
-                    fetch(url, {method:'HEAD'})
-                        .then(r => r.ok ? resolve(url) : resolve(tryImage(num, extIndex + 1)))
-                        .catch(()  => resolve(tryImage(num, extIndex + 1)));
-                });
+        function renderGallery(images) {
+            document.getElementById('photos-container').innerHTML = '';
+
+            if (!images.length) {
+                document.getElementById('error-message').innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-images"></i>
+                        <h5>No photos found</h5>
+                        <p>No photos have been added for this activity yet.</p>
+                    </div>`;
+                return;
             }
 
-            function loadSequential(num, found) {
-                const padded = num.toString().padStart(3, '0');
-                tryImage(padded, 0).then(url => {
-                    if (url) {
-                        found.push(url);
-                        loadSequential(num + 1, found); // try next
-                    } else {
-                        // No image for this number — stop and render
-                        renderGallery(found);
-                    }
-                });
-            }
+            galleryImages = images;
+            document.getElementById('photo-count').textContent = images.length;
+            document.getElementById('stats-row').style.cssText = 'display:flex!important;';
 
-            function renderGallery(images) {
-                const container = document.getElementById('photos-container');
-                container.innerHTML = '';
-
-                if (images.length === 0) {
-                    document.getElementById('error-message').innerHTML = `
-                        <div class="empty-state">
-                            <i class="bi bi-images"></i>
-                            <h5>No photos found</h5>
-                            <p>No photos have been added for this activity yet.</p>
-                        </div>`;
-                    return;
-                }
-
-                galleryImages = images;
-                document.getElementById('photo-count').textContent = images.length;
-                document.getElementById('stats-row').style.cssText = 'display:flex!important;';
-
-                images.forEach((url, index) => {
-                    const col = document.createElement('div');
-                    col.className = 'col-md-6 col-lg-4';
-                    col.style.animation = `fadeInUp .6s ${index * 60}ms ease both`;
-                    col.innerHTML = `
-                        <div class="photo-card" onclick="openLightbox(${index})">
-                            <img src="${url}" class="gallery-img" alt="Photo ${index+1}" loading="lazy">
-                            <div class="overlay">
-                                <div class="overlay-icon"><i class="bi bi-zoom-in"></i></div>
-                            </div>
-                        </div>`;
-                    container.appendChild(col);
-                });
-            }
-
-            // Start from image 1
-            loadSequential(1, []);
+            const container = document.getElementById('photos-container');
+            images.forEach((url, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <div class="photo-card" style="animation-delay:${index * 50}ms" onclick="openLightbox(${index})">
+                        <img src="${url}" class="gallery-img" alt="Photo ${index + 1}" loading="lazy">
+                        <div class="overlay">
+                            <div class="overlay-icon"><i class="bi bi-zoom-in"></i></div>
+                        </div>
+                    </div>`;
+                container.appendChild(col);
+            });
         }
 
         function openLightbox(index) {
