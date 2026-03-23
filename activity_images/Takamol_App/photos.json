@@ -1,1 +1,4 @@
-["001.jpg","002.jpg","003.jpg","004.jpg","005.jpg","006.jpg","007.jpg","008.jpg","009.jpg","010.jpg","011.jpg","012.jpg"]
+[
+  { "name": "001.jpg", "url": "https://media.githubusercontent.com/media/Amigo-PT/Health-Screening/refs/heads/main/activity_images/Takamol_App/001.jpg" },
+  { "name": "002", "url": "https://link-to-image2.jpg" }
+]
