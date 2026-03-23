@@ -412,10 +412,6 @@
             }
         }
 
-        const GITHUB_USER = 'Amigo-PT';
-        const GITHUB_REPO = 'Health-Screening';
-        const GITHUB_BRANCH = 'main';
-
         function renderPage(title, description) {
             const titleEl = document.getElementById('activity-title');
             titleEl.innerHTML = `<span class="title-gradient">${title}</span>`;
@@ -425,34 +421,52 @@
                     `<p class="desc-box">${description}</p>`;
             }
 
-            // Try folder name as-is first, then with underscores, then with spaces replaced
-            const folderOriginal = title.trim();
-            const folderUnderscore = folderOriginal.replace(/\s+/g, '_');
-            const folderEncoded = encodeURIComponent(folderOriginal);
-            const folderEncodedUs = encodeURIComponent(folderUnderscore);
+            // Try underscore folder name (Takamol_App), fallback to original (Takamol App)
+            const folderUs  = title.trim().replace(/\s+/g, '_').replace(/[^\w\-]/g, '');
+            const folderOrig = title.trim();
 
-            function fetchFolder(encodedName) {
-                const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/activity_images/${encodedName}?ref=${GITHUB_BRANCH}`;
-                return fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
-                    .then(r => { console.log('[Gallery] Response:', r.status, encodedName); return r.ok ? r.json() : Promise.reject('not found'); });
+            // Method 1: photos.json manifest (fastest, no 404s)
+            // Create activity_images/Takamol_App/photos.json with: ["001.jpg","002.jpg",...]
+            function tryJson(folder) {
+                return fetch(`activity_images/${encodeURIComponent(folder)}/photos.json`)
+                    .then(r => r.ok ? r.json() : Promise.reject())
+                    .then(names => names.map(n => `activity_images/${encodeURIComponent(folder)}/${n}`));
             }
 
-            function extractImages(files) {
-                const imgExts = ['jpg','jpeg','png','webp','gif'];
-                return files
-                    .filter(f => f.type === 'file' && imgExts.some(e => f.name.toLowerCase().endsWith('.' + e)))
-                    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-                    .map(f => f.download_url);
+            // Method 2: Probe first image to detect extension, then load sequentially
+            function tryProbe(folder) {
+                const exts = ['jpg','jpeg','png','webp','gif'];
+                function probeExt(i) {
+                    if (i >= exts.length) return Promise.resolve(null);
+                    return fetch(`activity_images/${encodeURIComponent(folder)}/001.${exts[i]}`, {method:'HEAD'})
+                        .then(r => r.ok ? exts[i] : probeExt(i + 1))
+                        .catch(() => probeExt(i + 1));
+                }
+                return probeExt(0).then(ext => {
+                    if (!ext) return [];
+                    return loadSeq(folder, ext, 1, []);
+                });
             }
 
-            // Try with original name first, fallback to underscore version
-            fetchFolder(folderEncoded)
-                .catch(() => fetchFolder(folderEncodedUs))
-                .then(files => { console.log('[Gallery] Files found:', files.length, files.map(f=>f.name)); return renderGallery(extractImages(files)); })
-                .catch(e => { console.log('[Gallery] All attempts failed:', e); renderGallery([]); });
+            function loadSeq(folder, ext, num, found) {
+                const pad = num.toString().padStart(3, '0');
+                return fetch(`activity_images/${encodeURIComponent(folder)}/${pad}.${ext}`, {method:'HEAD'})
+                    .then(r => r.ok
+                        ? loadSeq(folder, ext, num + 1, [...found, `activity_images/${encodeURIComponent(folder)}/${pad}.${ext}`])
+                        : found)
+                    .catch(() => found);
+            }
+
+            // Try all strategies in order
+            tryJson(folderUs)
+                .catch(() => tryJson(folderOrig))
+                .catch(() => tryProbe(folderUs))
+                .catch(() => tryProbe(folderOrig))
+                .then(urls => renderGallery(urls || []))
+                .catch(() => renderGallery([]));
         }
 
-        function renderGallery(images) {
+                function renderGallery(images) {
             document.getElementById('photos-container').innerHTML = '';
 
             if (!images.length) {
