@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        // Maintenance Mode Check (preserved)
+        // Maintenance Mode Check
         (function() {
             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
@@ -242,7 +242,6 @@
             transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             opacity: 0;
             animation: fadeInUp 0.7s forwards;
-            will-change: transform, opacity;
         }
         
         /* Featured images get larger spans */
@@ -265,20 +264,13 @@
             box-shadow: 0 20px 40px -15px rgba(6, 182, 212, 0.3);
         }
         
-        /* Image Styling with lazy loading and blur-up technique */
+        /* Image Styling */
         .premium-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
             transition: transform 0.7s cubic-bezier(0.33, 1, 0.68, 1);
-            background: rgba(15, 23, 42, 0.8);
-        }
-        
-        /* loading shimmer for images while fetching */
-        .premium-img.loading {
-            filter: blur(12px);
-            transform: scale(1.02);
         }
         
         .premium-card:hover .premium-img {
@@ -384,7 +376,7 @@
             animation: float 2s ease-in-out infinite;
         }
         
-        /* Skeleton Loader - improved */
+        /* Skeleton Loader */
         .skeleton-premium {
             background: linear-gradient(90deg,
                 rgba(255,255,255,0.04) 25%,
@@ -553,58 +545,6 @@
         let currentImageIndex = 0;
         let galleryImages = [];
 
-        // Optimized image discovery with parallel batch loading and smart timeout
-        async function discoverImagesOptimized(folderName, maxAttempts = 45) {
-            const basePath = `activity_images/${folderName}/`;
-            const exts = ['jpg', 'jpeg', 'png', 'webp'];
-            // Batch size to avoid overwhelming network
-            const BATCH_SIZE = 12;
-            const allChecks = [];
-            
-            // Pre-generate all candidate URLs
-            const candidates = [];
-            for (let i = 1; i <= maxAttempts; i++) {
-                const num = i.toString().padStart(3, '0');
-                for (const ext of exts) {
-                    candidates.push({ url: `${basePath}${num}.${ext}`, index: i });
-                }
-            }
-            
-            const validImages = [];
-            // Process in batches for controlled concurrency
-            for (let i = 0; i < candidates.length; i += BATCH_SIZE) {
-                const batch = candidates.slice(i, i + BATCH_SIZE);
-                const batchPromises = batch.map(candidate => {
-                    return new Promise(resolve => {
-                        const img = new Image();
-                        // Set timeout to avoid hanging on slow responses
-                        const timeoutId = setTimeout(() => resolve(null), 1800);
-                        img.onload = () => {
-                            clearTimeout(timeoutId);
-                            resolve({ url: candidate.url, index: candidate.index });
-                        };
-                        img.onerror = () => {
-                            clearTimeout(timeoutId);
-                            resolve(null);
-                        };
-                        img.src = candidate.url;
-                    });
-                });
-                
-                const results = await Promise.all(batchPromises);
-                for (const res of results) {
-                    if (res && !validImages.some(v => v.num === res.index)) {
-                        validImages.push({ url: res.url, num: res.index });
-                    }
-                }
-                // early exit if we already have enough? but keep full discovery
-                if (validImages.length >= 35) break;
-            }
-            
-            validImages.sort((a, b) => a.num - b.num);
-            return validImages.map(v => v.url);
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const title = params.get('title');
@@ -613,8 +553,7 @@
             if (!title) { showError('Activity not specified.'); return; }
 
             showPremiumSkeletons();
-            // Start loading immediately
-            renderPremiumGallery(title, desc);
+            setTimeout(() => renderPremiumGallery(title, desc), 800);
 
             document.addEventListener('keydown', e => {
                 if (document.getElementById('lightbox').style.display === 'block') {
@@ -628,7 +567,7 @@
         function showPremiumSkeletons() {
             const container = document.getElementById('photos-container');
             container.innerHTML = '';
-            for (let i = 0; i < 12; i++) {
+            for (let i = 0; i < 8; i++) {
                 const skeletonDiv = document.createElement('div');
                 skeletonDiv.className = 'premium-card';
                 skeletonDiv.style.opacity = '1';
@@ -648,52 +587,71 @@
             }
 
             const folderName = title.trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
-            
-            // Fast parallel image discovery
-            let imageUrls = [];
-            try {
-                imageUrls = await discoverImagesOptimized(folderName, 50);
-            } catch (err) {
-                console.warn(err);
-                imageUrls = [];
+            const basePath = `activity_images/${folderName}/`;
+            const exts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            const maxCheck = 60;
+            let validImages = [];
+            let promises = [];
+
+            for (let i = 1; i <= maxCheck; i++) {
+                const num = i.toString().padStart(3, '0');
+                for (const ext of exts) {
+                    const url = `${basePath}${num}.${ext}`;
+                    promises.push(new Promise(resolve => {
+                        const img = new Image();
+                        img.src = url;
+                        img.onload = () => {
+                            validImages.push({ url, num: i, width: img.width, height: img.height });
+                            resolve();
+                        };
+                        img.onerror = resolve;
+                    }));
+                }
             }
+
+            await Promise.all(promises);
             
-            galleryImages = imageUrls;
+            validImages.sort((a, b) => a.num - b.num);
+            galleryImages = validImages.map(v => v.url);
             const container = document.getElementById('photos-container');
             container.innerHTML = '';
 
-            if (galleryImages.length === 0) {
+            if (validImages.length === 0) {
                 document.getElementById('error-message').innerHTML = `
                     <div class="empty-state">
                         <i class="bi bi-images"></i>
                         <h5>No photos found</h5>
                         <p>We couldn't find any photos for this activity yet.</p>
                     </div>`;
-                document.getElementById('stats-row').style.display = 'none';
                 return;
             }
 
             document.getElementById('photo-count').textContent = galleryImages.length;
             document.getElementById('stats-row').style.cssText = 'display:flex!important;';
 
-            // Create all cards with lazy loading and instant rendering
-            const fragment = document.createDocumentFragment();
-            
-            galleryImages.forEach((imgUrl, idx) => {
-                const aspectHint = idx % 2 === 0 ? 0.75 : 1.2; // creative variation
+            // Create dynamic grid with varied sizes for visual interest
+            validImages.forEach((item, idx) => {
+                const imgUrl = item.url;
+                const aspectRatio = item.height / item.width;
+                
+                // Determine card style based on index and aspect ratio
                 let cardClass = '';
-                if (idx % 7 === 2 && galleryImages.length > 4) cardClass = 'wide';
-                else if (idx % 5 === 1 && idx % 3 !== 0) cardClass = 'portrait';
-                else if (idx % 3 === 0 && idx % 2 === 1 && galleryImages.length > 6) cardClass = 'featured';
+                if (idx % 7 === 0 && validImages.length > 3) {
+                    cardClass = 'wide'; // Wide landscape
+                } else if (idx % 5 === 0 && aspectRatio > 1.2) {
+                    cardClass = 'portrait'; // Tall portrait
+                } else if (idx % 3 === 0 && idx % 2 === 0) {
+                    cardClass = 'featured'; // Featured size
+                }
                 
                 const card = document.createElement('div');
                 card.className = `premium-card ${cardClass}`;
-                card.style.animationDelay = `${Math.min(idx % 8 * 40, 200)}ms`;
+                card.style.opacity = '0';
+                card.style.animationDelay = `${(idx % 12) * 50}ms`;
                 card.setAttribute('onclick', `openLightbox(${idx})`);
                 
-                // Use loading="lazy" native lazy loading + inline blur-up effect
                 card.innerHTML = `
-                    <img src="${imgUrl}" class="premium-img" alt="Activity Moment ${idx+1}" loading="lazy" decoding="async" onload="this.classList.remove('loading')" style="transition: filter 0.2s;">
+                    <img src="${imgUrl}" class="premium-img" alt="Activity Moment ${idx+1}" loading="lazy">
                     <div class="premium-overlay">
                         <div class="premium-icon">
                             <i class="bi bi-play-circle-fill"></i>
@@ -707,16 +665,13 @@
                         <i class="bi bi-heart-fill"></i>
                     </div>
                 `;
-                // Add loading class for subtle effect
-                const imgElement = card.querySelector('.premium-img');
-                imgElement.classList.add('loading');
-                fragment.appendChild(card);
+                
+                container.appendChild(card);
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                }, 80);
             });
-            
-            container.appendChild(fragment);
-            
-            // Trigger image loading optimization: remove loading class after natural load
-            // Already handled by onload event in each img
         }
 
         function openLightbox(index) {
@@ -756,7 +711,7 @@
                 img.style.transform = 'scale(1)';
                 document.getElementById('lb-current').textContent = currentImageIndex + 1;
                 document.getElementById('lb-total').textContent = galleryImages.length;
-            }, 140);
+            }, 160);
         }
 
         function showError(msg) {
