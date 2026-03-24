@@ -281,15 +281,15 @@
     <!-- Main -->
     <div class="main-content">
         <div class="container">
-            <div class="section-label"><i class="bi bi-clipboard-data"></i> HU Screening Programs</div>
+            <div class="section-label"><i class="bi bi-clipboard-data"></i>Screening Milestones</div>
             <div class="table-card">
                 <div class="table-responsive">
                     <table class="custom-table" id="screeningTable">
                         <thead>
                             <tr>
-                                <th class="hl" style="min-width:180px;">Program Name</th>
-                                <th class="hl" style="min-width:160px;">SDG / Indicator</th>
-                                <th>Acceleration</th>
+                                <th class="hl" style="min-width:180px;">Healthier Population Milestones</th>
+                                <th class="hl" style="min-width:160px;">Indicator</th>
+                                <th>Status</th>
                                 <th>Population</th>
                                 <th>Analysis</th>
                                 <th>Delivery Plans</th>
@@ -384,7 +384,7 @@
                 count++;
 
                 const phases = [
-                    { key:'Accel',    label:'Acceleration Phase', status:row.Accel_Status,    date:row.Accel_Date,    desc:row.Accel_Desc    },
+                    { key:'Accel',    label:'Status Phase', status:row.Accel_Status,    date:row.Accel_Date,    desc:row.Accel_Desc    },
                     { key:'Pop',      label:'Population Phase',   status:row.Pop_Status,      date:row.Pop_Date,      desc:row.Pop_Desc      },
                     { key:'Analysis', label:'Data Analysis',      status:row.Analysis_Status, date:row.Analysis_Date, desc:row.Analysis_Desc },
                     { key:'Delivery', label:'Delivery Plans',     status:row.Delivery_Status, date:row.Delivery_Date, desc:row.Delivery_Desc },
@@ -448,7 +448,7 @@
 
         // Export
         function exportToExcel() {
-            const data = [["Program Name","SDG / Indicator","Acceleration","Population","Analysis","Delivery Plans"]];
+            const data = [["Healthier Population Milestones","Indicator","Status","Population","Analysis","Delivery Plans"]];
             document.querySelectorAll('.custom-table tbody tr').forEach(row => {
                 const cols = row.querySelectorAll('td');
                 if (!cols.length) return;

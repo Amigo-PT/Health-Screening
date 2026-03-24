@@ -499,7 +499,7 @@
             compChart=new Chart(document.getElementById('comparisonChart'),{
                 type:'line',
                 data:{
-                    labels:['No Dx','Gastritis','Headache','URTI','Dental','Eye','Anemia','Tonsillitis','Sinusitis','Env Allergy','Food Allergy','Diabetes','Thyroid','Hypertension','Asthma','Heart','UTI','Chronic Pain','MS','Mental Health','Liver','RA','Other'],
+                    labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'],
                     datasets:[
                         { label:'Students', data:d.complaints.students, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.1)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
                         { label:'Workers',  data:d.complaints.workers,  borderColor:'#64748b', backgroundColor:'rgba(100,116,139,.1)', fill:true, tension:.4, pointRadius:3, pointHoverRadius:6 },
