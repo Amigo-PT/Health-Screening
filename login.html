@@ -59,6 +59,28 @@
             33%       { transform: translate(30px,-20px) scale(1.05); }
             66%       { transform: translate(-20px,15px) scale(.97); }
         }
+        /* Notification slide animation */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(40px);
+                visibility: hidden;
+            }
+        }
 
         body {
             font-family: 'Cairo', sans-serif;
@@ -94,6 +116,98 @@
                 linear-gradient(90deg, rgba(6,182,212,.03) 1px, transparent 1px);
             background-size: 60px 60px;
             pointer-events: none; z-index: 0;
+        }
+
+        /* Toast Notification Container (top-right) */
+        .toast-notification-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 380px;
+            pointer-events: none;
+        }
+
+        /* Individual Toast */
+        .login-toast {
+            pointer-events: auto;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border-left: 4px solid #ef4444;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(239,68,68,0.2);
+            padding: 16px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            animation: slideInRight 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .login-toast.hiding {
+            animation: slideOutRight 0.3s ease-in forwards;
+        }
+        .toast-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: rgba(239,68,68,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f87171;
+            font-size: 1.2rem;
+        }
+        .toast-content {
+            flex: 1;
+        }
+        .toast-title {
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #fca5a5;
+            margin-bottom: 4px;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toast-message {
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            line-height: 1.45;
+            margin-bottom: 8px;
+        }
+        .toast-detail {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 8px;
+            margin-top: 4px;
+        }
+        .toast-detail i {
+            font-size: 0.7rem;
+            color: #60a5fa;
+        }
+        .toast-close {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+            margin-left: 8px;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+        .toast-close:hover {
+            color: #f1f5f9;
         }
 
         /* Card */
@@ -248,25 +362,15 @@
 
         .spinner-border { width: 1.3rem; height: 1.3rem; border-width: 2px; }
 
-        /* Error */
-        .error-box {
-            display: none;
-            margin-top: 20px;
-            background: rgba(239,68,68,.1);
-            border: 1px solid rgba(239,68,68,.25);
-            border-radius: 14px; padding: 16px 18px;
-            font-size: .87rem; color: #fca5a5; line-height: 1.6;
-            animation: fadeIn .3s ease-out;
-        }
-        .error-box .err-title {
-            display: flex; align-items: center; gap: 8px;
-            font-weight: 700; margin-bottom: 6px; color: #f87171;
-        }
-
         /* Footer note */
         .login-footer {
             text-align: center; margin-top: 28px;
             font-size: .75rem; color: #1e293b;
+        }
+
+        /* original error box hidden (replaced by toast) */
+        .error-box {
+            display: none;
         }
     </style>
 </head>
@@ -275,6 +379,9 @@
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
+
+    <!-- Toast Notifications Container (top right) -->
+    <div class="toast-notification-container" id="toastContainer"></div>
 
     <div class="login-wrap">
         <div class="login-card">
@@ -318,9 +425,8 @@
                     <span id="btnSpinner" class="spinner-border text-white d-none" role="status"></span>
                 </button>
 
-                <div class="error-box" id="errorMsg">
-                    <div class="err-title"><i class="bi bi-shield-exclamation"></i> Access Denied</div><div style="margin-top:8px;font-size:.82rem;color:#9ca3af;">If you believe this is a system error, kindly contact the developer.</div>
-                </div>
+                <!-- hidden old error box (replaced by modern toasts) -->
+                <div class="error-box" id="errorMsg"></div>
 
             </form>
 
@@ -334,6 +440,77 @@
 
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vROSvg9xVSBLkqDfzLCKOr0Fvb0k_CeAQT9PDQHJMWDCmjYswPUSjXmE0YkfX836Npy0ivzOY5y8iIZ/pub?gid=0&single=true&output=csv";
 
+        // Toast notification manager
+        const toastContainer = document.getElementById('toastContainer');
+
+        function showErrorToast(title, mainMessage, detailedHint = null) {
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = 'login-toast';
+            
+            // Determine icon based on error type
+            let iconHtml = '<i class="bi bi-exclamation-triangle-fill"></i>';
+            
+            const content = `
+                <div class="toast-icon">
+                    ${iconHtml}
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">
+                        <i class="bi bi-shield-exclamation"></i> ${escapeHtml(title)}
+                    </div>
+                    <div class="toast-message">
+                        ${escapeHtml(mainMessage)}
+                    </div>
+                    ${detailedHint ? `<div class="toast-detail">
+                        <i class="bi bi-chat-dots"></i> ${escapeHtml(detailedHint)}
+                    </div>` : ''}
+                </div>
+                <button class="toast-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+            `;
+            toast.innerHTML = content;
+            
+            // Close button functionality
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                removeToast(toast);
+            });
+            
+            toastContainer.appendChild(toast);
+            
+            // Auto remove after 6 seconds
+            setTimeout(() => {
+                removeToast(toast);
+            }, 6000);
+        }
+        
+        function removeToast(toastElement) {
+            if (toastElement.classList.contains('hiding')) return;
+            toastElement.classList.add('hiding');
+            setTimeout(() => {
+                if (toastElement.parentNode) toastElement.remove();
+            }, 300);
+        }
+        
+        // simple escape to prevent XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
+            });
+        }
+        
+        // Clear any existing toasts (optional when new login attempt, but we keep)
+        function clearAllToasts() {
+            const toasts = document.querySelectorAll('.login-toast');
+            toasts.forEach(toast => removeToast(toast));
+        }
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -342,46 +519,88 @@
             const btn     = document.getElementById('loginBtn');
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('btnSpinner');
-            const errBox  = document.getElementById('errorMsg');
-            const errDetail = document.getElementById('errDetail');
-
+            
+            // Basic validation: empty fields
+            if (!user || !pass) {
+                let missingFields = [];
+                if (!user) missingFields.push("Username");
+                if (!pass) missingFields.push("Password");
+                let fieldMsg = missingFields.join(" and ");
+                showErrorToast(
+                    "Missing Credentials",
+                    `Please fill in ${fieldMsg}.`,
+                    "Both username and password are required to log in."
+                );
+                return;
+            }
+            
             btn.disabled = true;
             btnText.classList.add('d-none');
             spinner.classList.remove('d-none');
-            errBox.style.display = 'none';
 
             Papa.parse(sheetURL, {
                 download: true, header: true,
                 complete: function(results) {
                     const data = results.data;
-                    let userFound = false, passOk = false;
-
+                    let userFound = false;
+                    let passwordMatched = false;
+                    let storedPassword = "";
+                    
+                    // Loop to find username
                     for (let i = 0; i < data.length; i++) {
                         const ru = (data[i].username || '').toString().trim();
                         const rp = (data[i].password || '').toString().trim();
                         if (ru === user) {
                             userFound = true;
-                            if (rp === pass) passOk = true;
+                            storedPassword = rp;
+                            if (rp === pass) {
+                                passwordMatched = true;
+                            }
                             break;
                         }
                     }
-
-                    if (userFound && passOk) {
+                    
+                    // Success case
+                    if (userFound && passwordMatched) {
                         sessionStorage.setItem('isLoggedIn', 'true');
                         window.location.href = 'index.html';
-                    } else {
-                        errDetail.textContent = !userFound
-                            ? 'Could not find an account matching that username.'
-                            : 'The password you entered is incorrect.';
-                        errBox.style.display = 'block';
-                        btn.disabled = false;
-                        btnText.classList.remove('d-none');
-                        spinner.classList.add('d-none');
+                        return;
                     }
+                    
+                    // Determine exact error scenario
+                    let errorTitle = "Access Denied";
+                    let errorMessage = "";
+                    let errorHint = "If you believe this is a system error, kindly contact the developer.";
+                    
+                    if (!userFound) {
+                        errorMessage = "The username you entered does not exist in our records.";
+                        // custom hint: explain it's username specific
+                        errorHint = "Check your username spelling or contact support. If you need assistance, reach out to the developer.";
+                    } 
+                    else if (userFound && !passwordMatched) {
+                        errorMessage = "Incorrect password for this account.";
+                        errorHint = "Double-check your password or reset it via admin. For any issue, contact the developer.";
+                    }
+                    else {
+                        // fallback (should not happen)
+                        errorMessage = "Invalid credentials. Please verify your username and password.";
+                    }
+                    
+                    // Show toast notification
+                    showErrorToast(errorTitle, errorMessage, errorHint);
+                    
+                    // Reset button state
+                    btn.disabled = false;
+                    btnText.classList.remove('d-none');
+                    spinner.classList.add('d-none');
                 },
-                error: function() {
-                    errDetail.textContent = 'Connection error. Please check your internet and try again.';
-                    errBox.style.display = 'block';
+                error: function(err) {
+                    console.error("CSV Load Error", err);
+                    showErrorToast(
+                        "Connection Error",
+                        "Unable to reach authentication server. Please check your internet connection.",
+                        "If the problem persists, contact the developer for assistance."
+                    );
                     btn.disabled = false;
                     btnText.classList.remove('d-none');
                     spinner.classList.add('d-none');
