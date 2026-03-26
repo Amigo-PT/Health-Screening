@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Reports Timeline - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,9 +11,7 @@
     <script>
         // Maintenance Mode Check
         (function() {
-            // Check session storage first
             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 // Check if maintenance mode is enabled - NEW LINK
                  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
                     download: true,
                     header: true,
@@ -24,13 +22,11 @@
                             if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
                                 window.location.href = 'maintenance.html';
                             } else {
-                                // If not maintenance, check login
                                 if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                                     window.location.href = 'login.html';
                                 }
                             }
                         } else {
-                             // Fallback if sheet fails or is empty
                              if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                                 window.location.href = 'login.html';
                             }
@@ -38,7 +34,6 @@
                     },
                     error: function(err) {
                         console.error("Maintenance check failed", err);
-                         // Fallback on error
                          if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                             window.location.href = 'login.html';
                         }
@@ -54,10 +49,10 @@
             --bg: #020617;
             --text: #f1f5f9;
             --muted: #94a3b8;
-            --card-bg: rgba(15,23,42,0.6);
-            --border: rgba(255,255,255,0.07);
+            --card-bg: rgba(15,23,42,0.7);
+            --border: rgba(255,255,255,0.08);
             --radius: 20px;
-            --line-color: rgba(6,182,212,0.18);
+            --line-color: rgba(6,182,212,0.22);
         }
 
         * { box-sizing: border-box; }
@@ -85,7 +80,7 @@
         .amb-2 { width:360px;height:360px;background:#10b981;bottom:-10%;right:-8%; }
 
         /* NAVBAR */
-        .navbar { background:rgba(2,6,23,.85); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); padding:16px 0; z-index:200; }
+        .navbar { background:rgba(2,6,23,.88); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); padding:16px 0; z-index:200; }
         .navbar-brand { font-weight:900; font-size:1.3rem; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         .nav-link { font-weight:700; color:#64748b !important; padding:6px 14px !important; border-radius:10px; transition:all .25s; font-size:.9rem; margin-right:4px; }
         .nav-link:hover { background:rgba(6,182,212,.08); color:#e2e8f0 !important; }
@@ -109,8 +104,8 @@
             padding:16px 0; background:transparent;
         }
         .filter-inner {
-            background:rgba(15,23,42,.8);
-            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            background:rgba(15,23,42,.85);
+            backdrop-filter:blur(20px);
             border:1px solid rgba(255,255,255,.08);
             border-radius:50px; padding:10px 24px;
             display:flex; align-items:center; gap:16px; flex-wrap:wrap;
@@ -146,7 +141,6 @@
             padding:40px 0;
         }
 
-        /* center line */
         .timeline::before {
             content:''; position:absolute;
             left:50%; top:0; bottom:0; width:2px;
@@ -161,17 +155,16 @@
         .timeline-item.right { left:50%; padding:10px 0 10px 48px; text-align:left; }
         .timeline-item.left { text-align:right; }
 
-        /* Date dot */
         .tl-dot {
             position:absolute; top:18px;
             width:62px; height:62px; border-radius:50%;
             background:rgba(15,23,42,.95);
-            border:2px solid rgba(6,182,212,.35);
+            border:2px solid rgba(6,182,212,.45);
             display:flex; flex-direction:column;
             align-items:center; justify-content:center;
             z-index:10; font-weight:800; line-height:1.15;
             transition:all .35s;
-            box-shadow:0 0 18px rgba(6,182,212,.15);
+            box-shadow:0 0 18px rgba(6,182,212,.2);
         }
         .tl-dot .dot-month { font-size:.68rem; color:#22d3ee; text-transform:uppercase; letter-spacing:.04em; }
         .tl-dot .dot-year  { font-size:.95rem; color:var(--text); }
@@ -180,16 +173,15 @@
         .timeline-item.right .tl-dot { left:-31px; }
 
         .timeline-item:hover .tl-dot {
-            background:rgba(6,182,212,.15);
+            background:rgba(6,182,212,.2);
             border-color:#22d3ee;
-            box-shadow:0 0 28px rgba(6,182,212,.35);
-            transform:scale(1.1);
+            box-shadow:0 0 28px rgba(6,182,212,.45);
+            transform:scale(1.08);
         }
 
-        /* Card */
         .tl-card {
             background:var(--card-bg);
-            backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+            backdrop-filter:blur(14px);
             border:1px solid var(--border);
             border-radius:var(--radius);
             padding:24px;
@@ -203,12 +195,12 @@
             background:var(--main-gradient);
             transform:scaleX(0); transition:transform .4s; transform-origin:left;
         }
-        .timeline-item:hover .tl-card { transform:translateY(-6px); border-color:rgba(6,182,212,.18); box-shadow:0 20px 40px -10px rgba(0,0,0,.5); }
+        .timeline-item:hover .tl-card { transform:translateY(-6px); border-color:rgba(6,182,212,.25); box-shadow:0 20px 40px -10px rgba(0,0,0,.5); }
         .timeline-item:hover .tl-card::before { transform:scaleX(1); }
 
         .type-pill {
             display:inline-flex; align-items:center; gap:6px;
-            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.15);
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
             border-radius:50px; padding:4px 12px;
             font-size:.72rem; font-weight:700; color:#22d3ee;
             letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px;
@@ -217,39 +209,144 @@
         .report-desc  { font-size:.87rem; color:var(--muted); line-height:1.7; margin-bottom:18px; }
 
         .card-footer-row {
-            display:flex; align-items:center; gap:10px;
+            display:flex; align-items:center; gap:12px;
             padding-top:16px; border-top:1px solid rgba(255,255,255,.06);
+            flex-wrap: wrap;
         }
 
-        .btn-download {
-            flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px;
-            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.2);
-            border-radius:12px; padding:10px 16px;
-            font-size:.87rem; font-weight:700; color:#22d3ee;
+        .btn-download, .btn-view {
+            display:inline-flex; align-items:center; justify-content:center; gap:8px;
+            border-radius:14px; padding:10px 18px;
+            font-size:.85rem; font-weight:700;
             text-decoration:none; transition:all .3s;
             font-family:'Cairo',sans-serif;
+            cursor: pointer;
+            border: none;
+            flex: 1;
+            min-width: 120px;
         }
-        .btn-download:hover { background:rgba(6,182,212,.18); color:#67e8f9; transform:translateY(-2px); }
+        .btn-download {
+            background:rgba(6,182,212,.08); border:1px solid rgba(6,182,212,.25);
+            color:#22d3ee;
+        }
+        .btn-download:hover { background:rgba(6,182,212,.2); color:#a5f3fc; transform:translateY(-2px); }
+        
+        .btn-view {
+            background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.25);
+            color:#34d399;
+        }
+        .btn-view:hover { background:rgba(16,185,129,.2); color:#a7f3d0; transform:translateY(-2px); }
 
         .file-size-badge {
-            display:inline-flex; align-items:center; gap:5px;
-            background:rgba(16,185,129,.08); border:1px solid rgba(16,185,129,.15);
-            border-radius:10px; padding:6px 12px;
-            font-size:.78rem; font-weight:700; color:#34d399; white-space:nowrap;
+            display:inline-flex; align-items:center; gap:6px;
+            background:rgba(100,116,139,.2); border:1px solid rgba(255,255,255,.1);
+            border-radius:12px; padding:6px 14px;
+            font-size:.75rem; font-weight:600; color:#cbd5e1;
+            white-space:nowrap;
+            font-family: monospace;
+        }
+        
+        .size-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .size-loading .spinner-border-sm {
+            width: 0.9rem;
+            height: 0.9rem;
+            border-width: 2px;
         }
 
+        /* PDF MODAL */
+        .pdf-modal .modal-content {
+            background: rgba(8, 12, 30, 0.98);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(6, 182, 212, 0.5);
+            border-radius: 32px;
+            height: 88vh;
+            max-height: 88vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+        }
+        .pdf-modal .modal-header {
+            background: rgba(6, 182, 212, 0.08);
+            border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 18px 28px;
+        }
+        .pdf-modal .modal-title {
+            font-weight: 800;
+            background: var(--main-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.2px;
+        }
+        .pdf-modal .modal-body {
+            padding: 0;
+            height: calc(100% - 78px);
+            background: #0a0c18;
+        }
+        .pdf-viewer-container {
+            width: 100%;
+            height: 100%;
+            background: #10121f;
+            position: relative;
+        }
+        .pdf-embed {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #1e1f2c;
+        }
+        .pdf-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 420px;
+            gap: 20px;
+            color: var(--muted);
+            background: #0f1222;
+        }
+        .pdf-loading .spinner {
+            width: 52px;
+            height: 52px;
+            border: 4px solid rgba(6,182,212,0.2);
+            border-top-color: #22d3ee;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .pdf-error {
+            text-align: center;
+            padding: 60px 30px;
+            color: #f87171;
+            background: rgba(248,113,113,0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        .pdf-error i { font-size: 3rem; opacity: 0.8; }
+        .pdf-error p { font-size: 1rem; max-width: 300px; margin: 0; }
+
         /* SKELETON */
-        .skeleton { background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
+        .skeleton { background:linear-gradient(90deg,rgba(255,255,255,.05) 25%,rgba(255,255,255,.12) 50%,rgba(255,255,255,.05) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
         .skel-dot  { width:62px;height:62px;border-radius:50%; }
-        .skel-card { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:24px; }
+        .skel-card { background:rgba(15,23,42,0.5); border:1px solid var(--border); border-radius:var(--radius); padding:24px; backdrop-filter: blur(4px);}
         .skel-line { height:12px; margin-bottom:10px; }
         .skel-title{ height:20px; width:70%; margin-bottom:12px; }
         .skel-desc { height:40px; margin-bottom:16px; }
-        .skel-btn  { height:40px; border-radius:12px; }
+        .skel-btn  { height:42px; border-radius:14px; }
 
         /* EMPTY */
         .empty-state { text-align:center; padding:80px 20px; color:var(--muted); }
-        .empty-state i { font-size:3.5rem; opacity:.2; display:block; margin-bottom:16px; }
+        .empty-state i { font-size:3.5rem; opacity:.3; display:block; margin-bottom:18px; }
 
         /* RESPONSIVE */
         @media(max-width:768px) {
@@ -259,10 +356,14 @@
             .timeline-item.right .tl-dot { left:0; right:auto; }
             .search-wrap { border-right:none; padding-right:0; border-bottom:1px solid rgba(255,255,255,.07); padding-bottom:10px; }
             .filter-inner { border-radius:20px; flex-direction:column; align-items:stretch; }
+            .card-footer-row { flex-direction: column; }
+            .btn-download, .btn-view { width: 100%; }
+            .file-size-badge { align-self: center; }
         }
 
-        /* FOOTER */
-        footer { position:relative; z-index:1; background:#030712; color:#475569; padding:60px 0 32px; }
+        footer {
+            position:relative; z-index:1; background:#030712; color:#475569; padding:60px 0 32px; margin-top: auto;
+        }
         footer::before { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background:var(--main-gradient); }
         .footer-brand { font-size:1.1rem; font-weight:900; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
     </style>
@@ -272,7 +373,6 @@
     <div class="amb amb-1"></div>
     <div class="amb amb-2"></div>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
@@ -290,10 +390,9 @@
         </div>
     </nav>
 
-    <!-- Hero -->
     <section class="page-hero">
         <div class="container">
-            <div data-aos="fade-down" data-aos-duration="900">
+            <div>
                 <div class="hero-eyebrow"><i class="bi bi-file-earmark-text"></i> Documentation</div>
                 <h1 class="page-title">Project <span class="title-gradient">Reports</span></h1>
                 <p class="page-sub">Comprehensive archive of our progress, monthly updates, and official documentation.</p>
@@ -301,7 +400,6 @@
         </div>
     </section>
 
-    <!-- Filter -->
     <div class="filter-bar">
         <div class="container">
             <div class="filter-inner">
@@ -309,20 +407,48 @@
                     <i class="bi bi-search"></i>
                     <input type="text" id="searchInput" class="search-input" placeholder="Search reports...">
                 </div>
-                <select id="yearFilter"  class="filter-select"><option value="all">All Years</option></select>
+                <select id="yearFilter" class="filter-select"><option value="all">All Years</option></select>
                 <select id="monthFilter" class="filter-select"><option value="all">All Months</option></select>
             </div>
         </div>
     </div>
 
-    <!-- Timeline -->
     <section class="timeline-section">
         <div class="container">
             <div class="timeline" id="timeline-container"></div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- PDF Modal -->
+    <div class="modal fade pdf-modal" id="pdfViewerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pdfModalTitle">
+                        <i class="bi bi-file-earmark-pdf-fill me-2" style="color:#f97316;"></i>
+                        <span id="pdfTitle">Report Viewer</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="pdfModalBody">
+                    <div class="pdf-viewer-container">
+                        <div class="pdf-loading" id="pdfLoading">
+                            <div class="spinner"></div>
+                            <div>Loading document ...</div>
+                            <small style="color:#475569;">Requesting PDF from secure source</small>
+                        </div>
+                        <div id="pdfError" class="pdf-error" style="display: none;">
+                            <i class="bi bi-file-earmark-pdf-slash"></i>
+                            <p>Unable to preview the PDF. It might be unavailable or the file could be corrupted.</p>
+                            <button id="retryDownloadBtn" class="btn-download" style="margin-top: 12px;"><i class="bi bi-download"></i> Download Report Instead</button>
+                        </div>
+                        <iframe id="pdfEmbed" class="pdf-embed" style="display: none;" frameborder="0" allow="fullscreen"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="row g-4">
@@ -336,7 +462,7 @@
                 </div>
             </div>
             <hr style="border-color:rgba(255,255,255,.04);margin:32px 0 20px;">
-            <p class="text-center mb-0" style="font-size:0.8rem;color:#ffffff;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz</p>
+            <p class="text-center mb-0" style="font-size:0.8rem;color:#ffffffcc;">&copy; 2026 Health Screening Project. All rights reserved. | Developed by Dr. Mamdouh Abd Elaziz</p>
         </div>
     </footer>
 
@@ -353,24 +479,103 @@
         function shortMonth(m) { const n=toMonthNum(m); return(n>=1&&n<=12)?MONTH_SHORT[n]:'---'; }
         function fullMonth(m)  { const n=toMonthNum(m); return(n>=1&&n<=12)?MONTH_FULL[n]:'Unknown'; }
 
-        function formatBytes(b,d=2){if(!+b)return'–';const k=1024,s=['B','KB','MB','GB'],i=Math.floor(Math.log(b)/Math.log(k));return`${parseFloat((b/Math.pow(k,i)).toFixed(d))} ${s[i]}`;}
-
-        async function fetchFileSize(url,id){
-            try{const r=await fetch(url,{method:'HEAD'});if(r.ok){const s=r.headers.get('content-length');const el=document.getElementById(id);if(el){el.innerHTML=s?`<i class="bi bi-hdd me-1"></i>${formatBytes(s)}`:'';if(!s)el.style.display='none';}}}catch(e){const el=document.getElementById(id);if(el)el.style.display='none';}
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0 || !bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         }
 
-        document.addEventListener('DOMContentLoaded',()=>{
+        async function fetchFileSize(url, elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            try {
+                const response = await fetch(url, { method: 'HEAD', cache: 'force-cache' });
+                if (response.ok) {
+                    const contentLength = response.headers.get('content-length');
+                    if (contentLength) {
+                        const sizeText = formatBytes(parseInt(contentLength));
+                        element.innerHTML = `<i class="bi bi-hdd-stack"></i> ${sizeText}`;
+                        element.style.display = 'inline-flex';
+                    } else {
+                        element.innerHTML = `<i class="bi bi-question-circle"></i> Size N/A`;
+                        element.style.display = 'inline-flex';
+                    }
+                } else {
+                    element.innerHTML = `<i class="bi bi-exclamation-triangle"></i> Unavailable`;
+                    element.style.display = 'inline-flex';
+                }
+            } catch (error) {
+                console.warn("Could not fetch file size:", error);
+                element.innerHTML = `<i class="bi bi-wifi-off"></i> Offline`;
+                element.style.display = 'inline-flex';
+            }
+        }
+
+        function openPDFViewer(pdfUrl, title) {
+            const modalEl = document.getElementById('pdfViewerModal');
+            const modal = new bootstrap.Modal(modalEl);
+            const pdfTitleSpan = document.getElementById('pdfTitle');
+            const loadingDiv = document.getElementById('pdfLoading');
+            const errorDiv = document.getElementById('pdfError');
+            const pdfFrame = document.getElementById('pdfEmbed');
+            
+            pdfTitleSpan.textContent = title;
+            loadingDiv.style.display = 'flex';
+            errorDiv.style.display = 'none';
+            pdfFrame.style.display = 'none';
+            pdfFrame.src = 'about:blank';
+            
+            modal.show();
+            
+            const retryBtn = document.getElementById('retryDownloadBtn');
+            const newRetry = retryBtn.cloneNode(true);
+            retryBtn.parentNode.replaceChild(newRetry, retryBtn);
+            newRetry.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(pdfUrl, '_blank');
+            });
+            
+            setTimeout(() => {
+                pdfFrame.onload = () => {
+                    if (pdfFrame.contentDocument && pdfFrame.contentDocument.title === 'about:blank') return;
+                    loadingDiv.style.display = 'none';
+                    pdfFrame.style.display = 'block';
+                    errorDiv.style.display = 'none';
+                };
+                pdfFrame.onerror = () => {
+                    loadingDiv.style.display = 'none';
+                    errorDiv.style.display = 'flex';
+                    pdfFrame.style.display = 'none';
+                };
+                pdfFrame.src = pdfUrl + '#toolbar=1&navpanes=1&statusbar=1';
+                
+                setTimeout(() => {
+                    if (loadingDiv.style.display === 'flex') {
+                        loadingDiv.style.display = 'none';
+                        errorDiv.style.display = 'flex';
+                        pdfFrame.style.display = 'none';
+                    }
+                }, 8000);
+            }, 150);
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
             fetchData();
-            document.getElementById('searchInput').addEventListener('input',filterReports);
-            document.getElementById('yearFilter').addEventListener('change',()=>{populateMonthFilter();filterReports();});
-            document.getElementById('monthFilter').addEventListener('change',filterReports);
+            document.getElementById('searchInput').addEventListener('input', filterReports);
+            document.getElementById('yearFilter').addEventListener('change', () => { populateMonthFilter(); filterReports(); });
+            document.getElementById('monthFilter').addEventListener('change', filterReports);
         });
 
-        function showSkeletons(){
-            const c=document.getElementById('timeline-container'); c.innerHTML='';
-            for(let i=0;i<4;i++){
-                const side=i%2===0?'left':'right';
-                c.innerHTML+=`
+        function showSkeletons() {
+            const c = document.getElementById('timeline-container'); 
+            c.innerHTML = '';
+            for (let i = 0; i < 4; i++) {
+                const side = i % 2 === 0 ? 'left' : 'right';
+                c.innerHTML += `
                     <div class="timeline-item ${side}" style="opacity:1;">
                         <div class="tl-dot skeleton skel-dot"></div>
                         <div class="skel-card">
@@ -383,91 +588,135 @@
             }
         }
 
-        function fetchData(){
+        function fetchData() {
             showSkeletons();
-            const t=new Promise(r=>setTimeout(r,700));
-            const d=new Promise((res,rej)=>{Papa.parse(sheetURL,{download:true,header:true,dynamicTyping:true,complete:r=>res(r.data),error:e=>rej(e)});});
-            Promise.all([t,d]).then(([_,data])=>processData(data)).catch(()=>{
-                document.getElementById('timeline-container').innerHTML='<div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5></div>';
+            const minDelay = new Promise(r => setTimeout(r, 700));
+            const dataPromise = new Promise((res, rej) => {
+                Papa.parse(sheetURL, {
+                    download: true, 
+                    header: true, 
+                    dynamicTyping: true, 
+                    complete: r => res(r.data), 
+                    error: e => rej(e)
+                });
             });
+            Promise.all([minDelay, dataPromise])
+                .then(([_, data]) => processData(data))
+                .catch(() => {
+                    document.getElementById('timeline-container').innerHTML = '<div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5><p>Unable to load reports data.</p></div>';
+                });
         }
 
-        function processData(data){
-            allReports=data.filter(d=>d.Title).sort((a,b)=>{
-                if(b.Year!==a.Year) return b.Year-a.Year;
-                return toMonthNum(b.Month)-toMonthNum(a.Month);
+        function processData(data) {
+            allReports = data.filter(d => d && d.Title && d.Title.toString().trim()).sort((a, b) => {
+                if (b.Year !== a.Year) return (b.Year || 0) - (a.Year || 0);
+                return toMonthNum(b.Month) - toMonthNum(a.Month);
             });
-            populateYearFilter(); populateMonthFilter(); renderTimeline(allReports);
+            populateYearFilter(); 
+            populateMonthFilter(); 
+            renderTimeline(allReports);
         }
 
-        function populateYearFilter(){
-            const sel=document.getElementById('yearFilter');
-            sel.innerHTML='<option value="all">All Years</option>';
-            [...new Set(allReports.map(r=>r.Year).filter(Boolean))].sort((a,b)=>b-a).forEach(y=>{
-                sel.innerHTML+=`<option value="${y}">${y}</option>`;
+        function populateYearFilter() {
+            const sel = document.getElementById('yearFilter');
+            sel.innerHTML = '<option value="all">All Years</option>';
+            const years = [...new Set(allReports.map(r => r.Year).filter(y => y && !isNaN(y)))].sort((a, b) => b - a);
+            years.forEach(y => { sel.innerHTML += `<option value="${y}">${y}</option>`; });
+        }
+
+        function populateMonthFilter() {
+            const yr = document.getElementById('yearFilter').value;
+            const sel = document.getElementById('monthFilter');
+            const prev = sel.value; 
+            sel.innerHTML = '<option value="all">All Months</option>';
+            const monthsSet = new Set();
+            allReports.forEach(r => { 
+                if (yr === 'all' || String(r.Year) === yr) { 
+                    const n = toMonthNum(r.Month); 
+                    if (n > 0) monthsSet.add(n); 
+                } 
             });
+            [...monthsSet].sort((a, b) => a - b).forEach(n => { 
+                sel.innerHTML += `<option value="${n}">${fullMonth(n)}</option>`; 
+            });
+            if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
         }
 
-        function populateMonthFilter(){
-            const yr=document.getElementById('yearFilter').value;
-            const sel=document.getElementById('monthFilter');
-            const prev=sel.value; sel.innerHTML='<option value="all">All Months</option>';
-            const months=new Set();
-            allReports.forEach(r=>{ if(yr==='all'||String(r.Year)===yr){const n=toMonthNum(r.Month);if(n>0)months.add(n);} });
-            [...months].sort((a,b)=>a-b).forEach(n=>{ sel.innerHTML+=`<option value="${n}">${fullMonth(n)}</option>`; });
-            if([...sel.options].some(o=>o.value===prev)) sel.value=prev;
-        }
-
-        function filterReports(){
-            const q=document.getElementById('searchInput').value.toLowerCase();
-            const yr=document.getElementById('yearFilter').value;
-            const mo=document.getElementById('monthFilter').value;
-            renderTimeline(allReports.filter(r=>{
-                const t=r.Title&&r.Title.toString().toLowerCase().includes(q);
-                const y=yr==='all'||String(r.Year)===yr;
-                const m=mo==='all'||toMonthNum(r.Month)===parseInt(mo);
-                return t&&y&&m;
+        function filterReports() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const yr = document.getElementById('yearFilter').value;
+            const mo = document.getElementById('monthFilter').value;
+            renderTimeline(allReports.filter(r => {
+                const titleMatch = r.Title && r.Title.toString().toLowerCase().includes(q);
+                const yearMatch = yr === 'all' || String(r.Year) === yr;
+                const monthMatch = mo === 'all' || toMonthNum(r.Month) === parseInt(mo);
+                return titleMatch && yearMatch && monthMatch;
             }));
         }
 
-        function renderTimeline(data){
-            const c=document.getElementById('timeline-container');
-            c.innerHTML='';
-            if(!data.length){
-                c.innerHTML='<div class="empty-state"><i class="bi bi-search"></i><h5 style="color:#475569;">No reports found</h5><p style="color:#1e293b;font-size:.9rem;">Try adjusting your search or filters.</p></div>';
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function renderTimeline(data) {
+            const c = document.getElementById('timeline-container');
+            c.innerHTML = '';
+            
+            if (!data.length) {
+                c.innerHTML = '<div class="empty-state"><i class="bi bi-search"></i><h5 style="color:#475569;">No reports found</h5><p style="color:#1e293b;font-size:.9rem;">Try adjusting your search or filters.</p></div>';
                 return;
             }
-            data.forEach((item,i)=>{
-                const side=i%2===0?'left':'right';
-                const safe=item.Title.toString().trim().replace(/\s+/g,'_').replace(/[^\w-]/g,'');
-                const pdf=`reports_files/${safe}.pdf`;
-                const sizeId=`sz-${i}`;
-                let sizeHtml=item.File_Size
-                    ?`<span class="file-size-badge"><i class="bi bi-hdd"></i>${item.File_Size}</span>`
-                    :`<span class="file-size-badge" id="${sizeId}"><span class="spinner-border" style="width:.75rem;height:.75rem;border-width:2px;"></span></span>`;
-
-                c.innerHTML+=`
-                    <div class="timeline-item ${side}" style="animation-delay:${i*80}ms;">
+            
+            data.forEach((item, i) => {
+                const side = i % 2 === 0 ? 'left' : 'right';
+                const safeName = item.Title.toString().trim().replace(/[\/\\:*?"<>|]/g, '_').replace(/\s+/g, '_');
+                const pdfUrl = `reports_files/${encodeURIComponent(safeName)}.pdf`;
+                const sizeId = `size-${Date.now()}-${i}`;
+                
+                let sizeHtml = '';
+                if (item.File_Size && item.File_Size.toString().trim() !== "") {
+                    sizeHtml = `<span class="file-size-badge"><i class="bi bi-hdd-stack"></i> ${escapeHtml(item.File_Size)}</span>`;
+                } else {
+                    sizeHtml = `<span class="file-size-badge" id="${sizeId}"><span class="size-loading"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span>loading...</span></span></span>`;
+                }
+                
+                c.innerHTML += `
+                    <div class="timeline-item ${side}" style="animation-delay:${i * 70}ms;">
                         <div class="tl-dot">
                             <span class="dot-month">${shortMonth(item.Month)}</span>
-                            <span class="dot-year">${item.Year||'--'}</span>
+                            <span class="dot-year">${item.Year || '—'}</span>
                         </div>
                         <div class="tl-card">
-                            <span class="type-pill"><i class="bi bi-file-earmark-text"></i>${item.Type||'Report'}</span>
-                            <h4 class="report-title">${item.Title}</h4>
-                            <p class="report-desc">${item.Description||''}</p>
+                            <span class="type-pill"><i class="bi bi-file-earmark-text"></i>${escapeHtml(item.Type) || 'Document'}</span>
+                            <h4 class="report-title">${escapeHtml(item.Title)}</h4>
+                            <p class="report-desc">${escapeHtml(item.Description) || 'Comprehensive health screening report and insights.'}</p>
                             <div class="card-footer-row">
-                                <a href="${pdf}" target="_blank" download class="btn-download">
-                                    <i class="bi bi-file-earmark-arrow-down"></i> Download PDF
+                                <button class="btn-view" onclick="openPDFViewer('${pdfUrl.replace(/'/g, "\\'")}', '${escapeHtml(item.Title).replace(/'/g, "\\'")}')">
+                                    <i class="bi bi-eye-fill"></i> View PDF
+                                </button>
+                                <a href="${pdfUrl}" target="_blank" download class="btn-download">
+                                    <i class="bi bi-file-earmark-arrow-down"></i> Download
                                 </a>
                                 ${sizeHtml}
                             </div>
                         </div>
                     </div>`;
-
-                if(!item.File_Size) fetchFileSize(pdf,sizeId);
+                
+                if (!item.File_Size || item.File_Size.toString().trim() === "") {
+                    setTimeout(() => {
+                        fetchFileSize(pdfUrl, sizeId);
+                    }, 100);
+                }
             });
         }
+        
+        window.openPDFViewer = openPDFViewer;
     </script>
 </body>
 </html>
