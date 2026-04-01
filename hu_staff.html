@@ -1228,28 +1228,12 @@
             popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(59,130,246,0.6)',borderRadius:8},{label:lbl2,data:d2,backgroundColor:'rgba(6,182,212,0.6)',borderRadius:8}] }, options:{ responsive:true, plugins:{legend:{position:'top',labels:{color:'#94a3b8',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}} } });
             if (compChart) compChart.destroy();
             const labels2=['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'];
-            const lineKeys=['students','faculties','workers'];
-            const lineLabels={students:'Students',faculties:'Faculties',workers:'Workers'};
-            const colors=['#3b82f6','#f97316','#10b981'];
-            const datasets = lineKeys.filter(key => Array.isArray(comparisonData1.complaints[key]) || Array.isArray(comparisonData2.complaints[key])).map((key,index) => ({
-                label: lineLabels[key],
-                data: aggregateComplaints({
-                    students: key==='students'?comparisonData1.complaints.students:[],
-                    faculties: key==='faculties'?comparisonData1.complaints.faculties:[],
-                    workers: key==='workers'?comparisonData1.complaints.workers:[]
-                }).map((v,i)=>(comparisonData1.complaints[key]||[])[i]||0),
-                borderColor: colors[index],
-                backgroundColor: colors[index].replace(')',',0.2)'),
-                fill:false,
-                tension:.3,
-                pointRadius:3,
-                pointHoverRadius:6
-            }));
-            datasets = [];
-            if (Array.isArray(comparisonData1.complaints.students)) datasets.push({ label:'Students', data:comparisonData1.complaints.students, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,0.2)', fill:false, tension:.3, pointRadius:3, pointHoverRadius:6 });
-            if (Array.isArray(comparisonData1.complaints.faculties)) datasets.push({ label:'Faculties', data:comparisonData1.complaints.faculties, borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.2)', fill:false, tension:.3, pointRadius:3, pointHoverRadius:6 });
-            if (Array.isArray(comparisonData1.complaints.workers)) datasets.push({ label:'Workers', data:comparisonData1.complaints.workers, borderColor:'#10b981', backgroundColor:'rgba(16,185,129,0.2)', fill:false, tension:.3, pointRadius:3, pointHoverRadius:6 });
-            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:datasets }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}, legend:{labels:{color:'#94a3b8',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}} } });
+            const comp1 = aggregateComplaints(comparisonData1.complaints);
+            const comp2 = aggregateComplaints(comparisonData2.complaints);
+            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[
+                { label: lbl1, data: comp1, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.2)', fill: false, tension: .3, pointRadius: 3, pointHoverRadius: 6 },
+                { label: lbl2, data: comp2, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.2)', fill: false, tension: .3, pointRadius: 3, pointHoverRadius: 6 }
+            ] }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}, legend:{labels:{color:'#94a3b8',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}} } });
         }
 
         function resetComparison() {

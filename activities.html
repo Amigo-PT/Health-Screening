@@ -170,6 +170,18 @@
             line-height: 1.7;
         }
 
+        .hero-stats {
+            display:flex; justify-content:center; margin-top:32px; gap:18px; flex-wrap:wrap;
+        }
+        .stat-card {
+            display:flex; align-items:center; gap:18px; background:rgba(15,23,42,.85); border:1px solid rgba(255,255,255,.08); border-radius:24px; padding:22px 26px; min-width:280px; max-width:420px; box-shadow:0 18px 40px rgba(0,0,0,.18);
+        }
+        .stat-icon {
+            width:56px; height:56px; display:inline-flex; align-items:center; justify-content:center; border-radius:18px; background:rgba(37,99,235,.12); color:#60a5fa; font-size:1.7rem;
+        }
+        .stat-label { text-transform:uppercase; letter-spacing:.12em; font-size:.78rem; color:#94a3b8; margin-bottom:6px; }
+        .stat-value { font-size:2.4rem; font-weight:900; color:#f8fafc; line-height:1; }
+
         /* FILTER TABS */
         .filter-tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         .filter-tab {
@@ -519,6 +531,15 @@
                     <div class="heatmap-month-details-title">Select a month to see activities</div>
                 </div>
             </div>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="bi bi-calendar3"></i></div>
+                    <div>
+                        <div class="stat-label">Total Activities</div>
+                        <div class="stat-value" id="activitiesCount">0</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -583,6 +604,7 @@
         }
 
         function renderActivities(data) {
+            updateActivityCount(data);
             const container = document.getElementById('activities-container');
             container.innerHTML = '';
             const filtered = currentFilter === 'All' ? data : data.filter(item => (item.Category || 'Other') === currentFilter);
@@ -617,6 +639,13 @@
                         </div>
                     </div>`;
             });
+        }
+
+        function updateActivityCount(data) {
+            const el = document.getElementById('activitiesCount');
+            if (!el) return;
+            const count = Array.isArray(data) ? data.length : allData.length;
+            el.textContent = count.toLocaleString();
         }
 
         let heatmapCountsByYear = {};
@@ -749,7 +778,7 @@
                 });
             });
             Promise.all([minDelay, dataFetch])
-                .then(([_, data]) => { allData = data.filter(d => d.Title); renderActivities(allData); renderTimeHeatmap(allData); })
+                .then(([_, data]) => { allData = data.filter(d => d.Title); renderActivities(allData); renderTimeHeatmap(allData); updateActivityCount(); })
                 .catch(() => {
                     document.getElementById('activities-container').innerHTML = `<div class="col-12"><div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5><p style="font-size:0.9rem;">Could not load activities. Please check your connection.</p></div></div>`;
                 });
