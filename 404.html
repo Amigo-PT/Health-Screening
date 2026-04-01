@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Health Screening</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg: #070b18;
+            --panel: rgba(15, 23, 42, 0.88);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #06b6d4;
+            --accent-strong: #22d3ee;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow: 0 40px 120px rgba(0, 0, 0, 0.35);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at top left, rgba(6,182,212,0.12), transparent 22%),
+                        radial-gradient(circle at bottom right, rgba(16,185,129,0.1), transparent 18%),
+                        linear-gradient(180deg, #06090f 0%, #070b18 100%);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+        }
+        .page-shell {
+            width: min(100%, 1080px);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        .page-shell::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6,182,212,0.06), transparent 35%, rgba(37,99,235,0.05));
+            pointer-events: none;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2rem;
+            padding: 56px 64px;
+            position: relative;
+            z-index: 1;
+        }
+        @media(max-width: 900px) {
+            .hero { grid-template-columns: 1fr; padding: 42px 28px; }
+        }
+        .hero-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 18px;
+        }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: rgba(6,182,212,0.12);
+            color: var(--accent-strong);
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+        }
+        .title {
+            font-size: clamp(2.8rem, 5vw, 4.8rem);
+            line-height: 0.95;
+            letter-spacing: -0.04em;
+            margin: 0;
+            color: #ffffff;
+        }
+        .title span {
+            color: #06b6d4;
+        }
+        .description {
+            max-width: 620px;
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--muted);
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 24px;
+        }
+        .btn-primary,
+        .btn-secondary {
+            min-width: 170px;
+            padding: 14px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+            border: none;
+            color: #030712;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #e2e8f0;
+        }
+        .hero-visual {
+            display: grid;
+            align-items: center;
+            justify-items: center;
+        }
+        .visual-card {
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 1 / 1;
+            background: radial-gradient(circle at top, rgba(6,182,212,0.12), transparent 35%),
+                        radial-gradient(circle at bottom right, rgba(16,185,129,0.16), transparent 32%),
+                        linear-gradient(180deg, rgba(7,11,24,0.95), rgba(9,14,30,0.9));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 36px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.28);
+        }
+        .visual-grid {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 12px;
+            padding: 24px;
+        }
+        .visual-block {
+            background: rgba(255,255,255,0.06);
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .visual-block::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(6,182,212,0.18), transparent 40%);
+            opacity: 0.8;
+        }
+        .visual-block:nth-child(2),
+        .visual-block:nth-child(5),
+        .visual-block:nth-child(8) {
+            background: rgba(6,182,212,0.12);
+            border-color: rgba(6,182,212,0.22);
+        }
+        .visual-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 2.2rem;
+            color: rgba(255,255,255,0.85);
+        }
+        .footer-note {
+            padding: 20px 24px 28px;
+            background: rgba(7, 11, 24, 0.9);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .footer-note a {
+            color: var(--accent-strong);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <div class="hero">
+            <div class="hero-copy">
+                <span class="eyebrow"><i class="bi bi-exclamation-octagon-fill"></i> Page Not Found</span>
+                <h1 class="title">404 <span>Not Found</span></h1>
+                <p class="description">Looks like the page you were searching for does not exist. It may have been moved, renamed, or is temporarily unavailable. Return to the dashboard to continue your health screening workflow.</p>
+                <div class="actions">
+                    <a href="index.html" class="btn btn-primary">Go back Home</a>
+                    <a href="screening.html" class="btn btn-secondary">Open Screening Dashboard</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="visual-card">
+                    <div class="visual-grid">
+                        <div class="visual-block"><i class="bi bi-heart-pulse visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-file-earmark-medical visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-people-fill visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-bar-chart-line-fill visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-shield-lock-fill visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-clipboard-check visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-clock-history visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-globe2 visual-icon"></i></div>
+                        <div class="visual-block"><i class="bi bi-tools visual-icon"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-note">Need help? Visit <a href="contact.html">Contact</a> or return to the <a href="index.html">main menu</a>.</div>
+    </div>
+</body>
+</html>

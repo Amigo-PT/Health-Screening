@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
@@ -56,14 +57,12 @@
         .amb-1 { width:480px;height:480px;background:#f59e0b;top:-15%;left:-10%; }
         .amb-2 { width:360px;height:360px;background:#ef4444;bottom:-10%;right:-8%; }
 
-        /* NAVBAR - lower z-index */
         .navbar { position:relative; z-index:500; background:rgba(2,6,23,.9); backdrop-filter:blur(24px); border-bottom:1px solid var(--border); padding:14px 0; }
         .navbar-brand { font-weight:900; font-size:1.3rem; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         .nav-link { font-weight:700; color:#64748b !important; padding:6px 14px !important; border-radius:10px; transition:all .25s; font-size:.9rem; margin-right:4px; }
         .nav-link:hover { background:rgba(249,115,22,.08); color:#e2e8f0 !important; }
         .nav-link.active { background:rgba(249,115,22,.12); color:#fb923c !important; border:1px solid rgba(249,115,22,.2); }
 
-        /* MODAL - highest z-index */
         .modal { z-index: 999999 !important; }
         .modal-backdrop { z-index: 999998 !important; }
 
@@ -97,14 +96,22 @@
         .month-item.active .month-lbl, .month-item:hover .month-lbl { color:#fb923c; }
 
         .comparison-controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.07); align-items:center; }
+        .filter-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+        .filter-actions .comparison-select { min-width:220px; }
+        .filter-actions .btn-compare { min-width:170px; }
         .comparison-select { background:rgba(2,6,23,0.8); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:8px 16px; color:var(--text); font-family:'Cairo',sans-serif; font-size:0.85rem; cursor:pointer; }
         .comparison-select:hover,.comparison-select:focus { border-color:rgba(249,115,22,0.4); outline:none; }
         .btn-compare { background:linear-gradient(120deg,rgba(245,158,11,0.2),rgba(249,115,22,0.2)); border:1px solid rgba(249,115,22,0.3); border-radius:12px; padding:8px 20px; color:#fb923c; font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.25s; }
+        .btn-compare.active { background:rgba(239,68,68,0.16); border-color:rgba(239,68,68,0.3); color:#ef4444; }
+        @media(max-width:768px){ .filter-actions{flex-direction:column;} }
         .btn-compare:hover { background:linear-gradient(120deg,rgba(245,158,11,0.3),rgba(249,115,22,0.3)); transform:translateY(-2px); }
         .comparison-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(249,115,22,0.15); border-radius:50px; padding:5px 14px; font-size:0.7rem; font-weight:700; color:#fb923c; margin-left:12px; }
         .comparison-change { font-size:0.7rem; margin-top:4px; }
+        .status-indicator { transition:color .2s; }
+        .status-indicator.status-ok { color:#22c55e; }
+        .status-indicator.status-error { color:#ef4444; }
+        .status-indicator.status-loading { color:#f59e0b; }
 
-        /* RISK */
         .risk-section { margin:32px 0; }
         .risk-summary { background:linear-gradient(135deg,rgba(15,23,42,0.9),rgba(15,23,42,0.7)); border-radius:24px; padding:28px; border:1px solid rgba(255,255,255,0.07); backdrop-filter:blur(10px); }
         .risk-title { font-size:0.85rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:#fb923c; margin-bottom:24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
@@ -122,7 +129,6 @@
         .risk-description { font-size:0.7rem; color:#64748b; margin-top:4px; }
         .risk-summary-compact { margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.07); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
         .risk-formula-box { margin-top:16px; padding:12px 16px; background:rgba(249,115,22,0.04); border:1px solid rgba(249,115,22,0.1); border-radius:14px; font-size:0.72rem; color:#475569; line-height:1.6; }
-        .risk-formula-box strong { color:#64748b; }
 
         .company-risk-detail-btn { background:transparent; border:none; color:#fb923c; font-size:0.7rem; margin-top:8px; cursor:pointer; opacity:0.7; transition:opacity 0.3s; width:100%; }
         .company-risk-detail-btn:hover { opacity:1; }
@@ -146,16 +152,21 @@
         .company-card:hover::before { transform:scaleX(1); }
         .company-icon { width:72px; height:72px; border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:1.9rem; color:#fb923c; background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.1)); border:1px solid rgba(249,115,22,.15); animation:float 6s ease-in-out infinite; transition:.4s; }
         .company-card:hover .company-icon { background:var(--sekem-gradient); color:#fff; transform:rotate(10deg) scale(1.08); animation:none; }
-        .company-num  { font-size:2rem; font-weight:900; color:var(--text); margin-bottom:4px; }
+        .company-num { font-size:2rem; font-weight:900; color:var(--text); margin-bottom:4px; }
         .company-name { font-size:.88rem; color:var(--muted); margin-bottom:14px; line-height:1.4; }
-        .company-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(249,115,22,.08); border:1px solid rgba(249,115,22,.18); border-radius:50px; padding:5px 14px; font-size:.76rem; font-weight:700; color:#fb923c; }
 
         .charts-section { position:relative; z-index:1; margin-top:32px; }
         .chart-card { background:var(--card-bg); backdrop-filter:blur(14px); border:1px solid var(--border); border-radius:var(--radius); padding:30px; height:100%; transition:.4s; }
         .chart-card:hover { transform:translateY(-5px); box-shadow:0 20px 40px -10px rgba(0,0,0,.4); }
+        .drilldown-section { display:none; margin-top:24px; }
+        .drilldown-title { font-size:.88rem; font-weight:700; color:#fb923c; margin-bottom:18px; }
+        .drilldown-grid { display:flex; flex-wrap:wrap; gap:16px; }
+        .drilldown-card { flex:1 1 calc(33.333% - 10.66px); min-width:220px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:20px; padding:22px; }
+        .drilldown-card-title { font-size:.8rem; font-weight:700; text-transform:uppercase; color:#94a3b8; margin-bottom:10px; }
+        .drilldown-card-value { font-size:1.6rem; font-weight:900; color:#f8fafc; margin-bottom:8px; }
+        .drilldown-card-sub { font-size:.78rem; color:#cbd5e1; line-height:1.5; }
         .chart-title { font-size:.85rem; font-weight:700; color:var(--muted); letter-spacing:.04em; text-transform:uppercase; margin-bottom:24px; }
 
-        /* MODAL - fixed scroll + z-index */
         .risk-detail-modal .modal-dialog { max-height:90vh; }
         .risk-detail-modal .modal-content { background:rgba(15,23,42,0.98); backdrop-filter:blur(20px); border:1px solid rgba(249,115,22,0.3); border-radius:28px; max-height:90vh; display:flex; flex-direction:column; }
         .risk-detail-header { background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(239,68,68,0.05)); border-bottom:1px solid rgba(255,255,255,0.1); padding:24px 28px; flex-shrink:0; }
@@ -179,11 +190,11 @@
         footer::before { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background:var(--sekem-gradient); }
         .footer-brand { font-size:1.1rem; font-weight:900; background:var(--main-gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
     </style>
+        <link rel="stylesheet" href="claymorphism.css">
 </head>
-<body>
+<body class="page-sekem">
     <div class="amb amb-1"></div>
     <div class="amb amb-2"></div>
-
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
@@ -214,7 +225,7 @@
             <div data-aos="fade-down" data-aos-duration="900">
                 <div class="hero-eyebrow"><i class="bi bi-buildings-fill"></i> SEKEM Companies</div>
                 <h1 class="page-title">SEKEM <span class="title-gradient">Screening Dashboard</span></h1>
-                <p class="page-sub">Analysis of health survey data for SEKEM Companies &mdash; Workers across all facilities</p>
+                <p class="page-sub">Analysis of health survey data for SEKEM Companies — Workers across all facilities</p>
             </div>
         </div>
     </section>
@@ -222,12 +233,26 @@
     <div class="container pb-5" style="position:relative;z-index:1;">
         <div class="filter-card" data-aos="fade-up" data-aos-delay="80">
             <span class="filter-label"><i class="bi bi-calendar3 me-2"></i>Filter by Period</span>
+            <div class="status-indicator"><span id="statusDot" class="status-dot status-loading"></span><span id="statusText">Connecting to server...</span></div>
             <div class="year-tabs" id="yearContainer"></div>
+            <div class="filter-actions">
+                <select id="companyFilter" class="comparison-select">
+                    <option value="all">Show all companies</option>
+                    <option value="isis">Isis</option>
+                    <option value="atos">Atos</option>
+                    <option value="naturetex">Nature Tex</option>
+                    <option value="lotus">Lotus</option>
+                    <option value="school">School</option>
+                </select>
+                <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Risk Only</button>
+            </div>
             <div class="month-timeline" id="monthContainer"></div>
-            <div class="comparison-controls" id="comparisonControls" style="display:none;">
+            <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
+            <div class="comparison-controls" id="comparisonControls" style="display:none; flex-wrap:wrap; gap:10px;">
+                <div style="width:100%;font-size:.82rem;color:#94a3b8;">Default compares current period with same period in the previous year. Change any two periods below to compare other ranges.</div>
                 <select id="compareYear1" class="comparison-select"></select>
                 <select id="compareMonth1" class="comparison-select"></select>
-                <span style="color:#334155;">vs</span>
+                <span style="color:#334155; align-self:center;">vs</span>
                 <select id="compareYear2" class="comparison-select"></select>
                 <select id="compareMonth2" class="comparison-select"></select>
                 <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
@@ -262,17 +287,17 @@
                 <div class="risk-stats">
                     <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('high')">
                         <div class="risk-number" id="highRiskCount">--</div>
-                        <div class="risk-label">&#9888; High Risk</div>
+                        <div class="risk-label">⚠️ High Risk</div>
                         <div class="risk-description">Requires immediate intervention</div>
                     </div>
                     <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('moderate')">
                         <div class="risk-number" id="moderateRiskCount">--</div>
-                        <div class="risk-label">&#128202; Moderate Risk</div>
+                        <div class="risk-label">📊 Moderate Risk</div>
                         <div class="risk-description">Needs follow-up screening</div>
                     </div>
                     <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('low')">
                         <div class="risk-number" id="lowRiskCount">--</div>
-                        <div class="risk-label">&#10003; Low Risk</div>
+                        <div class="risk-label">✅ Low Risk</div>
                         <div class="risk-description">Maintain healthy lifestyle</div>
                     </div>
                 </div>
@@ -287,19 +312,19 @@
             <div class="section-eyebrow" data-aos="fade-right"><i class="bi bi-grid-3x3-gap"></i> SEKEM Companies Breakdown</div>
             <div class="row g-4 justify-content-center">
                 <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="60">
-                    <div class="company-card"><div class="company-icon" style="animation-delay:0s;"><i class="bi bi-flower1"></i></div><div class="company-num" id="num-isis">0</div><div class="company-name">Isis</div></div>
+                    <div class="company-card"><div class="company-icon"><i class="bi bi-flower1"></i></div><div class="company-num" id="num-isis">0</div><div class="company-name">Isis</div></div>
                 </div>
                 <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="120">
-                    <div class="company-card"><div class="company-icon" style="animation-delay:.3s;"><i class="bi bi-capsule"></i></div><div class="company-num" id="num-atos">0</div><div class="company-name">Atos</div></div>
+                    <div class="company-card"><div class="company-icon"><i class="bi bi-capsule"></i></div><div class="company-num" id="num-atos">0</div><div class="company-name">Atos</div></div>
                 </div>
                 <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="180">
-                    <div class="company-card"><div class="company-icon" style="animation-delay:.6s;"><i class="bi bi-tree"></i></div><div class="company-num" id="num-naturetex">0</div><div class="company-name">Nature Tex</div></div>
+                    <div class="company-card"><div class="company-icon"><i class="bi bi-tree"></i></div><div class="company-num" id="num-naturetex">0</div><div class="company-name">Nature Tex</div></div>
                 </div>
                 <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="240">
-                    <div class="company-card"><div class="company-icon" style="animation-delay:.9s;"><i class="bi bi-droplet"></i></div><div class="company-num" id="num-lotus">0</div><div class="company-name">Lotus</div></div>
+                    <div class="company-card"><div class="company-icon"><i class="bi bi-droplet"></i></div><div class="company-num" id="num-lotus">0</div><div class="company-name">Lotus</div></div>
                 </div>
                 <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="300">
-                    <div class="company-card"><div class="company-icon" style="animation-delay:1.2s;"><i class="bi bi-backpack"></i></div><div class="company-num" id="num-school">0</div><div class="company-name">School</div></div>
+                    <div class="company-card"><div class="company-icon"><i class="bi bi-backpack"></i></div><div class="company-num" id="num-school">0</div><div class="company-name">School</div></div>
                 </div>
             </div>
         </div>
@@ -310,7 +335,7 @@
                     <div class="chart-card"><div class="chart-title"><i class="bi bi-pie-chart me-2"></i>Participation Rate</div><canvas id="populationChart"></canvas></div>
                 </div>
                 <div class="col-md-8" data-aos="fade-left" data-aos-duration="900">
-                    <div class="chart-card"><div class="chart-title"><i class="bi bi-graph-up me-2"></i>Health Complaints in SEKEM Companies</div><canvas id="comparisonChart"></canvas></div>
+                    <div class="chart-card"><div class="chart-title"><i class="bi bi-graph-up me-2"></i>Medical condations in SEKEM Companies</div><canvas id="comparisonChart"></canvas></div>
                 </div>
             </div>
         </div>
@@ -370,7 +395,7 @@
             <div class="row g-5">
                 <div class="col-lg-6">
                     <div class="footer-brand"><i class="bi bi-activity me-2"></i>Health Screening</div>
-                    <p class="small mb-0" style="color:#1e293b;">Integrative Health Center &mdash; Heliopolis University</p>
+                    <p class="small mb-0" style="color:#1e293b;">Integrative Health Center — Heliopolis University</p>
                 </div>
                 <div class="col-lg-6">
                     <p class="small mb-2" style="color:#334155;"><i class="bi bi-envelope me-2 text-info"></i>info@hu.edu.eg</p>
@@ -390,33 +415,37 @@
         let popChart=null, compChart=null;
         let currentYear=null, currentMonth=1;
         let availableYears=[], screeningData={};
-        let currentFullData=null;
-        let comparisonMode=false, comparisonData1=null, comparisonData2=null;
+        let currentFullData = null;
+        let comparisonMode = false, comparisonData1 = null, comparisonData2 = null;
+        let comparisonData1Raw = null, comparisonData2Raw = null;
+        let activeCompanyFilter='all';
+        let highRiskOnly=false;
 
+        // ========== DISEASES DATABASE (مطابق للمصدر) ==========
         const DISEASES = [
-            { name:"No diagnosis",                     weight:0,   riskLevel:"healthy",      recommendation:"Continue healthy lifestyle - Annual check-up recommended" },
-            { name:"Acute Gastritis",                  weight:1,   riskLevel:"low",          recommendation:"Avoid spicy foods - Eat small frequent meals - Reduce stress - Avoid NSAIDs" },
-            { name:"Frequent Headache",                weight:1,   riskLevel:"low",          recommendation:"Stay hydrated - Regular sleep schedule - Reduce caffeine - Stress management" },
-            { name:"Upper Respiratory Tract Infection",weight:0.5, riskLevel:"low",          recommendation:"Rest and hydration - Vitamin C - Avoid smoking - Good ventilation" },
-            { name:"Dental Problems",                  weight:0.5, riskLevel:"low",          recommendation:"Regular dental check-ups - Brush twice daily - Reduce sugar intake" },
-            { name:"Eye Problems",                     weight:1,   riskLevel:"low",          recommendation:"Regular eye exams - Reduce screen time - Proper lighting - 20-20-20 rule" },
-            { name:"Anemia",                           weight:1,   riskLevel:"low",          recommendation:"Iron-rich foods (spinach, red meat) - Vitamin C for absorption - Regular blood tests" },
-            { name:"Acute Tonsillitis",                weight:0.5, riskLevel:"low",          recommendation:"Warm salt water gargles - Rest - Hydration - Avoid cold drinks" },
-            { name:"Acute Sinusitis",                  weight:0.5, riskLevel:"low",          recommendation:"Steam inhalation - Nasal saline spray - Hydration - Avoid allergens" },
-            { name:"Environmental Allergy",            weight:0.5, riskLevel:"low",          recommendation:"Identify and avoid allergens - Antihistamines if needed - Air purifiers" },
-            { name:"Food Allergy",                     weight:0.5, riskLevel:"low",          recommendation:"Identify trigger foods - Read food labels - Carry emergency medication if severe" },
-            { name:"Diabetes",                         weight:4,   riskLevel:"critical",     recommendation:"Monitor blood sugar regularly - Consult nutritionist - Regular foot examination - HbA1c every 3 months" },
-            { name:"Thyroid dysfunction",              weight:2,   riskLevel:"moderate",     recommendation:"Regular hormone tests - Medication adherence - Specialist follow-up - Monitor symptoms" },
-            { name:"Hypertension",                     weight:3,   riskLevel:"high",         recommendation:"Daily blood pressure monitoring - Reduce salt intake - Regular walking exercise - Limit alcohol" },
-            { name:"Asthma",                           weight:2,   riskLevel:"moderate",     recommendation:"Regular inhaler use - Avoid triggers - Regular check-ups - Peak flow monitoring" },
-            { name:"Heart Disease",                    weight:5,   riskLevel:"critical",     recommendation:"Immediate cardiologist consultation - Monitor blood pressure - Avoid stress - Healthy diet" },
-            { name:"Urinary Tract Problems",           weight:1,   riskLevel:"low-moderate", recommendation:"Increase water intake - Avoid holding urine - Cranberry juice - Medical consultation if recurrent" },
-            { name:"Chronic Pain Disorders",           weight:1,   riskLevel:"low-moderate", recommendation:"Physical therapy sessions - Strengthening exercises - Ergonomic adjustments - Pain management techniques" },
-            { name:"Multiple Sclerosis",               weight:4,   riskLevel:"critical",     recommendation:"Neurologist follow-up - Physical therapy - Support groups - Manage fatigue and stress" },
-            { name:"Mental Health Disorders",          weight:2,   riskLevel:"moderate",     recommendation:"Counseling sessions - Relaxation exercises - Social support - Regular sleep schedule" },
-            { name:"Liver Diseases",                   weight:4,   riskLevel:"critical",     recommendation:"Avoid alcohol - Healthy diet - Regular liver function tests - Hepatologist consultation" },
-            { name:"Rheumatoid Arthritis",             weight:3,   riskLevel:"high",         recommendation:"Rheumatologist follow-up - Anti-inflammatory diet - Gentle exercise - Joint protection" },
-            { name:"Other",                            weight:1,   riskLevel:"low-moderate", recommendation:"Medical consultation for proper diagnosis - Follow recommended treatment plan" }
+            { name: "No diagnosis", weight: 0, riskLevel: "healthy", recommendation: "Continue healthy lifestyle - Annual check-up recommended" },
+            { name: "Acute Gastritis", weight: 1.1, riskLevel: "low", recommendation: "Avoid spicy and fried foods - Eat small frequent meals - Reduce stress - Avoid self-medicating with NSAIDs (Painkillers)" },
+            { name: "Frequent Headache", weight: 0.7, riskLevel: "low", recommendation: "Stay hydrated - Maintain regular sleep schedule - Monitor screen time - Practice stress management techniques" },
+            { name: "Upper Respiratory Tract Infection", weight: 0.2, riskLevel: "low", recommendation: "Rest and adequate hydration - Increase Vitamin C intake - Avoid smoking areas - Ensure good room ventilation" },
+            { name: "Dental Problems", weight: 0.1, riskLevel: "low", recommendation: "Visit a dentist for professional cleaning - Brush twice daily with fluoride toothpaste - Reduce sugary snacks and drinks" },
+            { name: "Eye Problems", weight: 0.3, riskLevel: "low", recommendation: "Regular eye exams - Follow the 20-20-20 rule (look away from screens every 20 mins) - Ensure proper lighting while reading" },
+            { name: "Anemia", weight: 0.5, riskLevel: "low", recommendation: "Eat iron-rich foods (liver, honey, spinach) - Take Vitamin C to improve absorption - Follow up with regular blood tests" },
+            { name: "Acute Tonsillitis", weight: 0.5, riskLevel: "low", recommendation: "Warm salt water gargles - Increase warm fluids - Adequate rest - Avoid very cold beverages until recovery" },
+            { name: "Acute Sinusitis", weight: 0.5, riskLevel: "low", recommendation: "Steam inhalation - Nasal saline rinses - Stay well-hydrated - Avoid dust and known allergens" },
+            { name: "Environmental Allergy", weight: 0.3, riskLevel: "low", recommendation: "Identify and avoid triggers - Keep indoor air clean - Use air purifiers if possible - Consult for appropriate antihistamines" },
+            { name: "Food Allergy", weight: 0.3, riskLevel: "low", recommendation: "Strictly avoid trigger foods - Read food labels carefully - Inform others about your allergy when eating out" },
+            { name: "Diabetes", weight: 1.6, riskLevel: "moderate-high", recommendation: "Regular blood sugar monitoring - Follow a structured diabetic diet - Daily foot inspection - HbA1c test every 3 months" },
+            { name: "Thyroid dysfunction", weight: 1.1, riskLevel: "moderate", recommendation: "Adhere to prescribed medication - Regular thyroid hormone blood tests - Follow up with an endocrinologist" },
+            { name: "Hypertension", weight: 2.5, riskLevel: "high", recommendation: "Monitor blood pressure daily - Reduce salt intake - Engage in 30 minutes of brisk walking - Weight management" },
+            { name: "Asthma", weight: 0.4, riskLevel: "low-moderate", recommendation: "Carry rescue inhaler at all times - Avoid smoke and strong perfumes - Regular check-ups to adjust preventive medication" },
+            { name: "Heart Disease", weight: 4.8, riskLevel: "critical", recommendation: "Follow up strictly with a cardiologist - Low-sodium and heart-healthy diet - Manage stress - Monitor for any chest pain or shortness of breath" },
+            { name: "Urinary Tract Problems", weight: 1.1, riskLevel: "low-moderate", recommendation: "Significantly increase water intake - Practice good hygiene - Avoid delaying urination - Medical consultation if symptoms persist" },
+            { name: "Chronic Pain Disorders", weight: 2.2, riskLevel: "high", recommendation: "Regular physical therapy - Strengthening and flexibility exercises - Ergonomic workspace setup - Gentle daily movement" },
+            { name: "Multiple Sclerosis", weight: 4.5, riskLevel: "critical", recommendation: "Regular neurology follow-ups - Physical therapy for mobility maintenance - Energy conservation techniques - Stay in cool environments" },
+            { name: "Mental Health Disorders", weight: 2.0, riskLevel: "moderate-high", recommendation: "Professional counseling or therapy - Regular physical activity - Consistent sleep hygiene - Engage with social support networks" },
+            { name: "Liver Diseases", weight: 3.8, riskLevel: "critical", recommendation: "Follow a liver-friendly diet - Avoid unnecessary medications - Regular liver function tests (LFT) - Consult a hepatologist" },
+            { name: "Rheumatoid Arthritis", weight: 2.9, riskLevel: "high", recommendation: "Consult a rheumatologist for biological/DMARDS therapy - Anti-inflammatory diet - Low-impact exercise (swimming/walking) - Joint protection" },
+            { name: "Other", weight: 1.0, riskLevel: "low-moderate", recommendation: "Seek medical consultation for a specific diagnosis - Follow the prescribed management plan" }
         ];
 
         const DISEASE_MAP = {
@@ -432,26 +461,54 @@
         };
 
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=2058048191&single=true&output=csv";
+        let lastSyncTime = null;
+
+        function formatLastSync(date) {
+            return date ? date.toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : 'not available';
+        }
+
+        function updateLastSyncLabel() {
+            const el = document.getElementById('lastSyncLabel');
+            if (!el) return;
+            el.textContent = `Last sync: ${lastSyncTime ? formatLastSync(lastSyncTime) : 'not available'}`;
+        }
+
+        function updateDataStatus(state) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const wrapper = document.querySelector('.status-indicator');
+            if (!dot || !text || !wrapper) return;
+            dot.className = `status-dot status-${state}`;
+            wrapper.className = `status-indicator status-${state}`;
+            if (state === 'ok') text.textContent = 'Connected to server';
+            else if (state === 'error') text.textContent = 'Server connection lost';
+            else if (state === 'loading') text.textContent = 'Connecting to server...';
+            else text.textContent = 'Status unknown';
+        }
 
         function fetchData() {
             showLoadingState();
-            Papa.parse(sheetURL,{download:true,header:true,dynamicTyping:true,complete:r=>processData(r.data),error:e=>console.error(e)});
+            Papa.parse(sheetURL, { download:true, header:true, dynamicTyping:true, complete:r=>{ lastSyncTime=new Date(); processData(r.data); updateLastSyncLabel(); updateDataStatus('ok'); }, error:err=>{ console.error(err); lastSyncTime=null; updateLastSyncLabel(); updateDataStatus('error'); } });
         }
 
         function showLoadingState() {
-            ['total-participants','num-isis','num-atos','num-naturetex','num-lotus','num-school'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='0'; });
+            ['total-participants','num-isis','num-atos','num-naturetex','num-lotus','num-school'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.textContent='0';
+            });
             document.getElementById('highRiskCount').textContent='--';
             document.getElementById('moderateRiskCount').textContent='--';
             document.getElementById('lowRiskCount').textContent='--';
+            const label = document.getElementById('lastSyncLabel'); if(label) label.textContent='Last sync: loading...';
+            updateDataStatus('loading');
         }
 
         function processData(rows) {
             screeningData={}; let yearsSet=new Set();
-            rows.forEach(row=>{
-                if(!row.Year||!row.Month) return;
+            rows.forEach(row => {
+                if (!row.Year||!row.Month) return;
                 yearsSet.add(row.Year);
                 const key=`${row.Year}-${row.Month}`;
-                if(!screeningData[key]) {
+                if (!screeningData[key]) {
                     screeningData[key]={ companies:{isis:0,atos:0,naturetex:0,lotus:0,school:0}, complaints:{isis:Array(23).fill(0),atos:Array(23).fill(0),naturetex:Array(23).fill(0),lotus:Array(23).fill(0),school:Array(23).fill(0)}, rawData:{} };
                 }
                 const c=(row.Company||'').toLowerCase().trim();
@@ -469,7 +526,7 @@
                 }
             });
             availableYears=Array.from(yearsSet).sort((a,b)=>b-a);
-            if(availableYears.length>0&&currentYear===null) currentYear=availableYears[0];
+            if (availableYears.length>0&&currentYear===null) currentYear=availableYears[0];
             generateYearTabs(); generateMonthDots(); updateDashboard();
         }
 
@@ -501,8 +558,8 @@
             let available=new Set();
             Object.keys(screeningData).forEach(k=>{ const[y,m]=k.split('-'); if(parseInt(y)===currentYear&&Object.values(screeningData[k].companies).reduce((a,b)=>a+b,0)>0) available.add(parseInt(m)); });
             const sorted=[...available].sort((a,b)=>a-b);
-            if(!sorted.length){ c.innerHTML='<span style="font-size:.82rem;color:#334155;padding:12px 0;">No data for this year</span>'; return; }
-            if(!available.has(currentMonth)) currentMonth=sorted[0];
+            if (!sorted.length) { c.innerHTML='<span style="font-size:.82rem;color:#334155;padding:12px 0;">No data for this year</span>'; return; }
+            if (!available.has(currentMonth)) currentMonth=sorted[0];
             sorted.forEach(mi=>{
                 const item=document.createElement('div');
                 item.className=`month-item has-data${mi===currentMonth?' active':''}`;
@@ -512,117 +569,128 @@
             });
         }
 
-        // ========== FIXED RISK STRATIFICATION ==========
-        /**
-         * Risk Score = (avgWeight / 5) * prevalenceRate   — normalized 0–1
-         * avgWeight  = sum(weight_i * count_i) / diagnosedCount   (exclude No diagnosis)
-         * prevalenceRate = diagnosedCount / totalCount
-         * Thresholds: >0.30 High | 0.10-0.30 Moderate | <0.10 Low
-         */
+        // ========== RISK STRATIFICATION (مطابق للمصدر) ==========
         function getCompanyDetailedRisk(companyName, companyData, totalCount) {
-            if (!companyData || totalCount===0) return { diseases:[], totalRiskScore:0, riskLevel:'low', recommendations:[], diagnosedCount:0 };
+            if (!companyData || totalCount === 0) return { diseases:[], totalRiskScore:0, riskLevel:'low', recommendations:[], diagnosedCount:0, prevalenceRate:0 };
 
-            const diseasesList=[];
-            let diagnosedCount=0, weightedRiskSum=0;
+            const diseasesList = [];
+            let diagnosedCount = 0;
+            let weightedRiskSum = 0;
 
             DISEASES.forEach(disease => {
-                const sheetCol=Object.keys(DISEASE_MAP).find(key=>DISEASE_MAP[key]===disease.name);
-                const count=sheetCol ? (parseInt(companyData[sheetCol])||0) : 0;
-                if (count<=0) return;
-                const percentage=(count/totalCount)*100;
-                diseasesList.push({...disease, count, percentage:percentage.toFixed(1)});
-                if (disease.weight>0) {
-                    diagnosedCount+=count;
-                    weightedRiskSum+=disease.weight*count;
+                const sheetCol = Object.keys(DISEASE_MAP).find(key => DISEASE_MAP[key] === disease.name);
+                const count = sheetCol ? (parseInt(companyData[sheetCol]) || 0) : 0;
+                if (count <= 0) return;
+
+                const percentage = (count / totalCount) * 100;
+                diseasesList.push({ ...disease, count, percentage: percentage.toFixed(1) });
+
+                if (disease.weight > 0) {
+                    diagnosedCount += count;
+                    weightedRiskSum += disease.weight * count;
                 }
             });
 
-            diseasesList.sort((a,b)=>(b.weight*b.count)-(a.weight*a.count));
+            diseasesList.sort((a, b) => (b.weight * b.count) - (a.weight * a.count));
 
-            let totalRiskScore=0;
-            if (diagnosedCount>0&&totalCount>0) {
-                const avgWeight=weightedRiskSum/diagnosedCount;
-                const prevalenceRate=diagnosedCount/totalCount;
-                totalRiskScore=(avgWeight/5)*prevalenceRate;
+            let totalRiskScore = 0;
+            if (diagnosedCount > 0 && totalCount > 0) {
+                const avgWeight = weightedRiskSum / diagnosedCount;
+                const prevalenceRate = diagnosedCount / totalCount;
+                totalRiskScore = (avgWeight / 5) * prevalenceRate;
             }
 
-            let riskLevel='low';
-            if      (totalRiskScore>0.30) riskLevel='high';
-            else if (totalRiskScore>0.10) riskLevel='moderate';
-            else                           riskLevel='low';
+            let riskLevel = 'low';
+            if      (totalRiskScore > 0.30) riskLevel = 'high';
+            else if (totalRiskScore > 0.10) riskLevel = 'moderate';
+            else                             riskLevel = 'low';
 
-            const recommendations=[];
-            const sickDiseases=diseasesList.filter(d=>d.weight>0);
-            const prevalencePct=diagnosedCount>0?((diagnosedCount/totalCount)*100).toFixed(1):0;
+            const recommendations = [];
+            const sickDiseases = diseasesList.filter(d => d.weight > 0);
+            const prevalencePct = diagnosedCount > 0 ? ((diagnosedCount / totalCount)*100).toFixed(1) : 0;
 
-            if (sickDiseases.length>0) {
-                const top=sickDiseases[0];
+            if (sickDiseases.length > 0) {
+                const top = sickDiseases[0];
                 recommendations.push(`Priority condition: ${top.name} (${top.count} cases, ${top.percentage}%) — ${top.recommendation}`);
-                if (sickDiseases.length>1) recommendations.push(`Also monitor: ${sickDiseases.slice(1,3).map(d=>d.name).join(', ')}`);
+                if (sickDiseases.length > 1) recommendations.push(`Also monitor: ${sickDiseases.slice(1,3).map(d=>d.name).join(', ')}`);
             }
             recommendations.push(`Disease prevalence: ${prevalencePct}% of this company (${diagnosedCount} / ${totalCount} workers have a diagnosed condition)`);
-            if      (totalRiskScore>0.30) recommendations.push("Action Required: Immediate comprehensive medical examination for high-risk individuals");
-            else if (totalRiskScore>0.10) recommendations.push("Action Recommended: Follow-up appointments within 1-3 months");
-            else                           recommendations.push("Status: Good health profile — Maintain annual health check-ups");
 
-            return { diseases:diseasesList, totalRiskScore, riskLevel, recommendations, diagnosedCount };
+            if      (totalRiskScore > 0.30) recommendations.push("Action Required: Immediate comprehensive medical examination for high-risk individuals");
+            else if (totalRiskScore > 0.10) recommendations.push("Action Recommended: Follow-up appointments within 1–3 months");
+            else                             recommendations.push("Status: Good health profile — Maintain annual health check-ups");
+
+            return { diseases:diseasesList, totalRiskScore, riskLevel, recommendations, diagnosedCount, prevalenceRate: diagnosedCount/totalCount };
         }
 
         function calculateDetailedRiskStats(data) {
-            if (!data||!data.companies||!data.rawData) return { highRisk:0, moderateRisk:0, lowRisk:0, companyDetails:{}, topDiseases:[] };
+            if (!data || !data.companies || !data.rawData) return { highRisk:0, moderateRisk:0, lowRisk:0, companyDetails:{}, topDiseases:[] };
 
             let highRisk=0, moderateRisk=0, lowRisk=0;
             const companyDetails={};
             const allDiseasesCount={};
+
             const companies=['isis','atos','naturetex','lotus','school'];
             const companyNames={ isis:'Isis', atos:'Atos', naturetex:'Nature Tex', lotus:'Lotus', school:'School' };
 
-            companies.forEach(company=>{
-                const count=data.companies[company]||0;
-                const rawData=data.rawData[company]||{};
-                if (count>0) {
-                    const detail=getCompanyDetailedRisk(company,rawData,count);
-                    companyDetails[company]={...detail, name:companyNames[company], totalCount:count};
-                    if      (detail.totalRiskScore>0.30) highRisk    +=count;
-                    else if (detail.totalRiskScore>0.10) moderateRisk+=count;
-                    else                                  lowRisk     +=count;
-                    detail.diseases.forEach(d=>{ if(!allDiseasesCount[d.name]) allDiseasesCount[d.name]=0; allDiseasesCount[d.name]+=d.count; });
+            companies.forEach(company => {
+                const count = data.companies[company]||0;
+                const rawData = data.rawData[company]||{};
+                if (count > 0) {
+                    const detail = getCompanyDetailedRisk(company, rawData, count);
+                    companyDetails[company] = { ...detail, name:companyNames[company], totalCount:count };
+
+                    if      (detail.totalRiskScore > 0.30) highRisk     += count;
+                    else if (detail.totalRiskScore > 0.10) moderateRisk += count;
+                    else                                    lowRisk      += count;
+
+                    detail.diseases.forEach(d => {
+                        if (!allDiseasesCount[d.name]) allDiseasesCount[d.name]=0;
+                        allDiseasesCount[d.name]+=d.count;
+                    });
                 }
             });
 
-            const topDiseases=Object.entries(allDiseasesCount)
-                .filter(([name])=>name!=='No diagnosis')
-                .map(([name,count])=>({name,count,diseaseInfo:DISEASES.find(d=>d.name===name)}))
-                .sort((a,b)=>b.count-a.count).slice(0,5);
+            const topDiseases = Object.entries(allDiseasesCount)
+                .filter(([name]) => name !== 'No diagnosis')
+                .map(([name,count]) => ({ name, count, diseaseInfo:DISEASES.find(d=>d.name===name) }))
+                .sort((a,b) => b.count - a.count)
+                .slice(0,5);
 
             return { highRisk, moderateRisk, lowRisk, companyDetails, topDiseases };
         }
 
         function updateDetailedRiskDisplay(data) {
-            const stats=calculateDetailedRiskStats(data);
-            currentFullData=data;
+            const stats = calculateDetailedRiskStats(data);
+            currentFullData = data;
+
             animateValue('highRiskCount',    stats.highRisk,     800);
             animateValue('moderateRiskCount',stats.moderateRisk, 800);
             animateValue('lowRiskCount',     stats.lowRisk,      800);
-            const topDiseaseText=document.getElementById('topDiseaseText');
-            if (stats.topDiseases.length>0) {
-                topDiseaseText.innerHTML=stats.topDiseases.slice(0,3).map(d=>`<i class="bi bi-dot"></i>${d.name} (${d.count})`).join(' ');
-            } else { topDiseaseText.innerHTML='No diseases recorded'; }
+
+            const topDiseaseText = document.getElementById('topDiseaseText');
+            if (stats.topDiseases.length > 0) {
+                topDiseaseText.innerHTML = stats.topDiseases.slice(0,3).map(d=>`<i class="bi bi-dot"></i>${d.name} (${d.count})`).join(' ');
+            } else {
+                topDiseaseText.innerHTML = 'No diseases recorded';
+            }
+
             addCompanyDetailButtons(stats.companyDetails);
         }
 
         function addCompanyDetailButtons(companyDetails) {
             const companies=['isis','atos','naturetex','lotus','school'];
-            companies.forEach((company,idx)=>{
+            companies.forEach((company,idx) => {
                 const card=document.querySelectorAll('.company-card')[idx];
                 if (!card||!companyDetails[company]) return;
+
                 const oldBtn=card.querySelector('.company-risk-detail-btn'); if(oldBtn) oldBtn.remove();
                 const existingTag=card.querySelector('.risk-tag'); if(existingTag) existingTag.remove();
 
-                const score=companyDetails[company].totalRiskScore;
+                const score = companyDetails[company].totalRiskScore;
                 let riskLevelClass='low', riskText='Low Risk', iconName='check-circle';
-                if      (score>0.30) { riskLevelClass='high';     riskText='High Risk';     iconName='exclamation'; }
-                else if (score>0.10) { riskLevelClass='moderate'; riskText='Moderate Risk'; iconName='check'; }
+                if      (score > 0.30) { riskLevelClass='high';     riskText='High Risk';     iconName='exclamation'; }
+                else if (score > 0.10) { riskLevelClass='moderate'; riskText='Moderate Risk'; iconName='check'; }
 
                 const riskTag=document.createElement('div');
                 riskTag.className=`risk-tag ${riskLevelClass}`;
@@ -637,40 +705,51 @@
             });
         }
 
+        function getRiskCategory(score) {
+            if (score > 0.30) return 'high';
+            if (score > 0.10) return 'moderate';
+            return 'low';
+        }
+
         function showCompanyRiskModal(companyId, detail) {
-            const openModals=document.querySelectorAll('.modal.show');
-            openModals.forEach(m=>{ const inst=bootstrap.Modal.getInstance(m); if(inst) inst.hide(); });
+            const openModals = document.querySelectorAll('.modal.show');
+            openModals.forEach(m => { const inst=bootstrap.Modal.getInstance(m); if(inst) inst.hide(); });
 
-            setTimeout(()=>{
-                const modal=new bootstrap.Modal(document.getElementById('companyRiskModal'),{backdrop:true,keyboard:true});
-                document.getElementById('modalCompanyName').innerHTML=detail.name||companyId;
-                document.getElementById('modalCompanyStats').innerHTML=`Total Participants: ${detail.totalCount}`;
+            setTimeout(() => {
+                const modal = new bootstrap.Modal(document.getElementById('companyRiskModal'), { backdrop:true, keyboard:true });
+                document.getElementById('modalCompanyName').innerHTML = detail.name || companyId;
+                document.getElementById('modalCompanyStats').innerHTML = `Total Participants: ${detail.totalCount}`;
 
-                const riskScoreEl=document.getElementById('modalRiskScore');
+                const riskScoreEl = document.getElementById('modalRiskScore');
                 if (riskScoreEl) {
-                    const s=detail.totalRiskScore||0;
+                    const s = detail.totalRiskScore || 0;
                     let rColor='#10b981', rLabel='Low Risk';
                     if      (s>0.30) { rColor='#ef4444'; rLabel='High Risk'; }
                     else if (s>0.10) { rColor='#f59e0b'; rLabel='Moderate Risk'; }
-                    const prevPct=detail.diagnosedCount&&detail.totalCount?((detail.diagnosedCount/detail.totalCount)*100).toFixed(1):0;
-                    riskScoreEl.innerHTML=`<span style="color:${rColor};font-weight:700;">&#9679; ${rLabel}</span> &mdash; Risk Score: <span style="color:#94a3b8;">${(s*100).toFixed(1)}/100</span> &mdash; Prevalence: <span style="color:#94a3b8;">${prevPct}%</span>`;
+                    const prevPct = detail.diagnosedCount && detail.totalCount ? ((detail.diagnosedCount/detail.totalCount)*100).toFixed(1) : 0;
+                    riskScoreEl.innerHTML = `<span style="color:${rColor};font-weight:700;">● ${rLabel}</span> — Risk Score: <span style="color:#94a3b8;">${(s*100).toFixed(1)}/100</span> — Prevalence: <span style="color:#94a3b8;">${prevPct}%</span>`;
                 }
 
-                const container=document.getElementById('diseaseListContainer');
-                const diseasesToShow=detail.diseases||[];
-                if (diseasesToShow.length===0) {
-                    container.innerHTML=`<div style="text-align:center;padding:40px;color:#64748b;"><i class="bi bi-check-circle" style="font-size:2rem;"></i><p style="margin-top:12px;">No diseases recorded in this company</p></div>`;
+                const container = document.getElementById('diseaseListContainer');
+                const diseasesToShow = detail.diseases || [];
+
+                if (diseasesToShow.length === 0) {
+                    container.innerHTML = `<div style="text-align:center;padding:40px;color:#64748b;"><i class="bi bi-check-circle" style="font-size:2rem;"></i><p style="margin-top:12px;">No diseases recorded in this company</p></div>`;
                 } else {
-                    container.innerHTML=diseasesToShow.map(d=>{
+                    container.innerHTML = diseasesToShow.map(d => {
                         let riskClass='risk-low';
                         if      (d.riskLevel==='critical')     riskClass='risk-critical';
                         else if (d.riskLevel==='high')         riskClass='risk-high';
                         else if (d.riskLevel==='moderate')     riskClass='risk-moderate';
                         else if (d.riskLevel==='low-moderate') riskClass='risk-moderate';
-                        const barColor=d.riskLevel==='critical'?'#ef4444':(d.riskLevel==='high'?'#f97316':(d.riskLevel==='moderate'?'#f59e0b':'#10b981'));
+
+                        const barColor = d.riskLevel==='critical'?'#ef4444':(d.riskLevel==='high'?'#f97316':(d.riskLevel==='moderate'?'#f59e0b':'#10b981'));
                         return `<div class="disease-item">
                             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-                                <div class="disease-name"><span class="risk-level-badge ${riskClass}">${d.riskLevel.toUpperCase()}</span><span>${d.name}</span></div>
+                                <div class="disease-name">
+                                    <span class="risk-level-badge ${riskClass}">${d.riskLevel.toUpperCase()}</span>
+                                    <span>${d.name}</span>
+                                </div>
                                 <div class="disease-count">${d.count} <span style="font-size:0.8rem;color:#64748b;">(${d.percentage}%)</span></div>
                             </div>
                             <div class="progress-risk"><div class="progress-risk-fill" style="width:${Math.min(parseFloat(d.percentage),100)}%;background:${barColor};"></div></div>
@@ -679,39 +758,42 @@
                     }).join('');
                 }
 
-                const recBox=document.getElementById('recommendationBox');
-                const recs=detail.recommendations||[];
-                if (recs.length>0) {
+                const recBox = document.getElementById('recommendationBox');
+                const recs = detail.recommendations || [];
+                if (recs.length > 0) {
                     recBox.style.display='block';
-                    document.getElementById('recommendationText').innerHTML=recs.map(r=>`<div style="margin-bottom:6px;"><i class="bi bi-check2-circle me-2" style="color:#fb923c;"></i>${r}</div>`).join('');
+                    document.getElementById('recommendationText').innerHTML = recs.map(r=>`<div style="margin-bottom:6px;"><i class="bi bi-check2-circle me-2" style="color:#fb923c;"></i>${r}</div>`).join('');
                 } else { recBox.style.display='none'; }
 
                 modal.show();
-            }, openModals.length>0?300:0);
+            }, openModals.length > 0 ? 300 : 0);
         }
 
         function showRiskCategoryModal(riskCategory) {
             if (!currentFullData) return;
-            const stats=calculateDetailedRiskStats(currentFullData);
-            const titles={ high:{title:'High Risk Companies',subtitle:'Companies requiring immediate medical intervention'}, moderate:{title:'Moderate Risk Companies',subtitle:'Companies needing regular follow-up'}, low:{title:'Low Risk Companies',subtitle:'Companies with good health profile'} };
-            document.getElementById('categoryModalTitle').innerHTML=titles[riskCategory].title;
-            document.getElementById('categoryModalSubtitle').innerHTML=titles[riskCategory].subtitle;
+            const stats = calculateDetailedRiskStats(currentFullData);
 
-            const companiesInCategory=[];
-            Object.entries(stats.companyDetails).forEach(([companyId,detail])=>{
-                let cat='low';
-                if      (detail.totalRiskScore>0.30) cat='high';
-                else if (detail.totalRiskScore>0.10) cat='moderate';
-                if (cat===riskCategory) companiesInCategory.push({...detail,companyId});
+            const titles = {
+                high:     { title:'High Risk Companies',     subtitle:'Companies requiring immediate medical intervention' },
+                moderate: { title:'Moderate Risk Companies', subtitle:'Companies needing regular follow-up' },
+                low:      { title:'Low Risk Companies',      subtitle:'Companies with good health profile' }
+            };
+            document.getElementById('categoryModalTitle').innerHTML = titles[riskCategory].title;
+            document.getElementById('categoryModalSubtitle').innerHTML = titles[riskCategory].subtitle;
+
+            const companiesInCategory = [];
+            Object.entries(stats.companyDetails).forEach(([companyId, detail]) => {
+                const cat = getRiskCategory(detail.totalRiskScore);
+                if (cat === riskCategory) companiesInCategory.push({ ...detail, companyId });
             });
 
-            const container=document.getElementById('categoryDetailsContainer');
-            if (companiesInCategory.length===0) {
-                container.innerHTML=`<div style="text-align:center;padding:40px;color:#64748b;"><i class="bi bi-emoji-smile" style="font-size:2rem;"></i><p style="margin-top:12px;">No companies in this category</p></div>`;
+            const container = document.getElementById('categoryDetailsContainer');
+            if (companiesInCategory.length === 0) {
+                container.innerHTML = `<div style="text-align:center;padding:40px;color:#64748b;"><i class="bi bi-emoji-smile" style="font-size:2rem;"></i><p style="margin-top:12px;">No companies in this risk category</p></div>`;
             } else {
-                container.innerHTML=companiesInCategory.map(detail=>{
-                    const badgeClass=detail.totalRiskScore>0.30?'risk-critical':(detail.totalRiskScore>0.10?'risk-moderate':'risk-low');
-                    const topConditions=(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').slice(0,3);
+                container.innerHTML = companiesInCategory.map(detail => {
+                    const badgeClass = detail.totalRiskScore>0.30?'risk-critical':(detail.totalRiskScore>0.10?'risk-moderate':'risk-low');
+                    const topConditions = (detail.diseases||[]).filter(d=>d.name!=='No diagnosis').slice(0,3);
                     return `<div class="disease-item" onclick="showCompanyRiskModal('${detail.companyId}', window._lastStats['${detail.companyId}'])" style="cursor:pointer;">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <div>
@@ -726,102 +808,290 @@
                         </div>
                     </div>`;
                 }).join('');
-                window._lastStats=stats.companyDetails;
+                window._lastStats = stats.companyDetails;
             }
 
-            const modal=new bootstrap.Modal(document.getElementById('riskCategoryModal'),{backdrop:true,keyboard:true});
+            const modal = new bootstrap.Modal(document.getElementById('riskCategoryModal'), { backdrop:true, keyboard:true });
             modal.show();
         }
 
         // ========== COMPARISON FUNCTIONS ==========
         function populateComparisonSelects() {
-            const y1=document.getElementById('compareYear1'),y2=document.getElementById('compareYear2');
-            const m1=document.getElementById('compareMonth1'),m2=document.getElementById('compareMonth2');
+            const yearSelect1=document.getElementById('compareYear1'), yearSelect2=document.getElementById('compareYear2');
+            const monthSelect1=document.getElementById('compareMonth1'), monthSelect2=document.getElementById('compareMonth2');
             const years=[...availableYears].sort((a,b)=>b-a);
-            y1.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
-            y2.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
-            if(years.length>0){y1.value=years[0];y2.value=years[0];}
+            yearSelect1.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
+            yearSelect2.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
+            if (years.length > 1) {
+                const baseYear = (typeof currentYear !== 'undefined' && currentYear !== null && years.includes(currentYear)) ? currentYear : years[0];
+                const baseIndex = years.indexOf(baseYear);
+                if (baseIndex > 0) {
+                    yearSelect2.value = baseYear;
+                    yearSelect1.value = years[baseIndex - 1];
+                } else {
+                    yearSelect2.value = years[0];
+                    yearSelect1.value = years[1];
+                }
+            } else if (years.length === 1) {
+                yearSelect1.value = years[0];
+                yearSelect2.value = years[0];
+            }
             const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            m1.innerHTML=mn.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
-            m2.innerHTML=mn.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
-            m1.value=currentMonth; m2.value=currentMonth;
+            monthSelect1.innerHTML=mn.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+            monthSelect2.innerHTML=mn.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+            monthSelect1.value=currentMonth; monthSelect2.value=currentMonth;
         }
 
-        function showComparisonControls() { document.getElementById('comparisonControls').style.display='flex'; populateComparisonSelects(); }
+        function getCompanyKey(label) {
+            const map={isis:'isis', atos:'atos', naturetex:'naturetex', lotus:'lotus', school:'school'};
+            return map[label] || 'all';
+        }
+
+        function getRiskFilteredCompanies(data) {
+            const keys=['isis','atos','naturetex','lotus','school'];
+            return keys.filter(key => {
+                const count=data.companies[key]||0;
+                if (count <= 0) return false;
+                const detail=getCompanyDetailedRisk(data.rawData[key], count);
+                return detail.riskLevel==='high';
+            });
+        }
+
+        function applyFiltersToData(data) {
+            if (!data || !data.companies) return data;
+            const filtered={companies:{},complaints:{},rawData:{}};
+            const companyKeys=['isis','atos','naturetex','lotus','school'];
+            const selected=activeCompanyFilter==='all' ? companyKeys : [getCompanyKey(activeCompanyFilter)];
+            const allowed=new Set(selected);
+            if (highRiskOnly) {
+                const highRiskKeys=getRiskFilteredCompanies(data);
+                [...allowed].forEach(key => { if (!highRiskKeys.includes(key)) allowed.delete(key); });
+            }
+            companyKeys.forEach(key=>{
+                if (allowed.has(key)) {
+                    filtered.companies[key]=data.companies[key]||0;
+                    filtered.complaints[key]=data.complaints[key]||Array(23).fill(0);
+                    filtered.rawData[key]=data.rawData[key]||{};
+                }
+            });
+            return filtered;
+        }
+
+        function aggregateComplaints(complaints) {
+            const keys=Object.keys(complaints||{});
+            const total=Array(23).fill(0);
+            keys.forEach(key=>{
+                const values=complaints[key]||Array(23).fill(0);
+                values.forEach((val, idx)=>{ total[idx]+=Number(val)||0; });
+            });
+            return total;
+        }
+
+        function updateFilterVisuals() {
+            const btn=document.getElementById('highRiskFilterBtn');
+            if (btn) {
+                btn.classList.toggle('active', highRiskOnly);
+                btn.innerHTML=highRiskOnly ? '<i class="bi bi-shield-exclamation"></i> High Risk Only' : '<i class="bi bi-shield-check"></i> High Risk Only';
+            }
+        }
+
+        function updateCompanyVisibility(sourceData) {
+            const companyKeys=['isis','atos','naturetex','lotus','school'];
+            const selected=activeCompanyFilter==='all' ? companyKeys : [getCompanyKey(activeCompanyFilter)];
+            const allowed=new Set(selected);
+            if (highRiskOnly) {
+                const highRiskKeys=getRiskFilteredCompanies(sourceData);
+                companyKeys.forEach(key => { if (!highRiskKeys.includes(key)) allowed.delete(key); });
+            }
+            companyKeys.forEach(key=>{
+                const numEl=document.getElementById(`num-${key}`);
+                if (!numEl) return;
+                const card=numEl.closest('.company-card');
+                if (!card) return;
+                card.style.display=allowed.has(key) ? '' : 'none';
+            });
+        }
+
+        function updateFilterState() {
+            const sourceData=getDataForDate(currentYear,currentMonth);
+            updateFilterVisuals();
+            updateCompanyVisibility(sourceData);
+            if (!comparisonMode) updateDashboard();
+            else updateComparisonDashboard();
+        }
+
+        function initFilterEvents() {
+            const companySelect=document.getElementById('companyFilter');
+            const highRiskBtn=document.getElementById('highRiskFilterBtn');
+            if (companySelect) {
+                companySelect.addEventListener('change', ()=>{
+                    activeCompanyFilter=companySelect.value;
+                    updateFilterState();
+                });
+            }
+            if (highRiskBtn) {
+                highRiskBtn.addEventListener('click', ()=>{
+                    highRiskOnly=!highRiskOnly;
+                    updateFilterState();
+                });
+            }
+        }
+
+        function showComparisonControls() {
+            document.getElementById('comparisonControls').style.display='flex';
+            populateComparisonSelects();
+        }
 
         function performComparison() {
-            const y1=parseInt(document.getElementById('compareYear1').value),m1=parseInt(document.getElementById('compareMonth1').value);
-            const y2=parseInt(document.getElementById('compareYear2').value),m2=parseInt(document.getElementById('compareMonth2').value);
-            comparisonData1=getDataForDate(y1,m1); comparisonData2=getDataForDate(y2,m2);
-            comparisonMode=true; updateComparisonDashboard();
+            const y1=parseInt(document.getElementById('compareYear1').value), m1=parseInt(document.getElementById('compareMonth1').value);
+            const y2=parseInt(document.getElementById('compareYear2').value), m2=parseInt(document.getElementById('compareMonth2').value);
+            comparisonData1Raw = getDataForDate(y1,m1); comparisonData2Raw = getDataForDate(y2,m2);
+            comparisonData1 = applyFiltersToData(comparisonData1Raw); comparisonData2 = applyFiltersToData(comparisonData2Raw);
+            comparisonMode=true;
+            updateComparisonDashboard();
             const filterCard=document.querySelector('.filter-card');
             let badge=filterCard.querySelector('.comparison-badge');
-            if(!badge){badge=document.createElement('span');badge.className='comparison-badge';filterCard.querySelector('.filter-label').after(badge);}
+            if (!badge) { badge=document.createElement('span'); badge.className='comparison-badge'; filterCard.querySelector('.filter-label').after(badge); }
             const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             badge.innerHTML=`<i class="bi bi-graph-up"></i> Comparing ${mn[m1-1]} ${y1} vs ${mn[m2-1]} ${y2}`;
         }
 
         function updateComparisonDashboard() {
-            if(!comparisonMode||!comparisonData1||!comparisonData2) return;
-            ['isis','atos','naturetex','lotus','school'].forEach(company=>{
-                const v1=comparisonData1.companies[company]||0,v2=comparisonData2.companies[company]||0;
-                const diff=v2-v1,pct=v1>0?((diff/v1)*100).toFixed(1):(v2>0?100:0);
-                const el=document.getElementById(`num-${company}`);
-                if(el){
-                    const parent=el.closest('.company-card');
+            if (!comparisonMode||!comparisonData1Raw||!comparisonData2Raw) return;
+            comparisonData1 = applyFiltersToData(comparisonData1Raw);
+            comparisonData2 = applyFiltersToData(comparisonData2Raw);
+            const companies=['isis','atos','naturetex','lotus','school'];
+            companies.forEach(company=>{
+                const val1=comparisonData1.companies[company]||0, val2=comparisonData2.companies[company]||0;
+                const diff=val2-val1, pct=val1>0?((diff/val1)*100).toFixed(1):(val2>0?100:0);
+                const numEl=document.getElementById(`num-${company}`);
+                if (numEl) {
+                    const parent=numEl.closest('.company-card');
                     let span=parent.querySelector('.comparison-change');
-                    if(!span){span=document.createElement('div');span.className='comparison-change';el.after(span);}
-                    const arrow=diff>0?'↑':(diff<0?'↓':'→'),color=diff>0?'#10b981':(diff<0?'#ef4444':'#94a3b8');
-                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:#475569;">(${v1} → ${v2})</span>`;
+                    if (!span) { span=document.createElement('div'); span.className='comparison-change'; numEl.after(span); }
+                    const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#10b981':(diff<0?'#ef4444':'#94a3b8');
+                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:#475569;">(${val1} → ${val2})</span>`;
                 }
             });
-            const t1=Object.values(comparisonData1.companies).reduce((a,b)=>a+b,0),t2=Object.values(comparisonData2.companies).reduce((a,b)=>a+b,0);
-            const td=t2-t1,tp=t1>0?((td/t1)*100).toFixed(1):0;
+            const t1=Object.values(comparisonData1.companies).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.companies).reduce((a,b)=>a+b,0);
+            const td=t2-t1, tp=t1>0?((td/t1)*100).toFixed(1):0;
             const tEl=document.getElementById('total-participants');
-            if(tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#10b981':(td<0?'#ef4444':'#94a3b8')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
+            if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#10b981':(td<0?'#ef4444':'#94a3b8')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
             updateComparisonCharts();
         }
 
         function updateComparisonCharts() {
-            if(!comparisonMode) return;
-            if(popChart) popChart.destroy();
-            const labels=['Isis','Atos','Nature Tex','Lotus','School'];
-            const d1=[comparisonData1.companies.isis,comparisonData1.companies.atos,comparisonData1.companies.naturetex,comparisonData1.companies.lotus,comparisonData1.companies.school];
-            const d2=[comparisonData2.companies.isis,comparisonData2.companies.atos,comparisonData2.companies.naturetex,comparisonData2.companies.lotus,comparisonData2.companies.school];
+            if (!comparisonMode) return;
+            if (popChart) popChart.destroy();
+            const baseOrder=['isis','atos','naturetex','lotus','school'];
+            const labels=baseOrder.filter(key => key in comparisonData1.companies || key in comparisonData2.companies).map(key => {
+                switch(key){
+                    case 'isis': return 'Isis';
+                    case 'atos': return 'Atos';
+                    case 'naturetex': return 'Nature Tex';
+                    case 'lotus': return 'Lotus';
+                    case 'school': return 'School';
+                    default: return key;
+                }
+            });
+            const keys=baseOrder.filter(key => key in comparisonData1.companies || key in comparisonData2.companies);
+            const d1=keys.map(key => comparisonData1.companies[key]||0);
+            const d2=keys.map(key => comparisonData2.companies[key]||0);
             const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const lbl1=`${mn[parseInt(document.getElementById('compareMonth1').value)-1]} ${document.getElementById('compareYear1').value}`;
             const lbl2=`${mn[parseInt(document.getElementById('compareMonth2').value)-1]} ${document.getElementById('compareYear2').value}`;
-            popChart=new Chart(document.getElementById('populationChart'),{type:'bar',data:{labels,datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(245,158,11,0.6)',borderRadius:8},{label:lbl2,data:d2,backgroundColor:'rgba(249,115,22,0.6)',borderRadius:8}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{color:'#94a3b8',font:{family:'Cairo'}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}}}});
+            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(245,158,11,0.6)',borderRadius:8},{label:lbl2,data:d2,backgroundColor:'rgba(249,115,22,0.6)',borderRadius:8}] }, options:{ responsive:true, plugins:{legend:{position:'top',labels:{color:'#94a3b8',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}} } });
+            if (compChart) compChart.destroy();
+            const labels2=['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'];
+            const aggComplaints = (complaints) => Object.values(complaints).reduce((acc, arr) => arr.map((value, index) => (acc[index] || 0) + (value || 0)), Array(labels2.length).fill(0));
+            const comp1 = aggComplaints(comparisonData1.complaints);
+            const comp2 = aggComplaints(comparisonData2.complaints);
+            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[{label:lbl1,data:comp1,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.2)',fill:false,tension:.3,pointRadius:3,pointHoverRadius:6},{label:lbl2,data:comp2,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.2)',fill:false,tension:.3,pointRadius:3,pointHoverRadius:6}] }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}, legend:{labels:{color:'#94a3b8',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}} } });
         }
 
         function resetComparison() {
-            comparisonMode=false; comparisonData1=null; comparisonData2=null;
+            comparisonMode=false; comparisonData1=null; comparisonData2=null; comparisonData1Raw=null; comparisonData2Raw=null;
             document.querySelectorAll('.comparison-change').forEach(el=>el.remove());
             const badge=document.querySelector('.comparison-badge'); if(badge) badge.remove();
-            const d=getDataForDate(currentYear,currentMonth);
-            document.getElementById('total-participants').textContent=Object.values(d.companies).reduce((a,b)=>a+b,0).toLocaleString();
-            updateCharts(d);
-            ['isis','atos','naturetex','lotus','school'].forEach(c=>{ const el=document.getElementById(`num-${c}`); if(el) el.textContent=(d.companies[c]||0).toLocaleString(); });
-            updateDetailedRiskDisplay(d);
+            updateDashboard();
         }
 
         function updateDashboard() {
-            const d=getDataForDate(currentYear,currentMonth);
-            if(!comparisonMode){
+            hideDrilldownSection();
+            const source=getDataForDate(currentYear,currentMonth);
+            const d=applyFiltersToData(source);
+            if (!comparisonMode) {
                 ['isis','atos','naturetex','lotus','school'].forEach(c=>animateValue(`num-${c}`,d.companies[c]||0));
                 animateValue('total-participants',Object.values(d.companies).reduce((a,b)=>a+b,0),1500);
-                updateCharts(d); updateDetailedRiskDisplay(d);
+                updateCharts(d);
+                updateDetailedRiskDisplay(d);
+                updateCompanyVisibility(source);
             }
         }
 
         function updateCharts(d) {
             const gc='rgba(255,255,255,.07)',tc='#94a3b8';
-            if(popChart&&!comparisonMode) popChart.destroy();
-            if(!comparisonMode){
-                popChart=new Chart(document.getElementById('populationChart'),{type:'polarArea',data:{labels:['Isis','Atos','Nature Tex','Lotus','School'],datasets:[{data:[d.companies.isis,d.companies.atos,d.companies.naturetex,d.companies.lotus,d.companies.school],backgroundColor:['rgba(245,158,11,.65)','rgba(249,115,22,.65)','rgba(239,68,68,.65)','rgba(132,204,22,.65)','rgba(6,182,212,.65)'],borderWidth:1,borderColor:'rgba(15,23,42,.8)'}]},options:{responsive:true,animation:{animateScale:true,animateRotate:true},scales:{r:{grid:{color:gc},ticks:{display:false,backdropColor:'transparent'}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:16,color:tc,font:{family:'Cairo',size:11}}}}}});
+            if (popChart&&!comparisonMode) popChart.destroy();
+            if (!comparisonMode) {
+                const companyOrder=['isis','atos','naturetex','lotus','school'];
+                const labelMap={isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
+                const colors=['rgba(245,158,11,.65)','rgba(249,115,22,.65)','rgba(239,68,68,.65)','rgba(132,204,22,.65)','rgba(6,182,212,.65)'];
+                const labels=[]; const values=[]; const bg=[];
+                companyOrder.forEach((key,index)=>{
+                    if (key in d.companies) {
+                        labels.push(labelMap[key]);
+                        values.push(d.companies[key]||0);
+                        bg.push(colors[index]);
+                    }
+                });
+                if (labels.length===0) { labels.push('No data'); values.push(1); bg.push('rgba(148,163,184,0.3)'); }
+                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:1,borderColor:'rgba(15,23,42,.8)'}] }, options:{ responsive:true, cutout:'55%', animation:{animateScale:true,animateRotate:true}, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:16,color:tc,font:{family:'Cairo',size:11}}}}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const idx=activeEls[0].index; const companyOrder=['isis','atos','naturetex','lotus','school']; const key=companyOrder[idx]; showDrilldownCardsSekem(key); } } } });
             }
-            if(compChart) compChart.destroy();
-            compChart=new Chart(document.getElementById('comparisonChart'),{type:'line',data:{labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'],datasets:[{label:'Isis',data:d.complaints.isis,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.1)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:6},{label:'Atos',data:d.complaints.atos,borderColor:'#f97316',backgroundColor:'rgba(249,115,22,.1)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:6},{label:'Nature Tex',data:d.complaints.naturetex,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.1)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:6},{label:'Lotus',data:d.complaints.lotus,borderColor:'#84cc16',backgroundColor:'rgba(132,204,22,.1)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:6},{label:'School',data:d.complaints.school,borderColor:'#06b6d4',backgroundColor:'rgba(6,182,212,.1)',fill:true,tension:.4,pointRadius:3,pointHoverRadius:6}]},options:{responsive:true,plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}},scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}}}});
+            if (compChart) compChart.destroy();
+            const companyOrder=['isis','atos','naturetex','lotus','school'];
+            const labelMap={isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
+            const colors=['#f59e0b','#f97316','#ef4444','#84cc16','#06b6d4'];
+            const lineBackgrounds=['rgba(245,158,11,0.2)','rgba(249,115,22,0.2)','rgba(239,68,68,0.2)','rgba(132,204,22,0.2)','rgba(6,182,212,0.2)'];
+            const datasets = companyOrder.filter(key => Array.isArray(d.complaints[key])).map((key,index) => ({
+                label: labelMap[key],
+                data: d.complaints[key],
+                borderColor: colors[index],
+                backgroundColor: lineBackgrounds[index],
+                fill:false,
+                tension:.4,
+                pointRadius:3,
+                pointHoverRadius:6
+            }));
+            if (datasets.length === 0) {
+                datasets.push({ label:'No data', data:Array(23).fill(0), borderColor:'#94a3b8', backgroundColor:'rgba(148,163,184,0.2)', fill:false, tension:.4, pointRadius:3, pointHoverRadius:6 });
+            }
+            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'], datasets:datasets }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.05)'}}} } });
+        }
+
+        function showDrilldownCardsSekem(companyKey) {
+            const source = getDataForDate(currentYear,currentMonth);
+            const data = applyFiltersToData(source);
+            const names = {isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
+            const companyName = names[companyKey] || companyKey;
+            const raw = source.rawData[companyKey] || {};
+            const totals = Object.entries(raw).sort((a,b)=>b[1]-a[1]);
+            const topComplaints = totals.slice(0,3).map(([key,value]) => `${DISEASE_MAP[key]||key}: ${value}`);
+            const totalParticipants = data.companies[companyKey]||0;
+            const topComplaint = topComplaints[0] || 'No complaint data';
+            const averageRisk = totals.length ? (totals.reduce((sum,[k,v])=>sum+v,0) / totals.length).toFixed(1) : '0';
+            const cards = [];
+            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Company</div><div class="drilldown-card-value">${companyName}</div><div class="drilldown-card-sub">Selected company summary</div></div>`);
+            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Participants</div><div class="drilldown-card-value">${totalParticipants.toLocaleString()}</div><div class="drilldown-card-sub">Total participants for this month</div></div>`);
+            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Top Complaints</div><div class="drilldown-card-value">${topComplaint}</div><div class="drilldown-card-sub">Highest reported medical condition</div></div>`);
+            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Top 3 Complaints</div><div class="drilldown-card-value">${topComplaints.slice(0,3).join('<br>')}</div><div class="drilldown-card-sub">Most common conditions by reported counts</div></div>`);
+            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Data freshness</div><div class="drilldown-card-value">${currentMonth}/${currentYear}</div><div class="drilldown-card-sub">Current period in view</div></div>`);
+            document.getElementById('drilldownCards').innerHTML = cards.join('');
+            document.getElementById('drilldownSection').style.display = 'block';
+        }
+
+        function hideDrilldownSection() {
+            const section = document.getElementById('drilldownSection');
+            if (section) section.style.display = 'none';
         }
 
         function initComparisonEvents() {
@@ -834,13 +1104,20 @@
             document.getElementById('btnResetCompare').addEventListener('click',resetComparison);
         }
 
-        window.showCompanyRiskModal=showCompanyRiskModal;
-        window.showRiskCategoryModal=showRiskCategoryModal;
+        window.showCompanyRiskModal = showCompanyRiskModal;
+        window.showRiskCategoryModal = showRiskCategoryModal;
 
-        document.addEventListener('DOMContentLoaded',()=>{
+        document.addEventListener('DOMContentLoaded', () => {
             fetchData();
-            setTimeout(()=>{ if(document.getElementById('btnCompare')) initComparisonEvents(); },1000);
+            setTimeout(()=>{ 
+                if(document.getElementById('btnCompare')) initComparisonEvents();
+                if(document.getElementById('companyFilter')) initFilterEvents();
+            }, 1000);
         });
     </script>
+    <script src="sound-effects.js"></script>
 </body>
 </html>
+
+
+

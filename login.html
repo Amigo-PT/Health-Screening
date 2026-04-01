@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" dir="ltr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         (function() {
@@ -373,8 +374,9 @@
             display: none;
         }
     </style>
+        <link rel="stylesheet" href="claymorphism.css">
 </head>
-<body>
+<body class="page-login">
 
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -447,10 +449,10 @@
             // Create toast element
             const toast = document.createElement('div');
             toast.className = 'login-toast';
-            
+
             // Determine icon based on error type
             let iconHtml = '<i class="bi bi-exclamation-triangle-fill"></i>';
-            
+
             const content = `
                 <div class="toast-icon">
                     ${iconHtml}
@@ -469,21 +471,21 @@
                 <button class="toast-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
             `;
             toast.innerHTML = content;
-            
+
             // Close button functionality
             const closeBtn = toast.querySelector('.toast-close');
             closeBtn.addEventListener('click', () => {
                 removeToast(toast);
             });
-            
+
             toastContainer.appendChild(toast);
-            
+
             // Auto remove after 6 seconds
             setTimeout(() => {
                 removeToast(toast);
             }, 6000);
         }
-        
+
         function removeToast(toastElement) {
             if (toastElement.classList.contains('hiding')) return;
             toastElement.classList.add('hiding');
@@ -491,7 +493,7 @@
                 if (toastElement.parentNode) toastElement.remove();
             }, 300);
         }
-        
+
         // simple escape to prevent XSS
         function escapeHtml(str) {
             if (!str) return '';
@@ -504,7 +506,7 @@
                 return c;
             });
         }
-        
+
         // Clear any existing toasts (optional when new login attempt, but we keep)
         function clearAllToasts() {
             const toasts = document.querySelectorAll('.login-toast');
@@ -519,7 +521,7 @@
             const btn     = document.getElementById('loginBtn');
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('btnSpinner');
-            
+
             // Basic validation: empty fields
             if (!user || !pass) {
                 let missingFields = [];
@@ -533,7 +535,7 @@
                 );
                 return;
             }
-            
+
             btn.disabled = true;
             btnText.classList.add('d-none');
             spinner.classList.remove('d-none');
@@ -545,7 +547,7 @@
                     let userFound = false;
                     let passwordMatched = false;
                     let storedPassword = "";
-                    
+
                     // Loop to find username
                     for (let i = 0; i < data.length; i++) {
                         const ru = (data[i].username || '').toString().trim();
@@ -559,24 +561,24 @@
                             break;
                         }
                     }
-                    
+
                     // Success case
                     if (userFound && passwordMatched) {
                         sessionStorage.setItem('isLoggedIn', 'true');
                         window.location.href = 'index.html';
                         return;
                     }
-                    
+
                     // Determine exact error scenario
                     let errorTitle = "Access Denied";
                     let errorMessage = "";
                     let errorHint = "If you believe this is a system error, kindly contact the developer.";
-                    
+
                     if (!userFound) {
                         errorMessage = "The username you entered does not exist in our records.";
                         // custom hint: explain it's username specific
                         errorHint = "Check your username spelling or contact support. If you need assistance, reach out to the developer.";
-                    } 
+                    }
                     else if (userFound && !passwordMatched) {
                         errorMessage = "Incorrect password for this account.";
                         errorHint = "Double-check your password or reset it via admin. For any issue, contact the developer.";
@@ -585,10 +587,10 @@
                         // fallback (should not happen)
                         errorMessage = "Invalid credentials. Please verify your username and password.";
                     }
-                    
+
                     // Show toast notification
                     showErrorToast(errorTitle, errorMessage, errorHint);
-                    
+
                     // Reset button state
                     btn.disabled = false;
                     btnText.classList.remove('d-none');
@@ -608,5 +610,9 @@
             });
         });
     </script>
+    <script src="sound-effects.js"></script>
 </body>
 </html>
+
+
+

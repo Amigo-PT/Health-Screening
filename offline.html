@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | Health Screening</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg: #060b16;
+            --panel: rgba(15, 23, 42, 0.95);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #06b6d4;
+            --accent-strong: #22d3ee;
+            --border: rgba(255,255,255,0.08);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, rgba(6,182,212,0.15), transparent 25%),
+                        radial-gradient(circle at bottom right, rgba(16,185,129,0.12), transparent 22%),
+                        linear-gradient(180deg, #04070f 0%, #060b16 100%);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .offline-card {
+            width: min(100%, 1000px);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 42px 40px;
+            box-shadow: 0 34px 90px rgba(0, 0, 0, 0.28);
+            position: relative;
+            overflow: hidden;
+        }
+        .offline-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(6,182,212,0.08), transparent 34%);
+            pointer-events: none;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        @media(max-width: 860px) {
+            .hero { grid-template-columns: 1fr; }
+        }
+        .message-title {
+            font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+            line-height: 1.02;
+            margin: 0 0 20px;
+            color: #ffffff;
+        }
+        .message-title span {
+            color: var(--accent);
+        }
+        .message-body {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--muted);
+            margin-bottom: 26px;
+            max-width: 640px;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+        .btn-primary,
+        .btn-secondary {
+            border-radius: 14px;
+            padding: 14px 24px;
+            font-weight: 700;
+            min-width: 170px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+            border: none;
+            color: #030712;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text);
+        }
+        .visual-panel {
+            display: grid;
+            gap: 14px;
+            align-items: center;
+            justify-items: center;
+        }
+        .visual-box {
+            width: 100%;
+            max-width: 320px;
+            aspect-ratio: 1 / 1;
+            border-radius: 32px;
+            background: radial-gradient(circle at top left, rgba(6,182,212,0.18), transparent 32%),
+                        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            display: grid;
+            align-items: center;
+            justify-items: center;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .visual-box::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at bottom right, rgba(37,99,235,0.12), transparent 40%);
+        }
+        .visual-icon {
+            position: relative;
+            z-index: 1;
+            font-size: 4.5rem;
+            color: rgba(255,255,255,0.9);
+        }
+        .visual-label {
+            color: var(--muted);
+            margin-top: 14px;
+            text-align: center;
+            line-height: 1.7;
+        }
+        .help-note {
+            margin-top: 28px;
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+        .help-note a {
+            color: var(--accent-strong);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="offline-card">
+        <div class="hero">
+            <div>
+                <span class="eyebrow" style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:999px;background:rgba(6,182,212,0.12);color:var(--accent-strong);font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;">Offline Mode</span>
+                <h1 class="message-title">You are currently <span>offline</span></h1>
+                <p class="message-body">This page is not available because your device has no internet connection. Check your network, then refresh the page. You can still browse some local screens if they are cached.</p>
+                <div class="actions">
+                    <a href="javascript:location.reload()" class="btn btn-primary"><i class="bi bi-arrow-clockwise me-2"></i>Retry Connection</a>
+                    <a href="index.html" class="btn btn-secondary"><i class="bi bi-house-door me-2"></i>Go to Home</a>
+                </div>
+                <p class="help-note">If the issue continues, verify your WIFI or mobile data settings, or try again later.</p>
+            </div>
+            <div class="visual-panel">
+                <div class="visual-box">
+                    <i class="bi bi-wifi-off visual-icon"></i>
+                </div>
+                <div class="visual-box">
+                    <i class="bi bi-hospital visual-icon"></i>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
