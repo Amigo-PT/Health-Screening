@@ -681,6 +681,7 @@
                     <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1100">
                         <div class="hero-eyebrow"><i class="bi bi-stars"></i> A Smart Health Initiative</div>
                         <h1 class="hero-title">The <span class="text-gradient">Health Screening</span> Project</h1>
+                        <h2 id="welcomeMessage" class="hero-sub mb-4" style="font-weight: 700; font-size: 1.3rem;"></h2>
                         <p class="hero-sub">
                             A scientific preventive approach for a sustainable quality of life within the SEKEM
                             community.
@@ -867,6 +868,25 @@
         <script>
             AOS.init({ duration: 950, once: true, offset: 40 });
 
+            function getGreeting(hour) {
+                if (hour >= 5 && hour < 12) return { text: 'Good Morning', icon: 'bi bi-sunrise' };
+                if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', icon: 'bi bi-sun' };
+                if (hour >= 17 && hour < 21) return { text: 'Good Evening', icon: 'bi bi-sunset' };
+                return { text: 'Good Night', icon: 'bi bi-moon-stars' };
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const userName = sessionStorage.getItem('userName') || 'User';
+                const hour = new Date().getHours();
+                const greeting = getGreeting(hour);
+                
+                const welcomeEl = document.getElementById('welcomeMessage');
+                if (welcomeEl) {
+                    welcomeEl.innerHTML = `<i class="${greeting.icon} me-2 text-info"></i>${greeting.text}, <span class="text-gradient">${userName}</span>!`;
+                }
+            });
+        </script>
+        <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const teamData = [
                     {
