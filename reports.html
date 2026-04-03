@@ -678,7 +678,22 @@
 
         function updateReportCount() {
             const el = document.getElementById('reportsCount');
-            if (el) el.textContent = allReports.length.toLocaleString();
+            if (el) animateCounter(el, allReports.length);
+        }
+
+        function animateCounter(el, target) {
+            const duration = 1500;
+            const start = 0;
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(start + (target - start) * easeOut);
+                el.textContent = current.toLocaleString();
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
         }
 
         function populateYearFilter() {
