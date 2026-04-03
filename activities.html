@@ -243,14 +243,30 @@
         /* CARDS */
         .cards-section { position: relative; z-index: 1; padding-bottom: 100px; }
 
+        /* MONTH GROUPS */
+        .month-groups-section { position:relative; z-index:10; padding:60px 0 100px; background:transparent; }
+        .month-group { margin-bottom:48px; }
+        .month-group-header {
+            display:flex; align-items:center; gap:16px; margin-bottom:24px;
+            padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,.08);
+        }
+        .month-group-icon {
+            width:52px; height:52px; border-radius:14px;
+            background:linear-gradient(135deg, rgba(6,182,212,.15), rgba(37,99,235,.15));
+            border:1px solid rgba(6,182,212,.25); display:flex; align-items:center; justify-content:center;
+            color:#22d3ee; font-size:1.4rem;
+        }
+        .month-group-title { font-size:1.3rem; font-weight:800; color:#f8fafc; }
+        .month-group-count { font-size:.85rem; color:#64748b; font-weight:600; }
+        .month-activities-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px; }
+
         .activity-card {
-            background: var(--card-bg);
+            background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: var(--glass-border);
-            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
             transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
             height: 100%;
             position: relative;
@@ -403,10 +419,8 @@
         </div>
     </section>
 
-    <section class="cards-section">
-        <div class="container">
-            <div class="row g-4" id="activities-container"></div>
-        </div>
+    <section class="month-groups-section">
+        <div class="container" id="month-groups-container"></div>
     </section>
 
     <footer>
@@ -438,19 +452,27 @@
         let currentFilter = 'All';
 
         function showSkeletons() {
-            const container = document.getElementById('activities-container');
+            const container = document.getElementById('month-groups-container');
             container.innerHTML = '';
-            for (let i = 0; i < 6; i++) {
+            for (let g = 0; g < 3; g++) {
                 container.innerHTML += `
-                    <div class="col-md-6 col-lg-4">
-                        <div class="skeleton-card">
-                            <div class="skeleton skeleton-img"></div>
-                            <div class="p-4">
-                                <div class="skeleton skeleton-line" style="width:35%;"></div>
-                                <div class="skeleton skeleton-title"></div>
-                                <div class="skeleton skeleton-desc"></div>
-                                <div class="skeleton skeleton-btn"></div>
-                            </div>
+                    <div class="month-group">
+                        <div class="month-group-header">
+                            <div class="skeleton" style="width:52px;height:52px;border-radius:14px;"></div>
+                            <div><div class="skeleton" style="width:120px;height:20px;margin-bottom:8px;"></div><div class="skeleton" style="width:80px;height:14px;"></div></div>
+                        </div>
+                        <div class="month-activities-grid">
+                            ${[1,2,3].map(() => `
+                                <div class="skeleton-card">
+                                    <div class="skeleton skeleton-img"></div>
+                                    <div class="p-4">
+                                        <div class="skeleton skeleton-line" style="width:35%;"></div>
+                                        <div class="skeleton skeleton-title"></div>
+                                        <div class="skeleton skeleton-desc"></div>
+                                        <div class="skeleton skeleton-btn"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>`;
             }
@@ -460,33 +482,81 @@
             currentFilter = category;
             document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            renderActivities(allData);
+            renderMonthGroups(allData);
         }
 
-        function renderActivities(data) {
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+        function parseActivityDate(value) {
+            if (!value) return null;
+            const text = String(value).trim();
+            const parsed = new Date(text);
+            if (!isNaN(parsed)) return parsed;
+            const lower = text.toLowerCase();
+            for (let i = 0; i < monthNames.length; i++) {
+                if (lower.includes(monthNames[i].toLowerCase())) {
+                    const yearMatch = text.match(/(20\d{2}|19\d{2})/);
+                    return new Date(yearMatch ? parseInt(yearMatch[1]) : new Date().getFullYear(), i, 1);
+                }
+            }
+            const numeric = text.match(/(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);
+            if (numeric) {
+                const monthPart = parseInt(numeric[2], 10);
+                const yearPart = numeric[3] ? parseInt(numeric[3], 10) : null;
+                const year = yearPart ? (yearPart < 100 ? 2000 + yearPart : yearPart) : new Date().getFullYear();
+                if (monthPart >= 1 && monthPart <= 12) return new Date(year, monthPart - 1, 1);
+            }
+            return null;
+        }
+
+        function getCatColor(cat) {
+            const colors = { 'Workshop': '#22d3ee', 'Campaign': '#f59e0b', 'Event': '#a855f7', 'Other': '#64748b' };
+            return colors[cat] || colors['Other'];
+        }
+
+        function renderMonthGroups(data) {
             updateActivityCount(data);
-            const container = document.getElementById('activities-container');
+            const container = document.getElementById('month-groups-container');
             container.innerHTML = '';
             const filtered = currentFilter === 'All' ? data : data.filter(item => (item.Category || 'Other') === currentFilter);
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="col-12"><div class="empty-state"><i class="bi bi-calendar-x"></i><h5 style="color:#475569;">No activities found</h5><p style="font-size:0.9rem;">No entries match the selected filter.</p></div></div>`;
+                container.innerHTML = `<div class="empty-state" style="text-align:center;padding:60px 20px;"><i class="bi bi-calendar-x" style="font-size:3rem;color:#64748b;margin-bottom:16px;"></i><h5 style="color:#475569;">No activities found</h5><p style="font-size:0.9rem;color:#64748b;">No entries match the selected filter.</p></div>`;
                 return;
             }
 
-            filtered.forEach((item, index) => {
-                if (!item.Title) return;
-                const delay = (index % 6) * 80;
-                const imgUrl = item.Image_URL || 'https://placehold.co/600x400/0f172a/334155?text=No+Image';
-                const galleryUrl = `activity_photos.html?title=${encodeURIComponent(item.Title)}&desc=${encodeURIComponent(item.Description || '')}`;
+            let activitiesByMonth = {};
+            filtered.forEach(item => {
+                const date = parseActivityDate(item.Date || item.date || item.Activity_Date);
+                if (!date) return;
+                const key = date.getFullYear() + '-' + date.getMonth();
+                if (!activitiesByMonth[key]) activitiesByMonth[key] = [];
+                activitiesByMonth[key].push({ ...item, parsedDate: date });
+            });
 
-                container.innerHTML += `
-                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="900">
-                        <div class="activity-card">
+            const sortedKeys = Object.keys(activitiesByMonth).sort((a, b) => {
+                const [yearA, monthA] = a.split('-').map(Number);
+                const [yearB, monthB] = b.split('-').map(Number);
+                return (yearB * 12 + monthB) - (yearA * 12 + monthA);
+            });
+
+            sortedKeys.forEach((key, groupIndex) => {
+                const [year, month] = key.split('-').map(Number);
+                const activities = activitiesByMonth[key].sort((a, b) => b.parsedDate - a.parsedDate);
+                const monthName = monthNames[month];
+                
+                let activitiesHtml = activities.map((item, idx) => {
+                    const color = getCatColor(item.Category);
+                    const imgUrl = item.Image_URL || 'https://placehold.co/600x400/0f172a/334155?text=No+Image';
+                    const galleryUrl = `activity_photos.html?title=${encodeURIComponent(item.Title)}&desc=${encodeURIComponent(item.Description || '')}`;
+                    const day = item.parsedDate.getDate();
+                    
+                    return `
+                        <div class="activity-card" data-aos="fade-up" data-aos-delay="${idx * 60}" data-aos-duration="600">
                             <div class="activity-img-wrapper">
                                 <img src="${imgUrl}" class="activity-img" alt="${item.Title}" loading="lazy">
-                                <div class="activity-date-badge"><i class="bi bi-calendar3"></i> ${item.Date || 'TBD'}</div>
-                                <div class="category-badge">${item.Category || 'General'}</div>
+                                <div class="activity-date-badge"><i class="bi bi-calendar3"></i> ${day} ${monthName.slice(0,3)}</div>
+                                <div class="category-badge" style="background:linear-gradient(135deg, ${color}, ${color}dd);">${item.Category || 'Other'}</div>
                             </div>
                             <div class="card-body-inner">
                                 <h5 class="card-title">${item.Title}</h5>
@@ -496,7 +566,19 @@
                                     <span class="photo-count"><i class="bi bi-images"></i> Gallery</span>
                                 </div>
                             </div>
+                        </div>`;
+                }).join('');
+
+                container.innerHTML += `
+                    <div class="month-group" data-aos="fade-up" data-aos-delay="${groupIndex * 100}" data-aos-duration="600">
+                        <div class="month-group-header">
+                            <div class="month-group-icon"><i class="bi bi-calendar3"></i></div>
+                            <div>
+                                <div class="month-group-title">${monthName} ${year}</div>
+                                <div class="month-group-count">${activities.length} activit${activities.length === 1 ? 'y' : 'ies'}</div>
+                            </div>
                         </div>
+                        <div class="month-activities-grid">${activitiesHtml}</div>
                     </div>`;
             });
         }
@@ -509,19 +591,26 @@
         }
 
         function fetchData() {
+            console.log('Fetching data...');
             showSkeletons();
             const minDelay = new Promise(r => setTimeout(r, 700));
             const dataFetch = new Promise((resolve, reject) => {
                 Papa.parse(sheetURL, {
                     download: true, header: true, dynamicTyping: true,
-                    complete: r => resolve(r.data),
-                    error: e => reject(e)
+                    complete: r => { console.log('Data loaded:', r.data?.length || 0); resolve(r.data); },
+                    error: e => { console.error('Error:', e); reject(e); }
                 });
             });
             Promise.all([minDelay, dataFetch])
-                .then(([_, data]) => { allData = data.filter(d => d.Title); renderActivities(allData); updateActivityCount(); })
+                .then(([_, data]) => { 
+                    console.log('Filtering...'); 
+                    allData = data.filter(d => d.Title); 
+                    console.log('Filtered:', allData.length); 
+                    renderMonthGroups(allData); 
+                    updateActivityCount(); 
+                })
                 .catch(() => {
-                    document.getElementById('activities-container').innerHTML = `<div class="col-12"><div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5><p style="font-size:0.9rem;">Could not load activities. Please check your connection.</p></div></div>`;
+                    document.getElementById('month-groups-container').innerHTML = `<div class="empty-state" style="text-align:center;padding:60px 20px;"><i class="bi bi-wifi-off" style="font-size:3rem;color:#64748b;margin-bottom:16px;"></i><h5 style="color:#475569;">Connection Error</h5><p style="font-size:0.9rem;color:#64748b;">Could not load activities.</p></div>`;
                 });
         }
 
