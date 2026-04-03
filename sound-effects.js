@@ -1,16 +1,10 @@
 (function() {
-    const STORAGE_KEY = 'healthScreeningSoundEffectsEnabled';
-    const CLICK_STORAGE_KEY = 'healthScreeningClickSoundEnabled';
-    const NAV_STORAGE_KEY = 'healthScreeningNavSoundEnabled';
+    const STORAGE_KEY = 'healthScreeningSoundEnabled';
     let audioContext = null;
     let enabled = localStorage.getItem(STORAGE_KEY);
-    let clickEnabled = localStorage.getItem(CLICK_STORAGE_KEY);
-    let navEnabled = localStorage.getItem(NAV_STORAGE_KEY);
     enabled = enabled === null ? true : enabled === 'true';
-    clickEnabled = clickEnabled === null ? true : clickEnabled === 'true';
-    navEnabled = navEnabled === null ? true : navEnabled === 'true';
-    let lastClickSound = 0;
-    const NAV_DELAY = 140;
+    let lastSound = 0;
+    const MIN_INTERVAL = 120;
 
     function initAudioContext() {
         if (audioContext) return audioContext;
@@ -20,44 +14,36 @@
         return audioContext;
     }
 
-    function playTone(frequency, duration = 0.08, type = 'sine', volume = 0.12) {
+    function playSoftClick() {
         if (!enabled) return;
+        const now = Date.now();
+        if (now - lastSound < MIN_INTERVAL) return;
+        lastSound = now;
+
         const ctx = initAudioContext();
         if (!ctx) return;
-        const now = ctx.currentTime;
-        const oscillator = ctx.createOscillator();
+
+        const t = ctx.currentTime;
+        const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        oscillator.type = type;
-        oscillator.frequency.value = frequency;
-        gain.gain.setValueAtTime(volume, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-        oscillator.connect(gain);
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, t);
+        osc.frequency.exponentialRampToValueAtTime(400, t + 0.06);
+
+        gain.gain.setValueAtTime(0.04, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+
+        osc.connect(gain);
         gain.connect(ctx.destination);
-        oscillator.start(now);
-        oscillator.stop(now + duration + 0.02);
-    }
-
-    function playClickSound() {
-        if (!enabled || !clickEnabled) return;
-        playTone(700, 0.04, 'triangle', 0.12);
-    }
-
-    function playNavSound() {
-        if (!enabled || !navEnabled) return;
-        playTone(390, 0.06, 'sine', 0.14);
-        setTimeout(() => playTone(520, 0.04, 'sine', 0.1), 60);
-    }
-
-    function playLoadSound() {
-        playTone(260, 0.1, 'sine', 0.14);
-        setTimeout(() => playTone(340, 0.08, 'sine', 0.1), 100);
-        setTimeout(() => playTone(420, 0.06, 'sine', 0.08), 180);
+        osc.start(t);
+        osc.stop(t + 0.08);
     }
 
     function setEnabled(value) {
         enabled = !!value;
         localStorage.setItem(STORAGE_KEY, enabled);
-        document.body.classList.toggle('sound-effects-disabled', !enabled);
+        document.body.classList.toggle('sound-disabled', !enabled);
     }
 
     function isInternalNavLink(anchor, event) {
@@ -70,94 +56,25 @@
         return url.origin === location.origin;
     }
 
-    function handleAnchorClick(event) {
+    function handleClick(event) {
+        if (!enabled) return;
+        if (event.defaultPrevented) return;
+
         const anchor = event.target.closest('a');
-        if (!anchor || !anchor.href) return;
-        if (!isInternalNavLink(anchor, event)) return;
-        if (!navEnabled || !enabled) return;
-        event.preventDefault();
-        playNavSound();
-        setTimeout(() => {
-            location.href = new URL(anchor.getAttribute('href'), location.href).href;
-        }, NAV_DELAY);
-    }
+        if (anchor && isInternalNavLink(anchor, event)) {
+            event.preventDefault();
+            playSoftClick();
+            setTimeout(() => {
+                location.href = new URL(anchor.getAttribute('href'), location.href).href;
+            }, 120);
+            return;
+        }
 
-    function setClickEnabled(value) {
-        clickEnabled = !!value;
-        localStorage.setItem(CLICK_STORAGE_KEY, clickEnabled);
-    }
-
-    function setNavEnabled(value) {
-        navEnabled = !!value;
-        localStorage.setItem(NAV_STORAGE_KEY, navEnabled);
-    }
-
-    function attachToggle(selector, stateGetter, stateSetter, trueText, falseText) {
-        const toggle = document.querySelector(selector);
-        if (!toggle) return;
-        const updateLabel = () => {
-            toggle.textContent = stateGetter() ? falseText : trueText;
-            toggle.setAttribute('aria-pressed', stateGetter());
-        };
-        updateLabel();
-        toggle.addEventListener('click', () => {
-            stateSetter(!stateGetter());
-            updateLabel();
-        });
-    }
-
-    function attachSoundToggle() {
-        attachToggle('[data-sound-toggle]',
-            () => enabled,
-            setEnabled,
-            'Enable Sounds',
-            'Disable Sounds'
-        );
-    }
-
-    function attachClickToggle() {
-        attachToggle('[data-click-toggle]',
-            () => clickEnabled,
-            setClickEnabled,
-            'Enable Click Sound',
-            'Disable Click Sound'
-        );
-    }
-
-    function attachNavToggle() {
-        attachToggle('[data-nav-toggle]',
-            () => navEnabled,
-            setNavEnabled,
-            'Enable Nav Sound',
-            'Disable Nav Sound'
-        );
+        playSoftClick();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        if (enabled) {
-            setTimeout(playLoadSound, 120);
-        }
-
-        attachSoundToggle();
-        attachClickToggle();
-        attachNavToggle();
-
-        document.body.addEventListener('click', event => {
-            if (event.defaultPrevented) return;
-            const anchor = event.target.closest('a');
-            const isNavLink = anchor && isInternalNavLink(anchor, event);
-            if (isNavLink && navEnabled && enabled) {
-                handleAnchorClick(event);
-                return;
-            }
-
-            const now = Date.now();
-            if (now - lastClickSound > 70) {
-                lastClickSound = now;
-                playClickSound();
-            }
-        }, true);
-
+        document.body.addEventListener('click', handleClick, true);
     });
 
     window.soundEffects = {
@@ -165,5 +82,6 @@
         enable: () => setEnabled(true),
         disable: () => setEnabled(false),
         toggle: () => setEnabled(!enabled),
+        play: playSoftClick
     };
 })();
