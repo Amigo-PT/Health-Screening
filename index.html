@@ -63,6 +63,17 @@
                 --radius: 24px;
             }
 
+            body {
+                background: linear-gradient(120deg, #020617 0%, #0f172a 50%, #020617 100%);
+                background-size: 300% 300%;
+                animation: bgGradientFlow 8s ease-in-out infinite;
+            }
+
+            @keyframes bgGradientFlow {
+                0%, 100% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+            }
+
             * {
                 box-sizing: border-box;
             }
@@ -132,7 +143,6 @@
             body {
                 font-family: "Cairo", sans-serif;
                 color: var(--text);
-                background: var(--bg);
                 overflow-x: hidden;
                 animation: fadeInPage 0.8s ease-out;
             }
