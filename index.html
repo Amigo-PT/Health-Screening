@@ -255,6 +255,12 @@
                 background: var(--main-gradient);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
+                background-size: 200% auto;
+                animation: gradientFlow 3s ease-in-out infinite;
+            }
+            @keyframes gradientFlow {
+                0%, 100% { background-position: 0% center; }
+                50% { background-position: 100% center; }
             }
             .hero-sub {
                 font-size: 1.1rem;
