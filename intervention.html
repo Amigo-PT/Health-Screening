@@ -454,7 +454,18 @@
 
             const valid = data.filter(d => d.Title);
             if (!valid.length) {
-                container.innerHTML = `<div class="empty-state"><i class="bi bi-clipboard-x"></i><h5 style="color:#475569;">No interventions found</h5></div>`;
+                container.innerHTML = `
+                    <div class="col-12 text-center" data-aos="fade-up">
+                        <div class="footer-card" style="max-width: 400px; margin: 0 auto;">
+                            <div class="footer-card-icon" style="background: rgba(71, 85, 105, 0.1); color: #64748b; margin: 0 auto 16px;">
+                                <i class="bi bi-clipboard-x"></i>
+                            </div>
+                            <div class="footer-card-title" style="color: #64748b;">No Interventions Found</div>
+                            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0;">
+                                There are no interventions available at the moment.
+                            </p>
+                        </div>
+                    </div>`;
                 return;
             }
 

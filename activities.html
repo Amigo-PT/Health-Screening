@@ -440,7 +440,6 @@
         .empty-state i { font-size: 4rem; opacity: 0.3; margin-bottom: 20px; display: block; }
 
         /* FOOTER */
-        footer {
         /* ===== MODERN FOOTER ===== */
         .modern-footer {
             position: relative;
@@ -682,7 +681,18 @@
             const filtered = currentFilter === 'All' ? data : data.filter(item => (item.Category || 'Other') === currentFilter);
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="text-align:center;padding:60px 20px;"><i class="bi bi-calendar-x" style="font-size:3rem;color:#64748b;margin-bottom:16px;"></i><h5 style="color:#475569;">No activities found</h5><p style="font-size:0.9rem;color:#64748b;">No entries match the selected filter.</p></div>`;
+                container.innerHTML = `
+                    <div class="col-12 text-center" data-aos="fade-up">
+                        <div class="footer-card" style="max-width: 400px; margin: 0 auto;">
+                            <div class="footer-card-icon" style="background: rgba(71, 85, 105, 0.1); color: #64748b; margin: 0 auto 16px;">
+                                <i class="bi bi-calendar-x"></i>
+                            </div>
+                            <div class="footer-card-title" style="color: #64748b;">No Activities Found</div>
+                            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0;">
+                                No entries match the selected filter.
+                            </p>
+                        </div>
+                    </div>`;
                 return;
             }
 
@@ -783,7 +793,18 @@
                     updateActivityCount(); 
                 })
                 .catch(() => {
-                    document.getElementById('month-groups-container').innerHTML = `<div class="empty-state" style="text-align:center;padding:60px 20px;"><i class="bi bi-wifi-off" style="font-size:3rem;color:#64748b;margin-bottom:16px;"></i><h5 style="color:#475569;">Connection Error</h5><p style="font-size:0.9rem;color:#64748b;">Could not load activities.</p></div>`;
+                    document.getElementById('month-groups-container').innerHTML = `
+                        <div class="col-12 text-center" data-aos="fade-up">
+                            <div class="footer-card" style="max-width: 400px; margin: 0 auto;">
+                                <div class="footer-card-icon" style="background: rgba(239, 68, 68, 0.1); color: #f87171; margin: 0 auto 16px;">
+                                    <i class="bi bi-wifi-off"></i>
+                                </div>
+                                <div class="footer-card-title" style="color: #f87171;">Connection Error</div>
+                                <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0;">
+                                    Could not load activities. Please check your connection.
+                                </p>
+                            </div>
+                        </div>`;
                 });
         }
 

@@ -1153,7 +1153,18 @@
                         const data = results.data.filter(row => row.Years || row.Issues);
                         
                         if (data.length === 0) {
-                            container.innerHTML = '<div class="text-center"><p class="text-muted">No issues found.</p></div>';
+                            container.innerHTML = `
+                                <div class="col-12 text-center" data-aos="fade-up">
+                                    <div class="footer-card" style="max-width: 400px; margin: 0 auto;">
+                                        <div class="footer-card-icon" style="background: rgba(71, 85, 105, 0.1); color: #64748b; margin: 0 auto 16px;">
+                                            <i class="bi bi-check-circle"></i>
+                                        </div>
+                                        <div class="footer-card-title" style="color: #64748b;">No Issues Found</div>
+                                        <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0;">
+                                            Great! There are no reported issues at the moment.
+                                        </p>
+                                    </div>
+                                </div>`;
                             return;
                         }
 

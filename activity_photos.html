@@ -709,10 +709,16 @@
 
             if (validImages.length === 0) {
                 document.getElementById('error-message').innerHTML = `
-                    <div class="empty-state">
-                        <i class="bi bi-images"></i>
-                        <h5>No photos found</h5>
-                        <p>We couldn't find any photos for this activity yet.</p>
+                    <div class="col-12 text-center" data-aos="fade-up">
+                        <div class="footer-card" style="max-width: 400px; margin: 0 auto;">
+                            <div class="footer-card-icon" style="background: rgba(71, 85, 105, 0.1); color: #64748b; margin: 0 auto 16px;">
+                                <i class="bi bi-images"></i>
+                            </div>
+                            <div class="footer-card-title" style="color: #64748b;">No Photos Found</div>
+                            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0;">
+                                We couldn't find any photos for this activity yet.
+                            </p>
+                        </div>
                     </div>`;
                 return;
             }
