@@ -64,14 +64,17 @@
             }
 
             body {
-                background: linear-gradient(120deg, #020617 0%, #0f172a 50%, #020617 100%);
-                background-size: 300% 300%;
-                animation: bgGradientFlow 8s ease-in-out infinite;
+                background: linear-gradient(-45deg, #020617, #0c1322, #0f1a2e, #0a1120, #020617);
+                background-size: 400% 400%;
+                animation: gradientShift 12s ease infinite;
             }
 
-            @keyframes bgGradientFlow {
-                0%, 100% { background-position: 0% 50%; }
+            @keyframes gradientShift {
+                0% { background-position: 0% 50%; }
+                25% { background-position: 50% 100%; }
                 50% { background-position: 100% 50%; }
+                75% { background-position: 50% 0%; }
+                100% { background-position: 0% 50%; }
             }
 
             * {
@@ -726,6 +729,16 @@
                 line-height: 1.6;
                 text-align: start;
             }
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
             /* ===== FOOTER ===== */
             footer {
@@ -947,18 +960,26 @@
 
         <!-- Issues Modal -->
         <div class="modal fade" id="issuesModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;">
-                    <div class="modal-header border-0 pb-0" id="modalHeader" style="border-bottom: 2px solid #f87171 !important;">
-                        <div>
-                            <h3 class="modal-title">
-                                <i class="bi bi-calendar3 me-2"></i><span id="modalYear"></span>
-                            </h3>
-                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Issues recorded this year</p>
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; overflow: hidden;">
+                    <div class="modal-header border-0 pt-4 px-4" id="modalHeader" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));">
+                        <div class="d-flex align-items-center gap-4 w-100">
+                            <div class="modal-icon" id="modalIcon" style="width: 70px; height: 70px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                                <i class="bi bi-calendar3"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center gap-3 mb-1">
+                                    <h3 class="modal-title mb-0" id="modalYear"></h3>
+                                    <span class="badge rounded-pill px-3 py-2" id="modalBadge" style="font-size: 0.8rem; font-weight: 700;"></span>
+                                </div>
+                                <p class="mb-0" style="font-size: 0.9rem; color: #94a3b8;">
+                                    <i class="bi bi-bug me-1" style="color: #fff;"></i> All issues recorded for this year
+                                </p>
+                            </div>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.5;"></button>
                     </div>
-                    <div class="modal-body pt-4">
+                    <div class="modal-body pt-4 px-4 pb-4">
                         <div class="row g-3" id="modalIssues"></div>
                     </div>
                 </div>
@@ -1075,8 +1096,8 @@
                             ];
                             const c = colors[i % colors.length];
                             html += `
-                                <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="${i * 100}">
-                                    <div class="year-card cursor-pointer" style="background: ${c.bg}; border-color: ${c.border};" onclick="showIssuesModal('${year}', ${JSON.stringify(groupedByYear[year]).replace(/"/g, '&quot;')}, '${c.icon}')">
+                                <div class="col-md-4 col-lg-3">
+                                    <div class="year-card cursor-pointer" style="background: ${c.bg}; border-color: ${c.border}; animation: fadeInUp 0.5s ease-out ${i * 0.1}s both;" onclick="showIssuesModal('${year}', ${JSON.stringify(groupedByYear[year]).replace(/"/g, '&quot;')}, '${c.icon}')">
                                         <div class="year-icon" style="background: ${c.border}; color: ${c.icon};">
                                             <i class="bi bi-calendar3"></i>
                                         </div>
@@ -1102,7 +1123,15 @@
                 const modal = new bootstrap.Modal(document.getElementById('issuesModal'));
                 document.getElementById('modalYear').textContent = year;
                 document.getElementById('modalYear').style.color = color;
-                document.getElementById('modalHeader').style.borderColor = color;
+                
+                const icon = document.getElementById('modalIcon');
+                icon.style.background = color + '20';
+                icon.style.color = color;
+                
+                const badge = document.getElementById('modalBadge');
+                badge.textContent = issues.length + ' Issue' + (issues.length > 1 ? 's' : '');
+                badge.style.background = color + '20';
+                badge.style.color = color;
                 
                 let issuesHtml = '';
                 issues.forEach((issue, i) => {
