@@ -621,6 +621,112 @@
                 line-height: 1.75;
             }
 
+            /* ===== ERRORS CARD ===== */
+            .errors-section {
+                position: relative;
+                z-index: 1;
+                padding: 80px 0;
+            }
+            .cursor-pointer {
+                cursor: pointer;
+            }
+            .year-card {
+                background: rgba(15, 23, 42, 0.6);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 20px;
+                padding: 32px 24px;
+                text-align: center;
+                height: 100%;
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                position: relative;
+                overflow: hidden;
+            }
+            .year-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                opacity: 0;
+                transition: opacity 0.4s;
+            }
+            .year-card:hover::before {
+                opacity: 1;
+            }
+            .year-card:hover {
+                transform: translateY(-12px) scale(1.02);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            }
+            .year-icon {
+                width: 70px;
+                height: 70px;
+                border-radius: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.8rem;
+                margin: 0 auto 20px;
+                transition: transform 0.4s;
+            }
+            .year-card:hover .year-icon {
+                transform: rotate(10deg) scale(1.1);
+            }
+            .year-title {
+                font-size: 2rem;
+                font-weight: 900;
+                margin-bottom: 8px;
+            }
+            .year-count {
+                font-size: 1rem;
+                font-weight: 700;
+                margin-bottom: 16px;
+            }
+            .year-count span {
+                font-weight: 500;
+                opacity: 0.7;
+            }
+            .year-arrow {
+                font-size: 1.2rem;
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all 0.3s;
+            }
+            .year-card:hover .year-arrow {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .issue-card {
+                background: rgba(15, 23, 42, 0.6);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 16px;
+                padding: 20px 24px;
+                transition: all 0.3s;
+            }
+            .issue-card:hover {
+                background: rgba(15, 23, 42, 0.8);
+                transform: translateX(8px);
+            }
+            .issue-num {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                font-size: 0.9rem;
+                flex-shrink: 0;
+            }
+            .issue-text {
+                font-size: 0.95rem;
+                color: #cbd5e1;
+                line-height: 1.6;
+                text-align: start;
+            }
+
             /* ===== FOOTER ===== */
             footer {
                 position: relative;
@@ -826,6 +932,39 @@
             </div>
         </section>
 
+        <!-- Errors Card -->
+        <section class="errors-section">
+            <div class="container" style="position: relative; z-index: 1">
+                <div class="text-center mb-5" data-aos="fade-down">
+                    <div class="section-eyebrow" style="margin: 0 auto 16px; background: rgba(220, 38, 38, 0.08); border-color: rgba(220, 38, 38, 0.2); color: #f87171;">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Debugging
+                    </div>
+                    <h2 class="section-title">Known <span class="text-gradient">Issues</span></h2>
+                </div>
+                <div id="issuesContainer"></div>
+            </div>
+        </section>
+
+        <!-- Issues Modal -->
+        <div class="modal fade" id="issuesModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;">
+                    <div class="modal-header border-0 pb-0" id="modalHeader" style="border-bottom: 2px solid #f87171 !important;">
+                        <div>
+                            <h3 class="modal-title">
+                                <i class="bi bi-calendar3 me-2"></i><span id="modalYear"></span>
+                            </h3>
+                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Issues recorded this year</p>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body pt-4">
+                        <div class="row g-3" id="modalIssues"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer>
             <div class="container">
@@ -901,6 +1040,86 @@
                     welcomeEl.innerHTML = `<i class="${greeting.icon} me-2 text-info"></i>${greeting.text}, <span class="text-gradient">${userName}</span>!`;
                 }
             });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=220896824&single=true&output=csv", {
+                    download: true,
+                    header: true,
+                    complete: function(results) {
+                        const container = document.getElementById("issuesContainer");
+                        const data = results.data.filter(row => row.Years || row.Issues);
+                        
+                        if (data.length === 0) {
+                            container.innerHTML = '<div class="text-center"><p class="text-muted">No issues found.</p></div>';
+                            return;
+                        }
+
+                        const groupedByYear = {};
+                        data.forEach(row => {
+                            const year = row.Years || 'Unknown';
+                            if (!groupedByYear[year]) groupedByYear[year] = [];
+                            groupedByYear[year].push(row.Issues || '');
+                        });
+
+                        let html = '<div class="row g-4 justify-content-center">';
+                        Object.keys(groupedByYear).sort().reverse().forEach((year, i) => {
+                            const count = groupedByYear[year].length;
+                            const colors = [
+                                { bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.2)', icon: '#f87171', text: '#ef4444' },
+                                { bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.2)', icon: '#fbbf24', text: '#f59e0b' },
+                                { bg: 'rgba(34, 197, 94, 0.08)', border: 'rgba(34, 197, 94, 0.2)', icon: '#4ade80', text: '#22c55e' },
+                                { bg: 'rgba(59, 130, 246, 0.08)', border: 'rgba(59, 130, 246, 0.2)', icon: '#60a5fa', text: '#3b82f6' },
+                                { bg: 'rgba(168, 85, 247, 0.08)', border: 'rgba(168, 85, 247, 0.2)', icon: '#c084fc', text: '#a855f7' },
+                                { bg: 'rgba(236, 72, 153, 0.08)', border: 'rgba(236, 72, 153, 0.2)', icon: '#f472b6', text: '#ec4899' }
+                            ];
+                            const c = colors[i % colors.length];
+                            html += `
+                                <div class="col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="${i * 100}">
+                                    <div class="year-card cursor-pointer" style="background: ${c.bg}; border-color: ${c.border};" onclick="showIssuesModal('${year}', ${JSON.stringify(groupedByYear[year]).replace(/"/g, '&quot;')}, '${c.icon}')">
+                                        <div class="year-icon" style="background: ${c.border}; color: ${c.icon};">
+                                            <i class="bi bi-calendar3"></i>
+                                        </div>
+                                        <h3 class="year-title" style="color: ${c.text};">${year}</h3>
+                                        <div class="year-count" style="color: ${c.icon};">
+                                            ${count} <span>Issue${count > 1 ? 's' : ''}</span>
+                                        </div>
+                                        <div class="year-arrow" style="color: ${c.icon};">
+                                            <i class="bi bi-chevron-double-down"></i>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        });
+                        html += '</div>';
+                        
+                        container.innerHTML = html;
+                        AOS.refresh();
+                    }
+                });
+            });
+
+            function showIssuesModal(year, issues, color) {
+                const modal = new bootstrap.Modal(document.getElementById('issuesModal'));
+                document.getElementById('modalYear').textContent = year;
+                document.getElementById('modalYear').style.color = color;
+                document.getElementById('modalHeader').style.borderColor = color;
+                
+                let issuesHtml = '';
+                issues.forEach((issue, i) => {
+                    issuesHtml += `
+                        <div class="col-12" data-aos="fade-up" data-aos-delay="${i * 60}">
+                            <div class="issue-card" style="border-left: 3px solid ${color};">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="issue-num" style="background: ${color}20; color: ${color};">${i + 1}</div>
+                                    <p class="issue-text mb-0">${issue}</p>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                document.getElementById('modalIssues').innerHTML = issuesHtml;
+                modal.show();
+                AOS.refresh();
+            }
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
