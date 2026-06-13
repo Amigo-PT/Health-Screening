@@ -1,23 +1,20 @@
 ﻿<!doctype html>
-<html lang="en" dir="ltr" data-theme="dark">
+<html lang="en" dir="ltr" data-theme="naruto">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Health Screening Project</title>
+        <title>Konoha | Health Screening Project</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap"
-            rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
         <script>
-        // Maintenance Mode Check
+        // Maintenance Mode Check (Same functionality - preserved)
         (function() {
-            // Check session storage first
             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 // Check if maintenance mode is enabled - NEW LINK
                  Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
                     download: true,
                     header: true,
@@ -28,13 +25,11 @@
                             if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
                                 window.location.href = 'maintenance.html';
                             } else {
-                                // If not maintenance, check login
                                 if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                                     window.location.href = 'login.html';
                                 }
                             }
                         } else {
-                             // Fallback if sheet fails or is empty
                              if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                                 window.location.href = 'login.html';
                             }
@@ -42,7 +37,6 @@
                     },
                     error: function(err) {
                         console.error("Maintenance check failed", err);
-                         // Fallback on error
                          if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                             window.location.href = 'login.html';
                         }
@@ -53,190 +47,190 @@
     </script>
 
         <style>
+            /* ===== Hidden Leaf Village Colors ===== */
             :root {
-                --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-                --bg: #020617;
-                --text: #f1f5f9;
-                --muted: #94a3b8;
-                --card-bg: rgba(15, 23, 42, 0.6);
-                --border: rgba(255, 255, 255, 0.07);
-                --radius: 24px;
+                --naruto-orange: #FF8C00;
+                --naruto-orange-dark: #E67600;
+                --leaf-green: #2E5A2B;
+                --leaf-green-light: #4A7C3F;
+                --clay-bg: #F4F1E1;
+                --wood-dark: #5C4033;
+                --wood-light: #8B6914;
+                --shadow-color: #1a1a2e;
+                --text-dark: #2F2E2E;
+                --text-light: #F5F5DC;
+                --scroll-bg: #FFF8E7;
+                --radius-sm: 12px;
+                --radius-md: 20px;
+                --radius-lg: 32px;
             }
 
+            /* Nature-inspired background + moving clouds */
             body {
-                background: linear-gradient(-45deg, #020617, #0c1322, #0f1a2e, #0a1120, #020617);
-                background-size: 400% 400%;
-                animation: gradientShift 12s ease infinite;
-            }
-
-            @keyframes gradientShift {
-                0% { background-position: 0% 50%; }
-                25% { background-position: 50% 100%; }
-                50% { background-position: 100% 50%; }
-                75% { background-position: 50% 0%; }
-                100% { background-position: 0% 50%; }
-            }
-
-            * {
-                box-sizing: border-box;
-            }
-
-            @keyframes fadeInPage {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            @keyframes float {
-                0%,
-                100% {
-                    transform: translateY(0);
-                }
-                50% {
-                    transform: translateY(-12px);
-                }
-            }
-            @keyframes blobDrift {
-                0%,
-                100% {
-                    transform: translate(0, 0) scale(1);
-                }
-                40% {
-                    transform: translate(30px, -25px) scale(1.05);
-                }
-                70% {
-                    transform: translate(-20px, 15px) scale(0.97);
-                }
-            }
-            @keyframes slideInRight {
-                from {
-                    opacity: 0;
-                    transform: translateX(40px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-            @keyframes slideInLeft {
-                from {
-                    opacity: 0;
-                    transform: translateX(-40px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-            @keyframes countUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            body {
-                font-family: "Cairo", sans-serif;
-                color: var(--text);
+                font-family: 'Poppins', 'Cairo', sans-serif;
+                background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
+                min-height: 100vh;
+                position: relative;
                 overflow-x: hidden;
-                animation: fadeInPage 0.8s ease-out;
             }
 
-            /* Grid bg */
+            /* Floating clouds effect like anime */
             body::before {
-                content: "";
+                content: "☁️";
                 position: fixed;
-                inset: 0;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 pointer-events: none;
+                font-size: 120px;
+                white-space: nowrap;
+                color: rgba(255,255,240,0.08);
+                animation: cloudsFloat 40s linear infinite;
                 z-index: 0;
-                background-image: linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
-                background-size: 60px 60px;
             }
 
-            /* Blobs */
-            .blob {
+            @keyframes cloudsFloat {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
+            }
+
+            /* Scroll-style cards */
+            .scroll-card {
+                background: var(--scroll-bg);
+                background-image: repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 28px,
+                    rgba(139, 69, 19, 0.05) 28px,
+                    rgba(139, 69, 19, 0.05) 32px
+                );
+                border-radius: 16px;
+                border-left: 8px solid var(--wood-dark);
+                border-right: 8px solid var(--wood-dark);
+                border-top: none;
+                border-bottom: none;
+                position: relative;
+                overflow: visible;
+                z-index: 0;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
+                transition: all 0.3s ease;
+            }
+
+            .scroll-card:hover {
+                transform: translateY(-5px) rotate(0.5deg);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            }
+
+            /* Scroll wooden rollers */
+            .scroll-card::before, .scroll-card::after,
+            .sdg-card::before, .sdg-card::after,
+            .year-card::before, .year-card::after,
+            .mvg-card::before, .mvg-card::after,
+            .team-card-modern::before, .team-card-modern::after {
+                content: '';
                 position: absolute;
-                border-radius: 50%;
-                filter: blur(80px);
-                opacity: 0.2;
-                animation: blobDrift 16s ease-in-out infinite;
+                left: -4px; right: -4px;
+                height: 18px;
+                z-index: 3;
+                border-radius: 9px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
                 pointer-events: none;
-                z-index: 0;
+                background:
+                    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
+                    linear-gradient(to bottom,
+                        #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
+                    );
             }
-            .blob-1 {
-                width: 500px;
-                height: 500px;
-                background: #2563eb;
-                top: -15%;
-                left: -10%;
-                animation-delay: 0s;
-            }
-            .blob-2 {
-                width: 380px;
-                height: 380px;
-                background: #06b6d4;
-                bottom: -10%;
-                right: -8%;
-                animation-delay: 6s;
-            }
-            .blob-3 {
-                width: 280px;
-                height: 280px;
-                background: #10b981;
-                top: 40%;
-                left: 55%;
-                animation-delay: 11s;
+            .scroll-card::before, .sdg-card::before, .year-card::before, .mvg-card::before, .team-card-modern::before { top: -9px; }
+            .scroll-card::after,  .sdg-card::after,  .year-card::after,  .mvg-card::after,  .team-card-modern::after  { bottom: -9px; }
+
+            /* Ninja stamp */
+            .scroll-stamp {
+                position: absolute;
+                top: 10px; right: 14px;
+                font-size: 1.4rem;
+                z-index: 3;
+                opacity: 0.5;
+                transform: rotate(-15deg);
+                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+                pointer-events: none;
             }
 
-            /* ===== NAVBAR ===== */
-            .navbar {
-                background: rgba(2, 6, 23, 0.85);
-                backdrop-filter: blur(24px);
-                -webkit-backdrop-filter: blur(24px);
-                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-                padding: 16px 0;
-                z-index: 100;
+            /* Village logo */
+            .konoha-logo {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
+                padding: 6px 14px;
+                border-radius: 50px;
+                font-weight: 900;
+                color: var(--text-light);
+                font-size: 0.85rem;
+                box-shadow: 0 0 12px rgba(255,140,0,0.3);
             }
+
+            /* Sharingan hover effect */
+            .sharingan-hover {
+                transition: all 0.3s ease;
+            }
+            .sharingan-hover:hover {
+                animation: sharinganSpin 0.6s ease-in-out;
+                color: var(--naruto-orange) !important;
+            }
+
+            @keyframes sharinganSpin {
+                0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
+                50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
+                100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
+            }
+
+            /* Ninja-style navbar */
+            .navbar {
+                background: rgba(44, 34, 24, 0.95);
+                backdrop-filter: blur(12px);
+                border-bottom: 2px solid var(--naruto-orange);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                padding: 12px 0;
+            }
+
             .navbar-brand {
                 font-weight: 900;
-                font-size: 1.4rem;
-                background: var(--main-gradient);
+                font-size: 1.2rem;
+                background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-            }
-            .nav-link {
-                font-weight: 700;
-                color: #64748b !important;
-                padding: 6px 14px !important;
-                border-radius: 10px;
-                transition: all 0.25s;
-                font-size: 0.9rem;
-                margin-right: 4px;
-            }
-            .nav-link:hover {
-                background: rgba(6, 182, 212, 0.08);
-                color: #e2e8f0 !important;
-            }
-            .nav-link.active {
-                background: rgba(6, 182, 212, 0.12);
-                color: #22d3ee !important;
-                border: 1px solid rgba(6, 182, 212, 0.2);
+                display: flex;
+                align-items: center;
+                gap: 10px;
             }
 
-            /* ===== HERO ===== */
+            .nav-link {
+                font-weight: 700;
+                color: #e8d5b7 !important;
+                padding: 8px 18px !important;
+                border-radius: 30px;
+                transition: all 0.25s;
+                font-size: 0.85rem;
+                margin: 0 2px;
+            }
+            .nav-link:hover {
+                background: rgba(255, 140, 0, 0.2);
+                color: var(--naruto-orange) !important;
+                transform: translateY(-2px);
+            }
+            .nav-link.active {
+                background: rgba(255, 140, 0, 0.3);
+                color: var(--naruto-orange) !important;
+                border: 1px solid var(--naruto-orange);
+                box-shadow: 0 0 10px rgba(255,140,0,0.3);
+            }
+
+            /* Hero Section */
             .hero-section {
                 position: relative;
-                overflow: hidden;
-                padding: 160px 0 120px;
+                padding: 140px 0 100px;
                 min-height: 100vh;
                 display: flex;
                 align-items: center;
@@ -245,94 +239,110 @@
             .hero-eyebrow {
                 display: inline-flex;
                 align-items: center;
-                gap: 8px;
-                background: rgba(6, 182, 212, 0.08);
-                border: 1px solid rgba(6, 182, 212, 0.2);
+                gap: 10px;
+                background: rgba(46, 90, 43, 0.8);
+                border: 1px solid var(--naruto-orange);
                 border-radius: 50px;
-                padding: 8px 20px;
-                font-size: 0.8rem;
-                font-weight: 700;
-                color: #22d3ee;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
+                padding: 6px 20px;
+                font-size: 0.75rem;
+                font-weight: 800;
+                color: var(--naruto-orange);
+                letter-spacing: 0.05em;
                 margin-bottom: 24px;
+                backdrop-filter: blur(4px);
             }
 
             .hero-title {
-                font-size: clamp(2.4rem, 5.5vw, 4rem);
+                font-size: clamp(2rem, 5vw, 3.5rem);
                 font-weight: 900;
-                line-height: 1.12;
+                line-height: 1.15;
                 margin-bottom: 20px;
+                color: var(--text-light);
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             }
-            .text-gradient {
-                background: var(--main-gradient);
+            
+            .text-gradient-naruto {
+                background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-size: 200% auto;
-                animation: gradientFlow 3s ease-in-out infinite;
+                animation: chakraFlow 3s ease infinite;
             }
-            @keyframes gradientFlow {
+
+            @keyframes chakraFlow {
                 0%, 100% { background-position: 0% center; }
                 50% { background-position: 100% center; }
             }
+
             .hero-sub {
-                font-size: 1.1rem;
-                color: var(--muted);
-                line-height: 1.75;
-                max-width: 480px;
-                margin-bottom: 40px;
+                font-size: 1rem;
+                color: #F5F5DC;
+                line-height: 1.7;
+                max-width: 500px;
+                margin-bottom: 35px;
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
             }
 
-            .btn-primary-glow {
+            /* Rasengan-style buttons */
+            .btn-rasengan {
                 display: inline-flex;
                 align-items: center;
                 gap: 10px;
-                background: var(--main-gradient);
+                background: linear-gradient(135deg, var(--naruto-orange), var(--naruto-orange-dark));
                 border: none;
-                padding: 14px 36px;
-                border-radius: 50px;
-                color: #fff;
+                padding: 12px 32px;
+                border-radius: 40px;
+                color: white;
                 font-weight: 800;
-                font-size: 1rem;
-                font-family: "Cairo", sans-serif;
-                box-shadow: 0 10px 30px -5px rgba(6, 182, 212, 0.4);
+                font-size: 0.9rem;
+                box-shadow: 0 5px 15px rgba(255,140,0,0.4);
                 transition: all 0.35s;
-                cursor: pointer;
                 text-decoration: none;
+                position: relative;
+                overflow: hidden;
             }
-            .btn-primary-glow:hover {
+            .btn-rasengan:hover {
                 transform: translateY(-4px) scale(1.02);
-                box-shadow: 0 18px 40px -5px rgba(6, 182, 212, 0.55);
-                color: #fff;
+                box-shadow: 0 12px 25px rgba(255,140,0,0.6);
+                color: white;
+            }
+            .btn-rasengan::before {
+                content: "🌀";
+                position: absolute;
+                left: -20px;
+                opacity: 0;
+                transition: all 0.4s;
+            }
+            .btn-rasengan:hover::before {
+                left: 10px;
+                opacity: 1;
             }
 
-            .btn-outline-glow {
+            .btn-konoha {
                 display: inline-flex;
                 align-items: center;
                 gap: 10px;
-                background: rgba(255, 255, 255, 0.04);
-                border: 1px solid rgba(255, 255, 255, 0.12);
-                padding: 14px 36px;
-                border-radius: 50px;
-                color: #e2e8f0;
+                background: rgba(92, 64, 51, 0.8);
+                border: 1px solid var(--naruto-orange);
+                padding: 12px 32px;
+                border-radius: 40px;
+                color: var(--text-light);
                 font-weight: 800;
-                font-size: 1rem;
-                font-family: "Cairo", sans-serif;
+                font-size: 0.9rem;
                 transition: all 0.35s;
-                cursor: pointer;
                 text-decoration: none;
             }
-            .btn-outline-glow:hover {
-                background: rgba(6, 182, 212, 0.1);
-                border-color: rgba(6, 182, 212, 0.35);
-                color: #22d3ee;
+            .btn-konoha:hover {
+                background: rgba(255, 140, 0, 0.3);
+                border-color: var(--naruto-orange);
+                color: var(--naruto-orange);
                 transform: translateY(-4px);
             }
 
-            /* ===== TEAM SLIDER ===== */
+            /* Team Slider - Scroll style */
             .team-slider-wrapper {
                 position: relative;
-                height: 440px;
+                height: 460px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -342,38 +352,40 @@
             .team-card-modern {
                 position: absolute;
                 width: 320px;
-                background: rgba(15, 23, 42, 0.75);
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                border-radius: 28px;
-                overflow: hidden;
+                background: var(--scroll-bg);
+                background-image: repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 28px,
+                    rgba(139, 69, 19, 0.05) 28px,
+                    rgba(139, 69, 19, 0.05) 32px
+                );
+                border-left: 8px solid var(--wood-dark);
+                border-right: 8px solid var(--wood-dark);
+                border-top: none;
+                border-bottom: none;
+                border-radius: 16px;
+                overflow: visible;
                 text-align: center;
                 transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
                 opacity: 0;
                 transform: translateX(60px) scale(0.85) rotateY(-10deg);
-                box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 20px 40px rgba(0,0,0,0.4);
                 z-index: 0;
             }
             .team-card-modern.active {
                 opacity: 1;
                 transform: translateX(0) scale(1) rotateY(0);
                 z-index: 10;
-                box-shadow:
-                    0 30px 60px -15px rgba(6, 182, 212, 0.25),
-                    0 0 0 1px rgba(6, 182, 212, 0.1);
+                box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 2px var(--naruto-orange);
             }
-            .team-card-modern.next {
-                opacity: 0.5;
-                transform: translateX(52px) scale(0.88) rotateY(-5deg);
-                z-index: 5;
-                filter: blur(1px);
-            }
-
+            
             .team-img-container {
                 width: 100%;
-                height: 220px;
+                height: 230px;
                 overflow: hidden;
                 position: relative;
+                background: var(--wood-dark);
             }
             .team-img-container::after {
                 content: "";
@@ -381,607 +393,482 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
-                height: 80px;
-                background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
+                height: 60px;
+                background: linear-gradient(to top, var(--scroll-bg), transparent);
             }
             .team-img-modern {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                object-position: top;
-                transition: transform 0.5s ease;
+                object-position: top center;
+                transition: transform 0.4s ease;
             }
             .team-card-modern:hover .team-img-modern {
-                transform: scale(1.06);
+                transform: scale(1.08);
             }
-
             .team-info {
-                padding: 20px 22px 24px;
-                background: rgba(15, 23, 42, 0.95);
+                padding: 18px 20px 24px;
+                background: var(--scroll-bg);
             }
             .team-role {
-                color: #22d3ee;
-                font-size: 0.82rem;
-                font-weight: 700;
-                letter-spacing: 0.04em;
+                color: var(--naruto-orange);
+                font-size: 0.7rem;
+                font-weight: 800;
+                letter-spacing: 0.05em;
                 text-transform: uppercase;
                 margin-bottom: 6px;
             }
             .team-name {
-                font-size: 1.05rem;
+                font-size: 0.95rem;
                 font-weight: 800;
-                color: var(--text);
+                color: var(--wood-dark);
                 margin-bottom: 8px;
             }
             .team-bio {
-                font-size: 0.82rem;
-                color: var(--muted);
-                line-height: 1.65;
+                font-size: 0.75rem;
+                color: #5a4a3a;
+                line-height: 1.6;
             }
 
+            /* Navigation buttons */
             .btn-nav-modern {
-                width: 48px;
-                height: 48px;
-                border-radius: 14px;
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                color: var(--muted);
-                font-size: 1.1rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                background: rgba(92, 64, 51, 0.8);
+                border: 1px solid var(--naruto-orange);
+                color: var(--naruto-orange);
+                font-size: 1.2rem;
                 transition: all 0.25s;
                 cursor: pointer;
             }
             .btn-nav-modern:hover {
-                background: rgba(6, 182, 212, 0.12);
-                border-color: rgba(6, 182, 212, 0.3);
-                color: #22d3ee;
-                transform: translateY(-2px);
+                background: var(--naruto-orange);
+                color: white;
+                transform: scale(1.1);
+                box-shadow: 0 0 12px var(--naruto-orange);
             }
 
-            /* ===== STATS BAR ===== */
+            /* Stats Bar */
             .stats-bar {
                 position: relative;
                 z-index: 10;
-                background: rgba(15, 23, 42, 0.7);
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.07);
-                border-radius: 24px;
-                padding: 32px 40px;
-                margin-top: -60px;
-            }
-            .stat-item {
-                text-align: center;
+                background: rgba(92, 64, 51, 0.85);
+                backdrop-filter: blur(12px);
+                border: 1px solid var(--naruto-orange);
+                border-radius: 30px;
+                padding: 30px 35px;
+                margin-top: -50px;
             }
             .stat-val {
-                font-size: 2.2rem;
+                font-size: 2rem;
                 font-weight: 900;
-                background: var(--main-gradient);
+                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-                line-height: 1.1;
             }
             .stat-label {
-                font-size: 0.82rem;
-                color: var(--muted);
+                font-size: 0.75rem;
+                color: #e8d5b7;
                 font-weight: 600;
-                margin-top: 4px;
-            }
-            .stat-divider {
-                width: 1px;
-                background: rgba(255, 255, 255, 0.07);
             }
 
-            /* ===== SDG SECTION ===== */
-            .sdg-section {
-                position: relative;
-                z-index: 1;
-                padding: 80px 0;
-            }
-            .section-eyebrow {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: rgba(6, 182, 212, 0.08);
-                border: 1px solid rgba(6, 182, 212, 0.2);
-                border-radius: 50px;
-                padding: 6px 16px;
-                font-size: 0.78rem;
-                font-weight: 700;
-                color: #22d3ee;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                margin-bottom: 16px;
-            }
-            .section-title {
-                font-size: clamp(1.6rem, 3vw, 2.4rem);
-                font-weight: 900;
-                margin-bottom: 12px;
-            }
-            .section-sub {
-                color: var(--muted);
-                font-size: 0.95rem;
-                line-height: 1.7;
-                max-width: 500px;
-            }
-
+            /* SDG Cards */
             .sdg-card {
-                background: var(--card-bg);
-                backdrop-filter: blur(12px);
-                border: var(--border) solid rgba(255, 255, 255, 0.07);
-                border-radius: 20px;
+                background: var(--scroll-bg);
+                background-image: repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 28px,
+                    rgba(139, 69, 19, 0.05) 28px,
+                    rgba(139, 69, 19, 0.05) 32px
+                );
+                border-left: 8px solid var(--wood-dark);
+                border-right: 8px solid var(--wood-dark);
+                border-top: none;
+                border-bottom: none;
+                border-radius: 16px;
                 padding: 28px 24px;
                 display: flex;
                 align-items: flex-start;
-                gap: 16px;
+                gap: 14px;
+                position: relative;
+                overflow: visible;
+                z-index: 0;
                 transition: all 0.35s;
                 height: 100%;
-                border: 1px solid rgba(255, 255, 255, 0.07);
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
             }
             .sdg-card:hover {
                 transform: translateY(-6px);
-                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
-                border-color: rgba(6, 182, 212, 0.2);
+                border-color: var(--naruto-orange);
+                box-shadow: 0 12px 25px rgba(255,140,0,0.3);
             }
             .sdg-icon {
-                width: 52px;
-                height: 52px;
-                border-radius: 14px;
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 1.4rem;
-                color: #fff;
+                font-size: 1.3rem;
+                color: white;
                 flex-shrink: 0;
             }
-            .sdg-num {
-                font-size: 0.7rem;
-                font-weight: 700;
-                color: var(--muted);
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-            }
             .sdg-name {
-                font-size: 1rem;
+                font-size: 0.9rem;
                 font-weight: 800;
-                color: var(--text);
-                margin-top: 2px;
+                color: var(--wood-dark);
             }
             .sdg-desc {
-                font-size: 0.82rem;
-                color: var(--muted);
-                margin-top: 6px;
-                line-height: 1.6;
+                font-size: 0.75rem;
+                color: #5a4a3a;
+                margin-top: 5px;
+                line-height: 1.5;
             }
 
-            /* ===== MVG CARDS ===== */
-            .mvg-section {
-                position: relative;
-                z-index: 1;
-                padding: 80px 0;
-            }
+            /* Mission/Vision/Goals Cards */
             .mvg-card {
-                background: var(--card-bg);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.07);
-                border-radius: var(--radius);
-                padding: 40px 32px;
+                background: var(--scroll-bg);
+                background-image: repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 28px,
+                    rgba(139, 69, 19, 0.05) 28px,
+                    rgba(139, 69, 19, 0.05) 32px
+                );
+                border-left: 8px solid var(--wood-dark);
+                border-right: 8px solid var(--wood-dark);
+                border-top: none;
+                border-bottom: none;
+                border-radius: 16px;
+                padding: 40px 28px;
                 text-align: center;
                 height: 100%;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                transition: all 0.4s;
                 position: relative;
-                overflow: hidden;
-            }
-            .mvg-card::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 2px;
-                background: var(--main-gradient);
-                transform: scaleX(0);
-                transition: transform 0.4s;
-                transform-origin: left;
-            }
-            .mvg-card:hover::before {
-                transform: scaleX(1);
+                overflow: visible;
+                z-index: 0;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
             }
             .mvg-card:hover {
-                transform: translateY(-12px);
-                box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.2);
-                border-color: rgba(6, 182, 212, 0.15);
+                transform: translateY(-10px);
+                border-color: var(--naruto-orange);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
             }
             .mvg-icon {
-                width: 80px;
-                height: 80px;
-                border-radius: 22px;
-                background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(16, 185, 129, 0.1));
-                border: 1px solid rgba(6, 182, 212, 0.15);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 2.2rem;
-                color: #22d3ee;
-                margin: 0 auto 24px;
-                animation: float 6s ease-in-out infinite;
-            }
-            .mvg-card:hover .mvg-icon {
-                background: var(--main-gradient);
-                color: #fff;
-                transform: rotate(12deg) scale(1.1);
-                animation: none;
-            }
-            .mvg-title {
-                font-size: 1.3rem;
-                font-weight: 800;
-                margin-bottom: 12px;
-            }
-            .mvg-text {
-                font-size: 0.9rem;
-                color: var(--muted);
-                line-height: 1.75;
-            }
-
-            /* ===== ERRORS CARD ===== */
-            .errors-section {
-                position: relative;
-                z-index: 1;
-                padding: 80px 0;
-            }
-            .cursor-pointer {
-                cursor: pointer;
-            }
-            .year-card {
-                background: rgba(15, 23, 42, 0.6);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                border-radius: 20px;
-                padding: 32px 24px;
-                text-align: center;
-                height: 100%;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                position: relative;
-                overflow: hidden;
-            }
-            .year-card::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                height: 3px;
-                opacity: 0;
-                transition: opacity 0.4s;
-            }
-            .year-card:hover::before {
-                opacity: 1;
-            }
-            .year-card:hover {
-                transform: translateY(-12px) scale(1.02);
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-            }
-            .year-icon {
                 width: 70px;
                 height: 70px;
-                border-radius: 18px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, var(--leaf-green), var(--wood-dark));
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 font-size: 1.8rem;
+                color: var(--naruto-orange);
                 margin: 0 auto 20px;
-                transition: transform 0.4s;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             }
-            .year-card:hover .year-icon {
-                transform: rotate(10deg) scale(1.1);
+            .mvg-title {
+                font-size: 1.15rem;
+                font-weight: 800;
+                color: var(--wood-dark);
+                margin-bottom: 12px;
+            }
+            .mvg-text {
+                font-size: 0.8rem;
+                color: #5a4a3a;
+                line-height: 1.7;
+            }
+
+            /* Issues Cards */
+            .year-card {
+                background: var(--scroll-bg);
+                background-image: repeating-linear-gradient(
+                    to bottom,
+                    transparent,
+                    transparent 28px,
+                    rgba(139, 69, 19, 0.05) 28px,
+                    rgba(139, 69, 19, 0.05) 32px
+                );
+                border-left: 8px solid var(--wood-dark);
+                border-right: 8px solid var(--wood-dark);
+                border-top: none;
+                border-bottom: none;
+                border-radius: 16px;
+                padding: 32px 20px;
+                text-align: center;
+                transition: all 0.4s;
+                cursor: pointer;
+                position: relative;
+                overflow: visible;
+                z-index: 0;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
+            }
+            .year-card:hover {
+                transform: translateY(-8px);
+                border-color: var(--naruto-orange);
+                box-shadow: 0 12px 25px rgba(255,140,0,0.3);
+            }
+            .year-icon {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                margin: 0 auto 15px;
             }
             .year-title {
-                font-size: 2rem;
+                font-size: 1.8rem;
                 font-weight: 900;
-                margin-bottom: 8px;
-            }
-            .year-count {
-                font-size: 1rem;
-                font-weight: 700;
-                margin-bottom: 16px;
+                margin-bottom: 5px;
             }
             .year-count span {
                 font-weight: 500;
                 opacity: 0.7;
             }
-            .year-arrow {
-                font-size: 1.2rem;
-                opacity: 0;
-                transform: translateY(10px);
-                transition: all 0.3s;
-            }
-            .year-card:hover .year-arrow {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .issue-card {
-                background: rgba(15, 23, 42, 0.6);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.06);
-                border-radius: 16px;
-                padding: 20px 24px;
-                transition: all 0.3s;
-            }
-            .issue-card:hover {
-                background: rgba(15, 23, 42, 0.8);
-                transform: translateX(8px);
-            }
-            .issue-num {
-                width: 36px;
-                height: 36px;
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: 800;
-                font-size: 0.9rem;
-                flex-shrink: 0;
-            }
-            .issue-text {
-                font-size: 0.95rem;
-                color: #cbd5e1;
-                line-height: 1.6;
-                text-align: start;
-            }
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
 
-            /* ===== FOOTER ===== */
-            footer {
-                position: relative;
-                z-index: 1;
-                background: #030712;
-                color: #475569;
-                padding: 80px 0 40px;
-            }
-            footer::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: var(--main-gradient);
-            }
-            .footer-brand {
-                font-size: 1.2rem;
-                font-weight: 900;
-                background: var(--main-gradient);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                margin-bottom: 10px;
-            }
-            .footer-link {
-                color: #334155;
-                text-decoration: none;
-                font-size: 0.88rem;
-                transition: 0.25s;
-                display: block;
-                margin-bottom: 8px;
-            }
-            .footer-link:hover {
-                color: #64748b;
-                padding-left: 6px;
-            }
-
-            /* ===== MODERN FOOTER ===== */
+            /* Footer */
             .modern-footer {
-                position: relative;
-                z-index: 1;
-                background: rgba(2, 6, 23, 0.5);
-                backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(255, 255, 255, 0.06);
-                padding: 80px 0 40px;
+                background: rgba(44, 34, 24, 0.95);
+                border-top: 3px solid var(--naruto-orange);
+                padding: 60px 0 30px;
+                margin-top: 40px;
             }
             .footer-card {
-                background: rgba(15, 23, 42, 0.4);
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.06);
+                background: var(--scroll-bg);
+                background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
+                border-left: 8px solid var(--wood-dark);
+                border-right: 8px solid var(--wood-dark);
+                border-top: none;
+                border-bottom: none;
                 border-radius: 16px;
-                padding: 20px 22px;
-                height: 100%;
-                transition: all 0.4s;
+                padding: 28px 22px;
+                position: relative;
+                overflow: visible;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
+                transition: all 0.3s ease;
+                z-index: 0;
             }
             .footer-card:hover {
-                background: rgba(15, 23, 42, 0.6);
-                border-color: rgba(6, 182, 212, 0.15);
-                transform: translateY(-4px);
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
             }
-            .footer-card-icon {
-                width: 40px;
-                height: 40px;
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.1rem;
-                margin-bottom: 14px;
+            .footer-card::before, .footer-card::after {
+                content: '';
+                position: absolute;
+                left: -4px; right: -4px;
+                height: 18px;
+                z-index: 3;
+                border-radius: 9px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
+                background:
+                    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
+                    linear-gradient(to bottom,
+                        #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
+                    );
             }
-            .footer-card-title {
-                font-size: 0.95rem;
-                font-weight: 800;
-                color: var(--text);
-                margin-bottom: 10px;
+            .footer-card::before { top: -9px; }
+            .footer-card::after  { bottom: -9px; }
+            .footer-card .scroll-stamp {
+                position: absolute;
+                top: 10px; right: 14px;
+                font-size: 1.4rem;
+                z-index: 3;
+                opacity: 0.5;
+                transform: rotate(-15deg);
+                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+                pointer-events: none;
             }
-            .footer-social {
-                display: flex;
-                gap: 12px;
-                margin-top: 20px;
-            }
-            .footer-social a {
-                width: 44px;
-                height: 44px;
-                border-radius: 12px;
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.08);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.2rem;
-                transition: all 0.3s;
-                text-decoration: none;
-            }
-            .footer-social a:hover {
-                transform: translateY(-4px) scale(1.1);
-            }
-            .footer-social a.whatsapp { color: #25D366; }
-            .footer-social a.whatsapp:hover { background: rgba(37, 211, 102, 0.15); border-color: rgba(37, 211, 102, 0.3); }
-            .footer-social a.email { color: #60a5fa; }
-            .footer-social a.email:hover { background: rgba(96, 165, 250, 0.15); border-color: rgba(96, 165, 250, 0.3); }
-            .footer-divider {
-                height: 1px;
-                background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), transparent);
-                margin: 40px 0 24px;
-            }
-            .footer-bottom {
-                text-align: center;
-            }
+
             .footer-logo {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
                 font-weight: 900;
-                background: var(--main-gradient);
+                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
-                margin-bottom: 12px;
             }
             .footer-copyright {
                 font-size: 0.85rem;
-                color: #475569;
+                color: #c4b08a;
+                letter-spacing: 0.03em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 6px;
             }
-            .footer-copyright span {
-                color: #22d3ee;
-                font-weight: 600;
+            .footer-copyright .copy-icon {
+                color: var(--naruto-orange);
+                font-size: 0.9rem;
+            }
+            .footer-copyright .dev-by {
+                color: #a09070;
+                font-weight: 400;
+            }
+            .footer-copyright .dev-name {
+                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 800;
+                letter-spacing: 0.05em;
+            }
+            .footer-copyright .pipe {
+                color: rgba(255,140,0,0.3);
+                font-weight: 300;
+            }
+
+            /* Section styles */
+            .section-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(46, 90, 43, 0.8);
+                border: 1px solid var(--naruto-orange);
+                border-radius: 50px;
+                padding: 5px 14px;
+                font-size: 0.7rem;
+                font-weight: 700;
+                color: var(--naruto-orange);
+                letter-spacing: 0.05em;
+                margin-bottom: 15px;
+            }
+            .section-title {
+                font-size: clamp(1.4rem, 3vw, 2rem);
+                font-weight: 900;
+                color: var(--text-light);
+                text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+                margin-bottom: 10px;
+            }
+            .section-sub {
+                color: #e8d5b7;
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+            .cursor-pointer {
+                cursor: pointer;
+            }
+
+            @media (max-width: 768px) {
+                .hero-section { padding: 100px 0 60px; }
+                .team-card-modern { width: 280px; }
+                .stats-bar { margin-top: 20px; }
             }
         </style>
-            <link rel="stylesheet" href="claymorphism.css">
-</head>
-    <body class="page-home">
-        <!-- Navbar -->
+    </head>
+    <body>
+        <!-- Navigation Bar -->
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="index.html"><i class="bi bi-activity me-2"></i>Health Screening</a>
-                <button
-                    class="navbar-toggler border-0"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav">
+                <a class="navbar-brand" href="index.html">
+                    <span class="konoha-logo">🍃</span>
+                    Health Screening
+                </a>
+                <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
-                        <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
-                        <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
-                        <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                        <li class="nav-item"><a class="nav-link active sharingan-hover" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
+                        <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link sharingan-hover" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
+                        <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
+                        <li class="nav-item"><a class="nav-link sharingan-hover" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
+                        <li class="nav-item"><a class="nav-link sharingan-hover" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <!-- Hero -->
+        <!-- Hero Section -->
         <section class="hero-section">
-            <div class="blob blob-1"></div>
-            <div class="blob blob-2"></div>
-            <div class="blob blob-3"></div>
-            <div class="container position-relative" style="z-index: 1">
+            <div class="container position-relative" style="z-index: 2">
                 <div class="row align-items-center g-5">
-                    <!-- Left -->
                     <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1100">
-                        <div class="hero-eyebrow"><i class="bi bi-stars"></i> A Smart Health Initiative</div>
-                        <h1 class="hero-title">The <span class="text-gradient">Health Screening</span> Project</h1>
-                        <h2 id="welcomeMessage" class="hero-sub mb-4" style="font-weight: 700; font-size: 1.3rem;"></h2>
+                        <div class="hero-eyebrow">
+                            <i class="bi bi-shield-shaded"></i> Hidden Leaf Village - Health Mission
+                        </div>
+                        <h1 class="hero-title">
+                            The <span class="text-gradient-naruto">Health Screening</span> Project
+                        </h1>
+                        <h2 id="welcomeMessage" class="hero-sub mb-3" style="font-weight: 700; font-size: 1.1rem;"></h2>
                         <p class="hero-sub">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM
-                            community.
+                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
                         </p>
                         <div class="d-flex gap-3 flex-wrap">
-                            <a href="screening.html" class="btn-primary-glow"
-                                >Explore Results <i class="bi bi-arrow-right"></i
-                            ></a>
-                            <a href="reports.html" class="btn-outline-glow"
-                                >Download Report <i class="bi bi-download"></i
-                            ></a>
+                            <a href="screening.html" class="btn-rasengan">
+                                Explore Results <i class="bi bi-arrow-right"></i>
+                            </a>
+                            <a href="reports.html" class="btn-konoha">
+                                Download Report <i class="bi bi-download"></i>
+                            </a>
                         </div>
                     </div>
 
-                    <!-- Right – Team Slider -->
                     <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1100" data-aos-delay="100">
                         <div class="team-slider-wrapper" id="team-slider"></div>
                         <div class="d-flex justify-content-center gap-3 mt-3">
-                            <button class="btn-nav-modern" id="prev-btn"><i class="bi bi-arrow-left"></i></button>
-                            <button class="btn-nav-modern" id="next-btn"><i class="bi bi-arrow-right"></i></button>
+                            <button class="btn-nav-modern" id="prev-btn"><i class="bi bi-chevron-left"></i></button>
+                            <button class="btn-nav-modern" id="next-btn"><i class="bi bi-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+
+
         <!-- SDG Section -->
-        <section class="sdg-section">
-            <div class="container" style="position: relative; z-index: 1">
+        <section class="sdg-section mt-5 pt-4">
+            <div class="container" style="position: relative; z-index: 2">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-4" data-aos="fade-right" data-aos-duration="900">
-                        <div class="section-eyebrow"><i class="bi bi-globe-americas"></i> Global Goals</div>
-                        <h2 class="section-title">Supporting the <span class="text-gradient">SDGs</span></h2>
+                        <div class="section-eyebrow"><i class="bi bi-globe-asia-australia"></i> Global Goals</div>
+                        <h2 class="section-title">Supporting the <span class="text-gradient-naruto">SDGs</span></h2>
                         <p class="section-sub">
-                            Our project is aligned with the United Nations Sustainable Development Goals, driving
-                            meaningful impact.
+                            Our project aligns with the UN Sustainable Development Goals, driving meaningful impact.
                         </p>
                     </div>
                     <div class="col-lg-8">
                         <div class="row g-3">
                             <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                                 <div class="sdg-card">
+                                    <span class="scroll-stamp">🍃</span>
                                     <div class="sdg-icon" style="background: #4c9f38">
                                         <i class="bi bi-heart-pulse-fill"></i>
                                     </div>
                                     <div>
-                                        <div class="sdg-num">Goal 3</div>
+                                        <div class="sdg-ninja-num" style="font-size:0.65rem; color:#5a4a3a; font-weight:600;">Goal 3</div>
                                         <div class="sdg-name">Good Health & Well-Being</div>
-                                        <div class="sdg-desc">
-                                            Promoting preventive healthcare and early detection programs.
-                                        </div>
+                                        <div class="sdg-desc">Promoting preventive healthcare and early detection programs.</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4" data-aos="fade-up" data-aos-delay="180">
                                 <div class="sdg-card">
+                                    <span class="scroll-stamp">🍃</span>
                                     <div class="sdg-icon" style="background: #a21942">
                                         <i class="bi bi-briefcase-fill"></i>
                                     </div>
                                     <div>
-                                        <div class="sdg-num">Goal 8</div>
-                                        <div class="sdg-name">Decent Work & Growth</div>
-                                        <div class="sdg-desc">
-                                            Improving worker health to enhance productivity and quality of life.
-                                        </div>
+                                        <div class="sdg-ninja-num" style="font-size:0.65rem; color:#5a4a3a; font-weight:600;">Goal 8</div>
+                                        <div class="sdg-name">Decent Work & Economic Growth</div>
+                                        <div class="sdg-desc">Improving worker health to enhance productivity and quality of life.</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4" data-aos="fade-up" data-aos-delay="260">
                                 <div class="sdg-card">
-                                    <div class="sdg-icon" style="background: #00558a"><i class="bi bi-bank2"></i></div>
+                                    <span class="scroll-stamp">🍃</span>
+                                    <div class="sdg-icon" style="background: #00558a">
+                                        <i class="bi bi-bank2"></i>
+                                    </div>
                                     <div>
-                                        <div class="sdg-num">Goal 16</div>
+                                        <div class="sdg-ninja-num" style="font-size:0.65rem; color:#5a4a3a; font-weight:600;">Goal 16</div>
                                         <div class="sdg-name">Peace, Justice & Institutions</div>
-                                        <div class="sdg-desc">
-                                            Building accountable health systems within the community.
-                                        </div>
+                                        <div class="sdg-desc">Building accountable health systems within the community.</div>
                                     </div>
                                 </div>
                             </div>
@@ -992,10 +879,10 @@
         </section>
 
         <!-- Mission / Vision / Goals -->
-        <section class="mvg-section">
-            <div class="container" style="position: relative; z-index: 1">
+        <section class="mvg-section py-5">
+            <div class="container" style="position: relative; z-index: 2">
                 <div class="text-center mb-5" data-aos="fade-down">
-                    <div class="section-eyebrow" style="margin: 0 auto 16px">
+                    <div class="section-eyebrow" style="margin: 0 auto 15px">
                         <i class="bi bi-compass"></i> Our Foundation
                     </div>
                     <h2 class="section-title">What Drives Us</h2>
@@ -1003,45 +890,40 @@
                 <div class="row g-4">
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
                         <div class="mvg-card">
-                            <div class="mvg-icon" style="animation-delay: 0s"><i class="bi bi-bullseye"></i></div>
+                            <span class="scroll-stamp">🍃</span>
+                            <div class="mvg-icon"><i class="bi bi-bullseye"></i></div>
                             <h3 class="mvg-title">Our Mission</h3>
-                            <p class="mvg-text">
-                                To promote a culture of preventive health within the SEKEM community through early
-                                detection and effective intervention.
-                            </p>
+                            <p class="mvg-text">To promote a culture of preventive health within the SEKEM community through early detection and effective intervention.</p>
                         </div>
                     </div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
                         <div class="mvg-card">
-                            <div class="mvg-icon" style="animation-delay: 0.5s"><i class="bi bi-eye-fill"></i></div>
+                            <span class="scroll-stamp">🍃</span>
+                            <div class="mvg-icon"><i class="bi bi-eye-fill"></i></div>
                             <h3 class="mvg-title">Our Vision</h3>
-                            <p class="mvg-text">
-                                A healthy, productive SEKEM community, free from chronic diseases and postural problems.
-                            </p>
+                            <p class="mvg-text">A healthy, productive SEKEM community, free from chronic diseases and postural problems.</p>
                         </div>
                     </div>
                     <div class="col-md-4" data-aos="fade-up" data-aos-delay="240">
                         <div class="mvg-card">
-                            <div class="mvg-icon" style="animation-delay: 1s"><i class="bi bi-trophy-fill"></i></div>
+                            <span class="scroll-stamp">🍃</span>
+                            <div class="mvg-icon"><i class="bi bi-trophy-fill"></i></div>
                             <h3 class="mvg-title">Our Goals</h3>
-                            <p class="mvg-text">
-                                Building a comprehensive health database, reducing incidence rates, and raising health
-                                awareness.
-                            </p>
+                            <p class="mvg-text">Building a comprehensive health database, reducing incidence rates, and raising health awareness.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Errors Card -->
-        <section class="errors-section">
-            <div class="container" style="position: relative; z-index: 1">
+        <!-- Known Issues Section -->
+        <section class="errors-section py-4">
+            <div class="container" style="position: relative; z-index: 2">
                 <div class="text-center mb-5" data-aos="fade-down">
-                    <div class="section-eyebrow" style="margin: 0 auto 16px; background: rgba(220, 38, 38, 0.08); border-color: rgba(220, 38, 38, 0.2); color: #f87171;">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Debugging
+                    <div class="section-eyebrow" style="margin: 0 auto 15px; background: rgba(139, 69, 19, 0.8);">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Mission Reports
                     </div>
-                    <h2 class="section-title">Known <span class="text-gradient">Issues</span></h2>
+                    <h2 class="section-title">Known <span class="text-gradient-naruto">Issues</span></h2>
                 </div>
                 <div id="issuesContainer"></div>
             </div>
@@ -1050,23 +932,18 @@
         <!-- Issues Modal -->
         <div class="modal fade" id="issuesModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content" style="background: linear-gradient(145deg, #0f172a, #1e293b); border: 1px solid rgba(255,255,255,0.08); border-radius: 28px; overflow: hidden;">
-                    <div class="modal-header border-0 pt-4 px-4" id="modalHeader" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));">
+                <div class="modal-content" style="background: #FFF8E7; border: 3px solid var(--wood-dark); border-radius: 28px;">
+                    <div class="modal-header border-0 pt-4 px-4" id="modalHeader" style="background: var(--wood-dark); border-radius: 25px 25px 0 0;">
                         <div class="d-flex align-items-center gap-4 w-100">
-                            <div class="modal-icon" id="modalIcon" style="width: 70px; height: 70px; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                            <div class="modal-icon" id="modalIcon" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: white;">
                                 <i class="bi bi-calendar3"></i>
                             </div>
                             <div class="flex-grow-1">
-                                <div class="d-flex align-items-center gap-3 mb-1">
-                                    <h3 class="modal-title mb-0" id="modalYear"></h3>
-                                    <span class="badge rounded-pill px-3 py-2" id="modalBadge" style="font-size: 0.8rem; font-weight: 700;"></span>
-                                </div>
-                                <p class="mb-0" style="font-size: 0.9rem; color: #94a3b8;">
-                                    <i class="bi bi-bug me-1" style="color: #fff;"></i> All issues recorded for this year
-                                </p>
+                                <h3 class="modal-title mb-1" id="modalYear" style="color: var(--naruto-orange); font-weight: 900;"></h3>
+                                <p class="mb-0" style="font-size: 0.8rem; color: #e8d5b7;">All issues recorded for this year</p>
                             </div>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.5;"></button>
                     </div>
                     <div class="modal-body pt-4 px-4 pb-4">
                         <div class="row g-3" id="modalIssues"></div>
@@ -1079,43 +956,40 @@
         <footer class="modern-footer">
             <div class="container">
                 <div class="row g-4 justify-content-center">
-                    <div class="col-lg-5" data-aos="fade-up" data-aos-delay="0">
+                    <div class="col-lg-5" data-aos="fade-up">
                         <div class="footer-card">
-                            <div class="footer-card-icon" style="background: rgba(6, 182, 212, 0.1); color: #22d3ee;">
-                                <i class="bi bi-activity"></i>
+                            <span class="scroll-stamp">🍃</span>
+                            <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                                <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
                             </div>
-                            <div class="footer-card-title">Health Screening</div>
-                            <p style="font-size: 0.88rem; color: #64748b; line-height: 1.7; margin-bottom: 0;">
+                            <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
+                            <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
                                 A scientific preventive approach for a sustainable quality of life within the SEKEM community.
                             </p>
                         </div>
                     </div>
                     <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
                         <div class="footer-card">
-                            <div class="footer-card-icon" style="background: rgba(168, 85, 247, 0.1); color: #c084fc;">
-                                <i class="bi bi-headset"></i>
+                            <span class="scroll-stamp">🍃</span>
+                            <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                                <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
                             </div>
-                            <div class="footer-card-title">Get In Touch</div>
-                            <p style="font-size: 0.88rem; color: #64748b; line-height: 1.7; margin-bottom: 16px;">
-                                Have questions? Reach out directly through these channels.
-                            </p>
-                            <div class="d-flex flex-column gap-3">
-                                <a href="https://wa.me/201032318537" target="_blank" class="d-flex align-items-center gap-3" style="color: #25D366; text-decoration: none; font-weight: 600;">
-                                    <i class="bi bi-whatsapp" style="font-size: 1.3rem;"></i> 01032318537
+                            <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
+                            <div class="d-flex flex-column gap-2 mt-2">
+                                <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
+                                    <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
                                 </a>
-                                <a href="mailto:mamdouhabdalaziz952@gmail.com" class="d-flex align-items-center gap-3" style="color: #60a5fa; text-decoration: none; font-weight: 600;">
-                                    <i class="bi bi-envelope-fill" style="font-size: 1.3rem;"></i> mamdouhabdalaziz952@gmail.com
+                                <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
+                                    <i class="bi bi-envelope-fill me-2"></i> Email
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="footer-divider"></div>
-                <div class="footer-bottom">
-                    <div class="footer-logo"><i class="bi bi-activity me-2"></i>Health Screening</div>
-                    <p class="footer-copyright">
-                        &copy; 2026 Health Screening Project. All rights reserved. | Developed by <span>Dr. Mamdouh Abd Elaziz</span>
-                    </p>
+                <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
+                <div class="footer-bottom text-center">
+                    <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
+                    <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
                 </div>
             </div>
         </footer>
@@ -1125,24 +999,74 @@
         <script>
             AOS.init({ duration: 950, once: true, offset: 40 });
 
+            // Ninja-style greeting
             function getGreeting(hour) {
-                if (hour >= 5 && hour < 12) return { text: 'Good Morning', icon: 'bi bi-sunrise' };
-                if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', icon: 'bi bi-sun' };
-                if (hour >= 17 && hour < 21) return { text: 'Good Evening', icon: 'bi bi-sunset' };
-                return { text: 'Good Night', icon: 'bi bi-moon-stars' };
+                if (hour >= 5 && hour < 12) return { text: 'Good Morning', icon: '☀️' };
+                if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', icon: '🌤️' };
+                if (hour >= 17 && hour < 21) return { text: 'Good Evening', icon: '🌙' };
+                return { text: 'Good Night', icon: '🌟' };
             }
 
             document.addEventListener("DOMContentLoaded", function () {
-                const userName = sessionStorage.getItem('userName') || 'User';
+                const userName = sessionStorage.getItem('userName') || 'Ninja';
                 const hour = new Date().getHours();
                 const greeting = getGreeting(hour);
-                
                 const welcomeEl = document.getElementById('welcomeMessage');
                 if (welcomeEl) {
-                    welcomeEl.innerHTML = `<i class="${greeting.icon} me-2 text-info"></i>${greeting.text}, <span class="text-gradient">${userName}</span>!`;
+                    welcomeEl.innerHTML = `${greeting.icon} ${greeting.text}, <span class="text-gradient-naruto">${userName}</span>!`;
                 }
+
+
             });
         </script>
+
+        <!-- Team Data -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const teamData = [
+                    { name: "Dr. Mamdouh Abd Elaziz", role: "Physiotherapist / Project Coordinator", bio: "Expert in clinical practice, research, and digital health solutions.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/amigo.png?raw=true" },
+                    { name: "Dr. Gehan Fathy Attia", role: "Center Director", bio: "Professor of Pharmaceutics, Vice Dean for Community Service.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true" },
+                    { name: "Dr. Hind Al-sharif", role: "Project Manager", bio: "Physiotherapy Consultant, leading the project's strategic vision.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/h.png?raw=true" },
+                    { name: "Dr. Sham Ammar Kalaji", role: "Project Coordinator", bio: "Pharmacy graduate, Project Coordinator at Heliopolis University.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/s.png?raw=true" },
+                    { name: "Dr. Mariam Tamer", role: "Physiotherapist", bio: "Responsible for physical rehabilitation and posture correction programs.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/m.png?raw=true" }
+                ];
+
+                const wrapper = document.getElementById("team-slider");
+                teamData.forEach((m) => {
+                    const card = document.createElement("div");
+                    card.className = "team-card-modern";
+                    card.innerHTML = `
+                        <span class="scroll-stamp">🍃</span>
+                        <div class="team-img-container">
+                            <img src="${m.img}" class="team-img-modern" alt="${m.name}" loading="lazy">
+                        </div>
+                        <div class="team-info">
+                            <div class="team-role">${m.role}</div>
+                            <div class="team-name">${m.name}</div>
+                            <div class="team-bio">${m.bio}</div>
+                        </div>`;
+                    wrapper.appendChild(card);
+                });
+
+                let active = 0;
+                const cards = wrapper.querySelectorAll(".team-card-modern");
+                function update() {
+                    cards.forEach((c, i) => {
+                        c.className = "team-card-modern";
+                        if (i === active) c.classList.add("active");
+                        else if (i === (active + 1) % teamData.length) c.classList.add("next");
+                    });
+                }
+                update();
+                document.getElementById("next-btn").addEventListener("click", () => { active = (active + 1) % teamData.length; update(); });
+                document.getElementById("prev-btn").addEventListener("click", () => { active = (active - 1 + teamData.length) % teamData.length; update(); });
+                let timer = setInterval(() => { active = (active + 1) % teamData.length; update(); }, 3500);
+                wrapper.addEventListener("mouseenter", () => clearInterval(timer));
+                wrapper.addEventListener("mouseleave", () => { timer = setInterval(() => { active = (active + 1) % teamData.length; update(); }, 3500); });
+            });
+        </script>
+
+        <!-- Issues Data - Same functionality preserved -->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=220896824&single=true&output=csv", {
@@ -1151,60 +1075,32 @@
                     complete: function(results) {
                         const container = document.getElementById("issuesContainer");
                         const data = results.data.filter(row => row.Years || row.Issues);
-                        
                         if (data.length === 0) {
-                            container.innerHTML = `
-                                <div class="col-12 text-center" data-aos="fade-up">
-                                    <div class="footer-card" style="max-width: 400px; margin: 0 auto;">
-                                        <div class="footer-card-icon" style="background: rgba(71, 85, 105, 0.1); color: #64748b; margin: 0 auto 16px;">
-                                            <i class="bi bi-check-circle"></i>
-                                        </div>
-                                        <div class="footer-card-title" style="color: #64748b;">No Issues Found</div>
-                                        <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0;">
-                                            Great! There are no reported issues at the moment.
-                                        </p>
-                                    </div>
-                                </div>`;
+                            container.innerHTML = `<div class="text-center"><div class="scroll-card" style="max-width:420px;margin:0 auto;text-align:center;padding:50px 36px;"><span class="scroll-stamp">🍃</span><div style="font-size:1.4rem;margin-bottom:12px;">🍃</div><h5 style="font-weight:900;color:#3d2b1f;margin-bottom:4px;">All Clear!</h5><p style="font-size:0.9rem;color:#5a4a3a;margin:0;">No issues reported &mdash; Mission successful!</p></div></div>`;
                             return;
                         }
-
                         const groupedByYear = {};
                         data.forEach(row => {
                             const year = row.Years || 'Unknown';
                             if (!groupedByYear[year]) groupedByYear[year] = [];
                             groupedByYear[year].push(row.Issues || '');
                         });
-
                         let html = '<div class="row g-4 justify-content-center">';
                         Object.keys(groupedByYear).sort().reverse().forEach((year, i) => {
                             const count = groupedByYear[year].length;
-                            const colors = [
-                                { bg: 'rgba(239, 68, 68, 0.08)', border: 'rgba(239, 68, 68, 0.2)', icon: '#f87171', text: '#ef4444' },
-                                { bg: 'rgba(245, 158, 11, 0.08)', border: 'rgba(245, 158, 11, 0.2)', icon: '#fbbf24', text: '#f59e0b' },
-                                { bg: 'rgba(34, 197, 94, 0.08)', border: 'rgba(34, 197, 94, 0.2)', icon: '#4ade80', text: '#22c55e' },
-                                { bg: 'rgba(59, 130, 246, 0.08)', border: 'rgba(59, 130, 246, 0.2)', icon: '#60a5fa', text: '#3b82f6' },
-                                { bg: 'rgba(168, 85, 247, 0.08)', border: 'rgba(168, 85, 247, 0.2)', icon: '#c084fc', text: '#a855f7' },
-                                { bg: 'rgba(236, 72, 153, 0.08)', border: 'rgba(236, 72, 153, 0.2)', icon: '#f472b6', text: '#ec4899' }
-                            ];
+                            const colors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
                             const c = colors[i % colors.length];
                             html += `
                                 <div class="col-md-4 col-lg-3">
-                                    <div class="year-card cursor-pointer" style="background: ${c.bg}; border-color: ${c.border}; animation: fadeInUp 0.5s ease-out ${i * 0.1}s both;" onclick="showIssuesModal('${year}', ${JSON.stringify(groupedByYear[year]).replace(/"/g, '&quot;')}, '${c.icon}')">
-                                        <div class="year-icon" style="background: ${c.border}; color: ${c.icon};">
-                                            <i class="bi bi-calendar3"></i>
-                                        </div>
-                                        <h3 class="year-title" style="color: ${c.text};">${year}</h3>
-                                        <div class="year-count" style="color: ${c.icon};">
-                                            ${count} <span>Issue${count > 1 ? 's' : ''}</span>
-                                        </div>
-                                        <div class="year-arrow" style="color: ${c.icon};">
-                                            <i class="bi bi-chevron-double-down"></i>
-                                        </div>
+                                    <div class="year-card cursor-pointer" onclick="showIssuesModal('${year}', ${JSON.stringify(groupedByYear[year]).replace(/"/g, '&quot;')}, '${c}')">
+                                        <span class="scroll-stamp">🍃</span>
+                                        <div class="year-icon" style="background: ${c}20; color: ${c};"><i class="bi bi-calendar3"></i></div>
+                                        <h3 class="year-title" style="color: ${c};">${year}</h3>
+                                        <div class="year-count" style="color: ${c};">${count} <span>issue${count > 1 ? 's' : ''}</span></div>
                                     </div>
                                 </div>`;
                         });
                         html += '</div>';
-                        
                         container.innerHTML = html;
                         AOS.refresh();
                     }
@@ -1215,119 +1111,16 @@
                 const modal = new bootstrap.Modal(document.getElementById('issuesModal'));
                 document.getElementById('modalYear').textContent = year;
                 document.getElementById('modalYear').style.color = color;
-                
-                const icon = document.getElementById('modalIcon');
-                icon.style.background = color + '20';
-                icon.style.color = color;
-                
-                const badge = document.getElementById('modalBadge');
-                badge.textContent = issues.length + ' Issue' + (issues.length > 1 ? 's' : '');
-                badge.style.background = color + '20';
-                badge.style.color = color;
-                
+                document.getElementById('modalIcon').style.background = color + '20';
+                document.getElementById('modalIcon').style.color = color;
                 let issuesHtml = '';
                 issues.forEach((issue, i) => {
-                    issuesHtml += `
-                        <div class="col-12" data-aos="fade-up" data-aos-delay="${i * 60}">
-                            <div class="issue-card" style="border-left: 3px solid ${color};">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="issue-num" style="background: ${color}20; color: ${color};">${i + 1}</div>
-                                    <p class="issue-text mb-0">${issue}</p>
-                                </div>
-                            </div>
-                        </div>`;
+                    issuesHtml += `<div class="col-12"><div class="issue-card p-3" style="background:#FFF8E7; border-right:4px solid ${color}; border-radius:12px; margin-bottom:10px;"><div class="d-flex gap-2"><span style="background:${color}20; padding:0 10px; border-radius:20px; font-weight:bold;">#${i+1}</span><p class="mb-0">${issue}</p></div></div></div>`;
                 });
                 document.getElementById('modalIssues').innerHTML = issuesHtml;
                 modal.show();
-                AOS.refresh();
             }
         </script>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const teamData = [
-                    {
-                        name: "Dr. Mamdouh Abd El-aziz",
-                        role: "Physiotherapist / Project Coordinator",
-                        bio: "Physiotherapist experienced in clinical practice, research, and digital health solutions, with expertise in health screening and healthcare app development.",
-                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/amigo.png?raw=true"
-                    },
-                    {
-                        name: "Dr. Gehan Fathy Attia",
-                        role: "Center Director",
-                        bio: "Professor of Pharmaceutics, Vice Dean for Community Service, and Director of the Integrative Health Center at Heliopolis University.",
-                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true"
-                    },
-                    {
-                        name: "Dr. Hind Al-sharif",
-                        role: "Project Manager",
-                        bio: "Physiotherapy Consultant, leading the project's strategic vision.",
-                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/h.png?raw=true"
-                    },
-                    {
-                        name: "Dr. Sham Ammar Kalaji",
-                        role: "Project Coordinator",
-                        bio: "Pharmacy graduate pursuing a Master's in Pharmacoeconomics and working as a Project Coordinator at Heliopolis University.",
-                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/s.png?raw=true"
-                    },
-                    {
-                        name: "Dr. Mariam Tamer",
-                        role: "Physiotherapist",
-                        bio: "Responsible for physical rehabilitation and posture correction programs.",
-                        img: "https://github.com/Amigo-PT/Health-Screening/blob/main/m.png?raw=true"
-                    }
-                ];
-
-                const wrapper = document.getElementById("team-slider");
-
-                teamData.forEach((m) => {
-                    const card = document.createElement("div");
-                    card.className = "team-card-modern";
-                    card.innerHTML = `
-                    <div class="team-img-container">
-                        <img src="${m.img}" class="team-img-modern" alt="${m.name}" loading="lazy">
-                    </div>
-                    <div class="team-info">
-                        <div class="team-role">${m.role}</div>
-                        <div class="team-name">${m.name}</div>
-                        <div class="team-bio">${m.bio}</div>
-                    </div>`;
-                    wrapper.appendChild(card);
-                });
-
-                let active = 0;
-                const cards = wrapper.querySelectorAll(".team-card-modern");
-
-                function update() {
-                    cards.forEach((c, i) => {
-                        c.className = "team-card-modern";
-                        if (i === active) c.classList.add("active");
-                        else if (i === (active + 1) % teamData.length) c.classList.add("next");
-                    });
-                }
-                update();
-
-                const next = () => {
-                    active = (active + 1) % teamData.length;
-                    update();
-                };
-                const prev = () => {
-                    active = (active - 1 + teamData.length) % teamData.length;
-                    update();
-                };
-
-                document.getElementById("next-btn").addEventListener("click", next);
-                document.getElementById("prev-btn").addEventListener("click", prev);
-
-                let timer = setInterval(next, 3200);
-                wrapper.addEventListener("mouseenter", () => clearInterval(timer));
-                wrapper.addEventListener("mouseleave", () => {
-                    timer = setInterval(next, 3200);
-                });
-            });
-        </script>
         <script src="sound-effects.js"></script>
-</body>
+    </body>
 </html>
-
-
-
