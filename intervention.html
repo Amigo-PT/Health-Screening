@@ -25,7 +25,7 @@
                             const row = results.data[0];
                             const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
                             if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.href = 'maintenance.html';
+                                window.location.reload();
                             } else {
                                 // If not maintenance, check login
                                 if (sessionStorage.getItem('isLoggedIn') !== 'true') {
@@ -786,7 +786,7 @@
 
         document.addEventListener('DOMContentLoaded', fetchData);
     </script>
-    <script src="sound-effects.js"></script>
+
 </body>
 </html>
 

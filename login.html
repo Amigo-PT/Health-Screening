@@ -15,7 +15,7 @@
             var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv";
             function checkAndRedirect() {
                 var apiUrl = localStorage.getItem('healthScreening_API');
-                function handleResult(m) { if (m) window.location.replace('maintenance.html'); }
+                function handleResult(m) { if (m) window.location.reload(); }
                 function csvFallback() {
                     Papa.parse(CSV_URL, { download:true, header:true,
                         complete: function(r) { var s=''; if(r.data&&r.data.length>0){var row=r.data[0];s=row.Status||row.status||row.Maintenance||row.maintenance||Object.values(row)[0]||'';} handleResult(s.toString().toUpperCase()==='ON'||s.toString().toUpperCase()==='TRUE'); },
@@ -711,7 +711,7 @@
             });
         });
     </script>
-    <script src="sound-effects.js"></script>
+
 </body>
 </html>
 

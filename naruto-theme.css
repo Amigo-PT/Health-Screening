@@ -1,0 +1,611 @@
+/* ============================================================
+   KONOHA THEME - NARUTO STYLESHEET
+   Hidden Leaf Village UI for Health Screening Project
+   ============================================================ */
+
+/* ---------- KONOHA COLOR PALETTE ---------- */
+:root {
+    --konoha-orange: #FF6B00;
+    --konoha-orange-dark: #CC5500;
+    --konoha-orange-glow: #FF8C00;
+    --sasuke-blue: #0D1B3E;
+    --sasuke-blue-light: #1A3A6B;
+    --sasuke-blue-bright: #0044FF;
+    --leaf-green: #2E5A2B;
+    --leaf-green-light: #4A8C3F;
+    --leaf-green-bright: #6BBF59;
+    --scroll-paper: #F5E6C8;
+    --scroll-paper-light: #FFF8E7;
+    --scroll-paper-dark: #E8D5B0;
+    --wood-dark: #5C4033;
+    --wood-mid: #7A5A4A;
+    --wood-light: #A08060;
+    --wood-pale: #C4A882;
+    --ink-black: #1A1A1A;
+    --text-dark: #2C1810;
+    --text-light: #F5F0E8;
+    --shadow-color: rgba(30, 15, 10, 0.45);
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --clay-bg: #F4F1E1;
+    --scroll-bg: #FFF8E7;
+    --naruto-orange: #FF8C00;
+    --naruto-orange-dark: #E67600;
+    --leaf-green: #2E5A2B;
+    --leaf-green-light: #4A7C3F;
+    --wood-dark: #5C4033;
+    --wood-light: #8B6914;
+    --text-dark: #2F2E2E;
+    --text-light: #F5F5DC;
+    --shadow-color: #1a1a2e;
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 32px;
+
+    /* Night Operation Mode */
+    --night-bg: #080C1A;
+    --night-bg2: #0E1428;
+    --night-card: #111827;
+    --night-card2: #1A2235;
+    --night-text: #C8D0E0;
+    --night-text-dim: #8890A8;
+    --night-accent: #00D4FF;
+    --night-border: #2A3550;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ---------- ANIME KEYFRAMES ---------- */
+@keyframes cloudsFloat {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+@keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes leafFall {
+    0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
+    5% { opacity: 0.7; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(720deg) translateX(120px); opacity: 0; }
+}
+@keyframes leafFall2 {
+    0% { transform: translateY(-10vh) rotate(45deg) translateX(0); opacity: 0; }
+    5% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(-540deg) translateX(-80px); opacity: 0; }
+}
+@keyframes dustMote {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-200px) translateX(60px) scale(0.3); opacity: 0; }
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+@keyframes sharinganSpin {
+    0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
+    50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
+    100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
+}
+@keyframes chakraFlow {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+}
+@keyframes rasenganSpin {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes poofIn {
+    0% { transform: scale(0.2); opacity: 0; filter: blur(10px); }
+    50% { transform: scale(1.05); opacity: 1; filter: blur(0); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+@keyframes brushStrokeReveal {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   BODY - KONOHA VILLAGE BACKGROUND
+   ============================================================ */
+body {
+    font-family: 'Poppins', 'Cairo', 'Noto Sans JP', sans-serif;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(255, 180, 80, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(46, 90, 43, 0.12) 0%, transparent 50%),
+        linear-gradient(170deg,
+            #1a3a2a 0%, #2d5a2b 15%, #5a7a4a 30%,
+            #8B7355 50%, #C4A060 65%, #D2A040 75%, #E8C080 85%, #F0D5A0 100%);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    animation: fadeInPage .8s ease-out;
+}
+
+/* Floating clouds */
+body::before {
+    content: "☁️";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    font-size: 120px;
+    white-space: nowrap;
+    color: rgba(255,255,240,0.08);
+    animation: cloudsFloat 40s linear infinite;
+    z-index: 0;
+}
+
+/* ---------- FLOATING LEAVES ---------- */
+.leaf-particle {
+    position: fixed;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    animation: leafFall 12s linear infinite;
+}
+.leaf-particle:nth-child(1) { left: 5%; font-size: 16px; animation-duration: 14s; animation-delay: 0s; }
+.leaf-particle:nth-child(2) { left: 15%; font-size: 22px; animation-duration: 16s; animation-delay: 2s; }
+.leaf-particle:nth-child(3) { left: 25%; font-size: 14px; animation-duration: 12s; animation-delay: 4s; }
+.leaf-particle:nth-child(4) { left: 35%; font-size: 20px; animation-duration: 18s; animation-delay: 1s; }
+.leaf-particle:nth-child(5) { left: 45%; font-size: 18px; animation-duration: 13s; animation-delay: 3s; }
+.leaf-particle:nth-child(6) { left: 55%; font-size: 16px; animation-duration: 15s; animation-delay: 5s; }
+
+/* ---------- CHAKRA SPARK PARTICLES ---------- */
+.chakra-particle {
+    position: fixed;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    animation: dustMote 8s ease-in-out infinite;
+}
+.chakra-particle:nth-child(7) { left: 20%; top: 60%; background: var(--konoha-orange-glow); width: 3px; height: 3px; animation-duration: 7s; animation-delay: 0s; box-shadow: 0 0 6px var(--konoha-orange-glow); }
+.chakra-particle:nth-child(8) { left: 40%; top: 40%; background: var(--sasuke-blue-bright); width: 5px; height: 5px; animation-duration: 9s; animation-delay: 2s; box-shadow: 0 0 8px var(--sasuke-blue-bright); }
+.chakra-particle:nth-child(9) { left: 60%; top: 70%; background: var(--leaf-green-bright); width: 3px; height: 3px; animation-duration: 6s; animation-delay: 4s; box-shadow: 0 0 6px var(--leaf-green-bright); }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+    background: rgba(44, 34, 24, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--naruto-orange);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    padding: 12px 0;
+    z-index: 100;
+}
+.navbar-brand {
+    font-weight: 900;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.konoha-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-weight: 900;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    box-shadow: 0 0 12px rgba(255,140,0,0.3);
+}
+.nav-link {
+    font-weight: 700;
+    color: #e8d5b7 !important;
+    padding: 8px 18px !important;
+    border-radius: 30px;
+    transition: all 0.25s;
+    font-size: 0.85rem;
+    margin: 0 2px;
+}
+.nav-link:hover {
+    background: rgba(255, 140, 0, 0.2);
+    color: var(--naruto-orange) !important;
+    transform: translateY(-2px);
+}
+.nav-link.active {
+    background: rgba(255, 140, 0, 0.3) !important;
+    color: var(--naruto-orange) !important;
+    border: 1px solid var(--naruto-orange) !important;
+    box-shadow: 0 0 10px rgba(255,140,0,0.3);
+}
+.sharingan-hover { transition: all 0.3s ease; }
+.sharingan-hover:hover {
+    animation: sharinganSpin 0.6s ease-in-out;
+    color: var(--naruto-orange) !important;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.page-hero { position: relative; z-index: 1; padding: 150px 0 70px; text-align: center; }
+.hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(46, 90, 43, 0.8);
+    border: 1px solid var(--naruto-orange);
+    border-radius: 50px;
+    padding: 6px 20px;
+    font-size: 0.75rem; font-weight: 800;
+    color: var(--naruto-orange);
+    letter-spacing: 0.05em;
+    margin-bottom: 24px;
+    backdrop-filter: blur(4px);
+}
+.page-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: var(--text-light);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+.title-gradient {
+    background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: chakraFlow 3s ease infinite;
+}
+.page-sub, .page-subtitle {
+    font-size: 1rem;
+    color: #F5F5DC;
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto 40px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   SECTION ELEMENTS
+   ============================================================ */
+.section-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(46, 90, 43, 0.8);
+    border: 1px solid var(--naruto-orange);
+    border-radius: 50px; padding: 5px 14px;
+    font-size: 0.7rem; font-weight: 700;
+    color: var(--naruto-orange);
+    letter-spacing: 0.05em; margin-bottom: 15px;
+}
+.section-title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 900;
+    color: var(--text-light);
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
+.section-sub {
+    color: #e8d5b7;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+/* ============================================================
+   SCROLL CARDS & WOODEN ROLLERS
+   ============================================================ */
+.scroll-card, .stat-card, .intervention-card, .tl-card,
+.summary-card, .sel-card, .footer-card, .filter-inner,
+.outcome-box, .sdg-card, .mvg-card, .year-card, .team-card-modern,
+.survey-card, .activity-card {
+    position: relative;
+    overflow: visible;
+    z-index: 0;
+}
+
+/* Shared wood roller ends for all card types */
+.scroll-card::before, .scroll-card::after,
+.stat-card::before, .stat-card::after,
+.intervention-card::before, .intervention-card::after,
+.tl-card::before, .tl-card::after,
+.summary-card::before, .summary-card::after,
+.sel-card::before, .sel-card::after,
+.footer-card::before, .footer-card::after,
+.filter-inner::before, .filter-inner::after,
+.outcome-box::before, .outcome-box::after,
+.sdg-card::before, .sdg-card::after,
+.mvg-card::before, .mvg-card::after,
+.year-card::before, .year-card::after,
+.team-card-modern::before, .team-card-modern::after,
+.survey-card::before, .survey-card::after,
+.activity-card::before, .activity-card::after {
+    content: '';
+    position: absolute;
+    left: -4px; right: -4px;
+    height: 18px;
+    z-index: 3;
+    border-radius: 9px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
+        linear-gradient(to bottom,
+            #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%);
+}
+.scroll-card::before, .stat-card::before, .intervention-card::before,
+.tl-card::before, .summary-card::before, .sel-card::before,
+.footer-card::before, .filter-inner::before, .outcome-box::before,
+.sdg-card::before, .mvg-card::before, .year-card::before,
+.team-card-modern::before, .survey-card::before, .activity-card::before { top: -9px; }
+.scroll-card::after, .stat-card::after, .intervention-card::after,
+.tl-card::after, .summary-card::after, .sel-card::after,
+.footer-card::after, .filter-inner::after, .outcome-box::after,
+.sdg-card::after, .mvg-card::after, .year-card::after,
+.team-card-modern::after, .survey-card::after, .activity-card::after { bottom: -9px; }
+
+/* Ninja stamp */
+.scroll-stamp {
+    position: absolute;
+    top: 10px; right: 14px;
+    font-size: 1.4rem;
+    z-index: 3;
+    opacity: 0.5;
+    transform: rotate(-15deg);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+    pointer-events: none;
+}
+
+/* Scroll paper background pattern */
+.scroll-card, .summary-card, .intervention-card, .tl-card,
+.outcome-box, .sdg-card, .mvg-card, .year-card,
+.team-card-modern, .footer-card, .filter-inner,
+.survey-card, .activity-card {
+    background: var(--scroll-bg);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent,
+        transparent 28px,
+        rgba(139, 69, 19, 0.05) 28px,
+        rgba(139, 69, 19, 0.05) 32px
+    );
+    border-left: 8px solid var(--wood-dark);
+    border-right: 8px solid var(--wood-dark);
+    border-top: none;
+    border-bottom: none;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
+    transition: all 0.3s ease;
+}
+.scroll-card:hover, .summary-card:hover, .intervention-card:hover,
+.tl-card:hover, .outcome-box:hover,
+.sdg-card:hover, .mvg-card:hover, .year-card:hover,
+.team-card-modern:hover, .footer-card:hover,
+.survey-card:hover, .activity-card:hover {
+    transform: translateY(-5px) rotate(0.5deg);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-rasengan {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--naruto-orange), var(--naruto-orange-dark));
+    border: none; padding: 12px 32px;
+    border-radius: 40px; color: white;
+    font-weight: 800; font-size: 0.9rem;
+    box-shadow: 0 5px 15px rgba(255,140,0,0.4);
+    transition: all 0.35s; text-decoration: none;
+    position: relative; overflow: hidden;
+}
+.btn-rasengan:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(255,140,0,0.6);
+    color: white;
+}
+.btn-konoha {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(92, 64, 51, 0.8);
+    border: 1px solid var(--naruto-orange);
+    padding: 12px 32px; border-radius: 40px;
+    color: var(--text-light); font-weight: 800; font-size: 0.9rem;
+    transition: all 0.35s; text-decoration: none;
+}
+.btn-konoha:hover {
+    background: rgba(255, 140, 0, 0.3);
+    border-color: var(--naruto-orange);
+    color: var(--naruto-orange);
+    transform: translateY(-4px);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.modern-footer {
+    background: rgba(44, 34, 24, 0.95);
+    border-top: 3px solid var(--naruto-orange);
+    padding: 60px 0 30px;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+}
+.footer-card {
+    padding: 28px 22px;
+}
+.footer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+.footer-logo {
+    font-size: 1.1rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.footer-copyright {
+    font-size: 0.85rem;
+    color: #c4b08a;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.footer-copyright .copy-icon { color: var(--naruto-orange); font-size: 0.9rem; }
+.footer-copyright .dev-by { color: #a09070; font-weight: 400; }
+.footer-copyright .dev-name {
+    background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+.footer-copyright .pipe {
+    color: rgba(255,140,0,0.3);
+    font-weight: 300;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.cursor-pointer { cursor: pointer; }
+.text-gradient-naruto {
+    background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: chakraFlow 3s ease infinite;
+}
+.skeleton {
+    background: linear-gradient(90deg, rgba(92,64,51,0.08) 25%, rgba(92,64,51,0.15) 50%, rgba(92,64,51,0.08) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s infinite;
+    border-radius: 8px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .page-hero { padding: 120px 0 50px; }
+}
+
+/* ============================================================
+   NIGHT OPERATION MODE (DARK MODE)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+    body {
+        background:
+            radial-gradient(ellipse at 20% 20%, rgba(0, 212, 255, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(0, 180, 255, 0.04) 0%, transparent 50%),
+            linear-gradient(170deg, #060A15 0%, #0A1225 15%, #0E1A2E 30%, #14203A 50%, #1A2845 65%, #0E1A2E 80%, #060A15 100%);
+    }
+    .navbar {
+        background: rgba(6, 10, 21, 0.95);
+        border-bottom-color: var(--night-accent);
+    }
+    .nav-link {
+        color: var(--night-text-dim) !important;
+    }
+    .nav-link:hover, .nav-link.active {
+        color: var(--night-accent) !important;
+    }
+    .nav-link.active {
+        background: rgba(0, 212, 255, 0.15) !important;
+        border-color: var(--night-accent) !important;
+        box-shadow: 0 0 10px rgba(0,212,255,0.2) !important;
+    }
+    .navbar-brand {
+        background: linear-gradient(135deg, var(--night-accent), var(--sasuke-blue-bright));
+        -webkit-background-clip: text;
+    }
+    .hero-eyebrow {
+        background: rgba(0, 50, 100, 0.6);
+        border-color: var(--night-accent);
+        color: var(--night-accent);
+    }
+    .page-title, .section-title {
+        color: var(--night-text);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    .page-sub, .page-subtitle, .section-sub {
+        color: var(--night-text-dim);
+    }
+    .section-eyebrow {
+        background: rgba(0, 50, 100, 0.6);
+        border-color: var(--night-accent);
+        color: var(--night-accent);
+    }
+    .scroll-card, .summary-card, .intervention-card, .tl-card,
+    .outcome-box, .sdg-card, .mvg-card, .year-card,
+    .team-card-modern, .footer-card, .filter-inner,
+    .sel-card, .stat-card, .survey-card, .activity-card {
+        background: var(--night-card);
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 28px,
+            rgba(0, 212, 255, 0.03) 28px,
+            rgba(0, 212, 255, 0.03) 32px
+        );
+        border-left-color: var(--night-border);
+        border-right-color: var(--night-border);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(0, 212, 255, 0.03);
+        color: var(--night-text);
+    }
+    .scroll-card::before, .scroll-card::after,
+    .stat-card::before, .stat-card::after,
+    .intervention-card::before, .intervention-card::after,
+    .tl-card::before, .tl-card::after,
+    .summary-card::before, .summary-card::after,
+    .sel-card::before, .sel-card::after,
+    .footer-card::before, .footer-card::after,
+    .filter-inner::before, .filter-inner::after,
+    .outcome-box::before, .outcome-box::after,
+    .sdg-card::before, .sdg-card::after,
+    .mvg-card::before, .mvg-card::after,
+    .year-card::before, .year-card::after,
+    .team-card-modern::before, .team-card-modern::after,
+    .survey-card::before, .survey-card::after,
+    .activity-card::before, .activity-card::after {
+        background:
+            repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,212,255,0.05) 4px, rgba(0,212,255,0.05) 5px),
+            linear-gradient(to bottom, #0A0F1A 0%, #141F30 15%, #1A2845 30%, #1E3050 45%, #20355A 50%, #1E3050 55%, #1A2845 70%, #141F30 85%, #0A0F1A 100%);
+    }
+    .btn-konoha {
+        background: rgba(0, 20, 60, 0.8);
+        border-color: var(--night-accent);
+        color: var(--night-text-dim);
+    }
+    .btn-konoha:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: var(--night-accent);
+        color: var(--night-accent);
+    }
+    .btn-rasengan {
+        background: linear-gradient(135deg, #003377, #001A4D);
+    }
+    .modern-footer {
+        background: rgba(6, 10, 21, 0.95);
+        border-top-color: var(--night-accent);
+    }
+    .footer-copyright { color: var(--night-text-dim); }
+    .footer-card .scroll-stamp { opacity: 0.3; }
+    .scroll-stamp { opacity: 0.3; }
+    .footer-logo {
+        background: linear-gradient(135deg, var(--night-accent), var(--sasuke-blue-bright));
+        -webkit-background-clip: text;
+    }
+}

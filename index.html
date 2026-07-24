@@ -23,7 +23,7 @@
                             const row = results.data[0];
                             const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
                             if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.href = 'maintenance.html';
+                                window.location.reload();
                             } else {
                                 if (sessionStorage.getItem('isLoggedIn') !== 'true') {
                                     window.location.href = 'login.html';
@@ -126,8 +126,7 @@
             .scroll-card::before, .scroll-card::after,
             .sdg-card::before, .sdg-card::after,
             .year-card::before, .year-card::after,
-            .mvg-card::before, .mvg-card::after,
-            .team-card-modern::before, .team-card-modern::after {
+            .mvg-card::before, .mvg-card::after {
                 content: '';
                 position: absolute;
                 left: -4px; right: -4px;
@@ -142,8 +141,8 @@
                         #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
                     );
             }
-            .scroll-card::before, .sdg-card::before, .year-card::before, .mvg-card::before, .team-card-modern::before { top: -9px; }
-            .scroll-card::after,  .sdg-card::after,  .year-card::after,  .mvg-card::after,  .team-card-modern::after  { bottom: -9px; }
+            .scroll-card::before, .sdg-card::before, .year-card::before, .mvg-card::before { top: -9px; }
+            .scroll-card::after,  .sdg-card::after,  .year-card::after,  .mvg-card::after  { bottom: -9px; }
 
             /* Ninja stamp */
             .scroll-stamp {
@@ -337,116 +336,6 @@
                 border-color: var(--naruto-orange);
                 color: var(--naruto-orange);
                 transform: translateY(-4px);
-            }
-
-            /* Team Slider - Scroll style */
-            .team-slider-wrapper {
-                position: relative;
-                height: 460px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                perspective: 1200px;
-            }
-
-            .team-card-modern {
-                position: absolute;
-                width: 320px;
-                background: var(--scroll-bg);
-                background-image: repeating-linear-gradient(
-                    to bottom,
-                    transparent,
-                    transparent 28px,
-                    rgba(139, 69, 19, 0.05) 28px,
-                    rgba(139, 69, 19, 0.05) 32px
-                );
-                border-left: 8px solid var(--wood-dark);
-                border-right: 8px solid var(--wood-dark);
-                border-top: none;
-                border-bottom: none;
-                border-radius: 16px;
-                overflow: visible;
-                text-align: center;
-                transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
-                opacity: 0;
-                transform: translateX(60px) scale(0.85) rotateY(-10deg);
-                box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-                z-index: 0;
-            }
-            .team-card-modern.active {
-                opacity: 1;
-                transform: translateX(0) scale(1) rotateY(0);
-                z-index: 10;
-                box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 0 2px var(--naruto-orange);
-            }
-            
-            .team-img-container {
-                width: 100%;
-                height: 230px;
-                overflow: hidden;
-                position: relative;
-                background: var(--wood-dark);
-            }
-            .team-img-container::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 60px;
-                background: linear-gradient(to top, var(--scroll-bg), transparent);
-            }
-            .team-img-modern {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: top center;
-                transition: transform 0.4s ease;
-            }
-            .team-card-modern:hover .team-img-modern {
-                transform: scale(1.08);
-            }
-            .team-info {
-                padding: 18px 20px 24px;
-                background: var(--scroll-bg);
-            }
-            .team-role {
-                color: var(--naruto-orange);
-                font-size: 0.7rem;
-                font-weight: 800;
-                letter-spacing: 0.05em;
-                text-transform: uppercase;
-                margin-bottom: 6px;
-            }
-            .team-name {
-                font-size: 0.95rem;
-                font-weight: 800;
-                color: var(--wood-dark);
-                margin-bottom: 8px;
-            }
-            .team-bio {
-                font-size: 0.75rem;
-                color: #5a4a3a;
-                line-height: 1.6;
-            }
-
-            /* Navigation buttons */
-            .btn-nav-modern {
-                width: 46px;
-                height: 46px;
-                border-radius: 50%;
-                background: rgba(92, 64, 51, 0.8);
-                border: 1px solid var(--naruto-orange);
-                color: var(--naruto-orange);
-                font-size: 1.2rem;
-                transition: all 0.25s;
-                cursor: pointer;
-            }
-            .btn-nav-modern:hover {
-                background: var(--naruto-orange);
-                color: white;
-                transform: scale(1.1);
-                box-shadow: 0 0 12px var(--naruto-orange);
             }
 
             /* Stats Bar */
@@ -753,7 +642,6 @@
 
             @media (max-width: 768px) {
                 .hero-section { padding: 100px 0 60px; }
-                .team-card-modern { width: 280px; }
                 .stats-bar { margin-top: 20px; }
             }
         </style>
@@ -784,35 +672,25 @@
 
         <!-- Hero Section -->
         <section class="hero-section">
-            <div class="container position-relative" style="z-index: 2">
-                <div class="row align-items-center g-5">
-                    <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1100">
-                        <div class="hero-eyebrow">
-                            <i class="bi bi-shield-shaded"></i> Hidden Leaf Village - Health Mission
-                        </div>
-                        <h1 class="hero-title">
-                            The <span class="text-gradient-naruto">Health Screening</span> Project
-                        </h1>
-                        <h2 id="welcomeMessage" class="hero-sub mb-3" style="font-weight: 700; font-size: 1.1rem;"></h2>
-                        <p class="hero-sub">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                        </p>
-                        <div class="d-flex gap-3 flex-wrap">
-                            <a href="screening.html" class="btn-rasengan">
-                                Explore Results <i class="bi bi-arrow-right"></i>
-                            </a>
-                            <a href="reports.html" class="btn-konoha">
-                                Download Report <i class="bi bi-download"></i>
-                            </a>
-                        </div>
+            <div class="container position-relative text-center" style="z-index: 2">
+                <div class="d-flex flex-column align-items-center" data-aos="fade-up" data-aos-duration="1100">
+                    <div class="hero-eyebrow">
+                        <i class="bi bi-shield-shaded"></i> Hidden Leaf Village - Health Mission
                     </div>
-
-                    <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1100" data-aos-delay="100">
-                        <div class="team-slider-wrapper" id="team-slider"></div>
-                        <div class="d-flex justify-content-center gap-3 mt-3">
-                            <button class="btn-nav-modern" id="prev-btn"><i class="bi bi-chevron-left"></i></button>
-                            <button class="btn-nav-modern" id="next-btn"><i class="bi bi-chevron-right"></i></button>
-                        </div>
+                    <h1 class="hero-title">
+                        The <span class="text-gradient-naruto">Health Screening</span> Project
+                    </h1>
+                    <h2 id="welcomeMessage" class="hero-sub mb-3" style="font-weight: 700; font-size: 1.1rem;"></h2>
+                    <p class="hero-sub">
+                        A scientific preventive approach for a sustainable quality of life within the SEKEM community.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap justify-content-center">
+                        <a href="screening.html" class="btn-rasengan">
+                            Explore Results <i class="bi bi-arrow-right"></i>
+                        </a>
+                        <a href="reports.html" class="btn-konoha">
+                            Download Report <i class="bi bi-download"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1020,51 +898,6 @@
             });
         </script>
 
-        <!-- Team Data -->
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const teamData = [
-                    { name: "Dr. Mamdouh Abd Elaziz", role: "Physiotherapist / Project Coordinator", bio: "Expert in clinical practice, research, and digital health solutions.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/amigo.png?raw=true" },
-                    { name: "Dr. Gehan Fathy Attia", role: "Center Director", bio: "Professor of Pharmaceutics, Vice Dean for Community Service.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/g.png?raw=true" },
-                    { name: "Dr. Hind Al-sharif", role: "Project Manager", bio: "Physiotherapy Consultant, leading the project's strategic vision.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/h.png?raw=true" },
-                    { name: "Dr. Sham Ammar Kalaji", role: "Project Coordinator", bio: "Pharmacy graduate, Project Coordinator at Heliopolis University.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/s.png?raw=true" },
-                    { name: "Dr. Mariam Tamer", role: "Physiotherapist", bio: "Responsible for physical rehabilitation and posture correction programs.", img: "https://github.com/Amigo-PT/Health-Screening/blob/main/m.png?raw=true" }
-                ];
-
-                const wrapper = document.getElementById("team-slider");
-                teamData.forEach((m) => {
-                    const card = document.createElement("div");
-                    card.className = "team-card-modern";
-                    card.innerHTML = `
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="team-img-container">
-                            <img src="${m.img}" class="team-img-modern" alt="${m.name}" loading="lazy">
-                        </div>
-                        <div class="team-info">
-                            <div class="team-role">${m.role}</div>
-                            <div class="team-name">${m.name}</div>
-                            <div class="team-bio">${m.bio}</div>
-                        </div>`;
-                    wrapper.appendChild(card);
-                });
-
-                let active = 0;
-                const cards = wrapper.querySelectorAll(".team-card-modern");
-                function update() {
-                    cards.forEach((c, i) => {
-                        c.className = "team-card-modern";
-                        if (i === active) c.classList.add("active");
-                        else if (i === (active + 1) % teamData.length) c.classList.add("next");
-                    });
-                }
-                update();
-                document.getElementById("next-btn").addEventListener("click", () => { active = (active + 1) % teamData.length; update(); });
-                document.getElementById("prev-btn").addEventListener("click", () => { active = (active - 1 + teamData.length) % teamData.length; update(); });
-                let timer = setInterval(() => { active = (active + 1) % teamData.length; update(); }, 3500);
-                wrapper.addEventListener("mouseenter", () => clearInterval(timer));
-                wrapper.addEventListener("mouseleave", () => { timer = setInterval(() => { active = (active + 1) % teamData.length; update(); }, 3500); });
-            });
-        </script>
 
         <!-- Issues Data - Same functionality preserved -->
         <script>
@@ -1121,6 +954,6 @@
                 modal.show();
             }
         </script>
-        <script src="sound-effects.js"></script>
+
     </body>
 </html>
