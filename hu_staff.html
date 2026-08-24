@@ -1,713 +1,275 @@
 ﻿<!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="naruto">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f6f6f8" />
     <title>HU Staff Screening - Health Screening</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    
+    <link rel="stylesheet" href="hig.css">
+    <link rel="stylesheet" href="dashboard.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        (function() {
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true, header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.reload();
-                            } else {
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                            }
-                        } else {
-                            if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                        }
-                    },
-                    error: function(err) {
-                        console.error("Maintenance check failed", err);
-                        if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                    }
-                });
-            }
-        })();
-    </script>
-    <style>
-        :root {
-            --naruto-orange: #FF8C00;
-            --naruto-orange-dark: #E67600;
-            --leaf-green: #2E5A2B;
-            --leaf-green-light: #4A7C3F;
-            --clay-bg: #F4F1E1;
-            --wood-dark: #5C4033;
-            --wood-light: #8B6914;
-            --shadow-color: #1a1a2e;
-            --text-dark: #2F2E2E;
-            --text-light: #F5F5DC;
-            --scroll-bg: #FFF8E7;
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
-            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-            --bg: #020617; --text: #f1f5f9; --muted: #94a3b8;
-            --card-bg: rgba(15,23,42,0.6); --border: rgba(255,255,255,0.07); --radius: 22px;
-        }
-        * { box-sizing: border-box; }
-
-        @keyframes cloudsFloat {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-
-        body {
-            font-family: 'Poppins', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            animation: fadeInPage .8s ease-out;
-        }
-        body::before {
-            content: "☁️";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            font-size: 120px;
-            white-space: nowrap;
-            color: rgba(255,255,240,0.08);
-            animation: cloudsFloat 40s linear infinite;
-            z-index: 0;
-        }
-
-        .navbar {
-            background: rgba(44, 34, 24, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 2px solid var(--naruto-orange);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            padding: 12px 0;
-            z-index: 500;
-        }
-        .navbar-brand {
-            font-weight: 900;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .konoha-logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-weight: 900;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            box-shadow: 0 0 12px rgba(255,140,0,0.3);
-        }
-        .nav-link {
-            font-weight: 700;
-            color: #e8d5b7 !important;
-            padding: 8px 18px !important;
-            border-radius: 30px;
-            transition: all 0.25s;
-            font-size: 0.85rem;
-            margin: 0 2px;
-        }
-        .nav-link:hover {
-            background: rgba(255, 140, 0, 0.2);
-            color: var(--naruto-orange) !important;
-            transform: translateY(-2px);
-        }
-        .nav-link.active {
-            background: rgba(255, 140, 0, 0.3) !important;
-            color: var(--naruto-orange) !important;
-            border: 1px solid var(--naruto-orange) !important;
-            box-shadow: 0 0 10px rgba(255,140,0,0.3);
-        }
-        .sharingan-hover { transition: all 0.3s ease; }
-        .sharingan-hover:hover {
-            animation: sharinganSpin 0.6s ease-in-out;
-            color: var(--naruto-orange) !important;
-        }
-        @keyframes sharinganSpin {
-            0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
-            50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
-            100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
-        }
-
-        .page-hero { position: relative; z-index: 1; padding: 150px 0 70px; }
-        .hero-eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px;
-            padding: 6px 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
-        }
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 10px;
-            color: var(--text-light);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .title-gradient {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: chakraFlow 3s ease infinite;
-        }
-        @keyframes chakraFlow {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-        .page-sub {
-            font-size: 1rem;
-            color: #F5F5DC;
-            line-height: 1.7;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-        .scroll-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-radius: var(--radius-md);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: visible;
-            z-index: 0;
-        }
-        .scroll-card:hover {
-            transform: translateY(-5px) rotate(0.5deg);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .scroll-card::before, .scroll-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 14px;
-            z-index: 3;
-            border-radius: 7px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-            pointer-events: none;
-        }
-        .scroll-card::before { top: -7px; }
-        .scroll-card::after  { bottom: -7px; }
-        .scroll-card .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.2rem;
-            z-index: 3;
-            opacity: 0.4;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
-        .section-eyebrow {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px; padding: 5px 14px;
-            font-size: 0.7rem; font-weight: 700;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em; margin-bottom: 15px;
-        }
-        .section-title {
-            font-size: clamp(1.4rem, 3vw, 2rem);
-            font-weight: 900;
-            color: var(--text-light);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
-        }
-
-        .btn-rasengan {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--naruto-orange-dark));
-            border: none; padding: 12px 32px;
-            border-radius: 40px; color: white;
-            font-weight: 800; font-size: 0.9rem;
-            box-shadow: 0 5px 15px rgba(255,140,0,0.4);
-            transition: all 0.35s; text-decoration: none;
-            position: relative; overflow: hidden;
-        }
-        .btn-rasengan:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(255,140,0,0.6);
-            color: white;
-        }
-        .btn-konoha {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(92, 64, 51, 0.8);
-            border: 1px solid var(--naruto-orange);
-            padding: 12px 32px; border-radius: 40px;
-            color: var(--text-light); font-weight: 800; font-size: 0.9rem;
-            transition: all 0.35s; text-decoration: none;
-        }
-        .btn-konoha:hover {
-            background: rgba(255, 140, 0, 0.3);
-            border-color: var(--naruto-orange);
-            color: var(--naruto-orange);
-            transform: translateY(-4px);
-        }
-
-        .modern-footer {
-            background: rgba(44, 34, 24, 0.95);
-            border-top: 3px solid var(--naruto-orange);
-            padding: 60px 0 30px;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        .footer-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding: 28px 22px;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-            z-index: 0;
-        }
-        .footer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .footer-card::before, .footer-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .footer-card::before { top: -9px; }
-        .footer-card::after  { bottom: -9px; }
-        .footer-card .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
-        .footer-logo {
-            font-size: 1.1rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .footer-copyright {
-            font-size: 0.85rem;
-            color: #c4b08a;
-            letter-spacing: 0.03em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .footer-copyright .copy-icon {
-            color: var(--naruto-orange);
-            font-size: 0.9rem;
-        }
-        .footer-copyright .dev-by {
-            color: #a09070;
-            font-weight: 400;
-        }
-        .footer-copyright .dev-name {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-        }
-        .footer-copyright .pipe {
-            color: rgba(255,140,0,0.3);
-            font-weight: 300;
-        }
-
-        .modal { z-index: 999999 !important; }
-        .modal-backdrop { z-index: 999998 !important; }
-
-        .breadcrumb { background:none; padding:0; margin:0; }
-        .breadcrumb-item a { color:var(--text-dark); text-decoration:none; font-weight:700; font-size:.88rem; opacity:0.8; }
-        .breadcrumb-item a:hover { color:var(--naruto-orange); opacity:1; }
-        .breadcrumb-item.active { color:var(--text-dark); font-size:.88rem; font-weight:600; }
-        .breadcrumb-item+.breadcrumb-item::before { color:var(--wood-dark); opacity:0.4; }
-        .sync-note { font-size:.75rem; color:var(--text-dark); opacity:0.6; margin-top:12px; font-weight:500; }
-
-        .filter-card { position:relative; z-index:1; background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px 32px; margin-bottom:40px; overflow:visible; }
-        .filter-card::before, .filter-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .filter-card::before { top:-7px; }
-        .filter-card::after  { bottom:-7px; }
-        .filter-card .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .filter-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dark); margin-bottom:16px; display:block; }
-
-        .year-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
-        .year-tab { padding:8px 20px; border-radius:10px; font-size:.9rem; font-weight:800; color:var(--text-dark); background:transparent; border:2px solid transparent; cursor:pointer; transition:all .25s; font-family:'Poppins','Cairo',sans-serif; }
-        .year-tab:hover { background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; color:var(--naruto-orange); box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .year-tab.active { background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; color:var(--naruto-orange); box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-
-        .month-timeline { position:relative; display:flex; align-items:flex-start; padding:8px 0 4px; }
-        .month-timeline::before { content:''; position:absolute; left:0; right:0; top:16px; height:2px; background:rgba(92,64,51,0.2); z-index:0; }
-        .month-item { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; cursor:pointer; }
-        .month-dot { width:16px; height:16px; border-radius:50%; background:var(--scroll-bg); border:2px solid var(--wood-dark); margin-bottom:8px; transition:all .25s; }
-        .month-item.has-data .month-dot { border-color:var(--wood-dark); background:rgba(92,64,51,0.15); }
-        .month-item.active   .month-dot { background:var(--naruto-orange); border-color:var(--naruto-orange); transform:scale(1.35); box-shadow:0 0 12px rgba(255,140,0,0.4); }
-        .month-item:hover    .month-dot { background:var(--naruto-orange); border-color:var(--naruto-orange); transform:scale(1.2); }
-        .month-lbl { font-size:.78rem; font-weight:700; color:var(--text-dark); transition:.25s; }
-        .month-item.active .month-lbl, .month-item:hover .month-lbl { color:var(--naruto-orange); }
-
-        .comparison-controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; padding-top:20px; border-top:1px solid rgba(92,64,51,0.15); align-items:center; }
-        .filter-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
-        .filter-actions .comparison-select { min-width:220px; }
-        .filter-actions .btn-compare { min-width:170px; }
-        .comparison-select { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:8px 16px; color:var(--text-dark); font-family:'Cairo',sans-serif; font-size:0.85rem; cursor:pointer; font-weight:600; box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .comparison-select:hover,.comparison-select:focus { border-color:var(--naruto-orange); outline:none; }
-        .btn-compare { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:8px 20px; color:var(--text-dark); font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.25s; box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .btn-compare:hover { background:rgba(255,140,0,0.08); color:var(--naruto-orange); transform:translateY(-2px); }
-        .btn-compare.active { background:rgba(239,68,68,0.08); border-color:#ef4444; color:#ef4444; }
-        .comparison-badge { display:inline-flex; align-items:center; gap:6px; background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:8px; padding:5px 14px; font-size:0.7rem; font-weight:700; color:var(--text-dark); }
-        .comparison-change { font-size:0.7rem; margin-top:4px; }
-        .status-indicator { transition:color .2s; font-size:0.8rem; font-weight:600; }
-        .status-indicator.status-ok { color:#16a34a; }
-        .status-indicator.status-error { color:#dc2626; }
-        .status-indicator.status-loading { color:#d97706; }
-
-        .risk-section { margin:32px 0; }
-        .risk-summary { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px; position:relative; overflow:visible; z-index:0; }
-        .risk-summary::before, .risk-summary::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .risk-summary::before { top:-7px; }
-        .risk-summary::after  { bottom:-7px; }
-        .risk-summary .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .risk-title { font-size:0.85rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dark); margin-bottom:24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-        .risk-stats { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
-        .risk-stat-item { text-align:center; flex:1; min-width:140px; padding:20px; border-radius:20px; transition:all 0.3s ease; cursor:pointer; }
-        .risk-stat-item:hover { transform:translateY(-6px); }
-        .risk-stat-item.high-risk { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); }
-        .risk-stat-item.moderate-risk { background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25); }
-        .risk-stat-item.low-risk { background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); }
-        .risk-number { font-size:2.4rem; font-weight:900; line-height:1; }
-        .high-risk .risk-number { color:#ef4444; }
-        .moderate-risk .risk-number { color:#f59e0b; }
-        .low-risk .risk-number { color:#10b981; }
-        .risk-label { font-size:0.85rem; font-weight:700; margin-top:8px; color:var(--text-dark); }
-        .risk-description { font-size:0.7rem; color:#5a4a3a; margin-top:4px; }
-        .risk-summary-compact { margin-top:20px; padding-top:16px; border-top:1px solid rgba(92,64,51,0.15); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-        .risk-formula-box { margin-top:16px; padding:12px 16px; background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; font-size:0.72rem; color:var(--text-dark); line-height:1.6; box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.3); }
-        .risk-formula-box strong { color:var(--text-dark); }
-
-        .sector-risk-detail-btn { background:transparent; border:none; color:var(--naruto-orange); font-size:0.7rem; margin-top:8px; cursor:pointer; opacity:0.7; transition:opacity 0.3s; width:100%; }
-        .sector-risk-detail-btn:hover { opacity:1; }
-        .risk-tag { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:50px; font-size:0.7rem; font-weight:700; margin-top:8px; }
-        .risk-tag.high { background:rgba(239,68,68,0.15); color:#ef4444; }
-        .risk-tag.moderate { background:rgba(245,158,11,0.15); color:#f59e0b; }
-        .risk-tag.low { background:rgba(16,185,129,0.15); color:#10b981; }
-
-        .stats-row { position:relative; z-index:1; margin-bottom:32px; }
-        .stat-card { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px 24px; position:relative; overflow:visible; height:100%; transition:all .3s ease; z-index:0; }
-        .stat-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.3); }
-        .stat-card::before, .stat-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .stat-card::before { top:-7px; }
-        .stat-card::after  { bottom:-7px; }
-        .stat-card .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .stat-num { font-size:2.6rem; font-weight:900; line-height:1.1; margin-bottom:4px; background:linear-gradient(135deg, var(--naruto-orange), #FFD700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .stat-lbl { font-size:.88rem; font-weight:600; color:var(--text-dark); opacity:0.6; }
-        .drilldown-card-title { font-size:0.95rem; font-weight:800; margin-bottom:12px; color:var(--text-dark); }
-        .drilldown-card-value { font-size:2rem; font-weight:900; margin-bottom:10px; color:var(--naruto-orange); }
-        .drilldown-card-sub { font-size:0.85rem; color:var(--text-dark); line-height:1.6; opacity:0.6; }
-
-        .sectors-section { position:relative; z-index:1; }
-        .section-eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:.75rem; font-weight:700; color:var(--text-dark); letter-spacing:.08em; text-transform:uppercase; border-left:3px solid var(--naruto-orange); padding-left:10px; margin-bottom:24px; }
-        .sector-card { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px 20px; text-align:center; height:100%; transition:all .3s ease; position:relative; overflow:visible; z-index:0; }
-        .sector-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.3); }
-        .sector-card::before, .sector-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .sector-card::before { top:-7px; }
-        .sector-card::after  { bottom:-7px; }
-        .sector-card .scroll-stamp { position:absolute; top:8px; right:12px; font-size:1.1rem; z-index:3; opacity:0.35; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .sector-icon { width:72px; height:72px; border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:1.9rem; color:var(--naruto-orange); background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; animation:float 6s ease-in-out infinite; transition:.4s; box-shadow:0 4px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .sector-card:hover .sector-icon { background:linear-gradient(135deg, var(--naruto-orange), #FFD700); color:#fff; transform:rotate(10deg) scale(1.08); animation:none; border-color:transparent; }
-        .sector-num { font-size:2rem; font-weight:900; color:var(--text-dark); margin-bottom:4px; }
-        .sector-name { font-size:.88rem; color:var(--text-dark); margin-bottom:14px; line-height:1.4; opacity:0.7; }
-        .sector-badge { display:inline-flex; align-items:center; gap:6px; background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:8px; padding:5px 14px; font-size:.76rem; font-weight:700; color:var(--text-dark); box-shadow:0 2px 4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.5); }
-
-        .charts-section { position:relative; z-index:1; margin-top:32px; }
-        .chart-card { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:30px; height:100%; transition:.3s; position:relative; overflow:visible; z-index:0; }
-        .chart-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.3); }
-        .chart-card::before, .chart-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .chart-card::before { top:-7px; }
-        .chart-card::after  { bottom:-7px; }
-        .chart-card .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .chart-title { font-size:.85rem; font-weight:700; color:var(--text-dark); letter-spacing:.04em; text-transform:uppercase; margin-bottom:24px; }
-
-        .risk-detail-modal .modal-dialog { max-height: 90vh; }
-        .risk-detail-modal .modal-content { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:20px; max-height:90vh; display:flex; flex-direction:column; position:relative; overflow:visible; }
-        .risk-detail-modal .modal-content::before, .risk-detail-modal .modal-content::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .risk-detail-modal .modal-content::before { top:-7px; }
-        .risk-detail-modal .modal-content::after  { bottom:-7px; }
-        .risk-detail-modal .modal-content .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.4rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .risk-detail-header { background:var(--scroll-bg); border-bottom:1px solid rgba(92,64,51,0.15); padding:24px 28px; flex-shrink:0; }
-        .risk-detail-title { font-size:1.4rem; font-weight:800; color:var(--text-dark); }
-        .risk-detail-modal .modal-body { overflow-y:auto; flex:1; padding:24px 28px !important; }
-        .disease-list { max-height:none; overflow-y:visible; }
-        .disease-item { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:16px; margin-bottom:12px; transition:all 0.3s; box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.3); }
-        .disease-item:hover { border-color:var(--naruto-orange); transform:translateX(4px); }
-        .disease-name { font-weight:800; font-size:1rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap; color:var(--text-dark); }
-        .disease-count { font-size:1.2rem; font-weight:900; color:var(--text-dark); }
-        .risk-level-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 12px; border-radius:50px; font-size:0.7rem; font-weight:700; }
-        .risk-critical { background:rgba(239,68,68,0.2); color:#ef4444; }
-        .risk-high { background:rgba(239,68,68,0.15); color:#f87171; }
-        .risk-moderate { background:rgba(245,158,11,0.15); color:#fbbf24; }
-        .risk-low { background:rgba(16,185,129,0.15); color:#34d399; }
-        .progress-risk { height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; margin-top:8px; }
-        .progress-risk-fill { height:100%; border-radius:3px; transition:width 0.5s ease; }
-        .recommendation-box { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:16px; margin-top:20px; box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.3); }
-
-        .skeleton { background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; }
-        @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-        @keyframes pulse-glow { 0%,100%{box-shadow:0 0 0 0 rgba(6,182,212,.4)} 50%{box-shadow:0 0 0 8px rgba(6,182,212,0)} }
-        @keyframes float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    </style>
-        <link rel="stylesheet" href="claymorphism.css">
 </head>
-<body class="page-hu-staff">
-    <nav class="navbar navbar-expand-lg fixed-top">
+<body>
+
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <span class="konoha-logo">🍃</span>
-                Health Screening
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
             </a>
-            <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link sharingan-hover active" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn-hig btn-glass-hig btn-sm-hig" href="screening.html"><i class="bi bi-chevron-left"></i> Screening</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="page-hero">
+    <header class="hero-section">
         <div class="container">
-            <nav aria-label="breadcrumb" class="mb-4" data-aos="fade-right">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="screening.html"><i class="bi bi-bar-chart-line me-1"></i>Screening</a></li>
-                    <li class="breadcrumb-item active">HU Staff</li>
-                </ol>
-            </nav>
-            <div data-aos="fade-down" data-aos-duration="900">
-                <div class="hero-eyebrow"><i class="bi bi-mortarboard-fill"></i> University Dashboard</div>
-                <h1 class="page-title">HU Staff <span class="title-gradient">Screening Dashboard</span></h1>
-                <p class="page-sub">Analysis of health survey data for Heliopolis University — Students, Faculty &amp; Staff</p>
-            </div>
+            <h1 class="display-hero" data-reveal>
+                HU Staff <span class="text-accent-gradient">Screening Dashboard</span>
+            </h1>
+            <p class="hero-sub mt-3" data-reveal data-reveal-delay="160">
+                Analysis of health survey data for Heliopolis University — Students, Faculty &amp; Staff.
+            </p>
         </div>
-    </section>
+    </header>
 
-    <div class="container pb-5" style="position:relative;z-index:1;">
-        <div class="filter-card" data-aos="fade-up" data-aos-delay="80">
-            <span class="scroll-stamp">🍃</span>
-            <span class="filter-label"><i class="bi bi-calendar3 me-2"></i>Filter by Period</span>
-            <div class="status-indicator"><span id="statusDot" class="status-dot status-loading"></span><span id="statusText">Connecting to server...</span></div>
-            <div class="year-tabs" id="yearContainer"></div>
-            <div class="filter-actions">
-                <select id="sectorFilter" class="comparison-select">
-                    <option value="all">Show all sectors</option>
-                    <option value="students">Students</option>
-                    <option value="pt">Faculty of Physical Therapy</option>
-                    <option value="pharmacy">Faculty of Pharmacy</option>
-                    <option value="eng">Faculty of Engineering</option>
-                    <option value="business">Faculty of Business</option>
-                    <option value="agri">Faculty of Agriculture</option>
-                    <option value="workers">University Workers</option>
-                </select>
-                <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Risk Only</button>
-            </div>
-            <div class="month-timeline" id="monthContainer"></div>
-            <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
-            <div class="comparison-controls" id="comparisonControls" style="display:none; flex-wrap:wrap; gap:10px;">
-                <div style="width:100%;font-size:.82rem;color:var(--text-dark);opacity:0.6;">Default compares current period with same period in the previous year. Change any two periods below to compare other ranges.</div>
-                <select id="compareYear1" class="comparison-select"></select>
-                <select id="compareMonth1" class="comparison-select"></select>
-                <span style="color:var(--text-dark); align-self:center;font-weight:600;">vs</span>
-                <select id="compareYear2" class="comparison-select"></select>
-                <select id="compareMonth2" class="comparison-select"></select>
-                <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
-                <button class="btn-compare" id="btnResetCompare"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
-            </div>
-        </div>
+    <main class="section-block pt-2">
+        <div class="container page-shell pb-5">
 
-        <div class="stats-row">
-            <div class="row g-4">
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="80">
-                    <div class="stat-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="stat-num" id="total-participants">0</div>
-                        <div class="stat-lbl"><i class="bi bi-people-fill me-2 text-info"></i>Total Screened</div>
+            <div class="filter-card" data-reveal data-reveal-delay="80">
+                <div class="d-flex align-items-center flex-wrap">
+                    <span class="filter-label"><i class="bi bi-calendar3"></i>Filter by Period</span>
+                    <div class="status-indicator"><span id="statusDot" class="status-dot status-loading"></span><span id="statusText">Connecting to server...</span></div>
+                </div>
+                <div class="year-tabs" id="yearContainer"></div>
+                <div class="filter-actions">
+                    <select id="sectorFilter" class="comparison-select">
+                        <option value="all">Show all sectors</option>
+                        <option value="students">Students</option>
+                        <option value="pt">Faculty of Physical Therapy</option>
+                        <option value="pharmacy">Faculty of Pharmacy</option>
+                        <option value="eng">Faculty of Engineering</option>
+                        <option value="business">Faculty of Business</option>
+                        <option value="agri">Faculty of Agriculture</option>
+                        <option value="workers">University Workers</option>
+                    </select>
+                    <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Risk Only</button>
+                </div>
+                <div class="month-timeline" id="monthContainer"></div>
+                <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
+                <div class="comparison-controls" id="comparisonControls" style="display:none;">
+                    <div class="comparison-note">Default compares current period with same period in the previous year. Change any two periods below to compare other ranges.</div>
+                    <select id="compareYear1" class="comparison-select"></select>
+                    <select id="compareMonth1" class="comparison-select"></select>
+                    <span class="comparison-vs">vs</span>
+                    <select id="compareYear2" class="comparison-select"></select>
+                    <select id="compareMonth2" class="comparison-select"></select>
+                    <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
+                    <button class="btn-compare" id="btnResetCompare"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="row g-4">
+                    <div class="col-md-6" data-reveal data-reveal-delay="80">
+                        <div class="hig-card stat-card justify-content-center">
+                            <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+                            <div class="text-center">
+                                <div class="stat-num" id="total-participants">0</div>
+                                <div class="stat-lbl"><i class="bi bi-clipboard2-pulse me-2"></i>Total Screened</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-reveal data-reveal-delay="160">
+                        <div class="hig-card stat-card justify-content-center">
+                            <span class="stat-icon"><i class="bi bi-building"></i></span>
+                            <div class="text-center">
+                                <div class="stat-num">7</div>
+                                <div class="stat-lbl"><i class="bi bi-grid-3x3-gap me-2"></i>Targeted Sectors</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="160">
-                    <div class="stat-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="stat-num">7</div>
-                        <div class="stat-lbl"><i class="bi bi-building me-2 text-info"></i>Targeted Sectors</div>
-                    </div>
-                </div>
             </div>
-        </div>
 
-        <!-- Risk Stratification -->
-        <div class="risk-section" data-aos="fade-up" data-aos-delay="200">
-            <div class="risk-summary">
-                <span class="scroll-stamp">🍃</span>
-                <div class="risk-title">
-                    <i class="bi bi-shield-shaded"></i>
-                    Risk Stratification Analysis
-                    <span style="font-size:0.65rem;background:rgba(92,64,51,0.1);padding:2px 8px;border-radius:20px;color:var(--text-dark);">Click any category for details</span>
-                </div>
-                <div class="risk-stats" id="riskStats">
-                    <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('high')">
-                        <div class="risk-number" id="highRiskCount">--</div>
-                        <div class="risk-label">&#9888; High Risk</div>
-                        <div class="risk-description">Requires immediate intervention</div>
+            <!-- Risk Stratification -->
+            <div class="risk-section" data-reveal data-reveal-delay="200">
+                <div class="risk-summary">
+                    <div class="risk-title">
+                        <i class="bi bi-shield-fill-exclamation"></i>
+                        Risk Stratification Analysis
                     </div>
-                    <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('moderate')">
-                        <div class="risk-number" id="moderateRiskCount">--</div>
-                        <div class="risk-label">&#128202; Moderate Risk</div>
-                        <div class="risk-description">Needs follow-up screening</div>
+                    <div class="risk-stats" id="riskStats">
+                        <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('high')">
+                            <div class="risk-number" id="highRiskCount">--</div>
+                            <div class="risk-label">&#9888; High Risk</div>
+                            <div class="risk-description">Requires immediate intervention</div>
+                        </div>
+                        <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('moderate')">
+                            <div class="risk-number" id="moderateRiskCount">--</div>
+                            <div class="risk-label">&#128202; Moderate Risk</div>
+                            <div class="risk-description">Needs follow-up screening</div>
+                        </div>
+                        <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('low')">
+                            <div class="risk-number" id="lowRiskCount">--</div>
+                            <div class="risk-label">&#10003; Low Risk</div>
+                            <div class="risk-description">Maintain healthy lifestyle</div>
+                        </div>
                     </div>
-                    <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('low')">
-                        <div class="risk-number" id="lowRiskCount">--</div>
-                        <div class="risk-label">&#10003; Low Risk</div>
-                        <div class="risk-description">Maintain healthy lifestyle</div>
+                    <div class="risk-summary-compact" id="topDiseasesSummary">
+                        <span><i class="bi bi-bar-chart-steps me-1"></i>Most common conditions:</span>
+                        <span id="topDiseaseText">Loading...</span>
                     </div>
                 </div>
-                <div class="risk-summary-compact" id="topDiseasesSummary">
-                    <span style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;"><i class="bi bi-bar-chart-steps me-1"></i>Most common conditions:</span>
-                    <span id="topDiseaseText" style="font-size:0.8rem;color:var(--text-dark);">Loading...</span>
-                </div>
-                <!-- Formula explanation -->
             </div>
-        </div>
 
-        <!-- Sectors -->
-        <div class="sectors-section mb-5">
-            <div class="section-eyebrow" data-aos="fade-right"><i class="bi bi-grid-3x3-gap"></i> HU Sectors Breakdown</div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="60">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:0s;"><i class="bi bi-mortarboard"></i></div><div class="sector-num" id="num-students">0</div><div class="sector-name">Students</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="120">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:.2s;"><i class="bi bi-heart-pulse"></i></div><div class="sector-num" id="num-pt">0</div><div class="sector-name">Faculty of Physical Therapy</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="180">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:.4s;"><i class="bi bi-capsule"></i></div><div class="sector-num" id="num-pharmacy">0</div><div class="sector-name">Faculty of Pharmacy</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="240">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:.6s;"><i class="bi bi-gear"></i></div><div class="sector-num" id="num-eng">0</div><div class="sector-name">Faculty of Engineering</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="300">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:.8s;"><i class="bi bi-briefcase"></i></div><div class="sector-num" id="num-business">0</div><div class="sector-name">Faculty of Business</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="360">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:1s;"><i class="bi bi-flower1"></i></div><div class="sector-num" id="num-agri">0</div><div class="sector-name">Faculty of Agriculture</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="420">
-                    <div class="sector-card"><div class="sector-icon" style="animation-delay:1.2s;"><i class="bi bi-person-gear"></i></div><div class="sector-num" id="num-workers">0</div><div class="sector-name">University Workers</div></div>
+            <!-- Sectors -->
+            <div class="sectors-section mb-5">
+                <div class="section-eyebrow" data-reveal><i class="bi bi-grid-3x3-gap"></i> HU Sectors Breakdown</div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="60">
+                        <div class="hig-card info-card center sector-card" style="--tile:#3e8bff">
+                            <span class="info-icon"><i class="bi bi-mortarboard"></i></span>
+                            <div class="entity-num" id="num-students">0</div>
+                            <p class="entity-name sector-name mb-0">Students</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="120">
+                        <div class="hig-card info-card center sector-card" style="--tile:#22ac38">
+                            <span class="info-icon"><i class="bi bi-heart-pulse"></i></span>
+                            <div class="entity-num" id="num-pt">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Physical Therapy</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="180">
+                        <div class="hig-card info-card center sector-card" style="--tile:#8f5bff">
+                            <span class="info-icon"><i class="bi bi-capsule"></i></span>
+                            <div class="entity-num" id="num-pharmacy">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Pharmacy</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="240">
+                        <div class="hig-card info-card center sector-card" style="--tile:#ff9500">
+                            <span class="info-icon"><i class="bi bi-gear"></i></span>
+                            <div class="entity-num" id="num-eng">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Engineering</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="300">
+                        <div class="hig-card info-card center sector-card" style="--tile:#00b8d9">
+                            <span class="info-icon"><i class="bi bi-briefcase"></i></span>
+                            <div class="entity-num" id="num-business">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Business</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="360">
+                        <div class="hig-card info-card center sector-card" style="--tile:#ffc300">
+                            <span class="info-icon"><i class="bi bi-flower1"></i></span>
+                            <div class="entity-num" id="num-agri">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Agriculture</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="420">
+                        <div class="hig-card info-card center sector-card" style="--tile:#98a2b3">
+                            <span class="info-icon"><i class="bi bi-person-gear"></i></span>
+                            <div class="entity-num" id="num-workers">0</div>
+                            <p class="entity-name sector-name mb-0">University Workers</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="charts-section">
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-right" data-aos-duration="900">
-                    <div class="chart-card"><span class="scroll-stamp">🍃</span><div class="chart-title"><i class="bi bi-pie-chart me-2"></i>Participation Rate</div><canvas id="populationChart"></canvas></div>
+            <div class="charts-section">
+                <div class="row g-4">
+                    <div class="col-md-4" data-reveal>
+                        <div class="hig-card chart-card">
+                            <div class="chart-head">
+                                <span class="chart-icon"><i class="bi bi-pie-chart-fill"></i></span>
+                                <div>
+                                    <div class="chart-title">Participation Rate</div>
+                                    <div class="chart-sub">Screened distribution across sectors</div>
+                                </div>
+                            </div>
+                            <div class="chart-canvas chart-canvas-sm"><canvas id="populationChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-md-8" data-reveal data-reveal-delay="100">
+                        <div class="hig-card chart-card">
+                            <div class="chart-head">
+                                <span class="chart-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                                <div>
+                                    <div class="chart-title">Medical Conditions in HU Staff</div>
+                                    <div class="chart-sub">Reported cases per group over time</div>
+                                </div>
+                            </div>
+                            <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart"></canvas></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-8" data-aos="fade-left" data-aos-duration="900">
-                    <div class="chart-card"><span class="scroll-stamp">🍃</span><div class="chart-title"><i class="bi bi-graph-up me-2"></i><span style="font-size: 13.6px; letter-spacing: 0.544px;">Medical condations in hu staff</span></div><canvas id="comparisonChart"></canvas></div>
+                <div class="drilldown-section" id="drilldownSection" style="display:none;" data-reveal>
+                    <div class="row g-4" id="drilldownCards"></div>
                 </div>
             </div>
-            <div class="drilldown-section" id="drilldownSection" style="display:none;" data-aos="fade-up" data-aos-duration="900">
-                <div class="section-eyebrow"><i class="bi bi-search me-2"></i>Detailed Sector Insights</div>
-                <div class="row g-4" id="drilldownCards"></div>
-            </div>
+
         </div>
-    </div>
+    </main>
 
     <!-- Sector Risk Modal -->
-    <div class="modal fade risk-detail-modal" id="sectorRiskModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal fade modal-hig risk-detail-modal" id="sectorRiskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="risk-detail-header">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="risk-detail-title" id="modalSectorName">Sector Name</div>
-                            <div style="font-size:0.8rem;color:var(--text-dark);opacity:0.6;margin-top:8px;" id="modalSectorStats">Total Participants: --</div>
-                            <div style="font-size:0.75rem;margin-top:6px;" id="modalRiskScore"></div>
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph"><i class="bi bi-grid-3x3-gap-fill"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="modalSectorName" style="font-size:1.25rem;">Sector Name</h3>
+                            <p class="caption mb-0" id="modalSectorStats">Total Participants: --</p>
+                            <p class="caption mb-0" id="modalRiskScore"></p>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
                 <div class="modal-body">
-                    <h6 style="font-weight:800;margin-bottom:16px;"><i class="bi bi-virus me-2 text-danger"></i>Disease Analysis</h6>
+                    <h6 class="fw-bold mb-3"><i class="bi bi-virus me-2" style="color:#eb4435;"></i>Disease Analysis</h6>
                     <div id="diseaseListContainer" class="disease-list"></div>
                     <div class="recommendation-box" id="recommendationBox">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                            <i class="bi bi-lightbulb" style="color:#fbbf24;font-size:1.2rem;"></i>
-                            <span style="font-weight:800;">Recommendations</span>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-lightbulb-fill" style="color:#ff9500;font-size:1.15rem;"></i>
+                            <span class="fw-bold">Recommendations</span>
                         </div>
-                        <div id="recommendationText" style="font-size:0.9rem;line-height:1.6;"></div>
+                        <div class="recommendation-text" id="recommendationText"></div>
                     </div>
                 </div>
             </div>
@@ -715,16 +277,17 @@
     </div>
 
     <!-- Risk Category Modal -->
-    <div class="modal fade risk-detail-modal" id="riskCategoryModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal fade modal-hig risk-detail-modal" id="riskCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="risk-detail-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="risk-detail-title" id="categoryModalTitle">Risk Category</div>
-                            <div style="font-size:0.8rem;color:var(--text-dark);opacity:0.6;margin-top:8px;" id="categoryModalSubtitle">Details</div>
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph"><i class="bi bi-shield-check"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="categoryModalTitle" style="font-size:1.25rem;">Risk Category</h3>
+                            <p class="caption mb-0" id="categoryModalSubtitle">Details</p>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
                 <div class="modal-body">
@@ -734,51 +297,35 @@
         </div>
     </div>
 
-    <footer class="modern-footer">
+    <footer class="site-footer">
         <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-5" data-aos="fade-up">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
-                        <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                        </p>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
                     </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
                 </div>
-                <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
-                        <div class="d-flex flex-column gap-2 mt-2">
-                            <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
-                                <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
-                            </a>
-                            <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                                <i class="bi bi-envelope-fill me-2"></i> Email
-                            </a>
-                        </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
                     </div>
                 </div>
             </div>
-            <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
-            <div class="footer-bottom text-center">
-                <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
-                <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
-            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project &middot; Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="hig.js"></script>
     <script>
-        AOS.init({ duration: 950, once: true, offset: 40 });
+        // Chart theme (Xiaomi MIUI light palette)
+        const CHART_GRID = 'rgba(0,0,0,0.07)';
+        const CHART_TEXT = 'rgba(0,0,0,0.65)';
+        const CHART_TICKS = 'rgba(0,0,0,0.45)';
 
         let popChart=null, compChart=null;
         let currentYear=null, currentMonth=1;
@@ -792,145 +339,30 @@
 
         // ========== DISEASES DATABASE ==========
         const DISEASES = [
-    { 
-        name: "No diagnosis", 
-        weight: 0, 
-        riskLevel: "healthy", 
-        recommendation: "Continue healthy lifestyle - Annual check-up recommended" 
-    },
-    { 
-        name: "Acute Gastritis", 
-        weight: 1.1, 
-        riskLevel: "low", 
-        recommendation: "Avoid spicy and fried foods - Eat small frequent meals - Reduce stress - Avoid self-medicating with NSAIDs (Painkillers)" 
-    },
-    { 
-        name: "Frequent Headache", 
-        weight: 0.7, 
-        riskLevel: "low", 
-        recommendation: "Stay hydrated - Maintain regular sleep schedule - Monitor screen time - Practice stress management techniques" 
-    },
-    { 
-        name: "Upper Respiratory Tract Infection", 
-        weight: 0.2, 
-        riskLevel: "low", 
-        recommendation: "Rest and adequate hydration - Increase Vitamin C intake - Avoid smoking areas - Ensure good room ventilation" 
-    },
-    { 
-        name: "Dental Problems", 
-        weight: 0.1, 
-        riskLevel: "low", 
-        recommendation: "Visit a dentist for professional cleaning - Brush twice daily with fluoride toothpaste - Reduce sugary snacks and drinks" 
-    },
-    { 
-        name: "Eye Problems", 
-        weight: 0.3, 
-        riskLevel: "low", 
-        recommendation: "Regular eye exams - Follow the 20-20-20 rule (look away from screens every 20 mins) - Ensure proper lighting while reading" 
-    },
-    { 
-        name: "Anemia", 
-        weight: 0.5, 
-        riskLevel: "low", 
-        recommendation: "Eat iron-rich foods (liver, honey, spinach) - Take Vitamin C to improve absorption - Follow up with regular blood tests" 
-    },
-    { 
-        name: "Acute Tonsillitis", 
-        weight: 0.5, 
-        riskLevel: "low", 
-        recommendation: "Warm salt water gargles - Increase warm fluids - Adequate rest - Avoid very cold beverages until recovery" 
-    },
-    { 
-        name: "Acute Sinusitis", 
-        weight: 0.5, 
-        riskLevel: "low", 
-        recommendation: "Steam inhalation - Nasal saline rinses - Stay well-hydrated - Avoid dust and known allergens" 
-    },
-    { 
-        name: "Environmental Allergy", 
-        weight: 0.3, 
-        riskLevel: "low", 
-        recommendation: "Identify and avoid triggers - Keep indoor air clean - Use air purifiers if possible - Consult for appropriate antihistamines" 
-    },
-    { 
-        name: "Food Allergy", 
-        weight: 0.3, 
-        riskLevel: "low", 
-        recommendation: "Strictly avoid trigger foods - Read food labels carefully - Inform others about your allergy when eating out" 
-    },
-    { 
-        name: "Diabetes", 
-        weight: 1.6, 
-        riskLevel: "moderate-high", 
-        recommendation: "Regular blood sugar monitoring - Follow a structured diabetic diet - Daily foot inspection - HbA1c test every 3 months" 
-    },
-    { 
-        name: "Thyroid dysfunction", 
-        weight: 1.1, 
-        riskLevel: "moderate", 
-        recommendation: "Adhere to prescribed medication - Regular thyroid hormone blood tests - Follow up with an endocrinologist" 
-    },
-    { 
-        name: "Hypertension", 
-        weight: 2.5, 
-        riskLevel: "high", 
-        recommendation: "Monitor blood pressure daily - Reduce salt intake - Engage in 30 minutes of brisk walking - Weight management" 
-    },
-    { 
-        name: "Asthma", 
-        weight: 0.4, 
-        riskLevel: "low-moderate", 
-        recommendation: "Carry rescue inhaler at all times - Avoid smoke and strong perfumes - Regular check-ups to adjust preventive medication" 
-    },
-    { 
-        name: "Heart Disease", 
-        weight: 4.8, 
-        riskLevel: "critical", 
-        recommendation: "Follow up strictly with a cardiologist - Low-sodium and heart-healthy diet - Manage stress - Monitor for any chest pain or shortness of breath" 
-    },
-    { 
-        name: "Urinary Tract Problems", 
-        weight: 1.1, 
-        riskLevel: "low-moderate", 
-        recommendation: "Significantly increase water intake - Practice good hygiene - Avoid delaying urination - Medical consultation if symptoms persist" 
-    },
-    { 
-        name: "Chronic Pain Disorders", 
-        weight: 2.2, 
-        riskLevel: "high", 
-        recommendation: "Regular physical therapy - Strengthening and flexibility exercises - Ergonomic workspace setup - Gentle daily movement" 
-    },
-    { 
-        name: "Multiple Sclerosis", 
-        weight: 4.5, 
-        riskLevel: "critical", 
-        recommendation: "Regular neurology follow-ups - Physical therapy for mobility maintenance - Energy conservation techniques - Stay in cool environments" 
-    },
-    { 
-        name: "Mental Health Disorders", 
-        weight: 2.0, 
-        riskLevel: "moderate-high", 
-        recommendation: "Professional counseling or therapy - Regular physical activity - Consistent sleep hygiene - Engage with social support networks" 
-    },
-    { 
-        name: "Liver Diseases", 
-        weight: 3.8, 
-        riskLevel: "critical", 
-        recommendation: "Follow a liver-friendly diet - Avoid unnecessary medications - Regular liver function tests (LFT) - Consult a hepatologist" 
-    },
-    { 
-        name: "Rheumatoid Arthritis", 
-        weight: 2.9, 
-        riskLevel: "high", 
-        recommendation: "Consult a rheumatologist for biological/DMARDS therapy - Anti-inflammatory diet - Low-impact exercise (swimming/walking) - Joint protection" 
-    },
-    { 
-        name: "Other", 
-        weight: 1.0, 
-        riskLevel: "low-moderate", 
-        recommendation: "Seek medical consultation for a specific diagnosis - Follow the prescribed management plan" 
-    }
-];
+            { name: "No diagnosis", weight: 0, riskLevel: "healthy", recommendation: "Continue healthy lifestyle - Annual check-up recommended" },
+            { name: "Acute Gastritis", weight: 1.1, riskLevel: "low", recommendation: "Avoid spicy and fried foods - Eat small frequent meals - Reduce stress - Avoid self-medicating with NSAIDs (Painkillers)" },
+            { name: "Frequent Headache", weight: 0.7, riskLevel: "low", recommendation: "Stay hydrated - Maintain regular sleep schedule - Monitor screen time - Practice stress management techniques" },
+            { name: "Upper Respiratory Tract Infection", weight: 0.2, riskLevel: "low", recommendation: "Rest and adequate hydration - Increase Vitamin C intake - Avoid smoking areas - Ensure good room ventilation" },
+            { name: "Dental Problems", weight: 0.1, riskLevel: "low", recommendation: "Visit a dentist for professional cleaning - Brush twice daily with fluoride toothpaste - Reduce sugary snacks and drinks" },
+            { name: "Eye Problems", weight: 0.3, riskLevel: "low", recommendation: "Regular eye exams - Follow the 20-20-20 rule (look away from screens every 20 mins) - Ensure proper lighting while reading" },
+            { name: "Anemia", weight: 0.5, riskLevel: "low", recommendation: "Eat iron-rich foods (liver, honey, spinach) - Take Vitamin C to improve absorption - Follow up with regular blood tests" },
+            { name: "Acute Tonsillitis", weight: 0.5, riskLevel: "low", recommendation: "Warm salt water gargles - Increase warm fluids - Adequate rest - Avoid very cold beverages until recovery" },
+            { name: "Acute Sinusitis", weight: 0.5, riskLevel: "low", recommendation: "Steam inhalation - Nasal saline rinses - Stay well-hydrated - Avoid dust and known allergens" },
+            { name: "Environmental Allergy", weight: 0.3, riskLevel: "low", recommendation: "Identify and avoid triggers - Keep indoor air clean - Use air purifiers if possible - Consult for appropriate antihistamines" },
+            { name: "Food Allergy", weight: 0.3, riskLevel: "low", recommendation: "Strictly avoid trigger foods - Read food labels carefully - Inform others about your allergy when eating out" },
+            { name: "Diabetes", weight: 1.6, riskLevel: "moderate-high", recommendation: "Regular blood sugar monitoring - Follow a structured diabetic diet - Daily foot inspection - HbA1c test every 3 months" },
+            { name: "Thyroid dysfunction", weight: 1.1, riskLevel: "moderate", recommendation: "Adhere to prescribed medication - Regular thyroid hormone blood tests - Follow up with an endocrinologist" },
+            { name: "Hypertension", weight: 2.5, riskLevel: "high", recommendation: "Monitor blood pressure daily - Reduce salt intake - Engage in 30 minutes of brisk walking - Weight management" },
+            { name: "Asthma", weight: 0.4, riskLevel: "low-moderate", recommendation: "Carry rescue inhaler at all times - Avoid smoke and strong perfumes - Regular check-ups to adjust preventive medication" },
+            { name: "Heart Disease", weight: 4.8, riskLevel: "critical", recommendation: "Follow up strictly with a cardiologist - Low-sodium and heart-healthy diet - Manage stress - Monitor for any chest pain or shortness of breath" },
+            { name: "Urinary Tract Problems", weight: 1.1, riskLevel: "low-moderate", recommendation: "Significantly increase water intake - Practice good hygiene - Avoid delaying urination - Medical consultation if symptoms persist" },
+            { name: "Chronic Pain Disorders", weight: 2.2, riskLevel: "high", recommendation: "Regular physical therapy - Strengthening and flexibility exercises - Ergonomic workspace setup - Gentle daily movement" },
+            { name: "Multiple Sclerosis", weight: 4.5, riskLevel: "critical", recommendation: "Regular neurology follow-ups - Physical therapy for mobility maintenance - Energy conservation techniques - Stay in cool environments" },
+            { name: "Mental Health Disorders", weight: 2.0, riskLevel: "moderate-high", recommendation: "Professional counseling or therapy - Regular physical activity - Consistent sleep hygiene - Engage with social support networks" },
+            { name: "Liver Diseases", weight: 3.8, riskLevel: "critical", recommendation: "Follow a liver-friendly diet - Avoid unnecessary medications - Regular liver function tests (LFT) - Consult a hepatologist" },
+            { name: "Rheumatoid Arthritis", weight: 2.9, riskLevel: "high", recommendation: "Consult a rheumatologist for biological/DMARDS therapy - Anti-inflammatory diet - Low-impact exercise (swimming/walking) - Joint protection" },
+            { name: "Other", weight: 1.0, riskLevel: "low-moderate", recommendation: "Seek medical consultation for a specific diagnosis - Follow the prescribed management plan" }
+        ];
 
         const DISEASE_MAP = {
             'No_diagnosis':'No diagnosis','Acute_Gastritis':'Acute Gastritis','Frequent_Headache':'Frequent Headache',
@@ -1051,7 +483,7 @@
             let available=new Set();
             Object.keys(screeningData).forEach(k=>{ const[y,m]=k.split('-'); if(parseInt(y)===currentYear&&Object.values(screeningData[k].sectors).reduce((a,b)=>a+b,0)>0) available.add(parseInt(m)); });
             const sorted=[...available].sort((a,b)=>a-b);
-            if (!sorted.length) { c.innerHTML='<span style="font-size:.82rem;color:var(--text-dark);opacity:0.5;padding:12px 0;">No data for this year</span>'; return; }
+            if (!sorted.length) { c.innerHTML='<span class="sync-note mt-0">No data for this year</span>'; return; }
             if (!available.has(currentMonth)) currentMonth=sorted[0];
             sorted.forEach(mi=>{
                 const item=document.createElement('div');
@@ -1062,20 +494,19 @@
             });
         }
 
-        // ========== FIXED RISK STRATIFICATION ==========
+        // ========== RISK STRATIFICATION ==========
         /**
-         * FIXED Risk Score Formula:
+         * Risk Score Formula:
          * 1. Exclude "No diagnosis" cases completely.
          * 2. Weighted sum = sum(weight_i * count_i) for all diagnosed diseases
          * 3. Average weight per diagnosed person = weightedSum / diagnosedCount
          * 4. Prevalence rate = diagnosedCount / totalCount  (0 to 1)
          * 5. Risk Score = (avgWeight / 5) * prevalenceRate  — normalized 0–1
-         *    where 5 is the max possible disease weight (Heart Disease)
-         * 
+         *
          * Thresholds:
-         *   > 0.30  → High Risk (critical sectors)
-         *   0.10–0.30 → Moderate Risk
-         *   < 0.10  → Low Risk
+         *   > 0.30     → High Risk
+         *   0.10–0.30  → Moderate Risk
+         *   < 0.10     → Low Risk
          */
         function getSectorDetailedRisk(sectorName, sectorData, totalCount) {
             if (!sectorData || totalCount === 0) return { diseases:[], totalRiskScore:0, riskLevel:'low', recommendations:[], diagnosedCount:0, prevalenceRate:0 };
@@ -1092,7 +523,6 @@
                 const percentage = (count / totalCount) * 100;
                 diseasesList.push({ ...disease, count, percentage: percentage.toFixed(1) });
 
-                // Only count actual diseases in risk score (exclude "No diagnosis" weight=0)
                 if (disease.weight > 0) {
                     diagnosedCount += count;
                     weightedRiskSum += disease.weight * count;
@@ -1101,21 +531,18 @@
 
             diseasesList.sort((a, b) => (b.weight * b.count) - (a.weight * a.count));
 
-            // Normalized risk score 0–1
             let totalRiskScore = 0;
             if (diagnosedCount > 0 && totalCount > 0) {
-                const avgWeight = weightedRiskSum / diagnosedCount;   // avg severity per sick person
-                const prevalenceRate = diagnosedCount / totalCount;    // proportion of sick people
-                totalRiskScore = (avgWeight / 5) * prevalenceRate;     // normalized
+                const avgWeight = weightedRiskSum / diagnosedCount;
+                const prevalenceRate = diagnosedCount / totalCount;
+                totalRiskScore = (avgWeight / 5) * prevalenceRate;
             }
 
-            // Thresholds
             let riskLevel = 'low';
             if      (totalRiskScore > 0.30) riskLevel = 'high';
             else if (totalRiskScore > 0.10) riskLevel = 'moderate';
             else                             riskLevel = 'low';
 
-            // Recommendations
             const recommendations = [];
             const sickDiseases = diseasesList.filter(d => d.weight > 0);
             const prevalencePct = diagnosedCount > 0 ? ((diagnosedCount / totalCount)*100).toFixed(1) : 0;
@@ -1151,7 +578,6 @@
                     const detail = getSectorDetailedRisk(sector, rawData, count);
                     sectorDetails[sector] = { ...detail, name:sectorNames[sector], totalCount:count };
 
-                    // Use same thresholds as getSectorDetailedRisk
                     if      (detail.totalRiskScore > 0.30) highRisk     += count;
                     else if (detail.totalRiskScore > 0.10) moderateRisk += count;
                     else                                    lowRisk      += count;
@@ -1163,7 +589,6 @@
                 }
             });
 
-            // Filter out "No diagnosis" from top diseases summary
             const topDiseases = Object.entries(allDiseasesCount)
                 .filter(([name]) => name !== 'No diagnosis')
                 .map(([name,count]) => ({ name, count, diseaseInfo:DISEASES.find(d=>d.name===name) }))
@@ -1238,18 +663,18 @@
                 const riskScoreEl = document.getElementById('modalRiskScore');
                 if (riskScoreEl) {
                     const s = detail.totalRiskScore || 0;
-                    let rColor='#10b981', rLabel='Low Risk';
-                    if      (s>0.30) { rColor='#ef4444'; rLabel='High Risk'; }
-                    else if (s>0.10) { rColor='#f59e0b'; rLabel='Moderate Risk'; }
+                    let rColor='#22ac38', rLabel='Low Risk';
+                    if      (s>0.30) { rColor='#eb4435'; rLabel='High Risk'; }
+                    else if (s>0.10) { rColor='#ff9500'; rLabel='Moderate Risk'; }
                     const prevPct = detail.diagnosedCount && detail.totalCount ? ((detail.diagnosedCount/detail.totalCount)*100).toFixed(1) : 0;
-                    riskScoreEl.innerHTML = `<span style="color:${rColor};font-weight:700;">&#9679; ${rLabel}</span> &mdash; Risk Score: <span style="color:var(--text-dark);opacity:0.6;">${(s*100).toFixed(1)}/100</span> &mdash; Disease Prevalence: <span style="color:var(--text-dark);opacity:0.6;">${prevPct}%</span>`;
+                    riskScoreEl.innerHTML = `<span style="color:${rColor};font-weight:700;">&#9679; ${rLabel}</span> &mdash; Risk Score: ${(s*100).toFixed(1)}/100 &mdash; Disease Prevalence: ${prevPct}%`;
                 }
 
                 const container = document.getElementById('diseaseListContainer');
                 const diseasesToShow = detail.diseases || [];
 
                 if (diseasesToShow.length === 0) {
-                    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dark);opacity:0.6;"><i class="bi bi-check-circle" style="font-size:2rem;"></i><p style="margin-top:12px;">No diseases recorded</p></div>`;
+                    container.innerHTML = `<div class="glass-panel state-panel m-0"><div class="state-icon"><i class="bi bi-check-circle"></i></div><h5 class="state-title">No Diseases Recorded</h5><p class="state-text">This sector has no recorded diagnoses.</p></div>`;
                 } else {
                     container.innerHTML = diseasesToShow.map(d => {
                         let riskClass='risk-low';
@@ -1258,17 +683,17 @@
                         else if (d.riskLevel==='moderate')     riskClass='risk-moderate';
                         else if (d.riskLevel==='low-moderate') riskClass='risk-moderate';
 
-                        const barColor = d.riskLevel==='critical'?'#ef4444':(d.riskLevel==='high'?'#f97316':(d.riskLevel==='moderate'?'#f59e0b':'#10b981'));
+                        const barColor = d.riskLevel==='critical'?'#eb4435':(d.riskLevel==='high'?'#ff9500':(d.riskLevel==='moderate'?'#ffb340':'#22ac38'));
                         return `<div class="disease-item">
                             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
                                 <div class="disease-name">
                                     <span class="risk-level-badge ${riskClass}">${d.riskLevel.toUpperCase()}</span>
                                     <span>${d.name}</span>
                                 </div>
-                                <div class="disease-count">${d.count} <span style="font-size:0.8rem;color:var(--text-dark);opacity:0.6;">(${d.percentage}%)</span></div>
+                                <div class="disease-count">${d.count} <small>(${d.percentage}%)</small></div>
                             </div>
                             <div class="progress-risk"><div class="progress-risk-fill" style="width:${Math.min(parseFloat(d.percentage),100)}%;background:${barColor};"></div></div>
-                            <div style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;margin-top:8px;"><i class="bi bi-arrow-right"></i> ${d.recommendation}</div>
+                            <div class="caption mt-2"><i class="bi bi-arrow-right"></i> ${d.recommendation}</div>
                         </div>`;
                     }).join('');
                 }
@@ -1277,7 +702,7 @@
                 const recs = detail.recommendations || [];
                 if (recs.length > 0) {
                     recBox.style.display='block';
-                    document.getElementById('recommendationText').innerHTML = recs.map(r=>`<div style="margin-bottom:6px;"><i class="bi bi-check2-circle me-2" style="color:var(--naruto-orange);"></i>${r}</div>`).join('');
+                    document.getElementById('recommendationText').innerHTML = recs.map(r=>`<div class="mb-1"><i class="bi bi-check2-circle me-2" style="color:var(--accent-color);"></i>${r}</div>`).join('');
                 } else { recBox.style.display='none'; }
 
                 modal.show();
@@ -1303,7 +728,7 @@
             });
             const container = document.getElementById('categoryDetailsContainer');
             if (sectorsInCategory.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dark);opacity:0.6;"><i class="bi bi-emoji-smile" style="font-size:2rem;"></i><p style="margin-top:12px;">No sectors in this risk category</p></div>`;
+                container.innerHTML = `<div class="glass-panel state-panel m-0"><div class="state-icon"><i class="bi bi-emoji-smile"></i></div><h5 class="state-title">All Clear!</h5><p class="state-text">No sectors in this risk category.</p></div>`;
             } else {
                 container.innerHTML = sectorsInCategory.map(detail => {
                     const badgeClass = detail.totalRiskScore>0.30?'risk-critical':(detail.totalRiskScore>0.10?'risk-moderate':'risk-low');
@@ -1312,13 +737,13 @@
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <div>
                                 <strong style="font-size:1rem;">${detail.name}</strong>
-                                <div style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;">${detail.totalCount} participants | Prevalence: ${((detail.diagnosedCount||0)/detail.totalCount*100).toFixed(1)}%</div>
+                                <div class="caption">${detail.totalCount} participants | Prevalence: ${((detail.diagnosedCount||0)/detail.totalCount*100).toFixed(1)}%</div>
                             </div>
                             <span class="risk-level-badge ${badgeClass}">Risk Score: ${(detail.totalRiskScore*100).toFixed(1)}/100</span>
                         </div>
-                        <div style="margin-top:10px;">
-                            ${topConditions.map(d=>`<span style="background:rgba(249,115,22,0.1);padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:6px;">${d.name} (${d.count})</span>`).join('')}
-                            ${(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').length>3?`<span style="font-size:0.7rem;color:var(--text-dark);opacity:0.5;">+${(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').length-3} more</span>`:''}
+                        <div class="mt-2 d-flex flex-wrap gap-1">
+                            ${topConditions.map(d=>`<span class="chip" style="--chip:var(--accent-color);">${d.name} (${d.count})</span>`).join('')}
+                            ${(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').length>3?`<span class="caption align-self-center">+${(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').length-3} more</span>`:''}
                         </div>
                     </div>`;
                 }).join('');
@@ -1329,7 +754,7 @@
             const modal = new bootstrap.Modal(document.getElementById('riskCategoryModal'), { backdrop:true, keyboard:true });
             modal.show();
         }
-        
+
 
         // ========== COMPARISON FUNCTIONS ==========
         function populateComparisonSelects() {
@@ -1439,7 +864,7 @@
         }
 
         function createDrilldownCard(title, value, note) {
-            return `<div class="col-md-4"><div class="drilldown-card"><span class="scroll-stamp">🍃</span><div class="drilldown-card-title">${title}</div><div class="drilldown-card-value">${value}</div><div class="drilldown-card-sub">${note}</div></div></div>`;
+            return `<div class="col-md-4"><div class="drilldown-card"><div class="drilldown-card-title">${title}</div><div class="drilldown-card-value">${value}</div><div class="drilldown-card-sub">${note}</div></div></div>`;
         }
 
         function showDrilldownCards(type,key) {
@@ -1451,8 +876,6 @@
             const riskDetail = getSectorDetailedRisk(key, data.rawData[key]||{}, data.sectors[key]||0);
             const cards=[];
             cards.push(createDrilldownCard('Sector', itemName, `Detailed insight for ${itemName}`));
-            cards.push(createDrilldownCard('Average Age', summary.averageAge ? `${summary.averageAge} years` : 'Not available', summary.averageAge ? 'Based on available participant records' : 'Age data not present in source rows'));
-            cards.push(createDrilldownCard('Top Departments', summary.topDepartments.length ? summary.topDepartments.join('<br>') : 'Not available', summary.topDepartments.length ? 'Most common departments in this sector' : 'Department data not present in source rows'));
             cards.push(createDrilldownCard('Risk Level', riskDetail.riskLevel.toUpperCase(), `Estimated risk score ${Math.round(riskDetail.totalRiskScore*100)}%`));
             cards.push(createDrilldownCard('Top Condition', riskDetail.diseases.length ? `${riskDetail.diseases[0].name} (${riskDetail.diseases[0].count})` : 'No condition data', riskDetail.diseases.length ? `Top diagnosed condition` : 'No diagnosed condition data'));
             document.getElementById('drilldownCards').innerHTML = cards.join('');
@@ -1546,14 +969,14 @@
                     const parent=numEl.closest('.sector-card');
                     let span=parent.querySelector('.comparison-change');
                     if (!span) { span=document.createElement('div'); span.className='comparison-change'; numEl.after(span); }
-                    const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#10b981':(diff<0?'#ef4444':'#a68b6c');
-                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:var(--text-dark);opacity:0.5;">(${val1} → ${val2})</span>`;
+                    const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#22ac38':(diff<0?'#eb4435':'#98a2b3');
+                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:var(--text-tertiary);">(${val1} → ${val2})</span>`;
                 }
             });
             const t1=Object.values(comparisonData1.sectors).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.sectors).reduce((a,b)=>a+b,0);
             const td=t2-t1, tp=t1>0?((td/t1)*100).toFixed(1):0;
             const tEl=document.getElementById('total-participants');
-            if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#10b981':(td<0?'#ef4444':'#a68b6c')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
+            if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#22ac38':(td<0?'#eb4435':'#98a2b3')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
             updateComparisonCharts();
         }
 
@@ -1578,15 +1001,15 @@
             const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const lbl1=`${mn[parseInt(document.getElementById('compareMonth1').value)-1]} ${document.getElementById('compareYear1').value}`;
             const lbl2=`${mn[parseInt(document.getElementById('compareMonth2').value)-1]} ${document.getElementById('compareYear2').value}`;
-            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(245,158,11,0.6)',borderRadius:8},{label:lbl2,data:d2,backgroundColor:'rgba(249,115,22,0.6)',borderRadius:8}] }, options:{ responsive:true, plugins:{legend:{position:'top',labels:{color:'var(--text-dark)',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(92,64,51,0.1)'}}} } });
+            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(255,105,0,0.75)',borderRadius:10,borderSkipped:false},{label:lbl2,data:d2,backgroundColor:'rgba(255,149,0,0.75)',borderRadius:10,borderSkipped:false}] }, options:{ responsive:true, plugins:{legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8}}} } });
             if (compChart) compChart.destroy();
             const labels2=['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'];
             const comp1 = aggregateComplaints(comparisonData1.complaints);
             const comp2 = aggregateComplaints(comparisonData2.complaints);
             compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[
-                { label: lbl1, data: comp1, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.2)', fill: false, tension: .3, pointRadius: 3, pointHoverRadius: 6 },
-                { label: lbl2, data: comp2, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.2)', fill: false, tension: .3, pointRadius: 3, pointHoverRadius: 6 }
-            ] }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}, legend:{labels:{color:'var(--text-dark)',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(92,64,51,0.1)'}}} } });
+                { label: lbl1, data: comp1, borderColor: '#ff6900', backgroundColor: 'rgba(255,105,0,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 },
+                { label: lbl2, data: comp2, borderColor: '#ff9500', backgroundColor: 'rgba(255,149,0,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 }
+            ] }, options:{ responsive:true, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},padding:12,cornerRadius:12,boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
         }
 
         function resetComparison() {
@@ -1608,13 +1031,32 @@
             }
         }
 
+        const doughnutCenterPlugin={
+            id:'doughnutCenter',
+            afterDraw(chart){
+                const labels=chart.data.labels||[];
+                if(!labels.length||labels[0]==='No data') return;
+                const meta=chart.getDatasetMeta(0);
+                if(!meta.data.length) return;
+                const {x,y}=meta.data[0];
+                const ctx=chart.ctx;
+                const total=(chart.data.datasets[0].data||[]).reduce((a,b)=>a+(Number(b)||0),0);
+                ctx.save();
+                ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.font='600 24px MiSans, sans-serif'; ctx.fillStyle='rgba(0,0,0,.9)';
+                ctx.fillText(total.toLocaleString(), x, y-8);
+                ctx.font='500 10px MiSans, sans-serif'; ctx.fillStyle='rgba(0,0,0,.45)';
+                ctx.fillText('SCREENED', x, y+13);
+                ctx.restore();
+            }
+        };
+
         function updateCharts(d) {
-            const gc='rgba(92,64,51,0.1)',tc='var(--text-dark)';
             if (popChart&&!comparisonMode) popChart.destroy();
             if (!comparisonMode) {
                 const sectorOrder=['students','pt','pharmacy','eng','business','agri','workers'];
                 const labelMap={students:'Students',pt:'Physical Therapy',pharmacy:'Pharmacy',eng:'Engineering',business:'Business',agri:'Agriculture',workers:'Workers'};
-                const colors=['rgba(59,130,246,.65)','rgba(239,68,68,.65)','rgba(16,185,129,.65)','rgba(245,158,11,.65)','rgba(139,92,246,.65)','rgba(132,204,22,.65)','rgba(100,116,139,.65)'];
+                const colors=['rgba(255,105,0,.78)','rgba(62,139,255,.78)','rgba(34,172,56,.78)','rgba(255,149,0,.78)','rgba(0,184,217,.78)','rgba(143,91,255,.78)','rgba(152,162,179,.78)'];
                 const labels=[]; const values=[]; const bg=[];
                 sectorOrder.forEach((key, index) => {
                     if (key in d.sectors) {
@@ -1624,30 +1066,33 @@
                     }
                 });
                 if (labels.length === 0) {
-                    labels.push('No data'); values.push(1); bg.push('rgba(148,163,184,0.3)');
+                    labels.push('No data'); values.push(1); bg.push('rgba(142,142,147,.35)');
                 }
                 populationChartKeys = sectorOrder.filter(key => key in d.sectors);
-                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:1,borderColor:'rgba(15,23,42,.8)'}] }, options:{ responsive:true, cutout:'55%', animation:{animateScale:true,animateRotate:true}, onClick:(evt,elements)=>{ if(elements.length) onPopulationChartClick(elements[0].index); }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:16,color:tc,font:{family:'Cairo',size:11}}}} } });
+                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt,elements)=>{ if(elements.length) onPopulationChartClick(elements[0].index); }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
             }
             if (compChart) compChart.destroy();
             const lineKeys=['students','faculties','workers'];
             const lineLabels={students:'Students',faculties:'Faculties',workers:'Workers'};
-            const lineColors=['#3b82f6','#f97316','#10b981'];
-            const lineBackgrounds=['rgba(59,130,246,0.2)','rgba(249,115,22,0.2)','rgba(16,185,129,0.2)'];
+            const lineColors=['#ff6900','#3e8bff','#22ac38'];
+            const lineBackgrounds=['rgba(255,105,0,0.08)','rgba(62,139,255,0.08)','rgba(34,172,56,0.08)'];
             const datasets=lineKeys.filter(key => Array.isArray(d.complaints[key])).map((key,index) => ({
                 label: lineLabels[key],
                 data: d.complaints[key],
                 borderColor: lineColors[index],
                 backgroundColor: lineBackgrounds[index],
-                fill:false,
-                tension:.4,
-                pointRadius:3,
-                pointHoverRadius:6
+                borderWidth:2.5,
+                fill:true,
+                tension:.35,
+                pointRadius:0,
+                pointHoverRadius:5,
+                pointHoverBorderWidth:2,
+                pointHoverBorderColor:'#ffffff'
             }));
             if (datasets.length === 0) {
-                datasets.push({ label:'No data', data:Array(23).fill(0), borderColor:'var(--wood-dark)', backgroundColor:'rgba(148,163,184,0.2)', fill:false, tension:.4, pointRadius:3, pointHoverRadius:6 });
+                datasets.push({ label:'No data', data:Array(23).fill(0), borderColor:'#98a2b3', backgroundColor:'rgba(152,162,179,0.08)', borderWidth:2.5, fill:true, tension:.35, pointRadius:0, pointHoverRadius:5 });
             }
-            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'], datasets:datasets }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(92,64,51,0.1)'}}} } });
+            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'], datasets:datasets }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',padding:12,cornerRadius:12,titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
         }
 
         function initComparisonEvents() {
@@ -1675,6 +1120,3 @@
 
 </body>
 </html>
-
-
-

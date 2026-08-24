@@ -1,752 +1,107 @@
 ﻿<!doctype html>
-<html lang="en" dir="ltr" data-theme="naruto">
+<html lang="en" dir="ltr">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Konoha | Health Screening Project</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <meta name="theme-color" content="#f6f6f8" />
+        <title>Health Screening Project</title>
+        <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    
+        <link rel="stylesheet" href="hig.css" />
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-        <script>
-        // Maintenance Mode Check (Same functionality - preserved)
-        (function() {
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true,
-                    header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.reload();
-                            } else {
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                    window.location.href = 'login.html';
-                                }
-                            }
-                        } else {
-                             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                window.location.href = 'login.html';
-                            }
-                        }
-                    },
-                    error: function(err) {
-                        console.error("Maintenance check failed", err);
-                         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                            window.location.href = 'login.html';
-                        }
-                    }
-                });
-            }
-        })();
-    </script>
-
-        <style>
-            /* ===== Hidden Leaf Village Colors ===== */
-            :root {
-                --naruto-orange: #FF8C00;
-                --naruto-orange-dark: #E67600;
-                --leaf-green: #2E5A2B;
-                --leaf-green-light: #4A7C3F;
-                --clay-bg: #F4F1E1;
-                --wood-dark: #5C4033;
-                --wood-light: #8B6914;
-                --shadow-color: #1a1a2e;
-                --text-dark: #2F2E2E;
-                --text-light: #F5F5DC;
-                --scroll-bg: #FFF8E7;
-                --radius-sm: 12px;
-                --radius-md: 20px;
-                --radius-lg: 32px;
-            }
-
-            /* Nature-inspired background + moving clouds */
-            body {
-                font-family: 'Poppins', 'Cairo', sans-serif;
-                background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
-                min-height: 100vh;
-                position: relative;
-                overflow-x: hidden;
-            }
-
-            /* Floating clouds effect like anime */
-            body::before {
-                content: "☁️";
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                pointer-events: none;
-                font-size: 120px;
-                white-space: nowrap;
-                color: rgba(255,255,240,0.08);
-                animation: cloudsFloat 40s linear infinite;
-                z-index: 0;
-            }
-
-            @keyframes cloudsFloat {
-                0% { transform: translateX(0%); }
-                100% { transform: translateX(-50%); }
-            }
-
-            /* Scroll-style cards */
-            .scroll-card {
-                background: var(--scroll-bg);
-                background-image: repeating-linear-gradient(
-                    to bottom,
-                    transparent,
-                    transparent 28px,
-                    rgba(139, 69, 19, 0.05) 28px,
-                    rgba(139, 69, 19, 0.05) 32px
-                );
-                border-radius: 16px;
-                border-left: 8px solid var(--wood-dark);
-                border-right: 8px solid var(--wood-dark);
-                border-top: none;
-                border-bottom: none;
-                position: relative;
-                overflow: visible;
-                z-index: 0;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-                transition: all 0.3s ease;
-            }
-
-            .scroll-card:hover {
-                transform: translateY(-5px) rotate(0.5deg);
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            }
-
-            /* Scroll wooden rollers */
-            .scroll-card::before, .scroll-card::after,
-            .sdg-card::before, .sdg-card::after,
-            .year-card::before, .year-card::after,
-            .mvg-card::before, .mvg-card::after {
-                content: '';
-                position: absolute;
-                left: -4px; right: -4px;
-                height: 18px;
-                z-index: 3;
-                border-radius: 9px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-                pointer-events: none;
-                background:
-                    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                    linear-gradient(to bottom,
-                        #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                    );
-            }
-            .scroll-card::before, .sdg-card::before, .year-card::before, .mvg-card::before { top: -9px; }
-            .scroll-card::after,  .sdg-card::after,  .year-card::after,  .mvg-card::after  { bottom: -9px; }
-
-            /* Ninja stamp */
-            .scroll-stamp {
-                position: absolute;
-                top: 10px; right: 14px;
-                font-size: 1.4rem;
-                z-index: 3;
-                opacity: 0.5;
-                transform: rotate(-15deg);
-                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-                pointer-events: none;
-            }
-
-            /* Village logo */
-            .konoha-logo {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-                padding: 6px 14px;
-                border-radius: 50px;
-                font-weight: 900;
-                color: var(--text-light);
-                font-size: 0.85rem;
-                box-shadow: 0 0 12px rgba(255,140,0,0.3);
-            }
-
-            /* Sharingan hover effect */
-            .sharingan-hover {
-                transition: all 0.3s ease;
-            }
-            .sharingan-hover:hover {
-                animation: sharinganSpin 0.6s ease-in-out;
-                color: var(--naruto-orange) !important;
-            }
-
-            @keyframes sharinganSpin {
-                0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
-                50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
-                100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
-            }
-
-            /* Ninja-style navbar */
-            .navbar {
-                background: rgba(44, 34, 24, 0.95);
-                backdrop-filter: blur(12px);
-                border-bottom: 2px solid var(--naruto-orange);
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                padding: 12px 0;
-            }
-
-            .navbar-brand {
-                font-weight: 900;
-                font-size: 1.2rem;
-                background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .nav-link {
-                font-weight: 700;
-                color: #e8d5b7 !important;
-                padding: 8px 18px !important;
-                border-radius: 30px;
-                transition: all 0.25s;
-                font-size: 0.85rem;
-                margin: 0 2px;
-            }
-            .nav-link:hover {
-                background: rgba(255, 140, 0, 0.2);
-                color: var(--naruto-orange) !important;
-                transform: translateY(-2px);
-            }
-            .nav-link.active {
-                background: rgba(255, 140, 0, 0.3);
-                color: var(--naruto-orange) !important;
-                border: 1px solid var(--naruto-orange);
-                box-shadow: 0 0 10px rgba(255,140,0,0.3);
-            }
-
-            /* Hero Section */
-            .hero-section {
-                position: relative;
-                padding: 140px 0 100px;
-                min-height: 100vh;
-                display: flex;
-                align-items: center;
-            }
-
-            .hero-eyebrow {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                background: rgba(46, 90, 43, 0.8);
-                border: 1px solid var(--naruto-orange);
-                border-radius: 50px;
-                padding: 6px 20px;
-                font-size: 0.75rem;
-                font-weight: 800;
-                color: var(--naruto-orange);
-                letter-spacing: 0.05em;
-                margin-bottom: 24px;
-                backdrop-filter: blur(4px);
-            }
-
-            .hero-title {
-                font-size: clamp(2rem, 5vw, 3.5rem);
-                font-weight: 900;
-                line-height: 1.15;
-                margin-bottom: 20px;
-                color: var(--text-light);
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            }
-            
-            .text-gradient-naruto {
-                background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-size: 200% auto;
-                animation: chakraFlow 3s ease infinite;
-            }
-
-            @keyframes chakraFlow {
-                0%, 100% { background-position: 0% center; }
-                50% { background-position: 100% center; }
-            }
-
-            .hero-sub {
-                font-size: 1rem;
-                color: #F5F5DC;
-                line-height: 1.7;
-                max-width: 500px;
-                margin-bottom: 35px;
-                text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            }
-
-            /* Rasengan-style buttons */
-            .btn-rasengan {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                background: linear-gradient(135deg, var(--naruto-orange), var(--naruto-orange-dark));
-                border: none;
-                padding: 12px 32px;
-                border-radius: 40px;
-                color: white;
-                font-weight: 800;
-                font-size: 0.9rem;
-                box-shadow: 0 5px 15px rgba(255,140,0,0.4);
-                transition: all 0.35s;
-                text-decoration: none;
-                position: relative;
-                overflow: hidden;
-            }
-            .btn-rasengan:hover {
-                transform: translateY(-4px) scale(1.02);
-                box-shadow: 0 12px 25px rgba(255,140,0,0.6);
-                color: white;
-            }
-            .btn-rasengan::before {
-                content: "🌀";
-                position: absolute;
-                left: -20px;
-                opacity: 0;
-                transition: all 0.4s;
-            }
-            .btn-rasengan:hover::before {
-                left: 10px;
-                opacity: 1;
-            }
-
-            .btn-konoha {
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                background: rgba(92, 64, 51, 0.8);
-                border: 1px solid var(--naruto-orange);
-                padding: 12px 32px;
-                border-radius: 40px;
-                color: var(--text-light);
-                font-weight: 800;
-                font-size: 0.9rem;
-                transition: all 0.35s;
-                text-decoration: none;
-            }
-            .btn-konoha:hover {
-                background: rgba(255, 140, 0, 0.3);
-                border-color: var(--naruto-orange);
-                color: var(--naruto-orange);
-                transform: translateY(-4px);
-            }
-
-            /* Stats Bar */
-            .stats-bar {
-                position: relative;
-                z-index: 10;
-                background: rgba(92, 64, 51, 0.85);
-                backdrop-filter: blur(12px);
-                border: 1px solid var(--naruto-orange);
-                border-radius: 30px;
-                padding: 30px 35px;
-                margin-top: -50px;
-            }
-            .stat-val {
-                font-size: 2rem;
-                font-weight: 900;
-                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-            .stat-label {
-                font-size: 0.75rem;
-                color: #e8d5b7;
-                font-weight: 600;
-            }
-
-            /* SDG Cards */
-            .sdg-card {
-                background: var(--scroll-bg);
-                background-image: repeating-linear-gradient(
-                    to bottom,
-                    transparent,
-                    transparent 28px,
-                    rgba(139, 69, 19, 0.05) 28px,
-                    rgba(139, 69, 19, 0.05) 32px
-                );
-                border-left: 8px solid var(--wood-dark);
-                border-right: 8px solid var(--wood-dark);
-                border-top: none;
-                border-bottom: none;
-                border-radius: 16px;
-                padding: 28px 24px;
-                display: flex;
-                align-items: flex-start;
-                gap: 14px;
-                position: relative;
-                overflow: visible;
-                z-index: 0;
-                transition: all 0.35s;
-                height: 100%;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-            }
-            .sdg-card:hover {
-                transform: translateY(-6px);
-                border-color: var(--naruto-orange);
-                box-shadow: 0 12px 25px rgba(255,140,0,0.3);
-            }
-            .sdg-icon {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.3rem;
-                color: white;
-                flex-shrink: 0;
-            }
-            .sdg-name {
-                font-size: 0.9rem;
-                font-weight: 800;
-                color: var(--wood-dark);
-            }
-            .sdg-desc {
-                font-size: 0.75rem;
-                color: #5a4a3a;
-                margin-top: 5px;
-                line-height: 1.5;
-            }
-
-            /* Mission/Vision/Goals Cards */
-            .mvg-card {
-                background: var(--scroll-bg);
-                background-image: repeating-linear-gradient(
-                    to bottom,
-                    transparent,
-                    transparent 28px,
-                    rgba(139, 69, 19, 0.05) 28px,
-                    rgba(139, 69, 19, 0.05) 32px
-                );
-                border-left: 8px solid var(--wood-dark);
-                border-right: 8px solid var(--wood-dark);
-                border-top: none;
-                border-bottom: none;
-                border-radius: 16px;
-                padding: 40px 28px;
-                text-align: center;
-                height: 100%;
-                transition: all 0.4s;
-                position: relative;
-                overflow: visible;
-                z-index: 0;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-            }
-            .mvg-card:hover {
-                transform: translateY(-10px);
-                border-color: var(--naruto-orange);
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            }
-            .mvg-icon {
-                width: 70px;
-                height: 70px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, var(--leaf-green), var(--wood-dark));
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.8rem;
-                color: var(--naruto-orange);
-                margin: 0 auto 20px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            }
-            .mvg-title {
-                font-size: 1.15rem;
-                font-weight: 800;
-                color: var(--wood-dark);
-                margin-bottom: 12px;
-            }
-            .mvg-text {
-                font-size: 0.8rem;
-                color: #5a4a3a;
-                line-height: 1.7;
-            }
-
-            /* Issues Cards */
-            .year-card {
-                background: var(--scroll-bg);
-                background-image: repeating-linear-gradient(
-                    to bottom,
-                    transparent,
-                    transparent 28px,
-                    rgba(139, 69, 19, 0.05) 28px,
-                    rgba(139, 69, 19, 0.05) 32px
-                );
-                border-left: 8px solid var(--wood-dark);
-                border-right: 8px solid var(--wood-dark);
-                border-top: none;
-                border-bottom: none;
-                border-radius: 16px;
-                padding: 32px 20px;
-                text-align: center;
-                transition: all 0.4s;
-                cursor: pointer;
-                position: relative;
-                overflow: visible;
-                z-index: 0;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-            }
-            .year-card:hover {
-                transform: translateY(-8px);
-                border-color: var(--naruto-orange);
-                box-shadow: 0 12px 25px rgba(255,140,0,0.3);
-            }
-            .year-icon {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.5rem;
-                margin: 0 auto 15px;
-            }
-            .year-title {
-                font-size: 1.8rem;
-                font-weight: 900;
-                margin-bottom: 5px;
-            }
-            .year-count span {
-                font-weight: 500;
-                opacity: 0.7;
-            }
-
-            /* Footer */
-            .modern-footer {
-                background: rgba(44, 34, 24, 0.95);
-                border-top: 3px solid var(--naruto-orange);
-                padding: 60px 0 30px;
-                margin-top: 40px;
-            }
-            .footer-card {
-                background: var(--scroll-bg);
-                background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-                border-left: 8px solid var(--wood-dark);
-                border-right: 8px solid var(--wood-dark);
-                border-top: none;
-                border-bottom: none;
-                border-radius: 16px;
-                padding: 28px 22px;
-                position: relative;
-                overflow: visible;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-                transition: all 0.3s ease;
-                z-index: 0;
-            }
-            .footer-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            }
-            .footer-card::before, .footer-card::after {
-                content: '';
-                position: absolute;
-                left: -4px; right: -4px;
-                height: 18px;
-                z-index: 3;
-                border-radius: 9px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-                background:
-                    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                    linear-gradient(to bottom,
-                        #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                    );
-            }
-            .footer-card::before { top: -9px; }
-            .footer-card::after  { bottom: -9px; }
-            .footer-card .scroll-stamp {
-                position: absolute;
-                top: 10px; right: 14px;
-                font-size: 1.4rem;
-                z-index: 3;
-                opacity: 0.5;
-                transform: rotate(-15deg);
-                filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-                pointer-events: none;
-            }
-
-            .footer-logo {
-                font-size: 1.1rem;
-                font-weight: 900;
-                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-            .footer-copyright {
-                font-size: 0.85rem;
-                color: #c4b08a;
-                letter-spacing: 0.03em;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 6px;
-            }
-            .footer-copyright .copy-icon {
-                color: var(--naruto-orange);
-                font-size: 0.9rem;
-            }
-            .footer-copyright .dev-by {
-                color: #a09070;
-                font-weight: 400;
-            }
-            .footer-copyright .dev-name {
-                background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                font-weight: 800;
-                letter-spacing: 0.05em;
-            }
-            .footer-copyright .pipe {
-                color: rgba(255,140,0,0.3);
-                font-weight: 300;
-            }
-
-            /* Section styles */
-            .section-eyebrow {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-                background: rgba(46, 90, 43, 0.8);
-                border: 1px solid var(--naruto-orange);
-                border-radius: 50px;
-                padding: 5px 14px;
-                font-size: 0.7rem;
-                font-weight: 700;
-                color: var(--naruto-orange);
-                letter-spacing: 0.05em;
-                margin-bottom: 15px;
-            }
-            .section-title {
-                font-size: clamp(1.4rem, 3vw, 2rem);
-                font-weight: 900;
-                color: var(--text-light);
-                text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-                margin-bottom: 10px;
-            }
-            .section-sub {
-                color: #e8d5b7;
-                font-size: 0.85rem;
-                line-height: 1.6;
-            }
-            .cursor-pointer {
-                cursor: pointer;
-            }
-
-            @media (max-width: 768px) {
-                .hero-section { padding: 100px 0 60px; }
-                .stats-bar { margin-top: 20px; }
-            }
-        </style>
     </head>
     <body>
-        <!-- Navigation Bar -->
-        <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="ambient" aria-hidden="true">
+            <div class="ambient-layer">
+                <div class="ambient-blob b1"></div>
+                <div class="ambient-blob b2"></div>
+                <div class="ambient-blob b3"></div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
             <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <span class="konoha-logo">🍃</span>
-                    Health Screening
+                <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                    <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                    <span class="brand-text">Health Screening</span>
                 </a>
-                <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link active sharingan-hover" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
-                        <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link sharingan-hover" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
-                        <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
-                        <li class="nav-item"><a class="nav-link sharingan-hover" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
-                        <li class="nav-item"><a class="nav-link sharingan-hover" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                        <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                        <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="container position-relative text-center" style="z-index: 2">
-                <div class="d-flex flex-column align-items-center" data-aos="fade-up" data-aos-duration="1100">
-                    <div class="hero-eyebrow">
-                        <i class="bi bi-shield-shaded"></i> Hidden Leaf Village - Health Mission
-                    </div>
-                    <h1 class="hero-title">
-                        The <span class="text-gradient-naruto">Health Screening</span> Project
-                    </h1>
-                    <h2 id="welcomeMessage" class="hero-sub mb-3" style="font-weight: 700; font-size: 1.1rem;"></h2>
-                    <p class="hero-sub">
-                        A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                    </p>
-                    <div class="d-flex gap-3 flex-wrap justify-content-center">
-                        <a href="screening.html" class="btn-rasengan">
-                            Explore Results <i class="bi bi-arrow-right"></i>
-                        </a>
-                        <a href="reports.html" class="btn-konoha">
-                            Download Report <i class="bi bi-download"></i>
-                        </a>
-                    </div>
+        <header class="hero-section">
+            <div class="container">
+                <h1 class="display-hero" data-reveal>
+                    The <span class="text-accent-gradient">Health Screening</span> Project
+                </h1>
+                <h2 id="welcomeMessage" class="welcome-line mt-3 mb-0" data-reveal data-reveal-delay="140"></h2>
+                <p class="hero-sub mt-3" data-reveal data-reveal-delay="200">
+                    A scientific preventive approach for a sustainable quality of life within the SEKEM community.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap mt-4" data-reveal data-reveal-delay="280">
+                    <a href="screening.html" class="btn-hig btn-primary-hig">Explore Results</a>
+                    <a href="reports.html" class="btn-hig btn-glass-hig">Download Report</a>
                 </div>
             </div>
-        </section>
+        </header>
 
-
-
-        <!-- SDG Section -->
-        <section class="sdg-section mt-5 pt-4">
-            <div class="container" style="position: relative; z-index: 2">
+        <section class="section-block">
+            <div class="container">
                 <div class="row align-items-center g-5">
-                    <div class="col-lg-4" data-aos="fade-right" data-aos-duration="900">
-                        <div class="section-eyebrow"><i class="bi bi-globe-asia-australia"></i> Global Goals</div>
-                        <h2 class="section-title">Supporting the <span class="text-gradient-naruto">SDGs</span></h2>
-                        <p class="section-sub">
-                            Our project aligns with the UN Sustainable Development Goals, driving meaningful impact.
-                        </p>
+                    <div class="col-lg-4">
+                        <div class="section-head text-lg-start text-center mb-0" data-reveal>
+                            <h2 class="section-title">Supporting the <span class="text-accent-gradient">SDGs</span></h2>
+                            <p class="hero-sub ms-lg-0">Our project aligns with the UN Sustainable Development Goals, driving meaningful impact.</p>
+                        </div>
                     </div>
                     <div class="col-lg-8">
                         <div class="row g-3">
-                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                                <div class="sdg-card">
-                                    <span class="scroll-stamp">🍃</span>
-                                    <div class="sdg-icon" style="background: #4c9f38">
-                                        <i class="bi bi-heart-pulse-fill"></i>
-                                    </div>
+                            <div class="col-md-4" data-reveal data-reveal-delay="100">
+                                <div class="hig-card info-card" style="--tile:#22ac38">
+                                    <span class="info-icon"><i class="bi bi-heart-pulse-fill"></i></span>
                                     <div>
-                                        <div class="sdg-ninja-num" style="font-size:0.65rem; color:#5a4a3a; font-weight:600;">Goal 3</div>
-                                        <div class="sdg-name">Good Health & Well-Being</div>
-                                        <div class="sdg-desc">Promoting preventive healthcare and early detection programs.</div>
+                                        <div class="info-kicker">Goal 3</div>
+                                        <div class="info-title">Good Health &amp; Well-Being</div>
+                                        <p class="info-desc">Promoting preventive healthcare and early detection programs.</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="180">
-                                <div class="sdg-card">
-                                    <span class="scroll-stamp">🍃</span>
-                                    <div class="sdg-icon" style="background: #a21942">
-                                        <i class="bi bi-briefcase-fill"></i>
-                                    </div>
+                            <div class="col-md-4" data-reveal data-reveal-delay="180">
+                                <div class="hig-card info-card" style="--tile:#ff9500">
+                                    <span class="info-icon"><i class="bi bi-briefcase-fill"></i></span>
                                     <div>
-                                        <div class="sdg-ninja-num" style="font-size:0.65rem; color:#5a4a3a; font-weight:600;">Goal 8</div>
-                                        <div class="sdg-name">Decent Work & Economic Growth</div>
-                                        <div class="sdg-desc">Improving worker health to enhance productivity and quality of life.</div>
+                                        <div class="info-kicker">Goal 8</div>
+                                        <div class="info-title">Decent Work &amp; Economic Growth</div>
+                                        <p class="info-desc">Improving worker health to enhance productivity and quality of life.</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="260">
-                                <div class="sdg-card">
-                                    <span class="scroll-stamp">🍃</span>
-                                    <div class="sdg-icon" style="background: #00558a">
-                                        <i class="bi bi-bank2"></i>
-                                    </div>
+                            <div class="col-md-4" data-reveal data-reveal-delay="260">
+                                <div class="hig-card info-card" style="--tile:#3e8bff">
+                                    <span class="info-icon"><i class="bi bi-bank2"></i></span>
                                     <div>
-                                        <div class="sdg-ninja-num" style="font-size:0.65rem; color:#5a4a3a; font-weight:600;">Goal 16</div>
-                                        <div class="sdg-name">Peace, Justice & Institutions</div>
-                                        <div class="sdg-desc">Building accountable health systems within the community.</div>
+                                        <div class="info-kicker">Goal 16</div>
+                                        <div class="info-title">Peace, Justice &amp; Institutions</div>
+                                        <p class="info-desc">Building accountable health systems within the community.</p>
                                     </div>
                                 </div>
                             </div>
@@ -756,128 +111,91 @@
             </div>
         </section>
 
-        <!-- Mission / Vision / Goals -->
-        <section class="mvg-section py-5">
-            <div class="container" style="position: relative; z-index: 2">
-                <div class="text-center mb-5" data-aos="fade-down">
-                    <div class="section-eyebrow" style="margin: 0 auto 15px">
-                        <i class="bi bi-compass"></i> Our Foundation
-                    </div>
+        <section class="section-block">
+            <div class="container">
+                <div class="section-head text-center" data-reveal>
                     <h2 class="section-title">What Drives Us</h2>
                 </div>
                 <div class="row g-4">
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
-                        <div class="mvg-card">
-                            <span class="scroll-stamp">🍃</span>
-                            <div class="mvg-icon"><i class="bi bi-bullseye"></i></div>
-                            <h3 class="mvg-title">Our Mission</h3>
-                            <p class="mvg-text">To promote a culture of preventive health within the SEKEM community through early detection and effective intervention.</p>
+                    <div class="col-md-4" data-reveal data-reveal-delay="80">
+                        <div class="hig-card info-card center">
+                            <span class="info-icon"><i class="bi bi-bullseye"></i></span>
+                            <h3 class="info-title">Our Mission</h3>
+                            <p class="info-desc">To promote a culture of preventive health within the SEKEM community through early detection and effective intervention.</p>
                         </div>
                     </div>
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
-                        <div class="mvg-card">
-                            <span class="scroll-stamp">🍃</span>
-                            <div class="mvg-icon"><i class="bi bi-eye-fill"></i></div>
-                            <h3 class="mvg-title">Our Vision</h3>
-                            <p class="mvg-text">A healthy, productive SEKEM community, free from chronic diseases and postural problems.</p>
+                    <div class="col-md-4" data-reveal data-reveal-delay="160">
+                        <div class="hig-card info-card center">
+                            <span class="info-icon"><i class="bi bi-eye-fill"></i></span>
+                            <h3 class="info-title">Our Vision</h3>
+                            <p class="info-desc">A healthy, productive SEKEM community, free from chronic diseases and postural problems.</p>
                         </div>
                     </div>
-                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="240">
-                        <div class="mvg-card">
-                            <span class="scroll-stamp">🍃</span>
-                            <div class="mvg-icon"><i class="bi bi-trophy-fill"></i></div>
-                            <h3 class="mvg-title">Our Goals</h3>
-                            <p class="mvg-text">Building a comprehensive health database, reducing incidence rates, and raising health awareness.</p>
+                    <div class="col-md-4" data-reveal data-reveal-delay="240">
+                        <div class="hig-card info-card center">
+                            <span class="info-icon"><i class="bi bi-trophy-fill"></i></span>
+                            <h3 class="info-title">Our Goals</h3>
+                            <p class="info-desc">Building a comprehensive health database, reducing incidence rates, and raising health awareness.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Known Issues Section -->
-        <section class="errors-section py-4">
-            <div class="container" style="position: relative; z-index: 2">
-                <div class="text-center mb-5" data-aos="fade-down">
-                    <div class="section-eyebrow" style="margin: 0 auto 15px; background: rgba(139, 69, 19, 0.8);">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Mission Reports
-                    </div>
-                    <h2 class="section-title">Known <span class="text-gradient-naruto">Issues</span></h2>
+        <section class="section-block">
+            <div class="container">
+                <div class="section-head text-center" data-reveal>
+                    <h2 class="section-title">Known <span class="text-accent-gradient">Issues</span></h2>
                 </div>
                 <div id="issuesContainer"></div>
             </div>
         </section>
 
-        <!-- Issues Modal -->
-        <div class="modal fade" id="issuesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade modal-hig" id="issuesModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content" style="background: #FFF8E7; border: 3px solid var(--wood-dark); border-radius: 28px;">
-                    <div class="modal-header border-0 pt-4 px-4" id="modalHeader" style="background: var(--wood-dark); border-radius: 25px 25px 0 0;">
-                        <div class="d-flex align-items-center gap-4 w-100">
-                            <div class="modal-icon" id="modalIcon" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: white;">
-                                <i class="bi bi-calendar3"></i>
-                            </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                            <span class="modal-glyph" id="modalIcon"><i class="bi bi-calendar3"></i></span>
                             <div class="flex-grow-1">
-                                <h3 class="modal-title mb-1" id="modalYear" style="color: var(--naruto-orange); font-weight: 900;"></h3>
-                                <p class="mb-0" style="font-size: 0.8rem; color: #e8d5b7;">All issues recorded for this year</p>
+                                <h3 class="modal-title mb-0" id="modalYear" style="font-size:1.3rem;"></h3>
+                                <p class="caption mb-0">All issues recorded for this year</p>
                             </div>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
-                    <div class="modal-body pt-4 px-4 pb-4">
+                    <div class="modal-body">
                         <div class="row g-3" id="modalIssues"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer class="modern-footer">
+        <footer class="site-footer">
             <div class="container">
-                <div class="row g-4 justify-content-center">
-                    <div class="col-lg-5" data-aos="fade-up">
-                        <div class="footer-card">
-                            <span class="scroll-stamp">🍃</span>
-                            <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                                <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
-                            </div>
-                            <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
-                            <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
-                                A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                            </p>
+                <div class="row g-4 align-items-start">
+                    <div class="col-lg-6" data-reveal>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                            <span class="brand-text">Health Screening</span>
                         </div>
+                        <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
                     </div>
-                    <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
-                        <div class="footer-card">
-                            <span class="scroll-stamp">🍃</span>
-                            <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                                <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
-                            </div>
-                            <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
-                            <div class="d-flex flex-column gap-2 mt-2">
-                                <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
-                                    <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
-                                </a>
-                                <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                                    <i class="bi bi-envelope-fill me-2"></i> Email
-                                </a>
-                            </div>
+                    <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                        <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                            <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                            <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
                         </div>
                     </div>
                 </div>
-                <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
-                <div class="footer-bottom text-center">
-                    <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
-                    <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
-                </div>
+                <hr class="footer-rule" />
+                <p class="footer-copy">&copy; 2026 Health Screening Project &middot; Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
             </div>
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script src="hig.js"></script>
         <script>
-            AOS.init({ duration: 950, once: true, offset: 40 });
-
-            // Ninja-style greeting
             function getGreeting(hour) {
                 if (hour >= 5 && hour < 12) return { text: 'Good Morning', icon: '☀️' };
                 if (hour >= 12 && hour < 17) return { text: 'Good Afternoon', icon: '🌤️' };
@@ -886,21 +204,18 @@
             }
 
             document.addEventListener("DOMContentLoaded", function () {
-                const userName = sessionStorage.getItem('userName') || 'Ninja';
-                const hour = new Date().getHours();
-                const greeting = getGreeting(hour);
+                const greeting = getGreeting(new Date().getHours());
                 const welcomeEl = document.getElementById('welcomeMessage');
                 if (welcomeEl) {
-                    welcomeEl.innerHTML = `${greeting.icon} ${greeting.text}, <span class="text-gradient-naruto">${userName}</span>!`;
+                    welcomeEl.innerHTML = `${greeting.icon} ${greeting.text}, <span class="text-accent-gradient">Guest</span>`;
                 }
-
-
             });
         </script>
 
-
-        <!-- Issues Data - Same functionality preserved -->
         <script>
+            let issuesByYear = {};
+            const ISSUE_COLORS = ['#eb4435', '#ff9500', '#22ac38', '#3e8bff', '#8f5bff', '#ff2d55'];
+
             document.addEventListener("DOMContentLoaded", function () {
                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=220896824&single=true&output=csv", {
                     download: true,
@@ -909,51 +224,64 @@
                         const container = document.getElementById("issuesContainer");
                         const data = results.data.filter(row => row.Years || row.Issues);
                         if (data.length === 0) {
-                            container.innerHTML = `<div class="text-center"><div class="scroll-card" style="max-width:420px;margin:0 auto;text-align:center;padding:50px 36px;"><span class="scroll-stamp">🍃</span><div style="font-size:1.4rem;margin-bottom:12px;">🍃</div><h5 style="font-weight:900;color:#3d2b1f;margin-bottom:4px;">All Clear!</h5><p style="font-size:0.9rem;color:#5a4a3a;margin:0;">No issues reported &mdash; Mission successful!</p></div></div>`;
+                            container.innerHTML = `
+                                <div class="glass-panel state-panel" data-reveal>
+                                    <div class="state-icon"><i class="bi bi-check2"></i></div>
+                                    <h5 class="state-title">All Clear!</h5>
+                                    <p class="state-text">No issues reported.</p>
+                                </div>`;
+                            HIG.refreshReveals(container);
                             return;
                         }
-                        const groupedByYear = {};
+                        issuesByYear = {};
                         data.forEach(row => {
                             const year = row.Years || 'Unknown';
-                            if (!groupedByYear[year]) groupedByYear[year] = [];
-                            groupedByYear[year].push(row.Issues || '');
+                            if (!issuesByYear[year]) issuesByYear[year] = { items: [], color: '' };
+                            issuesByYear[year].items.push(row.Issues || '');
                         });
+                        const years = Object.keys(issuesByYear).sort().reverse();
                         let html = '<div class="row g-4 justify-content-center">';
-                        Object.keys(groupedByYear).sort().reverse().forEach((year, i) => {
-                            const count = groupedByYear[year].length;
-                            const colors = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7', '#ec4899'];
-                            const c = colors[i % colors.length];
+                        years.forEach((year, i) => {
+                            const c = ISSUE_COLORS[i % ISSUE_COLORS.length];
+                            issuesByYear[year].color = c;
+                            const count = issuesByYear[year].items.length;
                             html += `
-                                <div class="col-md-4 col-lg-3">
-                                    <div class="year-card cursor-pointer" onclick="showIssuesModal('${year}', ${JSON.stringify(groupedByYear[year]).replace(/"/g, '&quot;')}, '${c}')">
-                                        <span class="scroll-stamp">🍃</span>
-                                        <div class="year-icon" style="background: ${c}20; color: ${c};"><i class="bi bi-calendar3"></i></div>
-                                        <h3 class="year-title" style="color: ${c};">${year}</h3>
-                                        <div class="year-count" style="color: ${c};">${count} <span>issue${count > 1 ? 's' : ''}</span></div>
-                                    </div>
+                                <div class="col-md-4 col-lg-3" data-reveal data-reveal-delay="${i * 80}">
+                                    <button type="button" class="year-tile" style="--tile:${c}" onclick="showIssuesModal('${year}')">
+                                        <span class="year-icon"><i class="bi bi-calendar3"></i></span>
+                                        <span class="year-num">${HIG.escapeHtml(year)}</span>
+                                        <span class="year-count">${count} issue${count > 1 ? 's' : ''}</span>
+                                    </button>
                                 </div>`;
                         });
                         html += '</div>';
                         container.innerHTML = html;
-                        AOS.refresh();
+                        HIG.refreshReveals(container);
                     }
                 });
             });
 
-            function showIssuesModal(year, issues, color) {
-                const modal = new bootstrap.Modal(document.getElementById('issuesModal'));
-                document.getElementById('modalYear').textContent = year;
-                document.getElementById('modalYear').style.color = color;
-                document.getElementById('modalIcon').style.background = color + '20';
-                document.getElementById('modalIcon').style.color = color;
-                let issuesHtml = '';
-                issues.forEach((issue, i) => {
-                    issuesHtml += `<div class="col-12"><div class="issue-card p-3" style="background:#FFF8E7; border-right:4px solid ${color}; border-radius:12px; margin-bottom:10px;"><div class="d-flex gap-2"><span style="background:${color}20; padding:0 10px; border-radius:20px; font-weight:bold;">#${i+1}</span><p class="mb-0">${issue}</p></div></div></div>`;
-                });
-                document.getElementById('modalIssues').innerHTML = issuesHtml;
+            function showIssuesModal(year) {
+                const entry = issuesByYear[year] || { items: [], color: 'var(--accent-color)' };
+                const modalEl = document.getElementById('issuesModal');
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+                const yearEl = document.getElementById('modalYear');
+                yearEl.textContent = year;
+                yearEl.style.color = entry.color;
+
+                const iconEl = document.getElementById('modalIcon');
+                iconEl.style.setProperty('--tile', entry.color);
+
+                document.getElementById('modalIssues').innerHTML = entry.items.map((issue, i) => `
+                    <div class="col-12">
+                        <div class="issue-row" style="--tile:${entry.color}">
+                            <span class="issue-num">#${i + 1}</span>
+                            <p>${HIG.escapeHtml(issue)}</p>
+                        </div>
+                    </div>`).join('');
                 modal.show();
             }
         </script>
-
     </body>
 </html>

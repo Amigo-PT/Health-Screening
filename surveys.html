@@ -1,766 +1,299 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="naruto">
+<!doctype html>
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Screening - Data & Delivery</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        (function() {
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true, header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.reload();
-                            } else {
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                            }
-                        } else {
-                            if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                        }
-                    }, error: function(err) {
-                        if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                    }
-                });
-            }
-        })();
-    </script>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f6f8" />
+    <title>Data & Delivery - Health Screening</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="hig.css" />
     <style>
-        :root {
-            --naruto-orange: #FF8C00;
-            --naruto-orange-dark: #E67600;
-            --leaf-green: #2E5A2B;
-            --leaf-green-light: #4A7C3F;
-            --clay-bg: #F4F1E1;
-            --wood-dark: #5C4033;
-            --wood-light: #8B6914;
-            --shadow-color: #1a1a2e;
-            --text-dark: #2F2E2E;
-            --text-light: #F5F5DC;
-            --scroll-bg: #FFF8E7;
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
-            --c-idle:  #475569;
-            --c-wip:   #f59e0b;
-            --c-track: #10b981;
-            --c-done:  #3b82f6;
+        /* ---------- Milestone status dots (page-specific) ---------- */
+        .status-dot {
+            display: inline-block;
+            width: 15px; height: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform .35s var(--ease-spring), box-shadow .25s ease;
+        }
+        .status-dot:hover { transform: scale(1.3); }
+        .status-dot.idle { background: #c3ccd8; box-shadow: 0 0 0 4px rgba(152, 162, 179, .15); }
+        .status-dot.wip  { background: #ff9500; box-shadow: 0 0 0 4px rgba(255, 149, 0, .18); animation: pulseWip 2s ease infinite; }
+        .status-dot.track{ background: #22ac38; box-shadow: 0 0 0 4px rgba(34, 172, 56, .17); }
+        .status-dot.done { background: #3e8bff; box-shadow: 0 0 0 4px rgba(62, 139, 255, .18); }
+        @keyframes pulseWip {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(255, 149, 0, .18); }
+            50%      { box-shadow: 0 0 0 7px rgba(255, 149, 0, .10); }
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        @keyframes cloudsFloat {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        @keyframes dotPop { from { transform: rotate(45deg) scale(0); } to { transform: rotate(45deg) scale(1); } }
-
-        body {
-            font-family: 'Poppins', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            animation: fadeInPage .8s ease-out;
-        }
-        body::before {
-            content: "☁️";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            font-size: 120px;
-            white-space: nowrap;
-            color: rgba(255,255,240,0.08);
-            animation: cloudsFloat 40s linear infinite;
-            z-index: 0;
-        }
-
-        .navbar {
-            background: rgba(44, 34, 24, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 2px solid var(--naruto-orange);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            padding: 12px 0;
-            z-index: 100;
-        }
-        .navbar-brand {
-            font-weight: 900;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .konoha-logo {
+        /* ---------- Status badge (modal) ---------- */
+        .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-weight: 900;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            box-shadow: 0 0 12px rgba(255,140,0,0.3);
-        }
-        .nav-link {
-            font-weight: 700;
-            color: #e8d5b7 !important;
-            padding: 8px 18px !important;
-            border-radius: 30px;
-            transition: all 0.25s;
-            font-size: 0.85rem;
-            margin: 0 2px;
-        }
-        .nav-link:hover {
-            background: rgba(255, 140, 0, 0.2);
-            color: var(--naruto-orange) !important;
-            transform: translateY(-2px);
-        }
-        .nav-link.active {
-            background: rgba(255, 140, 0, 0.3) !important;
-            color: var(--naruto-orange) !important;
-            border: 1px solid var(--naruto-orange) !important;
-            box-shadow: 0 0 10px rgba(255,140,0,0.3);
-        }
-        .sharingan-hover { transition: all 0.3s ease; }
-        .sharingan-hover:hover {
-            animation: sharinganSpin 0.6s ease-in-out;
-            color: var(--naruto-orange) !important;
-        }
-        @keyframes sharinganSpin {
-            0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
-            50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
-            100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: .8rem;
+            font-weight: 600;
+            letter-spacing: .02em;
         }
 
-        .page-hero { position: relative; z-index: 1; padding: 150px 0 60px; text-align: center; }
-        .hero-eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px;
-            padding: 6px 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
-        }
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 16px;
-            color: var(--text-light);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .title-gradient {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: chakraFlow 3s ease infinite;
-        }
-        @keyframes chakraFlow {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-        .page-subtitle {
-            font-size: 1rem;
-            color: #F5F5DC;
-            line-height: 1.7;
-            max-width: 500px;
-            margin: 0 auto 40px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .legend-wrap {
-            display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap;
-            padding: 20px 30px;
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            max-width: 900px; margin: 0 auto 40px;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-        .legend-wrap::before, .legend-wrap::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .legend-wrap::before { top: -9px; }
-        .legend-wrap::after  { bottom: -9px; }
-        .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); }
-        .legend-dot { width: 14px; height: 14px; border-radius: 4px; transform: rotate(45deg); flex-shrink: 0; }
-        
-        .btn-export {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            border: none;
-            border-radius: 50px; padding: 8px 20px;
-            font-size: 0.82rem; font-weight: 800; color: #fff;
-            cursor: pointer; transition: all 0.3s; font-family: 'Poppins', 'Cairo', sans-serif;
-            box-shadow: 0 4px 12px rgba(255,140,0,0.3);
-        }
-        .btn-export:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(255,140,0,0.4); }
-
-        .cards-section { position: relative; z-index: 1; padding-bottom: 100px; }
-
-        .section-label {
-            display: inline-flex; align-items: center; gap: 10px;
-            font-size: 0.8rem; font-weight: 700; color: var(--naruto-orange);
-            letter-spacing: 0.08em; text-transform: uppercase;
-            border-left: 3px solid var(--naruto-orange);
-            padding-left: 14px; margin-bottom: 24px;
-        }
-
-        .table-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 28px,
-                rgba(139, 69, 19, 0.05) 28px,
-                rgba(139, 69, 19, 0.05) 32px
-            );
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            overflow: visible;
-            position: relative;
-            z-index: 0;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-
-        .table-card::before,
-        .table-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .table-card::before { top: -9px; }
-        .table-card::after  { bottom: -9px; }
-
-        /* Ninja stamp */
-        .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
-
-        .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0; position: relative; }
-        .custom-table thead tr {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            position: relative;
-        }
-        .custom-table th {
-            padding: 16px 20px; font-size: 0.75rem; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
-            color: var(--text-dark); text-align: center;
-            border-left: 1px solid rgba(139, 69, 19, 0.1);
-        }
-        .custom-table th:first-child { border-left: none; }
-        .custom-table th.hl { color: var(--naruto-orange); }
-        .table-card thead {
-            position: relative;
-            overflow: visible;
-        }
-        .table-card thead::before, .table-card thead::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 14px;
-            z-index: 3;
-            border-radius: 7px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .table-card thead::before { top: -7px; }
-        .table-card thead::after  { bottom: -7px; }
-
-        .custom-table tbody tr {
-            border-bottom: 1px solid rgba(92, 64, 51, 0.15);
-            transition: all 0.25s;
-        }
-        .custom-table tbody tr:last-child { border-bottom: none; }
-        .custom-table tbody tr:hover { background: rgba(255,140,0,0.05); }
-
-        .custom-table td {
-            padding: 18px 20px; vertical-align: middle;
-            font-size: 0.92rem; font-weight: 600; color: var(--text-dark);
-        }
-        .custom-table td.program-name { font-weight: 800; font-size: 1rem; min-width: 200px; color: var(--text-dark); }
-        .custom-table td.indicator { font-size: 0.85rem; color: #5a4a3a; font-weight: 600; min-width: 180px; }
-        .custom-table td.dot-cell { text-align: center; }
-
-        .sdot {
-            width: 16px; height: 16px; border-radius: 4px; transform: rotate(45deg);
-            display: inline-block; cursor: pointer; transition: all 0.3s;
-            animation: dotPop 0.4s ease backwards;
-        }
-        .sdot:hover { transform: rotate(45deg) scale(1.5); box-shadow: 0 0 15px currentColor; }
-        .sdot.idle { background: var(--c-idle); }
-        .sdot.wip { background: var(--c-wip); box-shadow: 0 0 0 3px rgba(245,158,11,0.25); }
-        .sdot.track { background: var(--c-track); box-shadow: 0 0 0 3px rgba(16,185,129,0.25); }
-        .sdot.done { background: var(--c-done); box-shadow: 0 0 0 3px rgba(59,130,246,0.25); }
-
-        .skeleton { background: linear-gradient(90deg, rgba(92,64,51,0.08) 25%, rgba(92,64,51,0.15) 50%, rgba(92,64,51,0.08) 75%); background-size: 200% 100%; animation: shimmer 1.6s infinite; border-radius: 8px; }
-
-        .empty-state { text-align: center; padding: 80px 20px; color: var(--wood-dark); }
-        .empty-state i { font-size: 4rem; opacity: 0.3; margin-bottom: 20px; display: block; }
-
-        .modal-content {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 20px;
-            position: relative;
-            overflow: visible;
-            color: var(--text-dark);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-        .modal-content::before, .modal-content::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .modal-content::before { top: -9px; }
-        .modal-content::after  { bottom: -9px; }
-        .modal-header { border-bottom: 1px solid rgba(255,140,0,0.2); padding: 24px 28px; background: transparent; position: relative; }
-        .modal-title { font-size: 1.3rem; font-weight: 900; background: linear-gradient(135deg, var(--naruto-orange), #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .btn-close { filter: invert(0.5); }
-        .modal-body { padding: 28px; }
-
-        .modal-prog-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, var(--naruto-orange), #FFD700); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 10px rgba(255,140,0,0.3); }
-        .info-box { background: var(--scroll-bg); background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left: 4px solid var(--wood-dark); border-right: 4px solid var(--wood-dark); border-radius: 12px; padding: 18px; text-align: center; border-top: none; border-bottom: none; box-shadow: inset 0 1px 0 rgba(255,255,200,0.5); }
-        .info-label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wood-dark); margin-bottom: 8px; display: block; }
-        .info-val { font-size: 1.05rem; font-weight: 800; color: var(--text-dark); }
-        .status-badge { display: inline-block; padding: 8px 20px; border-radius: 50px; font-size: 0.85rem; font-weight: 800; }
-        .desc-box { background: var(--scroll-bg); background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left: 4px solid var(--wood-dark); border-right: 4px solid var(--wood-dark); border-radius: 12px; padding: 20px; margin-top: 20px; border-top: none; border-bottom: none; box-shadow: inset 0 1px 0 rgba(255,255,200,0.5); }
-        .desc-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--wood-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .desc-box p { font-size: 0.95rem; color: var(--text-dark); line-height: 1.8; margin: 0; }
-
-        /* FOOTER */
-        .modern-footer {
-            background: rgba(44, 34, 24, 0.95);
-            border-top: 3px solid var(--naruto-orange);
-            padding: 60px 0 30px;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        .footer-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding: 28px 22px;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-            z-index: 0;
-        }
-        .footer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .footer-card::before, .footer-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .footer-card::before { top: -9px; }
-        .footer-card::after  { bottom: -9px; }
-        .footer-card .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
-        .footer-logo {
-            font-size: 1.1rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .footer-copyright {
-            font-size: 0.85rem;
-            color: #c4b08a;
-            letter-spacing: 0.03em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .footer-copyright .copy-icon {
-            color: var(--naruto-orange);
-            font-size: 0.9rem;
-        }
-        .footer-copyright .dev-by {
-            color: #a09070;
-            font-weight: 400;
-        }
-        .footer-copyright .dev-name {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-        }
-        .footer-copyright .pipe {
-            color: rgba(255,140,0,0.3);
-            font-weight: 300;
-        }
-
-        @media(max-width: 768px) {
-            .page-hero { padding: 120px 0 40px; }
-            .legend-wrap { padding: 16px; gap: 12px; }
-            .legend-item { font-size: 0.75rem; }
-            .custom-table { font-size: 0.8rem; }
-            .custom-table th, .custom-table td { padding: 12px 10px; }
-        }
-
-        /* Toast Notification */
-        .toast-notification-container {
-            position: fixed;
-            top: 24px;
-            right: 24px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 380px;
-            pointer-events: none;
-        }
-        .login-toast {
-            pointer-events: auto;
-            background: rgba(92, 64, 51, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border-left: 4px solid #ef4444;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 0 1px rgba(239,68,68,0.2);
-            padding: 16px 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            animation: slideInRight 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-            transition: all 0.2s ease;
+        /* ---------- MIUI milestone table ---------- */
+        .miui-table {
             width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
         }
-        .login-toast.hiding {
-            animation: slideOutRight 0.3s ease-in forwards;
+        .miui-table thead th {
+            padding: 15px 22px;
+            background: var(--surface-2);
+            color: var(--text-secondary);
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--hairline);
         }
-        .toast-icon {
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            background: rgba(239,68,68,0.2);
-            border-radius: 50%;
-            display: flex;
+        .miui-table tbody td {
+            padding: 17px 22px;
+            border-bottom: 1px solid rgba(0, 0, 0, .05);
+            vertical-align: middle;
+            color: var(--text-primary);
+        }
+        .miui-table tbody tr:last-child td { border-bottom: 0; }
+        .miui-table tbody tr {
+            transition: background .25s ease;
+        }
+        .miui-table tbody tr:hover {
+            background: rgba(255, 105, 0, .05);
+        }
+
+        .milestone-name {
+            font-weight: 600;
+            font-size: .95rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ind-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 14px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-deep);
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+            white-space: nowrap;
+        }
+
+        .miui-dash {
+            color: var(--text-tertiary);
+        }
+
+        /* ---------- MIUI detail modal ---------- */
+        #detailModal .modal-content { border-radius: 26px; }
+        #detailModal .modal-header {
+            border-bottom: 0;
+            padding: 24px 26px 8px;
+        }
+        #detailModal .modal-body { padding: 10px 26px 26px; }
+
+        .mi-stage-glyph {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: #f87171;
-            font-size: 1.2rem;
+            font-size: 1.35rem;
+            color: var(--stage, var(--accent-color));
+            background: color-mix(in srgb, var(--stage, var(--accent-color)) 12%, transparent);
+            flex-shrink: 0;
+            transition: color .3s ease, background .3s ease;
         }
-        .toast-content {
-            flex: 1;
+
+        .mi-field {
+            background: var(--fill-thin);
+            border-radius: 16px;
+            padding: 14px 16px;
+            height: 100%;
         }
-        .toast-title {
-            font-weight: 800;
-            font-size: 0.9rem;
-            color: #fca5a5;
-            margin-bottom: 4px;
-            letter-spacing: -0.2px;
-        }
-        .toast-message {
-            font-size: 0.82rem;
-            color: #e8d5b7;
-            line-height: 1.45;
+        .mi-label {
+            display: block;
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
             margin-bottom: 8px;
         }
-        .toast-detail {
-            font-size: 0.7rem;
-            color: #e8d5b7;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            padding-top: 8px;
-            margin-top: 4px;
+        .mi-field .info-val {
+            font-weight: 600;
+            font-size: .95rem;
         }
-        .toast-close {
-            background: transparent;
-            border: none;
-            color: #64748b;
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 4px;
-            transition: color 0.2s;
-            line-height: 1;
+
+        .mi-desc {
+            background: var(--fill-thin);
+            border-radius: 16px;
+            padding: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
         }
-        .toast-close:hover { color: #f1f5f9; }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideOutRight { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(60px); } }
     </style>
-    <link rel="stylesheet" href="claymorphism.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
-<body class="page-surveys">
-    <nav class="navbar navbar-expand-lg fixed-top">
+<body>
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <span class="konoha-logo">🍃</span>
-                Health Screening
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
             </a>
-            <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover active" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="page-hero">
+    <header class="hero-section">
         <div class="container">
-            <div data-aos="fade-down" data-aos-duration="950">
-                <div class="hero-eyebrow"><i class="bi bi-bar-chart-line-fill"></i> Milestones Overview</div>
-                <h1 class="page-title">Data &<br><span class="title-gradient">Delivery</span></h1>
-                <p class="page-subtitle">Healthier Population Milestones — Milestones Status Overview</p>
-            </div>
-
-            <div class="legend-wrap" data-aos="fade-up" data-aos-delay="100">
-                <span class="scroll-stamp" style="position:absolute;top:10px;right:14px;font-size:1.4rem;z-index:3;opacity:0.5;transform:rotate(-15deg);pointer-events:none;">🍃</span>
-                <div class="legend-item"><span class="legend-dot" style="background:var(--c-idle);"></span> Not Started</div>
-                <div class="legend-item"><span class="legend-dot" style="background:var(--c-wip);"></span> In Progress</div>
-                <div class="legend-item"><span class="legend-dot" style="background:var(--c-track);"></span> On Track</div>
-                <div class="legend-item"><span class="legend-dot" style="background:var(--c-done);"></span> Completed</div>
-                <div class="legend-item"><button class="btn-export" onclick="exportToExcel()"><i class="bi bi-file-earmark-spreadsheet me-2"></i>Export to Excel</button></div>
-            </div>
+            <h1 class="display-hero" data-reveal data-reveal-delay="80">
+                Data & <span class="text-accent-gradient">Delivery</span>
+            </h1>
+            <p class="hero-sub mt-3" data-reveal data-reveal-delay="160">
+                Healthier Population Milestones
+            </p>
         </div>
-    </section>
+    </header>
 
-    <section class="cards-section">
+    <section class="section-block">
         <div class="container">
-            <div class="section-label" data-aos="fade-right"><i class="bi bi-clipboard-data"></i> Screening Milestones</div>
-            <div class="table-card" data-aos="fade-up" data-aos-delay="100">
-                <span class="scroll-stamp">🍃</span>
-                <div class="table-responsive">
-                    <table class="custom-table" id="screeningTable">
-                        <thead>
-                            <tr>
-                                <th class="hl" style="min-width:200px;"><i class="bi bi-collection me-2"></i>Milestone</th>
-                                <th class="hl" style="min-width:180px;"><i class="bi bi-graph-up me-2"></i>Indicator</th>
-                                <th style="width:100px;"><i class="bi bi-speedometer2 me-1"></i>Status</th>
-                                <th style="width:100px;"><i class="bi bi-people me-2"></i>Population</th>
-                                <th style="width:100px;"><i class="bi bi-pie-chart me-2"></i>Analysis</th>
-                                <th style="width:100px;"><i class="bi bi-truck me-2"></i>Delivery</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            <tr>
-                                <td colspan="6" style="text-align:center;padding:50px;">
-                                    <div style="display:inline-flex;flex-direction:column;gap:12px;width:100%;max-width:500px;">
-                                        <div class="skeleton" style="height:20px;width:45%;margin:0 auto;"></div>
-                                        <div class="skeleton" style="height:16px;width:70%;margin:0 auto;"></div>
-                                        <div class="skeleton" style="height:16px;width:55%;margin:0 auto;"></div>
-                                        <div class="skeleton" style="height:16px;width:65%;margin:0 auto;"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="row g-4 justify-content-center" data-reveal data-reveal-delay="100">
+                <div class="col-12">
+                    <div class="hig-card" style="--chip:#ff6900">
+                        <div class="table-responsive">
+                            <table class="miui-table" id="screeningTable">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width:220px;">Milestone</th>
+                                        <th style="min-width:180px;">Indicator</th>
+                                        <th style="width:110px;">Status</th>
+                                        <th style="width:110px;">Population</th>
+                                        <th style="width:110px;">Analysis</th>
+                                        <th style="width:110px;">Delivery</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    <tr>
+                                        <td colspan="6" style="text-align:center;padding:50px;">
+                                            <div class="d-flex flex-column gap-3 align-items-center">
+                                                <div class="spinner-border text-accent" role="status" style="width:3rem;height:3rem;"></div>
+                                                <span class="text-muted">Loading milestones...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="modern-footer">
-        <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-5" data-aos="fade-up">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
-                        <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                        </p>
-                    </div>
-                </div>
-                <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
-                        <div class="d-flex flex-column gap-2 mt-2">
-                            <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
-                                <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
-                            </a>
-                            <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                                <i class="bi bi-envelope-fill me-2"></i> Email
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
-            <div class="footer-bottom text-center">
-                <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
-                <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
-            </div>
-        </div>
-    </footer>
-
-    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade modal-hig" id="detailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width:600px;">
             <div class="modal-content">
-                <span class="scroll-stamp">🍃</span>
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalStageTitle"><i class="bi bi-info-circle me-2"></i>Stage Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="mi-stage-glyph" id="modalGlyph"><i class="bi bi-speedometer2" id="modalIcon"></i></span>
+                        <div class="flex-grow-1" style="min-width:0;">
+                            <h3 class="modal-title mb-1" id="modalStageTitle" style="font-size:1.25rem;"></h3>
+                            <p class="caption mb-0" id="modalProgram"></p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex align-items-center gap-3 mb-4">
-                        <div class="modal-prog-icon"><i class="bi bi-clipboard-data"></i></div>
-                        <div>
-                            <div style="font-size:1.1rem;font-weight:800;" id="modalProgram">—</div>
-                            <div style="font-size:.72rem;color:var(--wood-dark);font-weight:800;text-transform:uppercase;letter-spacing:.06em;">Milestone Overview</div>
-                        </div>
-                    </div>
-                    <div class="row g-3 mb-0">
+                    <div class="row g-3 mb-3">
                         <div class="col-6">
-                            <div class="info-box">
-                                <span class="info-label">Current Status</span>
+                            <div class="mi-field text-center">
+                                <span class="mi-label">Current Status</span>
                                 <span id="modalStatusBadge" class="status-badge">—</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="info-box">
-                                <span class="info-label">Timeline</span>
-                                <div class="info-val"><i class="bi bi-calendar3 me-2 text-info"></i><span id="modalDate">—</span></div>
+                            <div class="mi-field text-center">
+                                <span class="mi-label">Timeline</span>
+                                <div class="info-val"><i class="bi bi-calendar3 me-2"></i><span id="modalDate">—</span></div>
                             </div>
                         </div>
                     </div>
-                    <div class="desc-box">
-                        <div class="desc-label"><i class="bi bi-card-text text-info"></i> Description & Achievements</div>
-                        <p id="modalDesc">Loading...</p>
+                    <div class="mi-desc">
+                        <span class="mi-label">Details</span>
+                        <p id="modalDesc" class="mb-0">Loading...</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 950, once: true, offset: 40 });
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
+                    </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
+                </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project &middot; Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
+        </div>
+    </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="hig.js"></script>
+    <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=86792494&single=true&output=csv";
 
         function getDotClass(status) {
@@ -791,32 +324,35 @@
                 count++;
 
                 const phases = [
-                    { key:'Accel', label:'Population', status:row.Accel_Status, date:row.Accel_Date, desc:row.Accel_Desc },
-                    { key:'Pop', label:'Population Phase', status:row.Pop_Status, date:row.Pop_Date, desc:row.Pop_Desc },
-                    { key:'Analysis', label:'Data Analysis', status:row.Analysis_Status, date:row.Analysis_Date, desc:row.Analysis_Desc },
-                    { key:'Delivery', label:'Delivery Plans', status:row.Delivery_Status, date:row.Delivery_Date, desc:row.Delivery_Desc },
+                    { key: 'Accel', label: 'Status', icon: 'bi-speedometer2', status: row.Accel_Status, date: row.Accel_Date, desc: row.Accel_Desc },
+                    { key: 'Pop', label: 'Population', icon: 'bi-people', status: row.Pop_Status, date: row.Pop_Date, desc: row.Pop_Desc },
+                    { key: 'Analysis', label: 'Analysis', icon: 'bi-pie-chart', status: row.Analysis_Status, date: row.Analysis_Date, desc: row.Analysis_Desc },
+                    { key: 'Delivery', label: 'Delivery', icon: 'bi-truck', status: row.Delivery_Status, date: row.Delivery_Date, desc: row.Delivery_Desc },
                 ];
 
                 const dotCells = phases.map((p, pi) => {
                     const dc = getDotClass(p.status);
+                    const statusLabel = getStatusLabel(p.status);
                     const delay = (ri * 4 + pi) * 40;
-                    return `<td class="dot-cell">
-                        <span class="sdot ${dc}"
+                    return `<td class="text-center">
+                        <span class="status-dot ${dc}"
                             style="animation-delay:${delay}ms;"
                             data-bs-toggle="modal" data-bs-target="#detailModal"
-                            data-program="${row.Program_Name}"
-                            data-stage="${p.label}"
-                            data-status="${getStatusLabel(p.status)}"
-                            data-date="${p.date || 'TBD'}"
-                            data-desc="${(p.desc||'No details available.').replace(/"/g,'&quot;')}">
+                            data-program="${HIG.escapeHtml(row.Program_Name)}"
+                            data-stage="${HIG.escapeHtml(p.label)}"
+                            data-icon="${p.icon}"
+                            data-state="${dc}"
+                            data-status="${statusLabel}"
+                            data-date="${HIG.escapeHtml(p.date || 'TBD')}"
+                            data-desc="${HIG.escapeHtml(p.desc || 'No details available.')}">
                         </span>
                     </td>`;
                 }).join('');
 
                 tbody.innerHTML += `
-                    <tr>
-                        <td class="program-name">${row.Program_Name}</td>
-                        <td class="indicator">${row.Indicator || '—'}</td>
+                    <tr data-reveal data-reveal-delay="${Math.min(ri * 60, 400)}">
+                        <td><div class="milestone-name">${HIG.escapeHtml(row.Program_Name)}</div></td>
+                        <td>${row.Indicator ? `<span class="ind-chip">${HIG.escapeHtml(row.Indicator)}</span>` : '<span class="miui-dash">—</span>'}</td>
                         ${dotCells}
                     </tr>`;
             });
@@ -824,15 +360,17 @@
             if (count === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6">
-                            <div class="empty-state">
-                                <i class="bi bi-inbox"></i>
-                                <h5 style="color:#475569;">No programs found</h5>
-                                <p style="font-size:0.9rem;">No data available at the moment.</p>
+                        <td colspan="6" data-reveal>
+                            <div class="glass-panel state-panel" style="text-align:center;padding:60px 20px;">
+                                <div class="state-icon"><i class="bi bi-inbox"></i></div>
+                                <h5 class="state-title">No Programs Found</h5>
+                                <p class="state-text">No data available at the moment.</p>
                             </div>
                         </td>
                     </tr>`;
             }
+
+            HIG.refreshReveals(tbody);
         }
 
         function fetchData() {
@@ -842,87 +380,40 @@
                 error: () => {
                     document.getElementById('table-body').innerHTML = `
                         <tr>
-                            <td colspan="6" style="text-align:center;padding:50px;color:#f87171;">
-                                <i class="bi bi-wifi-off me-2" style="font-size:2rem;"></i>
-                                <p>Failed to load data. Please check your connection.</p>
+                            <td colspan="6" data-reveal>
+                                <div class="glass-panel state-panel" style="text-align:center;padding:60px 20px;">
+                                    <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
+                                    <h5 class="state-title">Connection Error</h5>
+                                    <p class="state-text">Failed to load data. Please check your connection.</p>
+                                </div>
                             </td>
                         </tr>`;
+                    HIG.refreshReveals(document.getElementById('table-body'));
                 }
             });
         }
 
         document.getElementById('detailModal').addEventListener('show.bs.modal', e => {
             const b = e.relatedTarget;
+            const stageColors = { done: '#3e8bff', track: '#22ac38', wip: '#ff9500', idle: '#98a2b3' };
             document.getElementById('modalStageTitle').textContent = b.dataset.stage;
             document.getElementById('modalProgram').textContent = b.dataset.program;
             document.getElementById('modalDate').textContent = b.dataset.date;
             document.getElementById('modalDesc').textContent = b.dataset.desc;
+            document.getElementById('modalIcon').className = 'bi ' + (b.dataset.icon || 'bi-speedometer2');
+            document.getElementById('modalGlyph').style.setProperty('--stage', stageColors[b.dataset.state] || stageColors.idle);
 
             const badge = document.getElementById('modalStatusBadge');
             badge.textContent = b.dataset.status;
             badge.className = 'status-badge';
             const s = b.dataset.status.toLowerCase();
-            if (s.includes('complete')) { badge.style.cssText = 'background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);'; }
-            else if (s.includes('track')) { badge.style.cssText = 'background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3);'; }
-            else if (s.includes('progress')) { badge.style.cssText = 'background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3);'; }
-            else { badge.style.cssText = 'background:rgba(71,85,105,.2);color:#94a3b8;border:1px solid rgba(71,85,105,.35);'; }
+            if (s.includes('complete')) { badge.style.cssText = 'background:rgba(62,139,255,.12);color:#2f6bdb;border:1px solid rgba(62,139,255,.3);'; }
+            else if (s.includes('track')) { badge.style.cssText = 'background:rgba(34,172,56,.12);color:#1d9631;border:1px solid rgba(34,172,56,.3);'; }
+            else if (s.includes('progress')) { badge.style.cssText = 'background:rgba(255,149,0,.13);color:#d97a00;border:1px solid rgba(255,149,0,.32);'; }
+            else { badge.style.cssText = 'background:rgba(152,162,179,.14);color:#6b7686;border:1px solid rgba(152,162,179,.38);'; }
         });
-
-        function exportToExcel() {
-            const userName = sessionStorage.getItem('userName') || '';
-            
-            if (userName !== 'Amigo') {
-                showErrorToast("Access Denied", "You do not have permission to perform this action.", "Contact the developer to request access.");
-                return;
-            }
-            
-            const data = [["Healthier Population Milestones","Indicator","Status","Population","Analysis","Delivery Plans"]];
-            document.querySelectorAll('.custom-table tbody tr').forEach(row => {
-                const cols = row.querySelectorAll('td');
-                if (!cols.length) return;
-                const r = [cols[0].textContent.trim(), cols[1].textContent.trim()];
-                for (let i = 2; i < 6; i++) {
-                    const dot = cols[i].querySelector('.sdot');
-                    r.push(dot ? dot.dataset.status : 'Not Started');
-                }
-                data.push(r);
-            });
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Screening Data");
-            XLSX.writeFile(wb, "Health_Screening_Dashboard.xlsx");
-        }
-
-        function showErrorToast(title, message, hint) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'login-toast';
-            toast.innerHTML = `
-                <div class="toast-icon"><i class="bi bi-shield-lock-fill"></i></div>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                    ${hint ? `<div class="toast-detail"><i class="bi bi-info-circle"></i> ${hint}</div>` : ''}
-                </div>
-                <button class="toast-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
-            `;
-            
-            const closeBtn = toast.querySelector('.toast-close');
-            closeBtn.addEventListener('click', () => removeToast(toast));
-            
-            container.appendChild(toast);
-            setTimeout(() => removeToast(toast), 5000);
-        }
-
-        function removeToast(toastElement) {
-            if (toastElement.classList.contains('hiding')) return;
-            toastElement.classList.add('hiding');
-            setTimeout(() => { if (toastElement.parentNode) toastElement.remove(); }, 300);
-        }
 
         document.addEventListener('DOMContentLoaded', fetchData);
     </script>
-
-    <div class="toast-notification-container" id="toastContainer"></div>
 </body>
 </html>

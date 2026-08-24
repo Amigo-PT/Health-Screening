@@ -1,828 +1,478 @@
-﻿<!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="naruto">
+﻿<!doctype html>
+<html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f6f8" />
     <title>Reports Timeline - Health Screening</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        // Maintenance Mode Check
-        (function() {
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true,
-                    header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.reload();
-                            } else {
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                    window.location.href = 'login.html';
-                                }
-                            }
-                        } else {
-                             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                window.location.href = 'login.html';
-                            }
-                        }
-                    },
-                    error: function(err) {
-                        console.error("Maintenance check failed", err);
-                         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                            window.location.href = 'login.html';
-                        }
-                    }
-                });
-            }
-        })();
-    </script>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="hig.css" />
 
     <style>
-        :root {
-            --naruto-orange: #FF8C00;
-            --naruto-orange-dark: #E67600;
-            --leaf-green: #2E5A2B;
-            --leaf-green-light: #4A7C3F;
-            --clay-bg: #F4F1E1;
-            --wood-dark: #5C4033;
-            --wood-light: #8B6914;
-            --shadow-color: #1a1a2e;
-            --text-dark: #2F2E2E;
-            --text-light: #F5F5DC;
-            --scroll-bg: #FFF8E7;
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
+        /* ---------- MIUI filter bar ---------- */
+        .mi-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 18px;
+            border: 1.5px solid transparent;
+            border-radius: 14px;
+            background: var(--fill-thin);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: .95rem;
+            outline: none;
+            transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
         }
-        * { box-sizing: border-box; }
+        .mi-input::placeholder { color: var(--text-tertiary); }
+        .mi-input:hover { background: var(--fill-medium); }
+        .mi-input:focus {
+            background: var(--surface-1);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(255, 105, 0, .12);
+        }
+        .mi-input.has-icon { padding-left: 46px; }
 
-        @keyframes cloudsFloat {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        body {
-            font-family: 'Poppins', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            animation: fadeInPage .8s ease-out;
-        }
-        body::before {
-            content: "☁️";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            font-size: 120px;
-            white-space: nowrap;
-            color: rgba(255,255,240,0.08);
-            animation: cloudsFloat 40s linear infinite;
-            z-index: 0;
-        }
-
-        .navbar {
-            background: rgba(44, 34, 24, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 2px solid var(--naruto-orange);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            padding: 12px 0;
-            z-index: 100;
-        }
-        .navbar-brand {
-            font-weight: 900;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .konoha-logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-weight: 900;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            box-shadow: 0 0 12px rgba(255,140,0,0.3);
-        }
-        .nav-link {
-            font-weight: 700;
-            color: #e8d5b7 !important;
-            padding: 8px 18px !important;
-            border-radius: 30px;
-            transition: all 0.25s;
-            font-size: 0.85rem;
-            margin: 0 2px;
-        }
-        .nav-link:hover {
-            background: rgba(255, 140, 0, 0.2);
-            color: var(--naruto-orange) !important;
-            transform: translateY(-2px);
-        }
-        .nav-link.active {
-            background: rgba(255, 140, 0, 0.3) !important;
-            color: var(--naruto-orange) !important;
-            border: 1px solid var(--naruto-orange) !important;
-            box-shadow: 0 0 10px rgba(255,140,0,0.3);
-        }
-        .sharingan-hover { transition: all 0.3s ease; }
-        .sharingan-hover:hover {
-            animation: sharinganSpin 0.6s ease-in-out;
-            color: var(--naruto-orange) !important;
-        }
-        @keyframes sharinganSpin {
-            0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
-            50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
-            100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
-        }
-
-        .page-hero { position: relative; z-index: 1; padding: 150px 0 60px; text-align: center; }
-        .hero-eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px;
-            padding: 6px 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
-        }
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 16px;
-            color: var(--text-light);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .title-gradient {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: chakraFlow 3s ease infinite;
-        }
-        @keyframes chakraFlow {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-        .page-sub {
+        .mi-input-wrap { position: relative; }
+        .mi-input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
             font-size: 1rem;
-            color: #F5F5DC;
-            line-height: 1.7;
-            max-width: 500px;
-            margin: 0 auto;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        .hero-stats {
-            display:flex; justify-content:center; margin-top:40px; gap:18px; flex-wrap:wrap;
-        }
-        .stat-card {
-            position: relative;
-            overflow: visible;
-            z-index: 0;
-            display: flex; align-items: center; gap: 14px;
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 28px,
-                rgba(139, 69, 19, 0.05) 28px,
-                rgba(139, 69, 19, 0.05) 32px
-            );
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px; padding: 24px 24px;
-            min-width: 180px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .stat-icon {
-            width: 44px; height: 44px;
-            display: inline-flex; align-items: center; justify-content: center;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(255,140,0,0.2), rgba(232,165,32,0.2));
-            border: 1px solid rgba(255,140,0,0.25);
-            color: var(--naruto-orange); font-size: 1.2rem;
-            animation: float 4s ease-in-out infinite;
-        }
-        .stat-label { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.65rem; color: var(--wood-dark); margin-bottom: 2px; font-weight: 700; }
-        .stat-value { 
-            font-size: 1.6rem; 
-            font-weight: 900; 
-            background: linear-gradient(90deg, var(--naruto-orange), #FFD700); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            line-height: 1; 
-        }
-
-        /* FILTER BAR */
-        .filter-bar {
-            position:sticky; top:76px; z-index:150;
-            padding:16px 0; background:transparent;
-        }
-        .filter-inner {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding: 14px 24px;
-            display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-            max-width:860px; margin:0 auto;
-            position: relative;
-            overflow: visible;
-            box-shadow:0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-        .filter-inner::before, .filter-inner::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .filter-inner::before { top: -9px; }
-        .filter-inner::after  { bottom: -9px; }
-        .search-wrap {
-            flex:1; min-width:180px; display:flex; align-items:center; gap:10px;
-            border-right:1px solid rgba(139, 69, 19, 0.15); padding-right:16px;
-        }
-        .search-wrap i { color: var(--wood-dark); font-size:1rem; }
-        .search-input {
-            background:transparent; border:none; color: var(--text-dark);
-            font-family:'Poppins', 'Cairo', sans-serif; font-size:.9rem; outline:none; width:100%;
-        }
-        .search-input::placeholder { color: #a09070; }
-        .filter-select {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 4px solid var(--wood-dark);
-            border-right: 4px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            color: var(--text-dark);
-            border-radius: 10px;
-            padding: 8px 14px;
-            font-family:'Poppins', 'Cairo', sans-serif; font-size:.85rem; cursor:pointer; outline:none;
-            font-weight: 700;
-            transition:.25s;
-            box-shadow: inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-        .filter-select:hover, .filter-select:focus { background: rgba(255,140,0,0.1); border-color: var(--naruto-orange); }
-        .filter-select option { background: var(--scroll-bg); color: var(--text-dark); }
-
-        /* TIMELINE CONTAINER */
-        .timeline-section { position:relative; z-index:1; flex:1; padding-bottom:100px; }
-
-        .timeline {
-            position:relative;
-            max-width:960px;
-            margin:0 auto;
-            padding:40px 0;
-        }
-
-        .timeline::before {
-            content:''; position:absolute;
-            left:50%; top:0; bottom:0; width:2px;
-            transform:translateX(-50%);
-            background:linear-gradient(to bottom, transparent, var(--naruto-orange) 8%, var(--naruto-orange) 92%, transparent);
-        }
-
-        .timeline-item {
-            position:relative; width:50%; padding:10px 48px 10px 0;
-            opacity:0; animation:slideUp .6s ease forwards;
-        }
-        .timeline-item.right { left:50%; padding:10px 0 10px 48px; text-align:left; }
-        .timeline-item.left { text-align:right; }
-
-        @keyframes slideUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-
-        .tl-dot {
-            position:absolute; top:18px;
-            width:62px; height:62px; border-radius:50%;
-            background: rgba(92, 64, 51, 0.95);
-            border:2px solid var(--naruto-orange);
-            display:flex; flex-direction:column;
-            align-items:center; justify-content:center;
-            z-index:10; font-weight:800; line-height:1.15;
-            transition:all .35s;
-            box-shadow:0 0 18px rgba(255,140,0,.3);
-        }
-        .tl-dot .dot-month { font-size:.68rem; color: var(--naruto-orange); text-transform:uppercase; letter-spacing:.04em; }
-        .tl-dot .dot-year  { font-size:.95rem; color: var(--text-light); }
-
-        .timeline-item.left  .tl-dot { right:-31px; }
-        .timeline-item.right .tl-dot { left:-31px; }
-
-        .timeline-item:hover .tl-dot {
-            background: rgba(255,140,0,0.2);
-            border-color:#FFD700;
-            box-shadow:0 0 28px rgba(255,140,0,.45);
-            transform:scale(1.08);
-        }
-
-        .tl-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent 28px,
-                rgba(139, 69, 19, 0.05) 28px,
-                rgba(139, 69, 19, 0.05) 32px
-            );
-            border-left:8px solid var(--wood-dark);
-            border-right:8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius:var(--radius-md);
-            padding:24px;
-            box-shadow:0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition:all .4s cubic-bezier(.23,1,.32,1);
-            position:relative; overflow:visible;
-            text-align:left;
-            z-index:0;
-        }
-        .timeline-item:hover .tl-card { transform:translateY(-6px); box-shadow:0 25px 40px -10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,200,0.5); }
-
-        /* Scroll wooden rollers */
-        .stat-card::before, .stat-card::after,
-        .tl-card::before, .tl-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .stat-card::before, .tl-card::before { top: -9px; }
-        .stat-card::after,  .tl-card::after  { bottom: -9px; }
-
-        /* Ninja stamp */
-        .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
             pointer-events: none;
         }
 
-        .type-pill {
-            display:inline-flex; align-items:center; gap:6px;
-            background: rgba(46, 90, 43, 0.8);
-            border:1px solid var(--naruto-orange);
-            border-radius:50px; padding:4px 12px;
-            font-size:.72rem; font-weight:700; color: var(--naruto-orange);
-            letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px;
-        }
-        .report-title { font-size:1.1rem; font-weight:800; color: var(--text-dark); margin-bottom:8px; line-height:1.4; }
-        .report-desc  { font-size:.87rem; color: #5a4a3a; line-height:1.7; margin-bottom:18px; }
-
-        .card-footer-row {
-            display:flex; align-items:center; gap:12px;
-            padding-top:16px; border-top:1px solid rgba(92, 64, 51, 0.2);
-            flex-wrap: wrap;
-        }
-
-        .btn-download, .btn-view {
-            display:inline-flex; align-items:center; justify-content:center; gap:8px;
-            border-radius:14px; padding:10px 18px;
-            font-size:.85rem; font-weight:700;
-            text-decoration:none; transition:all .3s;
-            font-family:'Poppins', 'Cairo', sans-serif;
+        select.mi-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398a2b3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 15px;
+            padding-right: 42px;
             cursor: pointer;
-            border: none;
-            flex: 1;
-            min-width: 120px;
+            appearance: none;
         }
-        .btn-download {
-            background: rgba(255,140,0,0.12); border:1px solid var(--naruto-orange);
-            color: var(--naruto-orange);
-        }
-        .btn-download:hover { background: rgba(255,140,0,0.25); color: #FFD700; transform:translateY(-2px); }
-        
-        .btn-view {
-            background: rgba(46, 90, 43, 0.3); border:1px solid var(--leaf-green-light);
-            color: var(--leaf-green-light);
-        }
-        .btn-view:hover { background: rgba(46, 90, 43, 0.5); color: #a8d5a2; transform:translateY(-2px); }
 
-        .file-size-badge {
-            display:inline-flex; align-items:center; gap:6px;
-            background: rgba(92, 64, 51, 0.2); border:1px solid var(--wood-dark);
-            border-radius:12px; padding:6px 14px;
-            font-size:.75rem; font-weight:600; color: var(--text-dark);
-            white-space:nowrap;
-            font-family: monospace;
-        }
-        
-        .size-loading {
+        .mi-clear-btn {
+            height: 48px;
+            border: none;
+            border-radius: 14px;
+            background: var(--fill-thin);
+            color: var(--text-secondary);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            font-size: 1rem;
+            transition: background .25s ease, color .25s ease, transform .25s var(--ease-spring, ease);
         }
-        
-        .size-loading .spinner-border-sm {
-            width: 0.9rem;
-            height: 0.9rem;
-            border-width: 2px;
+        .mi-clear-btn:hover {
+            background: rgba(235, 68, 53, .1);
+            color: #eb4435;
         }
+        .mi-clear-btn:active { transform: scale(.93); }
 
-        /* PDF MODAL */
-        .pdf-modal .modal-content {
-            background: rgba(44, 34, 24, 0.98);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 32px;
-            height: 88vh;
-            max-height: 88vh;
+        /* ---------- MIUI PDF viewer modal ---------- */
+        #pdfViewerModal .modal-content { border-radius: 26px; }
+        #pdfViewerModal .modal-header {
+            border-bottom: 0;
+            padding: 20px 22px 10px;
+            align-items: center;
+        }
+        #pdfViewerModal .modal-body { padding: 8px 22px 22px; }
+
+        .pdf-glyph {
+            width: 46px;
+            height: 46px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #eb4435;
+            background: rgba(235, 68, 53, .1);
+            flex-shrink: 0;
+        }
+        .pdf-modal-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+            white-space: nowrap;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+            text-overflow: ellipsis;
         }
-        .pdf-modal .modal-header {
-            background: rgba(255,140,0,0.1);
-            border-bottom: 1px solid var(--naruto-orange);
-            padding: 18px 28px;
+        .pdf-modal-caption {
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: .09em;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            margin: 2px 0 0;
         }
-        .pdf-modal .modal-title {
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.2px;
+
+        .pdf-frame-wrap {
+            border: 1px solid var(--hairline);
+            border-radius: 18px;
+            overflow: hidden;
+            background: var(--surface-2);
         }
-        .pdf-modal .modal-body {
-            padding: 0;
-            height: calc(100% - 78px);
-            background: #2a221d;
+
+        .pdf-state-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.02rem;
         }
-        .pdf-viewer-container {
-            width: 100%;
-            height: 100%;
-            background: #332b24;
-            position: relative;
-        }
-        .pdf-embed {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #3d322a;
-        }
-        .pdf-loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            min-height: 420px;
-            gap: 20px;
-            color: #e8d5b7;
-            background: #332b24;
-        }
-        .pdf-loading .spinner {
-            width: 52px;
-            height: 52px;
-            border: 4px solid rgba(255,140,0,0.2);
-            border-top-color: var(--naruto-orange);
+        .pdf-spin-bubble {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .pdf-error {
-            text-align: center;
-            padding: 60px 30px;
-            color: #f87171;
-            background: rgba(248,113,113,0.05);
-            height: 100%;
+            background: var(--accent-soft);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 16px;
+            margin: 0 auto 16px;
         }
-        .pdf-error i { font-size: 3rem; opacity: 0.8; }
-        .pdf-error p { font-size: 1rem; max-width: 300px; margin: 0; }
+        .pdf-error-bubble {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(235, 68, 53, .09);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: #eb4435;
+            font-size: 1.9rem;
+        }
 
-        /* SKELETON */
-        .skeleton { background:linear-gradient(90deg,rgba(92,64,51,0.08) 25%,rgba(92,64,51,0.15) 50%,rgba(92,64,51,0.08) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
-        .skel-dot  { width:62px;height:62px;border-radius:50%; }
-        .skel-card { background: var(--scroll-bg); border:1px solid var(--wood-dark); border-radius:var(--radius-md); padding:24px; }
-        .skel-line { height:12px; margin-bottom:10px; }
-        .skel-title{ height:20px; width:70%; margin-bottom:12px; }
-        .skel-desc { height:40px; margin-bottom:16px; }
-        .skel-btn  { height:42px; border-radius:14px; }
+        @media (max-width: 767px) {
+            #pdfEmbed { height: 62vh !important; }
+            #pdfViewerModal .modal-header { padding: 16px 16px 8px; }
+            #pdfViewerModal .modal-body { padding: 6px 16px 16px; }
+        }
 
-        /* EMPTY */
-        .empty-state { text-align:center; padding:80px 20px; color: var(--wood-dark); }
-        .empty-state i { font-size:3.5rem; opacity:.3; display:block; margin-bottom:18px; }
+        /* ---------- MIUI report cards ---------- */
+        .rep-card {
+            padding: 22px 24px;
+            border-radius: 22px;
+            transition: transform .45s var(--ease-spring, ease),
+                        box-shadow .35s ease,
+                        border-color .25s ease;
+        }
+        .rep-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px -16px rgba(255, 105, 0, .22),
+                        0 8px 24px rgba(17, 17, 17, .06);
+            border-color: rgba(255, 105, 0, .26);
+        }
 
-        /* FOOTER */
-        .modern-footer {
-            background: rgba(44, 34, 24, 0.95);
-            border-top: 3px solid var(--naruto-orange);
-            padding: 60px 0 30px;
-            margin-top: 40px;
+        .mi-timeline {
             position: relative;
-            z-index: 1;
+            padding-left: 38px;
         }
-        .footer-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding: 28px 22px;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-            z-index: 0;
-        }
-        .footer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .footer-card::before, .footer-card::after {
+        .mi-timeline::before {
             content: '';
             position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
+            left: 12px;
+            top: 14px;
+            bottom: 14px;
+            width: 2px;
+            border-radius: 2px;
+            background: linear-gradient(180deg, var(--accent-color) 0%, rgba(255, 105, 0, .08) 100%);
         }
-        .footer-card::before { top: -9px; }
-        .footer-card::after  { bottom: -9px; }
-        .footer-card .scroll-stamp {
+        .mi-tl-item { position: relative; }
+        .mi-tl-item + .mi-tl-item { margin-top: 18px; }
+        .mi-tl-node {
             position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
+            left: -33px;
+            top: 59px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            box-shadow: 0 0 0 4px #fff, 0 2px 10px rgba(255, 105, 0, .3);
         }
-        .footer-logo {
-            font-size: 1.1rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .mi-tl-item:first-child .mi-tl-node {
+            animation: miTlPulse 2.4s ease infinite;
         }
-        .footer-copyright {
-            font-size: 0.85rem;
-            color: #c4b08a;
-            letter-spacing: 0.03em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .footer-copyright .copy-icon {
-            color: var(--naruto-orange);
-            font-size: 0.9rem;
-        }
-        .footer-copyright .dev-by {
-            color: #a09070;
-            font-weight: 400;
-        }
-        .footer-copyright .dev-name {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-        }
-        .footer-copyright .pipe {
-            color: rgba(255,140,0,0.3);
-            font-weight: 300;
+        @keyframes miTlPulse {
+            0%, 100% { box-shadow: 0 0 0 4px #fff, 0 0 0 5px rgba(255, 105, 0, .22), 0 2px 10px rgba(255, 105, 0, .3); }
+            50%      { box-shadow: 0 0 0 4px #fff, 0 0 0 9px rgba(255, 105, 0, .08), 0 2px 14px rgba(255, 105, 0, .42); }
         }
 
-        /* RESPONSIVE */
-        @media(max-width:768px) {
-            .timeline::before { left:28px; }
-            .timeline-item, .timeline-item.right { width:100%; left:0; padding:10px 0 10px 72px; text-align:left; }
-            .timeline-item.left .tl-dot,
-            .timeline-item.right .tl-dot { left:0; right:auto; }
-            .search-wrap { border-right:none; padding-right:0; border-bottom:1px solid rgba(139, 69, 19, 0.15); padding-bottom:10px; }
-            .filter-inner { flex-direction:column; align-items:stretch; }
-            .card-footer-row { flex-direction: column; }
-            .btn-download, .btn-view { width: 100%; }
-            .file-size-badge { align-self: center; }
+        @media (max-width: 767px) {
+            .mi-timeline { padding-left: 30px; }
+            .mi-timeline::before { left: 9px; }
+            .mi-tl-node { left: -27px; top: 55px; width: 14px; height: 14px; }
+        }
+
+        .rep-date {
+            width: 76px;
+            min-width: 76px;
+            height: 76px;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #ff8a3d 0%, var(--accent-color) 55%, var(--accent-deep) 100%);
+            box-shadow: 0 10px 22px -8px rgba(255, 105, 0, .5),
+                        inset 0 1px 0 rgba(255, 255, 255, .35);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            transition: transform .45s var(--ease-spring, ease), box-shadow .35s ease;
+        }
+        .rep-card:hover .rep-date {
+            transform: scale(1.07) rotate(-3deg);
+            box-shadow: 0 14px 26px -8px rgba(255, 105, 0, .55),
+                        inset 0 1px 0 rgba(255, 255, 255, .35);
+        }
+        .rep-month {
+            font-size: .66rem;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .92);
+        }
+        .rep-year {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+        }
+
+        .rep-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .rep-type {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 13px;
+            border-radius: 999px;
+            background: var(--chip-bg, var(--fill-thin));
+            color: var(--chip-fg, var(--text-secondary));
+            font-size: .74rem;
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+        .rep-size {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: .78rem;
+            font-weight: 500;
+            color: var(--text-tertiary);
+        }
+        .rep-size .spinner-border {
+            width: .85em;
+            height: .85em;
+            border-width: 2px;
+            color: var(--accent-color);
+        }
+
+        .rep-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.45;
+            transition: color .25s ease;
+        }
+        .rep-card:hover .rep-title { color: var(--accent-deep); }
+        .rep-desc {
+            color: var(--text-secondary);
+            font-size: .93rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
-    <link rel="stylesheet" href="claymorphism.css">
-</head>
-<body class="page-reports">
 
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <span class="konoha-logo">🍃</span>
-                Health Screening
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
             </a>
-            <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover active" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="page-hero">
+    <header class="hero-section">
         <div class="container">
-            <div>
-                <div class="hero-eyebrow"><i class="bi bi-file-earmark-text"></i> Documentation</div>
-                <h1 class="page-title">Project <span class="title-gradient">Reports</span></h1>
-                <p class="page-sub">Comprehensive archive of our progress, monthly updates, and official documentation.</p>
-            </div>
-        </div>
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <span class="scroll-stamp">🍃</span>
-                    <div class="stat-icon"><i class="bi bi-file-earmark-text"></i></div>
-                    <div>
+            <h1 class="display-hero" data-reveal data-reveal-delay="80">
+                Project <span class="text-accent-gradient">Reports</span>
+            </h1>
+            <p class="hero-sub mt-3" data-reveal data-reveal-delay="160">
+                Comprehensive archive of our progress, monthly updates, and official documentation.
+            </p>
+            <div class="d-flex justify-content-center flex-wrap gap-3 mt-4" data-reveal data-reveal-delay="240">
+                <div class="glass-panel stat-tile justify-content-center">
+                    <span class="stat-icon"><i class="bi bi-file-earmark-text"></i></span>
+                    <div class="text-center">
                         <div class="stat-label">Total Reports</div>
                         <div class="stat-value" id="reportsCount">0</div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <div class="filter-bar">
+    <section class="section-block">
         <div class="container">
-            <div class="filter-inner">
-                <span class="scroll-stamp" style="position:absolute;top:8px;right:14px;font-size:1.2rem;z-index:3;opacity:0.4;transform:rotate(-15deg);pointer-events:none;">🍃</span>
-                <div class="search-wrap">
-                    <i class="bi bi-search"></i>
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search reports...">
-                </div>
-                <select id="yearFilter" class="filter-select"><option value="all">All Years</option></select>
-                <select id="monthFilter" class="filter-select"><option value="all">All Months</option></select>
+            <div class="section-head text-center" data-reveal>
+                <h2 class="section-title">Search & Filter</h2>
             </div>
-        </div>
-    </div>
+            <div class="row justify-content-center" data-reveal data-reveal-delay="100">
+                <div class="col-12 col-lg-10">
+                    <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <div class="mi-input-wrap">
+                                    <i class="bi bi-search mi-input-icon"></i>
+                                    <input type="text" id="searchInput" class="mi-input has-icon" placeholder="Search by title...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="yearFilter" class="mi-input mi-select">
+                                    <option value="all">All Years</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="monthFilter" class="mi-input mi-select">
+                                    <option value="all">All Months</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="mi-clear-btn w-100" onclick="clearFilters()" aria-label="Clear filters">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
 
-    <section class="timeline-section">
+    <section class="section-block">
         <div class="container">
-            <div class="timeline" id="timeline-container"></div>
+            <div class="section-head text-center" data-reveal>
+                <h2 class="section-title">All Reports</h2>
+            </div>
+            <div id="timeline-container" data-reveal data-reveal-delay="100"></div>
         </div>
     </section>
 
-    <!-- PDF Modal -->
-    <div class="modal fade pdf-modal" id="pdfViewerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal fade modal-hig" id="pdfViewerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="pdfModalTitle">
-                        <i class="bi bi-file-earmark-pdf-fill me-2" style="color:#f97316;"></i>
-                        <span id="pdfTitle">Report Viewer</span>
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <span class="pdf-glyph"><i class="bi bi-file-earmark-pdf-fill"></i></span>
+                    <div class="flex-grow-1 ms-3" style="min-width:0;">
+                        <h5 class="pdf-modal-title" id="pdfTitle">Report Viewer</h5>
+                        <p class="pdf-modal-caption">PDF Document</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="pdfModalBody">
-                    <div class="pdf-viewer-container">
-                        <div class="pdf-loading" id="pdfLoading">
-                            <div class="spinner"></div>
-                            <div>Loading document ...</div>
-                            <small style="color:#8B7355;">Requesting PDF from secure source</small>
+                    <div class="pdf-viewer-container pdf-frame-wrap">
+                        <div class="pdf-loading text-center py-5" id="pdfLoading">
+                            <div class="pdf-spin-bubble">
+                                <div class="spinner-border text-accent" style="width:2.2rem;height:2.2rem;"></div>
+                            </div>
+                            <div class="pdf-state-title">Loading document…</div>
+                            <small class="text-muted d-block mt-1">This will only take a moment</small>
                         </div>
-                        <div id="pdfError" class="pdf-error" style="display: none;">
-                            <i class="bi bi-file-earmark-pdf-slash"></i>
-                            <p>Unable to preview the PDF. It might be unavailable or the file could be corrupted.</p>
-                            <button id="retryDownloadBtn" class="btn-download" style="margin-top: 12px;"><i class="bi bi-download"></i> Download Report Instead</button>
+                        <div id="pdfError" class="pdf-error text-center py-5" style="display: none;">
+                            <div class="pdf-error-bubble"><i class="bi bi-file-earmark-pdf"></i></div>
+                            <div class="pdf-state-title">Preview unavailable</div>
+                            <p class="mt-2 mb-0 px-3">The file may be unavailable or corrupted. You can still download it below.</p>
+                            <button id="retryDownloadBtn" class="btn-hig btn-primary-hig mt-4"><i class="bi bi-download"></i> Download Report</button>
                         </div>
-                        <iframe id="pdfEmbed" class="pdf-embed" style="display: none;" frameborder="0" allow="fullscreen"></iframe>
+                        <iframe id="pdfEmbed" class="pdf-embed w-100" style="display: none; height: 72vh; border: none;" frameborder="0" allow="fullscreen"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="modern-footer">
+    <footer class="site-footer">
         <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-5" data-aos="fade-up">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
-                        <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                        </p>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
                     </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
                 </div>
-                <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
-                        <div class="d-flex flex-column gap-2 mt-2">
-                            <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
-                                <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
-                            </a>
-                            <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                                <i class="bi bi-envelope-fill me-2"></i> Email
-                            </a>
-                        </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
                     </div>
                 </div>
             </div>
-            <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
-            <div class="footer-bottom text-center">
-                <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
-                <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
-            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project &middot; Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 950, once: true, offset: 40 });</script>
+    <script src="hig.js"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
         let allReports = [];
 
         const MONTH_MAP = { "jan":1,"january":1,"feb":2,"february":2,"mar":3,"march":3,"apr":4,"april":4,"may":5,"jun":6,"june":6,"jul":7,"july":7,"aug":8,"august":8,"sep":9,"september":9,"oct":10,"october":10,"nov":11,"november":11,"dec":12,"december":12 };
+        const TYPE_COLORS = [
+            ["rgba(62, 139, 255, .12)", "#2f6bdb"],
+            ["rgba(34, 172, 56, .12)", "#1d9631"],
+            ["rgba(143, 91, 255, .12)", "#7a44f0"],
+            ["rgba(255, 149, 0, .15)", "#d97a00"],
+            ["rgba(0, 184, 217, .12)", "#0097b0"],
+        ];
+
+        function typeChipStyle(type) {
+            const t = (type || '').toString().trim().toLowerCase();
+            let hash = 0;
+            for (let c = 0; c < t.length; c++) hash = (hash * 31 + t.charCodeAt(c)) >>> 0;
+            const [bg, fg] = TYPE_COLORS[hash % TYPE_COLORS.length];
+            return ` style="--chip-bg:${bg};--chip-fg:${fg}"`;
+        }
         const MONTH_SHORT = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
         const MONTH_FULL  = ["","January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -842,7 +492,7 @@
         async function fetchFileSize(url, elementId) {
             const element = document.getElementById(elementId);
             if (!element) return;
-            
+
             try {
                 const response = await fetch(url, { method: 'HEAD', cache: 'force-cache' });
                 if (response.ok) {
@@ -866,77 +516,70 @@
             }
         }
 
+        let pdfLoadToken = 0;
+
         function openPDFViewer(pdfUrl, title) {
             const modalEl = document.getElementById('pdfViewerModal');
-            const modal = new bootstrap.Modal(modalEl);
-            const pdfTitleSpan = document.getElementById('pdfTitle');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            document.getElementById('pdfTitle').textContent = title;
+
             const loadingDiv = document.getElementById('pdfLoading');
             const errorDiv = document.getElementById('pdfError');
             const pdfFrame = document.getElementById('pdfEmbed');
-            
-            pdfTitleSpan.textContent = title;
-            loadingDiv.style.display = 'flex';
+            const token = ++pdfLoadToken;
+
+            loadingDiv.style.display = 'block';
             errorDiv.style.display = 'none';
             pdfFrame.style.display = 'none';
-            pdfFrame.src = 'about:blank';
-            
+
             modal.show();
-            
-            const retryBtn = document.getElementById('retryDownloadBtn');
-            const newRetry = retryBtn.cloneNode(true);
-            retryBtn.parentNode.replaceChild(newRetry, retryBtn);
-            newRetry.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.open(pdfUrl, '_blank');
-            });
-            
-            setTimeout(() => {
-                pdfFrame.onload = () => {
-                    if (pdfFrame.contentDocument && pdfFrame.contentDocument.title === 'about:blank') return;
-                    loadingDiv.style.display = 'none';
-                    pdfFrame.style.display = 'block';
-                    errorDiv.style.display = 'none';
-                };
-                pdfFrame.onerror = () => {
-                    loadingDiv.style.display = 'none';
-                    errorDiv.style.display = 'flex';
-                    pdfFrame.style.display = 'none';
-                };
-                pdfFrame.src = pdfUrl + '#toolbar=1&navpanes=1&statusbar=1';
-                
-                setTimeout(() => {
-                    if (loadingDiv.style.display === 'flex') {
-                        loadingDiv.style.display = 'none';
-                        errorDiv.style.display = 'flex';
-                        pdfFrame.style.display = 'none';
-                    }
-                }, 8000);
-            }, 150);
+
+            const succeed = () => {
+                if (token !== pdfLoadToken) return;
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'none';
+                pdfFrame.style.display = 'block';
+            };
+            const fail = () => {
+                if (token !== pdfLoadToken) return;
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'flex';
+                pdfFrame.style.display = 'none';
+            };
+
+            pdfFrame.onload = () => {
+                try {
+                    const doc = pdfFrame.contentDocument;
+                    if (doc && doc.location && doc.location.href === 'about:blank') return;
+                } catch (err) { /* PDF plugin document — treat as loaded */ }
+                succeed();
+            };
+            pdfFrame.onerror = fail;
+
+            pdfFrame.src = pdfUrl;
+            clearTimeout(pdfFrame._failTimer);
+            pdfFrame._failTimer = setTimeout(fail, 6500);
         }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchData();
-            document.getElementById('searchInput').addEventListener('input', filterReports);
-            document.getElementById('yearFilter').addEventListener('change', () => { populateMonthFilter(); filterReports(); });
-            document.getElementById('monthFilter').addEventListener('change', filterReports);
-        });
 
         function showSkeletons() {
-            const c = document.getElementById('timeline-container'); 
-            c.innerHTML = '';
+            const c = document.getElementById('timeline-container');
+            let html = '<div class="mi-timeline">';
             for (let i = 0; i < 4; i++) {
-                const side = i % 2 === 0 ? 'left' : 'right';
-                c.innerHTML += `
-                    <div class="timeline-item ${side}" style="opacity:1;">
-                        <div class="tl-dot skeleton skel-dot"></div>
-                        <div class="skel-card">
-                            <div class="skeleton skel-line" style="width:25%;margin-bottom:12px;"></div>
-                            <div class="skeleton skel-title"></div>
-                            <div class="skeleton skel-desc"></div>
-                            <div class="skeleton skel-btn"></div>
+                html += `
+                    <div class="mi-tl-item"><span class="mi-tl-node"></span>
+                        <div class="hig-card rep-card skeleton-card" style="--chip:#ff6900">
+                            <div class="d-flex gap-4">
+                                <div class="skeleton" style="width:60px;height:60px;border-radius:50%;flex-shrink:0;"></div>
+                                <div class="flex-grow-1">
+                                    <div class="skeleton" style="height:16px;width:40%;margin-bottom:8px;"></div>
+                                    <div class="skeleton" style="height:12px;width:70%;margin-bottom:8px;"></div>
+                                    <div class="skeleton" style="height:12px;width:50%;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>`;
             }
+            c.innerHTML = html + '</div>';
         }
 
         function fetchData() {
@@ -944,17 +587,23 @@
             const minDelay = new Promise(r => setTimeout(r, 700));
             const dataPromise = new Promise((res, rej) => {
                 Papa.parse(sheetURL, {
-                    download: true, 
-                    header: true, 
-                    dynamicTyping: true, 
-                    complete: r => res(r.data), 
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    complete: r => res(r.data),
                     error: e => rej(e)
                 });
             });
             Promise.all([minDelay, dataPromise])
                 .then(([_, data]) => processData(data))
                 .catch(() => {
-                    document.getElementById('timeline-container').innerHTML = '<div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5><p>Unable to load reports data.</p></div>';
+                    document.getElementById('timeline-container').innerHTML = `
+                        <div class="glass-panel state-panel text-center" data-reveal>
+                            <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
+                            <h5 class="state-title">Connection Error</h5>
+                            <p class="state-text">Unable to load reports data.</p>
+                        </div>`;
+                    HIG.refreshReveals(document.getElementById('timeline-container'));
                 });
         }
 
@@ -963,30 +612,15 @@
                 if (b.Year !== a.Year) return (b.Year || 0) - (a.Year || 0);
                 return toMonthNum(b.Month) - toMonthNum(a.Month);
             });
-            populateYearFilter(); 
-            populateMonthFilter(); 
+            populateYearFilter();
+            populateMonthFilter();
             renderTimeline(allReports);
             updateReportCount();
         }
 
         function updateReportCount() {
             const el = document.getElementById('reportsCount');
-            if (el) animateCounter(el, allReports.length);
-        }
-
-        function animateCounter(el, target) {
-            const duration = 1500;
-            const start = 0;
-            const startTime = performance.now();
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(start + (target - start) * easeOut);
-                el.textContent = current.toLocaleString();
-                if (progress < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
+            if (el) HIG.countUp(el, allReports.length);
         }
 
         function populateYearFilter() {
@@ -999,17 +633,17 @@
         function populateMonthFilter() {
             const yr = document.getElementById('yearFilter').value;
             const sel = document.getElementById('monthFilter');
-            const prev = sel.value; 
+            const prev = sel.value;
             sel.innerHTML = '<option value="all">All Months</option>';
             const monthsSet = new Set();
-            allReports.forEach(r => { 
-                if (yr === 'all' || String(r.Year) === yr) { 
-                    const n = toMonthNum(r.Month); 
-                    if (n > 0) monthsSet.add(n); 
-                } 
+            allReports.forEach(r => {
+                if (yr === 'all' || String(r.Year) === yr) {
+                    const n = toMonthNum(r.Month);
+                    if (n > 0) monthsSet.add(n);
+                }
             });
-            [...monthsSet].sort((a, b) => a - b).forEach(n => { 
-                sel.innerHTML += `<option value="${n}">${fullMonth(n)}</option>`; 
+            [...monthsSet].sort((a, b) => a - b).forEach(n => {
+                sel.innerHTML += `<option value="${n}">${fullMonth(n)}</option>`;
             });
             if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
         }
@@ -1026,71 +660,94 @@
             }));
         }
 
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('yearFilter').value = 'all';
+            document.getElementById('monthFilter').value = 'all';
+            renderTimeline(allReports);
+        }
+
         function escapeHtml(str) {
             if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
         }
 
         function renderTimeline(data) {
             const c = document.getElementById('timeline-container');
             c.innerHTML = '';
-            
+
             if (!data.length) {
-                c.innerHTML = '<div class="empty-state"><i class="bi bi-search"></i><h5 style="color:#475569;">No reports found</h5><p style="color:#1e293b;font-size:.9rem;">Try adjusting your search or filters.</p></div>';
+                c.innerHTML = `
+                    <div class="glass-panel state-panel text-center" data-reveal>
+                        <div class="state-icon"><i class="bi bi-search"></i></div>
+                        <h5 class="state-title">No Reports Found</h5>
+                        <p class="state-text">Try adjusting your search or filters.</p>
+                    </div>`;
+                HIG.refreshReveals(c);
                 return;
             }
-            
+
+            let items = '';
+
             data.forEach((item, i) => {
-                const side = i % 2 === 0 ? 'left' : 'right';
                 const safeName = item.Title.toString().trim().replace(/[\/\\:*?"<>|]/g, '_').replace(/\s+/g, '_');
                 const pdfUrl = `reports_files/${encodeURIComponent(safeName)}.pdf`;
                 const sizeId = `size-${Date.now()}-${i}`;
-                
+
                 let sizeHtml = '';
                 if (item.File_Size && item.File_Size.toString().trim() !== "") {
-                    sizeHtml = `<span class="file-size-badge"><i class="bi bi-hdd-stack"></i> ${escapeHtml(item.File_Size)}</span>`;
+                    sizeHtml = `<span class="rep-size"><i class="bi bi-hdd-stack"></i> ${escapeHtml(item.File_Size)}</span>`;
                 } else {
-                    sizeHtml = `<span class="file-size-badge" id="${sizeId}"><span class="size-loading"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <span>loading...</span></span></span>`;
+                    sizeHtml = `<span class="rep-size" id="${sizeId}"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> loading...</span>`;
                 }
-                
-                c.innerHTML += `
-                    <div class="timeline-item ${side}" style="animation-delay:${i * 70}ms;">
-                        <div class="tl-dot">
-                            <span class="dot-month">${shortMonth(item.Month)}</span>
-                            <span class="dot-year">${item.Year || '—'}</span>
-                        </div>
-                        <div class="tl-card">
-                            <span class="scroll-stamp">🍃</span>
-                            <span class="type-pill"><i class="bi bi-file-earmark-text"></i>${escapeHtml(item.Type) || 'Document'}</span>
-                            <h4 class="report-title">${escapeHtml(item.Title)}</h4>
-                            <p class="report-desc">${escapeHtml(item.Description) || 'Comprehensive health screening report and insights.'}</p>
-                            <div class="card-footer-row">
-                                <button class="btn-view" onclick="openPDFViewer('${pdfUrl.replace(/'/g, "\\'")}', '${escapeHtml(item.Title).replace(/'/g, "\\'")}')">
-                                    <i class="bi bi-eye-fill"></i> View PDF
-                                </button>
-                                <a href="${pdfUrl}" target="_blank" download class="btn-download">
-                                    <i class="bi bi-file-earmark-arrow-down"></i> Download
-                                </a>
-                                ${sizeHtml}
+
+                items += `
+                    <div class="mi-tl-item"><span class="mi-tl-node"></span>
+                        <div class="hig-card rep-card" style="--chip:#ff6900" data-reveal data-reveal-delay="${Math.min(i * 70, 400)}">
+                            <div class="d-flex flex-column flex-md-row gap-3 gap-md-4 align-items-md-center">
+                                <div class="rep-date">
+                                    <span class="rep-month">${shortMonth(item.Month)}</span>
+                                    <span class="rep-year">${item.Year || '—'}</span>
+                                </div>
+                                <div class="flex-grow-1" style="min-width:0;">
+                                    <div class="rep-meta mb-2">
+                                        <span class="rep-type"${typeChipStyle(item.Type)}>${escapeHtml(item.Type) || 'Document'}</span>
+                                        ${sizeHtml}
+                                    </div>
+                                    <h4 class="rep-title mb-1">${escapeHtml(item.Title)}</h4>
+                                    <p class="rep-desc mb-0">${escapeHtml(item.Description)}</p>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2 align-items-center">
+                                    <button class="btn-hig btn-primary-hig" onclick="openPDFViewer('${pdfUrl.replace(/'/g, "\\'")}', '${escapeHtml(item.Title).replace(/'/g, "\\'")}')">
+                                        <i class="bi bi-eye-fill"></i> View PDF
+                                    </button>
+                                    <a href="${pdfUrl}" target="_blank" download class="btn-hig btn-glass-hig">
+                                        <i class="bi bi-file-earmark-arrow-down"></i> Download
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>`;
-                
+
                 if (!item.File_Size || item.File_Size.toString().trim() === "") {
                     setTimeout(() => {
                         fetchFileSize(pdfUrl, sizeId);
                     }, 100);
                 }
             });
+
+            c.innerHTML = `<div class="mi-timeline">${items}</div>`;
+            HIG.refreshReveals(c);
         }
-        
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+            document.getElementById('searchInput').addEventListener('input', filterReports);
+            document.getElementById('yearFilter').addEventListener('change', () => { populateMonthFilter(); filterReports(); });
+            document.getElementById('monthFilter').addEventListener('change', filterReports);
+        });
+
         window.openPDFViewer = openPDFViewer;
     </script>
-
 </body>
 </html>

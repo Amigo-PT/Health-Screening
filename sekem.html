@@ -1,111 +1,104 @@
 ﻿<!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="naruto">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6f6f8" />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <title>SEKEM Screening - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="hig.css">
+    <link rel="stylesheet" href="dashboard.css">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        (function() {
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true, header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.reload();
-                            } else {
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                            }
-                        } else {
-                            if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                        }
-                    },
-                    error: function(err) {
-                        console.error("Maintenance check failed", err);
-                        if (sessionStorage.getItem('isLoggedIn') !== 'true') window.location.href = 'login.html';
-                    }
-                });
-            }
-        })();
-    </script>
     <style>
+        /* =====================================================
+           SEKEM Dashboard — Xiaomi MIUI / HyperOS design system
+           ===================================================== */
         :root {
-            --naruto-orange: #FF8C00;
-            --naruto-orange-dark: #E67600;
-            --leaf-green: #2E5A2B;
-            --leaf-green-light: #4A7C3F;
-            --clay-bg: #F4F1E1;
-            --wood-dark: #5C4033;
-            --wood-light: #8B6914;
-            --shadow-color: #1a1a2e;
-            --text-dark: #2F2E2E;
-            --text-light: #F5F5DC;
-            --scroll-bg: #FFF8E7;
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
-            --sekem-gradient: linear-gradient(120deg, #f59e0b, #f97316, #ef4444);
-            --main-gradient: linear-gradient(120deg, #2563eb, #06b6d4, #10b981);
-            --bg: #020617; --text: #f1f5f9; --muted: #94a3b8;
-            --card-bg: rgba(15,23,42,0.6); --border: rgba(255,255,255,0.07); --radius: 22px;
-            --accent: #f97316; --accent-glow: rgba(249,115,22,0.3);
+            /* legacy variable names kept so existing markup/JS keeps working */
+            --naruto-orange: #ff6900;
+            --naruto-orange-dark: #e85d00;
+            --leaf-green: #22ac38;
+            --leaf-green-light: #2ebd59;
+            --clay-bg: #f6f6f8;
+            --wood-dark: #98a2b3;
+            --wood-light: #c3ccd8;
+            --shadow-color: rgba(15, 23, 42, 0.08);
+            --text-dark: #1a1a1a;
+            --text-light: #ffffff;
+            --scroll-bg: #ffffff;
+            --radius-sm: 10px;
+            --radius-md: 18px;
+            --radius-lg: 28px;
+            --sekem-gradient: linear-gradient(120deg, #22ac38, #00b8d9);
+            --main-gradient: linear-gradient(120deg, #ff6900, #ff9500);
+            --bg: #f6f6f8;
+            --text: #1a1a1a;
+            --muted: rgba(0, 0, 0, 0.55);
+            --card-bg: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --radius: 20px;
+            --accent: #ff6900;
+            --accent-glow: rgba(255, 105, 0, 0.25);
+            --hairline: rgba(0, 0, 0, 0.07);
+            --hairline-strong: rgba(0, 0, 0, 0.13);
+            --surface-2: #f2f3f5;
+            --ease-spring: cubic-bezier(0.34, 1.3, 0.48, 1);
+            --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
         }
         * { box-sizing: border-box; }
 
-        @keyframes cloudsFloat {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeInPage { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
         body {
-            font-family: 'Poppins', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
+            font-family: 'MiSans', 'Cairo', sans-serif;
+            background:
+                radial-gradient(1100px 520px at 88% -140px, rgba(255, 105, 0, 0.08), transparent 60%),
+                radial-gradient(900px 480px at -10% 30%, rgba(34, 172, 56, 0.06), transparent 55%),
+                var(--bg);
+            color: var(--text-dark);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            animation: fadeInPage .8s ease-out;
+            animation: fadeInPage .7s ease-out;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -.01em;
         }
         body::before {
-            content: "☁️";
+            content: "";
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             pointer-events: none;
-            font-size: 120px;
-            white-space: nowrap;
-            color: rgba(255,255,240,0.08);
-            animation: cloudsFloat 40s linear infinite;
+            background: radial-gradient(700px 340px at 50% 115%, rgba(255, 105, 0, 0.05), transparent 60%);
             z-index: 0;
         }
 
+        ::selection { background: rgba(255, 105, 0, 0.22); }
+
+        /* ---------- Navbar ---------- */
         .navbar {
-            background: rgba(44, 34, 24, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 2px solid var(--naruto-orange);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(18px) saturate(1.6);
+            -webkit-backdrop-filter: blur(18px) saturate(1.6);
+            border-bottom: 1px solid var(--hairline);
+            box-shadow: 0 8px 32px -18px rgba(15, 23, 42, 0.18);
             padding: 12px 0;
             z-index: 500;
+            transition: box-shadow .3s ease, background .3s ease;
         }
         .navbar-brand {
-            font-weight: 900;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            font-size: 1.05rem;
+            letter-spacing: -.02em;
+            color: var(--text-dark) !important;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -113,560 +106,653 @@
         .konoha-logo {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-weight: 900;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            box-shadow: 0 0 12px rgba(255,140,0,0.3);
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff8a3c, var(--naruto-orange));
+            color: #fff;
+            font-size: 1rem;
+            box-shadow: 0 6px 16px -6px rgba(255, 105, 0, 0.55);
         }
         .nav-link {
-            font-weight: 700;
-            color: #e8d5b7 !important;
-            padding: 8px 18px !important;
-            border-radius: 30px;
-            transition: all 0.25s;
-            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.58) !important;
+            padding: 8px 16px !important;
+            border-radius: 999px;
+            transition: color .2s ease, background-color .2s ease, transform .35s var(--ease-spring);
+            font-size: 0.86rem;
             margin: 0 2px;
         }
         .nav-link:hover {
-            background: rgba(255, 140, 0, 0.2);
-            color: var(--naruto-orange) !important;
-            transform: translateY(-2px);
+            background: var(--accent-glow);
+            color: var(--naruto-orange-dark) !important;
+            transform: translateY(-1px);
         }
         .nav-link.active {
-            background: rgba(255, 140, 0, 0.3) !important;
-            color: var(--naruto-orange) !important;
-            border: 1px solid var(--naruto-orange) !important;
-            box-shadow: 0 0 10px rgba(255,140,0,0.3);
+            background: linear-gradient(135deg, #ff8a3c, var(--naruto-orange)) !important;
+            color: #fff !important;
+            box-shadow: 0 8px 20px -8px rgba(255, 105, 0, 0.55);
         }
-        .sharingan-hover { transition: all 0.3s ease; }
-        .sharingan-hover:hover {
-            animation: sharinganSpin 0.6s ease-in-out;
-            color: var(--naruto-orange) !important;
-        }
-        @keyframes sharinganSpin {
-            0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
-            50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
-            100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
-        }
+        .sharingan-hover { transition: transform .3s var(--ease-spring), color .2s ease; display: inline-block; }
+        .sharingan-hover:hover { transform: translateY(-2px); color: var(--naruto-orange) !important; }
+        .navbar-toggler { border: none; padding: 6px 10px; border-radius: 12px; transition: background .2s ease; }
+        .navbar-toggler:hover { background: var(--surface-2); }
+        .navbar-toggler:focus { box-shadow: none; }
 
-        .page-hero { position: relative; z-index: 1; padding: 150px 0 70px; }
-        .hero-eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px;
-            padding: 6px 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
-        }
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 10px;
-            color: var(--text-light);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .title-gradient {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: chakraFlow 3s ease infinite;
-        }
-        @keyframes chakraFlow {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-        .page-sub {
-            font-size: 1rem;
-            color: #F5F5DC;
-            line-height: 1.7;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-        .scroll-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-radius: var(--radius-md);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-        }
-        .scroll-card:hover {
-            transform: translateY(-5px) rotate(0.5deg);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
+        /* ---------- Hero ---------- */
         .section-eyebrow {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px; padding: 5px 14px;
-            font-size: 0.7rem; font-weight: 700;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em; margin-bottom: 15px;
+            font-size: .74rem; font-weight: 500;
+            color: var(--muted);
+            letter-spacing: .1em; text-transform: uppercase;
+            margin-bottom: 22px;
         }
+        .section-eyebrow i { color: var(--naruto-orange); }
         .section-title {
             font-size: clamp(1.4rem, 3vw, 2rem);
-            font-weight: 900;
-            color: var(--text-light);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-dark);
             margin-bottom: 10px;
         }
 
+        /* ---------- Card base ---------- */
+        .scroll-card,
+        .filter-card,
+        .stat-card,
+        .company-card,
+        .chart-card,
+        .risk-summary,
+        .drilldown-card {
+            background: var(--card-bg);
+            border: 1px solid var(--hairline);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 50px -30px rgba(15, 23, 42, 0.25), 0 2px 8px -4px rgba(15, 23, 42, 0.06);
+            transition: transform .45s var(--ease-spring), box-shadow .35s ease, border-color .25s ease;
+        }
+        .scroll-card:hover,
+        .filter-card:hover,
+        .stat-card:hover,
+        .company-card:hover,
+        .chart-card:hover,
+        .risk-summary:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 34px 70px -34px rgba(15, 23, 42, 0.32), 0 4px 14px -6px rgba(15, 23, 42, 0.08);
+        }
+        .scroll-stamp {
+            position: absolute;
+            top: 12px; right: 16px;
+            font-size: 1rem;
+            opacity: .35;
+            color: var(--leaf-green);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* ---------- Buttons ---------- */
         .btn-rasengan {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--naruto-orange-dark));
-            border: none; padding: 12px 32px;
-            border-radius: 40px; color: white;
-            font-weight: 800; font-size: 0.9rem;
-            box-shadow: 0 5px 15px rgba(255,140,0,0.4);
-            transition: all 0.35s; text-decoration: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(135deg, #ff8a3c, var(--naruto-orange));
+            border: none; padding: 13px 34px;
+            border-radius: 999px; color: #fff;
+            font-weight: 500; font-size: 0.92rem; letter-spacing: -.01em;
+            box-shadow: 0 14px 30px -12px rgba(255, 105, 0, 0.6);
+            transition: transform .4s var(--ease-spring), box-shadow .3s ease, filter .2s ease;
+            text-decoration: none;
             position: relative; overflow: hidden;
         }
         .btn-rasengan:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(255,140,0,0.6);
-            color: white;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 22px 40px -14px rgba(255, 105, 0, 0.65);
+            color: #fff;
+            filter: saturate(1.08);
         }
+        .btn-rasengan:active { transform: scale(.97); }
         .btn-konoha {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(92, 64, 51, 0.8);
-            border: 1px solid var(--naruto-orange);
-            padding: 12px 32px; border-radius: 40px;
-            color: var(--text-light); font-weight: 800; font-size: 0.9rem;
-            transition: all 0.35s; text-decoration: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: var(--card-bg);
+            border: 1px solid var(--hairline-strong);
+            padding: 13px 34px; border-radius: 999px;
+            color: var(--text-dark); font-weight: 500; font-size: 0.92rem;
+            transition: transform .4s var(--ease-spring), border-color .2s ease, color .2s ease, box-shadow .3s ease;
+            text-decoration: none;
+            box-shadow: 0 10px 26px -18px rgba(15, 23, 42, 0.3);
         }
         .btn-konoha:hover {
-            background: rgba(255, 140, 0, 0.3);
-            border-color: var(--naruto-orange);
-            color: var(--naruto-orange);
-            transform: translateY(-4px);
+            border-color: rgba(255, 105, 0, 0.5);
+            color: var(--naruto-orange-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 18px 36px -18px rgba(255, 105, 0, 0.4);
         }
 
+        /* ---------- Footer ---------- */
         .modern-footer {
-            background: rgba(44, 34, 24, 0.95);
-            border-top: 3px solid var(--naruto-orange);
+            background: var(--card-bg);
+            border-top: 1px solid var(--hairline);
             padding: 60px 0 30px;
-            margin-top: 40px;
+            margin-top: 48px;
             position: relative;
             z-index: 1;
         }
         .footer-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding: 28px 22px;
+            background: var(--surface-2);
+            border: 1px solid var(--hairline);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
             position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
+            height: 100%;
+            transition: transform .45s var(--ease-spring), box-shadow .3s ease;
             z-index: 0;
         }
-        .footer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .footer-card::before, .footer-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .footer-card::before { top: -9px; }
-        .footer-card::after  { bottom: -9px; }
-        .footer-card .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
+        .footer-card:hover { transform: translateY(-5px); box-shadow: 0 26px 50px -30px rgba(15, 23, 42, 0.28); }
         .footer-logo {
-            font-size: 1.1rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.05rem;
+            font-weight: 600;
+            letter-spacing: -.02em;
+            color: var(--text-dark);
         }
+        .footer-divider { opacity: .5; }
         .footer-copyright {
             font-size: 0.85rem;
-            color: #c4b08a;
-            letter-spacing: 0.03em;
+            color: var(--muted);
+            letter-spacing: 0.01em;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
             gap: 6px;
         }
-        .footer-copyright .copy-icon {
-            color: var(--naruto-orange);
-            font-size: 0.9rem;
-        }
-        .footer-copyright .dev-by {
-            color: #a09070;
-            font-weight: 400;
-        }
+        .footer-copyright .copy-icon { color: var(--naruto-orange); font-size: 0.9rem; }
+        .footer-copyright .dev-by { color: var(--muted); font-weight: 400; }
         .footer-copyright .dev-name {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-            letter-spacing: 0.05em;
+            color: var(--naruto-orange-dark);
+            font-weight: 600;
+            letter-spacing: 0.01em;
         }
-        .footer-copyright .pipe {
-            color: rgba(255,140,0,0.3);
-            font-weight: 300;
-        }
+        .footer-copyright .pipe { color: var(--hairline-strong); font-weight: 300; }
 
         .modal { z-index: 999999 !important; }
         .modal-backdrop { z-index: 999998 !important; }
 
-        .breadcrumb { background:none; padding:0; margin:0; }
-        .breadcrumb-item a { color:var(--text-dark); text-decoration:none; font-weight:700; font-size:.88rem; opacity:0.8; }
-        .breadcrumb-item a:hover { color:var(--naruto-orange); opacity:1; }
-        .breadcrumb-item.active { color:var(--text-dark); font-size:.88rem; font-weight:600; }
-        .breadcrumb-item+.breadcrumb-item::before { color:var(--wood-dark); opacity:0.4; }
+        /* ---------- Filter console ---------- */
+        .filter-card { position: relative; z-index: 1; padding: 28px 32px; margin-bottom: 40px; }
+        .filter-label {
+            font-size: .72rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+            color: var(--muted); margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .filter-label i { color: var(--naruto-orange); }
+        .sync-note { font-size: .74rem; color: var(--muted); margin-top: 14px; }
 
-        .filter-card { position:relative; z-index:1; background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px 32px; margin-bottom:40px; overflow:visible; }
-        .filter-card::before, .filter-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .filter-card::before { top:-7px; }
-        .filter-card::after  { bottom:-7px; }
-        .filter-card .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .filter-label { font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dark); margin-bottom:16px; display:block; }
+        .year-tabs {
+            display: flex; gap: 6px; flex-wrap: wrap;
+            width: max-content; max-width: 100%;
+            padding: 4px;
+            background: var(--surface-2);
+            border: 1px solid var(--hairline);
+            border-radius: 999px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .year-tabs::-webkit-scrollbar { display: none; }
+        .year-tab {
+            padding: 9px 22px; border-radius: 999px;
+            font-size: .88rem; font-weight: 400;
+            color: rgba(0, 0, 0, 0.58);
+            background: transparent; border: none; cursor: pointer;
+            font-family: inherit;
+            transition: color .2s ease, background-color .25s ease, transform .35s var(--ease-spring), box-shadow .25s ease;
+            white-space: nowrap;
+        }
+        .year-tab:hover { color: var(--text-dark); transform: scale(1.04); }
+        .year-tab.active {
+            background: linear-gradient(135deg, #ff8a3c, var(--naruto-orange));
+            color: #fff; font-weight: 500;
+            box-shadow: 0 8px 20px -8px rgba(255, 105, 0, 0.6);
+        }
 
-        .year-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px; }
-        .year-tab { padding:8px 20px; border-radius:10px; font-size:.9rem; font-weight:800; color:var(--text-dark); background:transparent; border:2px solid transparent; cursor:pointer; transition:all .25s; font-family:'Poppins','Cairo',sans-serif; }
-        .year-tab:hover { background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; color:var(--naruto-orange); box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .year-tab.active { background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; color:var(--naruto-orange); box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
+        .month-timeline { position: relative; display: flex; align-items: flex-start; padding: 10px 4px 4px; }
+        .month-timeline::before { content: ''; position: absolute; left: 10px; right: 10px; top: 17px; height: 1px; background: var(--hairline-strong); z-index: 0; }
+        .month-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; z-index: 1; cursor: pointer; }
+        .month-dot {
+            width: 15px; height: 15px; border-radius: 50%;
+            background: var(--card-bg); border: 2px solid var(--hairline-strong);
+            transition: transform .35s var(--ease-spring), background-color .2s ease, border-color .2s ease, box-shadow .25s ease;
+        }
+        .month-item.has-data .month-dot { border-color: rgba(255, 105, 0, 0.45); }
+        .month-item:hover .month-dot { transform: scale(1.2); border-color: rgba(255, 105, 0, 0.7); }
+        .month-item.active .month-dot {
+            background: var(--naruto-orange); border-color: var(--naruto-orange);
+            transform: scale(1.32);
+            box-shadow: 0 0 0 5px rgba(255, 105, 0, 0.14);
+        }
+        .month-lbl { font-size: .74rem; font-weight: 500; color: var(--muted); transition: color .2s ease; }
+        .month-item.active .month-lbl, .month-item:hover .month-lbl { color: var(--naruto-orange-dark); }
 
-        .month-timeline { position:relative; display:flex; align-items:flex-start; padding:8px 0 4px; }
-        .month-timeline::before { content:''; position:absolute; left:0; right:0; top:16px; height:2px; background:rgba(92,64,51,0.2); z-index:0; }
-        .month-item { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; z-index:1; cursor:pointer; }
-        .month-dot { width:16px; height:16px; border-radius:50%; background:var(--scroll-bg); border:2px solid var(--wood-dark); margin-bottom:8px; transition:all .25s; }
-        .month-item.has-data .month-dot { border-color:var(--wood-dark); background:rgba(92,64,51,0.15); }
-        .month-item.active   .month-dot { background:var(--naruto-orange); border-color:var(--naruto-orange); transform:scale(1.35); box-shadow:0 0 12px rgba(255,140,0,0.4); }
-        .month-item:hover    .month-dot { background:var(--naruto-orange); border-color:var(--naruto-orange); transform:scale(1.2); }
-        .month-lbl { font-size:.78rem; font-weight:700; color:var(--text-dark); transition:.25s; }
-        .month-item.active .month-lbl, .month-item:hover .month-lbl { color:var(--naruto-orange); }
+        .comparison-controls { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--hairline); align-items: center; }
+        .filter-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+        .filter-actions .comparison-select { min-width: 220px; }
+        .filter-actions .btn-compare { min-width: 170px; }
+        .comparison-select {
+            background: var(--card-bg); border: 1px solid var(--hairline-strong); border-radius: 12px;
+            padding: 9px 16px; color: var(--text-dark);
+            font-family: inherit; font-size: 0.85rem; cursor: pointer; font-weight: 500;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+        .comparison-select:hover { border-color: rgba(0, 0, 0, 0.22); }
+        .comparison-select:focus { outline: none; border-color: rgba(255, 105, 0, 0.55); box-shadow: 0 0 0 4px rgba(255, 105, 0, 0.13); }
+        .btn-compare {
+            background: var(--card-bg);
+            border: 1px solid var(--hairline-strong); border-radius: 999px;
+            padding: 9px 22px; color: var(--text-dark);
+            font-weight: 500; font-size: 0.85rem; cursor: pointer; font-family: inherit;
+            transition: transform .35s var(--ease-spring), border-color .2s ease, color .2s ease, background .2s ease, box-shadow .3s ease;
+            box-shadow: 0 10px 24px -18px rgba(15, 23, 42, 0.3);
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-compare:hover { border-color: rgba(255, 105, 0, 0.5); color: var(--naruto-orange-dark); transform: translateY(-2px); }
+        .btn-compare:active { transform: scale(.97); }
+        .btn-compare.active { background: rgba(235, 68, 53, 0.08); border-color: rgba(235, 68, 53, 0.45); color: #eb4435; }
+        .comparison-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--accent-glow); border-radius: 999px;
+            padding: 5px 14px; font-size: 0.72rem; font-weight: 500;
+            color: var(--naruto-orange-dark);
+        }
+        .comparison-change { font-size: 0.72rem; margin-top: 6px; }
+        .status-indicator { transition: color .25s ease; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
+        .status-indicator.status-ok { color: var(--leaf-green); }
+        .status-indicator.status-error { color: #eb4435; }
+        .status-indicator.status-loading { color: #ff9500; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: currentColor; box-shadow: 0 0 10px currentColor; flex-shrink: 0; }
 
-        .comparison-controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; padding-top:20px; border-top:1px solid rgba(92,64,51,0.15); align-items:center; }
-        .filter-actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
-        .filter-actions .comparison-select { min-width:220px; }
-        .filter-actions .btn-compare { min-width:170px; }
-        .comparison-select { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:8px 16px; color:var(--text-dark); font-family:'Cairo',sans-serif; font-size:0.85rem; cursor:pointer; font-weight:600; box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .comparison-select:hover,.comparison-select:focus { border-color:var(--naruto-orange); outline:none; }
-        .btn-compare { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:8px 20px; color:var(--text-dark); font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.25s; box-shadow:0 4px 10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .btn-compare:hover { background:rgba(255,140,0,0.08); color:var(--naruto-orange); transform:translateY(-2px); }
-        .btn-compare.active { background:rgba(239,68,68,0.08); border-color:#ef4444; color:#ef4444; }
-        .comparison-badge { display:inline-flex; align-items:center; gap:6px; background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:8px; padding:5px 14px; font-size:0.7rem; font-weight:700; color:var(--text-dark); }
-        .comparison-change { font-size:0.7rem; margin-top:4px; }
-        .status-indicator { transition:color .2s; font-size:0.8rem; font-weight:600; }
-        .status-indicator.status-ok { color:#16a34a; }
-        .status-indicator.status-error { color:#dc2626; }
-        .status-indicator.status-loading { color:#d97706; }
+        /* ---------- Stats ---------- */
+        .stats-row { position: relative; z-index: 1; margin-bottom: 36px; }
+        .stat-card { padding: 24px 22px; position: relative; height: 100%; display: flex; flex-direction: row; align-items: center; gap: 16px; }
+        .stat-num {
+            font-size: 2.5rem; font-weight: 600; line-height: 1.05; letter-spacing: -0.02em;
+            font-feature-settings: "tnum";
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .stat-lbl { font-size: .82rem; font-weight: 500; color: var(--muted); }
+        .stat-lbl i { color: var(--naruto-orange); }
 
-        .risk-section { margin:32px 0; }
-        .risk-summary { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px; position:relative; overflow:visible; z-index:0; }
-        .risk-summary::before, .risk-summary::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .risk-summary::before { top:-7px; }
-        .risk-summary::after  { bottom:-7px; }
-        .risk-summary .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .risk-title { font-size:0.85rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dark); margin-bottom:24px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-        .risk-stats { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
-        .risk-stat-item { text-align:center; flex:1; min-width:140px; padding:20px; border-radius:20px; transition:all 0.3s ease; cursor:pointer; }
-        .risk-stat-item:hover { transform:translateY(-6px); }
-        .risk-stat-item.high-risk { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25); }
-        .risk-stat-item.moderate-risk { background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.25); }
-        .risk-stat-item.low-risk { background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.25); }
-        .risk-number { font-size:2.4rem; font-weight:900; line-height:1; }
-        .high-risk .risk-number { color:#ef4444; }
-        .moderate-risk .risk-number { color:#f59e0b; }
-        .low-risk .risk-number { color:#10b981; }
-        .risk-label { font-size:0.85rem; font-weight:700; margin-top:8px; color:var(--text-dark); }
-        .risk-description { font-size:0.7rem; color:#5a4a3a; margin-top:4px; }
-        .risk-summary-compact { margin-top:20px; padding-top:16px; border-top:1px solid rgba(92,64,51,0.15); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-        .risk-formula-box { margin-top:16px; padding:12px 16px; background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; font-size:0.72rem; color:var(--text-dark); line-height:1.6; box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.3); }
-        .risk-formula-box strong { color:var(--text-dark); }
+        /* ---------- Risk stratification ---------- */
+        .risk-section { margin: 36px 0; }
+        .risk-summary { padding: 28px; position: relative; z-index: 0; }
+        .risk-title {
+            font-size: 0.76rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--muted); margin-bottom: 24px;
+            display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .risk-title i { color: var(--naruto-orange); }
+        .risk-stats { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .risk-stat-item {
+            text-align: center; flex: 1; min-width: 150px; padding: 22px 18px;
+            border-radius: var(--radius-md); cursor: pointer;
+            background: var(--surface-2); border: 1px solid var(--hairline);
+            transition: transform .4s var(--ease-spring), border-color .25s ease, box-shadow .3s ease;
+        }
+        .risk-stat-item:hover { transform: translateY(-6px); box-shadow: 0 22px 44px -24px rgba(15, 23, 42, 0.3); }
+        .risk-stat-item.high-risk { background: rgba(235, 68, 53, 0.06); border-color: rgba(235, 68, 53, 0.22); }
+        .risk-stat-item.high-risk:hover { border-color: rgba(235, 68, 53, 0.5); }
+        .risk-stat-item.moderate-risk { background: rgba(255, 149, 0, 0.07); border-color: rgba(255, 149, 0, 0.24); }
+        .risk-stat-item.moderate-risk:hover { border-color: rgba(255, 149, 0, 0.52); }
+        .risk-stat-item.low-risk { background: rgba(34, 172, 56, 0.07); border-color: rgba(34, 172, 56, 0.24); }
+        .risk-stat-item.low-risk:hover { border-color: rgba(34, 172, 56, 0.52); }
+        .risk-number { font-size: 2.3rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em; font-feature-settings: "tnum"; }
+        .high-risk .risk-number { color: #eb4435; }
+        .moderate-risk .risk-number { color: #ff9500; }
+        .low-risk .risk-number { color: #22ac38; }
+        .risk-label { font-size: 0.85rem; font-weight: 500; margin-top: 8px; color: var(--text-dark); }
+        .risk-description { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+        .risk-summary-compact {
+            margin-top: 20px; padding-top: 16px;
+            border-top: 1px solid var(--hairline);
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        }
+        .risk-formula-box {
+            margin-top: 16px; padding: 14px 18px;
+            background: var(--surface-2); border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+            font-size: 0.72rem; color: var(--muted); line-height: 1.65;
+        }
+        .risk-formula-box strong { color: var(--text-dark); }
+        .company-risk-detail-btn, .sector-risk-detail-btn {
+            background: transparent; border: none;
+            color: var(--naruto-orange); font-family: inherit;
+            font-size: 0.72rem; font-weight: 500;
+            margin-top: 12px; cursor: pointer; width: 100%;
+            opacity: .8; transition: opacity .25s ease, filter .2s ease;
+        }
+        .company-risk-detail-btn:hover, .sector-risk-detail-btn:hover { opacity: 1; filter: brightness(0.92); }
+        .risk-tag {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 999px;
+            font-size: 0.68rem; font-weight: 600; margin-top: 10px;
+        }
+        .risk-tag.high { background: rgba(235, 68, 53, 0.1); color: #eb4435; }
+        .risk-tag.moderate { background: rgba(255, 149, 0, 0.11); color: #e07800; }
+        .risk-tag.low { background: rgba(34, 172, 56, 0.11); color: #1d9631; }
 
-        .company-risk-detail-btn { background:transparent; border:none; color:var(--naruto-orange); font-size:0.7rem; margin-top:8px; cursor:pointer; opacity:0.7; transition:opacity 0.3s; width:100%; }
-        .company-risk-detail-btn:hover { opacity:1; }
-        .risk-tag { display:inline-flex; align-items:center; gap:5px; padding:4px 12px; border-radius:50px; font-size:0.7rem; font-weight:700; margin-top:8px; }
-        .risk-tag.high { background:rgba(239,68,68,0.15); color:#ef4444; }
-        .risk-tag.moderate { background:rgba(245,158,11,0.15); color:#f59e0b; }
-        .risk-tag.low { background:rgba(16,185,129,0.15); color:#10b981; }
+        /* ---------- Companies ---------- */
+        .companies-section { position: relative; z-index: 1; }
+        .company-card { padding: 28px 20px; text-align: center; height: 100%; position: relative; overflow: hidden; z-index: 0; }
+        .company-icon {
+            width: 72px; height: 72px; border-radius: 22px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 18px; font-size: 1.8rem;
+            color: var(--naruto-orange);
+            background: var(--accent-glow);
+            animation: float 6s ease-in-out infinite;
+            transition: transform .45s var(--ease-spring), background .3s ease, color .3s ease, box-shadow .3s ease;
+        }
+        .company-card:hover .company-icon {
+            background: linear-gradient(135deg, #ff8a3c, var(--naruto-orange));
+            color: #fff;
+            transform: rotate(8deg) scale(1.08);
+            animation: none;
+            box-shadow: 0 16px 30px -12px rgba(255, 105, 0, 0.55);
+        }
+        .company-num { font-size: 1.9rem; font-weight: 600; letter-spacing: -0.02em; font-feature-settings: "tnum"; color: var(--text-dark); margin-bottom: 4px; }
+        .company-name { font-size: .84rem; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
 
-        .stats-row { position:relative; z-index:1; margin-bottom:32px; }
-        .stat-card { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px 24px; position:relative; overflow:visible; height:100%; transition:all .3s ease; z-index:0; }
-        .stat-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.3); }
-        .stat-card::before, .stat-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .stat-card::before { top:-7px; }
-        .stat-card::after  { bottom:-7px; }
-        .stat-card .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .stat-num { font-size:2.6rem; font-weight:900; line-height:1.1; margin-bottom:4px; background:linear-gradient(135deg, var(--naruto-orange), #FFD700); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .stat-lbl { font-size:.88rem; font-weight:600; color:var(--text-dark); opacity:0.6; }
+        /* ---------- Charts ---------- */
+        .charts-section { position: relative; z-index: 1; margin-top: 8px; }
+        .chart-card { padding: 24px 26px; height: 100%; position: relative; }
 
-        .companies-section { position:relative; z-index:1; }
-        .section-eyebrow { display:inline-flex; align-items:center; gap:8px; font-size:.75rem; font-weight:700; color:var(--text-dark); letter-spacing:.08em; text-transform:uppercase; border-left:3px solid var(--naruto-orange); padding-left:10px; margin-bottom:24px; }
-        .company-card { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:28px 20px; text-align:center; height:100%; transition:all .3s ease; position:relative; overflow:visible; z-index:0; }
-        .company-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.3); }
-        .company-card::before, .company-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .company-card::before { top:-7px; }
-        .company-card::after  { bottom:-7px; }
-        .company-card .scroll-stamp { position:absolute; top:8px; right:12px; font-size:1.1rem; z-index:3; opacity:0.35; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .company-icon { width:72px; height:72px; border-radius:20px; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:1.9rem; color:var(--naruto-orange); background:var(--scroll-bg); border-left:3px solid var(--wood-dark); border-right:3px solid var(--wood-dark); border-top:none; border-bottom:none; animation:float 6s ease-in-out infinite; transition:.4s; box-shadow:0 4px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.5); }
-        .company-card:hover .company-icon { background:linear-gradient(135deg, var(--naruto-orange), #FFD700); color:#fff; transform:rotate(10deg) scale(1.08); animation:none; border-color:transparent; }
-        .company-num { font-size:2rem; font-weight:900; color:var(--text-dark); margin-bottom:4px; }
-        .company-name { font-size:.88rem; color:var(--text-dark); margin-bottom:14px; line-height:1.4; opacity:0.7; }
+        /* ---------- Drilldown ---------- */
+        .drilldown-section { display: none; margin-top: 24px; position: relative; z-index: 1; }
+        .drilldown-title { font-size: .88rem; font-weight: 600; color: var(--text-dark); margin-bottom: 18px; }
+        .drilldown-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+        .drilldown-card { flex: 1 1 calc(33.333% - 10.66px); min-width: 220px; padding: 22px; position: relative; z-index: 0; }
+        .drilldown-card:hover { transform: translateY(-4px); }
+        .drilldown-card-title { font-size: .66rem; font-weight: 500; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 10px; }
+        .drilldown-card-value { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; color: var(--naruto-orange-dark); margin-bottom: 8px; line-height: 1.35; }
+        .drilldown-card-sub { font-size: .76rem; color: var(--muted); line-height: 1.55; }
 
-        .charts-section { position:relative; z-index:1; margin-top:32px; }
-        .chart-card { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:30px; height:100%; transition:.3s; position:relative; overflow:visible; z-index:0; }
-        .chart-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.3); }
-        .chart-card::before, .chart-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .chart-card::before { top:-7px; }
-        .chart-card::after  { bottom:-7px; }
-        .chart-card .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.2rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .chart-title { font-size:.85rem; font-weight:700; color:var(--text-dark); letter-spacing:.04em; text-transform:uppercase; margin-bottom:24px; }
-        .drilldown-section { display:none; margin-top:24px; }
-        .drilldown-title { font-size:.88rem; font-weight:700; color:var(--text-dark); margin-bottom:18px; }
-        .drilldown-grid { display:flex; flex-wrap:wrap; gap:16px; }
-        .drilldown-card { flex:1 1 calc(33.333% - 10.66px); min-width:220px; background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:16px; padding:22px; position:relative; overflow:visible; z-index:0; }
-        .drilldown-card::before, .drilldown-card::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .drilldown-card::before { top:-7px; }
-        .drilldown-card::after  { bottom:-7px; }
-        .drilldown-card .scroll-stamp { position:absolute; top:8px; right:12px; font-size:1.1rem; z-index:3; opacity:0.35; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .drilldown-card-title { font-size:.8rem; font-weight:700; text-transform:uppercase; color:var(--text-dark); margin-bottom:10px; }
-        .drilldown-card-value { font-size:1.6rem; font-weight:900; color:var(--naruto-orange); margin-bottom:8px; }
-        .drilldown-card-sub { font-size:.78rem; color:var(--text-dark); line-height:1.5; opacity:0.6; }
+        /* ---------- Modals ---------- */
+        .risk-detail-modal .modal-dialog { max-height: 90vh; }
+        .risk-detail-modal .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--hairline);
+            border-radius: var(--radius-lg);
+            max-height: 90vh;
+            display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+            box-shadow: 0 40px 90px -30px rgba(15, 23, 42, 0.4);
+        }
+        .risk-detail-header { background: var(--card-bg); border-bottom: 1px solid var(--hairline); padding: 24px 28px; flex-shrink: 0; }
+        .risk-detail-title { font-size: 1.3rem; font-weight: 600; letter-spacing: -0.02em; color: var(--text-dark); }
+        .risk-detail-modal .modal-body { overflow-y: auto; flex: 1; padding: 24px 28px !important; }
+        .disease-list { max-height: none; overflow-y: visible; }
+        .disease-item {
+            background: var(--surface-2); border: 1px solid var(--hairline); border-radius: var(--radius-sm);
+            padding: 16px; margin-bottom: 12px;
+            transition: transform .35s var(--ease-spring), border-color .2s ease, background .2s ease;
+        }
+        .disease-item:hover { border-color: rgba(255, 105, 0, 0.4); background: var(--card-bg); transform: translateX(4px); }
+        .disease-name { font-weight: 500; font-size: .95rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--text-dark); }
+        .disease-count { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); font-feature-settings: "tnum"; }
+        .risk-level-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 999px; font-size: 0.64rem; font-weight: 600; letter-spacing: .04em; }
+        .risk-critical { background: rgba(235, 68, 53, 0.13); color: #d32f26; }
+        .risk-high { background: rgba(235, 68, 53, 0.09); color: #eb4435; }
+        .risk-moderate { background: rgba(255, 149, 0, 0.11); color: #e07800; }
+        .risk-low { background: rgba(34, 172, 56, 0.11); color: #1d9631; }
+        .progress-risk { height: 6px; background: rgba(0, 0, 0, 0.06); border-radius: 3px; overflow: hidden; margin-top: 10px; }
+        .progress-risk-fill { height: 100%; border-radius: 3px; transition: width .5s var(--ease-spring); }
+        .recommendation-box {
+            background: rgba(255, 149, 0, 0.06);
+            border: 1px solid rgba(255, 149, 0, 0.22);
+            border-radius: var(--radius-sm);
+            padding: 18px; margin-top: 20px;
+        }
 
-        .risk-detail-modal .modal-dialog { max-height:90vh; }
-        .risk-detail-modal .modal-content { background:var(--scroll-bg); background-image:repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px); border-left:8px solid var(--wood-dark); border-right:8px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:20px; max-height:90vh; display:flex; flex-direction:column; position:relative; overflow:visible; }
-        .risk-detail-modal .modal-content::before, .risk-detail-modal .modal-content::after { content:''; position:absolute; left:-4px; right:-4px; height:14px; z-index:3; border-radius:7px; box-shadow:0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3); background:repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px), linear-gradient(to bottom, #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%); pointer-events:none; }
-        .risk-detail-modal .modal-content::before { top:-7px; }
-        .risk-detail-modal .modal-content::after  { bottom:-7px; }
-        .risk-detail-modal .modal-content .scroll-stamp { position:absolute; top:10px; right:14px; font-size:1.4rem; z-index:3; opacity:0.4; transform:rotate(-15deg); filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); pointer-events:none; }
-        .risk-detail-header { background:var(--scroll-bg); border-bottom:1px solid rgba(92,64,51,0.15); padding:24px 28px; flex-shrink:0; }
-        .risk-detail-title { font-size:1.4rem; font-weight:800; color:var(--text-dark); }
-        .risk-detail-modal .modal-body { overflow-y:auto; flex:1; padding:24px 28px !important; }
-        .disease-list { max-height:none; overflow-y:visible; }
-        .disease-item { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:16px; margin-bottom:12px; transition:all 0.3s; box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.3); }
-        .disease-item:hover { border-color:var(--naruto-orange); transform:translateX(4px); }
-        .disease-name { font-weight:800; font-size:1rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap; color:var(--text-dark); }
-        .disease-count { font-size:1.2rem; font-weight:900; color:var(--text-dark); }
-        .risk-level-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 12px; border-radius:50px; font-size:0.7rem; font-weight:700; }
-        .risk-critical { background:rgba(239,68,68,0.2); color:#ef4444; }
-        .risk-high { background:rgba(239,68,68,0.15); color:#f87171; }
-        .risk-moderate { background:rgba(245,158,11,0.15); color:#fbbf24; }
-        .risk-low { background:rgba(16,185,129,0.15); color:#34d399; }
-        .progress-risk { height:6px; background:rgba(92,64,51,0.12); border-radius:3px; overflow:hidden; margin-top:8px; }
-        .progress-risk-fill { height:100%; border-radius:3px; transition:width 0.5s ease; }
-        .recommendation-box { background:var(--scroll-bg); border-left:4px solid var(--wood-dark); border-right:4px solid var(--wood-dark); border-top:none; border-bottom:none; border-radius:10px; padding:16px; margin-top:20px; box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,200,0.3); }
-
-        @keyframes pulse-glow { 0%,100%{box-shadow:0 0 0 0 var(--accent-glow)} 50%{box-shadow:0 0 0 8px rgba(249,115,22,0)} }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+        @media (max-width: 768px) {
+            .filter-card { padding: 22px 18px; }
+            .stat-num { font-size: 2rem; }
+            .risk-number { font-size: 1.9rem; }
+            .drilldown-card { flex: 1 1 100%; }
+        }
     </style>
-        <link rel="stylesheet" href="claymorphism.css">
 </head>
-<body class="page-sekem">
-    <nav class="navbar navbar-expand-lg fixed-top">
+<body>
+
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <span class="konoha-logo">🍃</span>
-                Health Screening
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
             </a>
-            <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link sharingan-hover active" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn-hig btn-glass-hig btn-sm-hig" href="screening.html"><i class="bi bi-chevron-left"></i> Screening</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <section class="page-hero">
+    <header class="hero-section">
         <div class="container">
-            <nav aria-label="breadcrumb" class="mb-4" data-aos="fade-right">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="screening.html"><i class="bi bi-bar-chart-line me-1"></i>Screening</a></li>
-                    <li class="breadcrumb-item active">SEKEM</li>
-                </ol>
-            </nav>
-            <div data-aos="fade-down" data-aos-duration="900">
-                <div class="hero-eyebrow"><i class="bi bi-buildings-fill"></i> SEKEM Companies</div>
-                <h1 class="page-title">SEKEM <span class="title-gradient">Screening Dashboard</span></h1>
-                <p class="page-sub">Analysis of health survey data for SEKEM Companies — Workers across all facilities</p>
-            </div>
+            <h1 class="display-hero" data-reveal>
+                SEKEM <span class="text-accent-gradient">Screening Dashboard</span>
+            </h1>
+            <p class="hero-sub mt-3" data-reveal data-reveal-delay="160">
+                Analysis of health survey data across SEKEM companies — Isis, Atos, Nature Tex, Lotus &amp; School.
+            </p>
         </div>
-    </section>
+    </header>
 
-    <div class="container pb-5" style="position:relative;z-index:1;">
-        <div class="filter-card" data-aos="fade-up" data-aos-delay="80">
-            <span class="scroll-stamp">🍃</span>
-            <span class="filter-label"><i class="bi bi-calendar3 me-2"></i>Filter by Period</span>
-            <div class="status-indicator"><span id="statusDot" class="status-dot status-loading"></span><span id="statusText">Connecting to server...</span></div>
-            <div class="year-tabs" id="yearContainer"></div>
-            <div class="filter-actions">
-                <select id="companyFilter" class="comparison-select">
-                    <option value="all">Show all companies</option>
-                    <option value="isis">Isis</option>
-                    <option value="atos">Atos</option>
-                    <option value="naturetex">Nature Tex</option>
-                    <option value="lotus">Lotus</option>
-                    <option value="school">School</option>
-                </select>
-                <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Risk Only</button>
-            </div>
-            <div class="month-timeline" id="monthContainer"></div>
-            <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
-            <div class="comparison-controls" id="comparisonControls" style="display:none; flex-wrap:wrap; gap:10px;">
-                <div style="width:100%;font-size:.82rem;color:var(--text-dark);opacity:0.6;">Default compares current period with same period in the previous year. Change any two periods below to compare other ranges.</div>
-                <select id="compareYear1" class="comparison-select"></select>
-                <select id="compareMonth1" class="comparison-select"></select>
-                <span style="color:var(--text-dark); align-self:center;font-weight:600;">vs</span>
-                <select id="compareYear2" class="comparison-select"></select>
-                <select id="compareMonth2" class="comparison-select"></select>
-                <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
-                <button class="btn-compare" id="btnResetCompare"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
-            </div>
-        </div>
+    <main class="section-block pt-2">
+        <div class="container page-shell pb-5">
 
-        <div class="stats-row">
-            <div class="row g-4">
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="80">
-                    <div class="stat-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="stat-num" id="total-participants">0</div>
-                        <div class="stat-lbl"><i class="bi bi-people-fill me-2" style="color:var(--naruto-orange);"></i>Total Screened</div>
+            <div class="filter-card" data-reveal data-reveal-delay="80">
+                <div class="d-flex align-items-center flex-wrap">
+                    <span class="filter-label"><i class="bi bi-calendar3"></i>Filter by Period</span>
+                    <div class="status-indicator"><span id="statusDot" class="status-dot status-loading"></span><span id="statusText">Connecting to server...</span></div>
+                </div>
+                <div class="year-tabs" id="yearContainer"></div>
+                <div class="filter-actions">
+                    <select id="companyFilter" class="comparison-select">
+                        <option value="all">Show all companies</option>
+                        <option value="isis">Isis</option>
+                        <option value="atos">Atos</option>
+                        <option value="naturetex">Nature Tex</option>
+                        <option value="lotus">Lotus</option>
+                        <option value="school">School</option>
+                    </select>
+                    <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Risk Only</button>
+                </div>
+                <div class="month-timeline" id="monthContainer"></div>
+                <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
+                <div class="comparison-controls" id="comparisonControls" style="display:none;">
+                    <div class="comparison-note">Default compares current period with same period in the previous year. Change any two periods below to compare other ranges.</div>
+                    <select id="compareYear1" class="comparison-select"></select>
+                    <select id="compareMonth1" class="comparison-select"></select>
+                    <span class="comparison-vs">vs</span>
+                    <select id="compareYear2" class="comparison-select"></select>
+                    <select id="compareMonth2" class="comparison-select"></select>
+                    <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
+                    <button class="btn-compare" id="btnResetCompare"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="row g-4">
+                    <div class="col-md-6" data-reveal data-reveal-delay="80">
+                        <div class="hig-card stat-card justify-content-center">
+                            <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+                            <div class="text-center">
+                                <div class="stat-num" id="total-participants">0</div>
+                                <div class="stat-lbl"><i class="bi bi-clipboard2-pulse me-2"></i>Total Screened</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-reveal data-reveal-delay="160">
+                        <div class="hig-card stat-card justify-content-center">
+                            <span class="stat-icon"><i class="bi bi-buildings"></i></span>
+                            <div class="text-center">
+                                <div class="stat-num">5</div>
+                                <div class="stat-lbl"><i class="bi bi-grid-3x3-gap me-2"></i>SEKEM Companies</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="160">
-                    <div class="stat-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="stat-num">5</div>
-                        <div class="stat-lbl"><i class="bi bi-building me-2" style="color:var(--naruto-orange);"></i>SEKEM Companies</div>
-                    </div>
-                </div>
             </div>
-        </div>
 
-        <div class="risk-section" data-aos="fade-up" data-aos-delay="200">
-            <div class="risk-summary">
-                <span class="scroll-stamp">🍃</span>
-                <div class="risk-title">
-                    <i class="bi bi-shield-shaded"></i>
-                    Risk Stratification Analysis
-                    <span style="font-size:0.65rem;background:rgba(92,64,51,0.1);padding:2px 8px;border-radius:20px;color:var(--text-dark);">Click any category for details</span>
-                </div>
-                <div class="risk-stats">
-                    <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('high')">
-                        <div class="risk-number" id="highRiskCount">--</div>
-                        <div class="risk-label">⚠️ High Risk</div>
-                        <div class="risk-description">Requires immediate intervention</div>
+            <!-- Risk Stratification -->
+            <div class="risk-section" data-reveal data-reveal-delay="200">
+                <div class="risk-summary hig-card">
+                    <div class="risk-title">
+                        <i class="bi bi-shield-fill-exclamation"></i>
+                        Risk Stratification Analysis
                     </div>
-                    <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('moderate')">
-                        <div class="risk-number" id="moderateRiskCount">--</div>
-                        <div class="risk-label">📊 Moderate Risk</div>
-                        <div class="risk-description">Needs follow-up screening</div>
+                    <div class="risk-stats" id="riskStats">
+                        <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('high')">
+                            <div class="risk-number" id="highRiskCount">--</div>
+                            <div class="risk-label">&#9888; High Risk</div>
+                            <div class="risk-description">Requires immediate intervention</div>
+                        </div>
+                        <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('moderate')">
+                            <div class="risk-number" id="moderateRiskCount">--</div>
+                            <div class="risk-label">&#128202; Moderate Risk</div>
+                            <div class="risk-description">Needs follow-up screening</div>
+                        </div>
+                        <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('low')">
+                            <div class="risk-number" id="lowRiskCount">--</div>
+                            <div class="risk-label">&#10003; Low Risk</div>
+                            <div class="risk-description">Maintain healthy lifestyle</div>
+                        </div>
                     </div>
-                    <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('low')">
-                        <div class="risk-number" id="lowRiskCount">--</div>
-                        <div class="risk-label">✅ Low Risk</div>
-                        <div class="risk-description">Maintain healthy lifestyle</div>
+                    <div class="risk-summary-compact" id="topDiseasesSummary">
+                        <span><i class="bi bi-bar-chart-steps me-1"></i>Most common conditions:</span>
+                        <span id="topDiseaseText">Loading...</span>
                     </div>
-                </div>
-                <div class="risk-summary-compact">
-                    <span style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;"><i class="bi bi-bar-chart-steps me-1"></i>Most common conditions:</span>
-                    <span id="topDiseaseText" style="font-size:0.8rem;color:var(--text-dark);">Loading...</span>
                 </div>
             </div>
-        </div>
 
-        <div class="companies-section mb-5">
-            <div class="section-eyebrow" data-aos="fade-right"><i class="bi bi-grid-3x3-gap"></i> SEKEM Companies Breakdown</div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="60">
-                    <div class="company-card"><span class="scroll-stamp">🍃</span><div class="company-icon"><i class="bi bi-flower1"></i></div><div class="company-num" id="num-isis">0</div><div class="company-name">Isis</div></div>
-                </div>
-                <div class="col-md-4 col-6" data-aos="zoom-in-up" data-aos-delay="120">
-                    <div class="company-card"><span class="scroll-stamp">🍃</span><div class="company-icon"><i class="bi bi-capsule"></i></div><div class="company-num" id="num-atos">0</div><div class="company-name">Atos</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="180">
-                    <div class="company-card"><span class="scroll-stamp">🍃</span><div class="company-icon"><i class="bi bi-tree"></i></div><div class="company-num" id="num-naturetex">0</div><div class="company-name">Nature Tex</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="240">
-                    <div class="company-card"><span class="scroll-stamp">🍃</span><div class="company-icon"><i class="bi bi-droplet"></i></div><div class="company-num" id="num-lotus">0</div><div class="company-name">Lotus</div></div>
-                </div>
-                <div class="col-md-3 col-6" data-aos="zoom-in-up" data-aos-delay="300">
-                    <div class="company-card"><span class="scroll-stamp">🍃</span><div class="company-icon"><i class="bi bi-backpack"></i></div><div class="company-num" id="num-school">0</div><div class="company-name">School</div></div>
+            <!-- Companies -->
+            <div class="companies-section mb-5">
+                <div class="section-eyebrow" data-reveal><i class="bi bi-buildings"></i> SEKEM Companies Breakdown</div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="60">
+                        <div class="hig-card company-card">
+                            <span class="company-icon"><i class="bi bi-flower1"></i></span>
+                            <div class="company-num" id="num-isis">0</div>
+                            <p class="company-name mb-0">Isis</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="120">
+                        <div class="hig-card company-card">
+                            <span class="company-icon"><i class="bi bi-building"></i></span>
+                            <div class="company-num" id="num-atos">0</div>
+                            <p class="company-name mb-0">Atos</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="180">
+                        <div class="hig-card company-card">
+                            <span class="company-icon"><i class="bi bi-tree"></i></span>
+                            <div class="company-num" id="num-naturetex">0</div>
+                            <p class="company-name mb-0">Nature Tex</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="240">
+                        <div class="hig-card company-card">
+                            <span class="company-icon"><i class="bi bi-flower2"></i></span>
+                            <div class="company-num" id="num-lotus">0</div>
+                            <p class="company-name mb-0">Lotus</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="300">
+                        <div class="hig-card company-card">
+                            <span class="company-icon"><i class="bi bi-mortarboard"></i></span>
+                            <div class="company-num" id="num-school">0</div>
+                            <p class="company-name mb-0">School</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="charts-section">
-            <div class="row g-4">
-                <div class="col-md-4" data-aos="fade-right" data-aos-duration="900">
-                    <div class="chart-card"><span class="scroll-stamp">🍃</span><div class="chart-title"><i class="bi bi-pie-chart me-2"></i>Participation Rate</div><canvas id="populationChart"></canvas></div>
+            <div class="charts-section">
+                <div class="row g-4">
+                    <div class="col-md-4" data-reveal>
+                        <div class="hig-card chart-card">
+                            <div class="chart-head">
+                                <span class="chart-icon"><i class="bi bi-pie-chart-fill"></i></span>
+                                <div>
+                                    <div class="chart-title">Participation Rate</div>
+                                    <div class="chart-sub">Screened distribution across companies</div>
+                                </div>
+                            </div>
+                            <div class="chart-canvas chart-canvas-sm"><canvas id="populationChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-md-8" data-reveal data-reveal-delay="100">
+                        <div class="hig-card chart-card">
+                            <div class="chart-head">
+                                <span class="chart-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                                <div>
+                                    <div class="chart-title">Medical Conditions in SEKEM Companies</div>
+                                    <div class="chart-sub">Reported cases per company over time</div>
+                                </div>
+                            </div>
+                            <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart"></canvas></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-8" data-aos="fade-left" data-aos-duration="900">
-                    <div class="chart-card"><span class="scroll-stamp">🍃</span><div class="chart-title"><i class="bi bi-graph-up me-2"></i>Medical condations in SEKEM Companies</div><canvas id="comparisonChart"></canvas></div>
+                <div class="drilldown-section" id="drilldownSection" style="display:none;" data-reveal>
+                    <div class="row g-4" id="drilldownCards"></div>
                 </div>
             </div>
+
         </div>
-    </div>
+    </main>
 
     <!-- Company Risk Modal -->
-    <div class="modal fade risk-detail-modal" id="companyRiskModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal fade modal-hig risk-detail-modal" id="companyRiskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="risk-detail-header">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <div class="risk-detail-title" id="modalCompanyName">Company Name</div>
-                            <div style="font-size:0.8rem;color:var(--text-dark);opacity:0.6;margin-top:8px;" id="modalCompanyStats">Total Participants: --</div>
-                            <div style="font-size:0.75rem;margin-top:6px;" id="modalRiskScore"></div>
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph"><i class="bi bi-buildings-fill"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="modalCompanyName" style="font-size:1.25rem;">Company Name</h3>
+                            <p class="caption mb-0" id="modalCompanyStats">Total Participants: --</p>
+                            <p class="caption mb-0" id="modalRiskScore"></p>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
                 <div class="modal-body">
-                    <h6 style="font-weight:800;margin-bottom:16px;"><i class="bi bi-virus me-2 text-danger"></i>Disease Analysis</h6>
+                    <h6 class="fw-bold mb-3"><i class="bi bi-virus me-2" style="color:#eb4435;"></i>Disease Analysis</h6>
                     <div id="diseaseListContainer" class="disease-list"></div>
                     <div class="recommendation-box" id="recommendationBox">
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                            <i class="bi bi-lightbulb" style="color:#fbbf24;font-size:1.2rem;"></i>
-                            <span style="font-weight:800;">Recommendations</span>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-lightbulb-fill" style="color:#ff9500;font-size:1.15rem;"></i>
+                            <span class="fw-bold">Recommendations</span>
                         </div>
-                        <div id="recommendationText" style="font-size:0.9rem;line-height:1.6;"></div>
+                        <div class="recommendation-text" id="recommendationText"></div>
                     </div>
                 </div>
             </div>
@@ -674,16 +760,17 @@
     </div>
 
     <!-- Risk Category Modal -->
-    <div class="modal fade risk-detail-modal" id="riskCategoryModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal fade modal-hig risk-detail-modal" id="riskCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="risk-detail-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <div class="risk-detail-title" id="categoryModalTitle">Risk Category</div>
-                            <div style="font-size:0.8rem;color:var(--text-dark);opacity:0.6;margin-top:8px;" id="categoryModalSubtitle">Details</div>
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph"><i class="bi bi-shield-check"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="categoryModalTitle" style="font-size:1.25rem;">Risk Category</h3>
+                            <p class="caption mb-0" id="categoryModalSubtitle">Details</p>
                         </div>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                 </div>
                 <div class="modal-body">
@@ -693,51 +780,34 @@
         </div>
     </div>
 
-    <footer class="modern-footer">
+    <footer class="site-footer">
         <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-5" data-aos="fade-up">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
-                        <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                        </p>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
                     </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
                 </div>
-                <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
-                        <div class="d-flex flex-column gap-2 mt-2">
-                            <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
-                                <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
-                            </a>
-                            <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                                <i class="bi bi-envelope-fill me-2"></i> Email
-                            </a>
-                        </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
                     </div>
                 </div>
             </div>
-            <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
-            <div class="footer-bottom text-center">
-                <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
-                <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
-            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project &middot; Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="hig.js"></script>
     <script>
-        AOS.init({ duration: 950, once: true, offset: 40 });
+        const CHART_GRID = 'rgba(0,0,0,0.07)';
+        const CHART_TEXT = 'rgba(0,0,0,0.65)';
+        const CHART_TICKS = 'rgba(0,0,0,0.45)';
 
         let popChart=null, compChart=null;
         let currentYear=null, currentMonth=1;
@@ -747,8 +817,11 @@
         let comparisonData1Raw = null, comparisonData2Raw = null;
         let activeCompanyFilter='all';
         let highRiskOnly=false;
+        let lastSyncTime = null;
 
-        // ========== DISEASES DATABASE (مطابق للمصدر) ==========
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=2058048191&single=true&output=csv";
+
+        // ========== DISEASES DATABASE ==========
         const DISEASES = [
             { name: "No diagnosis", weight: 0, riskLevel: "healthy", recommendation: "Continue healthy lifestyle - Annual check-up recommended" },
             { name: "Acute Gastritis", weight: 1.1, riskLevel: "low", recommendation: "Avoid spicy and fried foods - Eat small frequent meals - Reduce stress - Avoid self-medicating with NSAIDs (Painkillers)" },
@@ -786,9 +859,6 @@
             'Multiple_Sclerosis':'Multiple Sclerosis','Mental_Health_Disorders':'Mental Health Disorders',
             'Liver_Diseases':'Liver Diseases','Rheumatoid_Arthritis':'Rheumatoid Arthritis','Other':'Other'
         };
-
-        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=2058048191&single=true&output=csv";
-        let lastSyncTime = null;
 
         function formatLastSync(date) {
             return date ? date.toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : 'not available';
@@ -829,28 +899,39 @@
             updateDataStatus('loading');
         }
 
+        function emptyPeriod() {
+            const empty={ companies:{}, complaints:{}, rawData:{} };
+            ['isis','atos','naturetex','lotus','school'].forEach(k=>{ empty.companies[k]=0; empty.complaints[k]=Array(23).fill(0); });
+            return empty;
+        }
+
         function processData(rows) {
             screeningData={}; let yearsSet=new Set();
             rows.forEach(row => {
-                if (!row.Year||!row.Month) return;
+                if (!row.Year||!row.Month||!row.Company) return;
                 yearsSet.add(row.Year);
                 const key=`${row.Year}-${row.Month}`;
                 if (!screeningData[key]) {
-                    screeningData[key]={ companies:{isis:0,atos:0,naturetex:0,lotus:0,school:0}, complaints:{isis:Array(23).fill(0),atos:Array(23).fill(0),naturetex:Array(23).fill(0),lotus:Array(23).fill(0),school:Array(23).fill(0)}, rawData:{} };
+                    screeningData[key]={ companies:{isis:0,atos:0,naturetex:0,lotus:0,school:0}, complaints:{}, rawData:{}, details:{} };
+                    ['isis','atos','naturetex','lotus','school'].forEach(ck=>{
+                        screeningData[key].complaints[ck]=Array(23).fill(0);
+                        screeningData[key].details[ck]=[];
+                    });
                 }
-                const c=(row.Company||'').toLowerCase().trim();
+                const c=(row.Company||'').toString().toLowerCase().trim();
                 let ck='';
-                if(c.includes('isis')) ck='isis';
-                else if(c.includes('atos')) ck='atos';
-                else if(c.includes('nature')) ck='naturetex';
-                else if(c.includes('lotus')) ck='lotus';
-                else if(c.includes('school')) ck='school';
-                if(ck){
-                    screeningData[key].companies[ck]=row.Total_Count||0;
-                    if(!screeningData[key].rawData[ck]) screeningData[key].rawData[ck]={};
-                    Object.keys(DISEASE_MAP).forEach(col=>{ screeningData[key].rawData[ck][col]=row[col]||0; });
-                    screeningData[key].complaints[ck]=[row.No_diagnosis||0,row.Acute_Gastritis||0,row.Frequent_Headache||0,row.Upper_Respiratory_Tract_Infection||0,row.Dental_Problems||0,row.Eye_Problems||0,row.Anemia||0,row.Acute_Tonsillitis||0,row.Acute_Sinusitis||0,row.Environmental_Allergy||0,row.Food_Allergy||0,row.Diabetes||0,row.Thyroid_dysfunction||0,row.Hypertension||0,row.Asthma||0,row.Heart_Disease||0,row.Urinary_Tract_Problems||0,row.Chronic_Pain_Disorders||0,row.Multiple_Sclerosis||0,row.Mental_Health_Disorders||0,row.Liver_Diseases||0,row.Rheumatoid_Arthritis||0,row.Other||0];
-                }
+                if (c.includes('isis')) ck='isis';
+                else if (c.includes('atos')) ck='atos';
+                else if (c.includes('nature')) ck='naturetex';
+                else if (c.includes('lotus')) ck='lotus';
+                else if (c.includes('school')) ck='school';
+                if (!ck) return;
+
+                screeningData[key].companies[ck]=row.Total_Count||0;
+                if (!screeningData[key].rawData[ck]) screeningData[key].rawData[ck]={};
+                Object.keys(DISEASE_MAP).forEach(col => { screeningData[key].rawData[ck][col]=row[col]||0; });
+                screeningData[key].complaints[ck]=[row.No_diagnosis||0,row.Acute_Gastritis||0,row.Frequent_Headache||0,row.Upper_Respiratory_Tract_Infection||0,row.Dental_Problems||0,row.Eye_Problems||0,row.Anemia||0,row.Acute_Tonsillitis||0,row.Acute_Sinusitis||0,row.Environmental_Allergy||0,row.Food_Allergy||0,row.Diabetes||0,row.Thyroid_dysfunction||0,row.Hypertension||0,row.Asthma||0,row.Heart_Disease||0,row.Urinary_Tract_Problems||0,row.Chronic_Pain_Disorders||0,row.Multiple_Sclerosis||0,row.Mental_Health_Disorders||0,row.Liver_Diseases||0,row.Rheumatoid_Arthritis||0,row.Other||0];
+                screeningData[key].details[ck].push(row);
             });
             availableYears=Array.from(yearsSet).sort((a,b)=>b-a);
             if (availableYears.length>0&&currentYear===null) currentYear=availableYears[0];
@@ -858,7 +939,7 @@
         }
 
         function getDataForDate(y,m) {
-            return screeningData[`${y}-${m}`]||{ companies:{isis:0,atos:0,naturetex:0,lotus:0,school:0}, complaints:{isis:Array(23).fill(0),atos:Array(23).fill(0),naturetex:Array(23).fill(0),lotus:Array(23).fill(0),school:Array(23).fill(0)}, rawData:{} };
+            return screeningData[`${y}-${m}`]||emptyPeriod();
         }
 
         function animateValue(id,end,dur=1000) {
@@ -870,7 +951,7 @@
 
         function generateYearTabs() {
             const c=document.getElementById('yearContainer'); c.innerHTML='';
-            (availableYears.length?availableYears:[2025]).forEach(y=>{
+            (availableYears.length?availableYears:[new Date().getFullYear()]).forEach(y=>{
                 const btn=document.createElement('button');
                 btn.className=`year-tab${y===currentYear?' active':''}`;
                 btn.textContent=y;
@@ -885,8 +966,8 @@
             let available=new Set();
             Object.keys(screeningData).forEach(k=>{ const[y,m]=k.split('-'); if(parseInt(y)===currentYear&&Object.values(screeningData[k].companies).reduce((a,b)=>a+b,0)>0) available.add(parseInt(m)); });
             const sorted=[...available].sort((a,b)=>a-b);
-            if (!sorted.length) { c.innerHTML='<span style="font-size:.82rem;color:var(--text-dark);opacity:0.5;padding:12px 0;">No data for this year</span>'; return; }
-            if (!available.has(currentMonth)) currentMonth=sorted[0];
+            if (!sorted.length) { c.innerHTML='<span class="sync-note mt-0">No data for this year</span>'; currentMonth=1; return; }
+            if (!available.has(currentMonth)) currentMonth=sorted[sorted.length-1];
             sorted.forEach(mi=>{
                 const item=document.createElement('div');
                 item.className=`month-item has-data${mi===currentMonth?' active':''}`;
@@ -896,8 +977,24 @@
             });
         }
 
-        // ========== RISK STRATIFICATION (مطابق للمصدر) ==========
-        function getCompanyDetailedRisk(companyName, companyData, totalCount) {
+        // ========== RISK STRATIFICATION ==========
+        /**
+         * Risk Score Formula:
+         * 1. Exclude "No diagnosis" cases completely.
+         * 2. Weighted sum = sum(weight_i * count_i) for all diagnosed diseases
+         * 3. Average weight per diagnosed person = weightedSum / diagnosedCount
+         * 4. Prevalence rate = diagnosedCount / totalCount  (0 to 1)
+         * 5. Risk Score = (avgWeight / 5) * prevalenceRate  — normalized 0–1
+         *
+         * Thresholds:
+         *   > 0.30     → High Risk
+         *   0.10–0.30  → Moderate Risk
+         *   < 0.10     → Low Risk
+         */
+        function getCompanyDetailedRisk(a, b, c) {
+            let companyData, totalCount;
+            if (typeof b === 'number') { companyData = a || {}; totalCount = b; }
+            else { companyData = b || {}; totalCount = c || 0; }
             if (!companyData || totalCount === 0) return { diseases:[], totalRiskScore:0, riskLevel:'low', recommendations:[], diagnosedCount:0, prevalenceRate:0 };
 
             const diseasesList = [];
@@ -918,7 +1015,7 @@
                 }
             });
 
-            diseasesList.sort((a, b) => (b.weight * b.count) - (a.weight * a.count));
+            diseasesList.sort((x, y) => (y.weight * y.count) - (x.weight * x.count));
 
             let totalRiskScore = 0;
             if (diagnosedCount > 0 && totalCount > 0) {
@@ -941,7 +1038,7 @@
                 recommendations.push(`Priority condition: ${top.name} (${top.count} cases, ${top.percentage}%) — ${top.recommendation}`);
                 if (sickDiseases.length > 1) recommendations.push(`Also monitor: ${sickDiseases.slice(1,3).map(d=>d.name).join(', ')}`);
             }
-            recommendations.push(`Disease prevalence: ${prevalencePct}% of this company (${diagnosedCount} / ${totalCount} workers have a diagnosed condition)`);
+            recommendations.push(`Disease prevalence: ${prevalencePct}% of this company (${diagnosedCount} / ${totalCount} participants have a diagnosed condition)`);
 
             if      (totalRiskScore > 0.30) recommendations.push("Action Required: Immediate comprehensive medical examination for high-risk individuals");
             else if (totalRiskScore > 0.10) recommendations.push("Action Recommended: Follow-up appointments within 1–3 months");
@@ -1050,9 +1147,9 @@
                 const riskScoreEl = document.getElementById('modalRiskScore');
                 if (riskScoreEl) {
                     const s = detail.totalRiskScore || 0;
-                    let rColor='#10b981', rLabel='Low Risk';
-                    if      (s>0.30) { rColor='#ef4444'; rLabel='High Risk'; }
-                    else if (s>0.10) { rColor='#f59e0b'; rLabel='Moderate Risk'; }
+                    let rColor='#22ac38', rLabel='Low Risk';
+                    if      (s>0.30) { rColor='#eb4435'; rLabel='High Risk'; }
+                    else if (s>0.10) { rColor='#ff9500'; rLabel='Moderate Risk'; }
                     const prevPct = detail.diagnosedCount && detail.totalCount ? ((detail.diagnosedCount/detail.totalCount)*100).toFixed(1) : 0;
                     riskScoreEl.innerHTML = `<span style="color:${rColor};font-weight:700;">● ${rLabel}</span> — Risk Score: <span style="color:var(--text-dark);opacity:0.6;">${(s*100).toFixed(1)}/100</span> — Prevalence: <span style="color:var(--text-dark);opacity:0.6;">${prevPct}%</span>`;
                 }
@@ -1070,7 +1167,7 @@
                         else if (d.riskLevel==='moderate')     riskClass='risk-moderate';
                         else if (d.riskLevel==='low-moderate') riskClass='risk-moderate';
 
-                        const barColor = d.riskLevel==='critical'?'#ef4444':(d.riskLevel==='high'?'#f97316':(d.riskLevel==='moderate'?'#f59e0b':'#10b981'));
+                        const barColor = d.riskLevel==='critical'?'#eb4435':(d.riskLevel==='high'?'#e85d00':(d.riskLevel==='moderate'?'#ff9500':'#22ac38'));
                         return `<div class="disease-item">
                             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
                                 <div class="disease-name">
@@ -1129,7 +1226,7 @@
                             <span class="risk-level-badge ${badgeClass}">Risk Score: ${(detail.totalRiskScore*100).toFixed(1)}/100</span>
                         </div>
                         <div style="margin-top:10px;">
-                            ${topConditions.map(d=>`<span style="background:rgba(249,115,22,0.1);padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:6px;">${d.name} (${d.count})</span>`).join('')}
+                            ${topConditions.map(d=>`<span style="background:rgba(255,105,0,0.1);padding:2px 8px;border-radius:20px;font-size:0.7rem;margin-right:6px;">${d.name} (${d.count})</span>`).join('')}
                             ${(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').length>3?`<span style="font-size:0.7rem;color:var(--text-dark);opacity:0.5;">+${(detail.diseases||[]).filter(d=>d.name!=='No diagnosis').length-3} more</span>`:''}
                         </div>
                     </div>`;
@@ -1295,14 +1392,14 @@
                     const parent=numEl.closest('.company-card');
                     let span=parent.querySelector('.comparison-change');
                     if (!span) { span=document.createElement('div'); span.className='comparison-change'; numEl.after(span); }
-                    const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#10b981':(diff<0?'#ef4444':'#a68b6c');
+                    const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#22ac38':(diff<0?'#eb4435':'#98a2b3');
                     span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:var(--text-dark);opacity:0.5;">(${val1} → ${val2})</span>`;
                 }
             });
             const t1=Object.values(comparisonData1.companies).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.companies).reduce((a,b)=>a+b,0);
             const td=t2-t1, tp=t1>0?((td/t1)*100).toFixed(1):0;
             const tEl=document.getElementById('total-participants');
-            if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#10b981':(td<0?'#ef4444':'#a68b6c')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
+            if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#22ac38':(td<0?'#eb4435':'#98a2b3')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
             updateComparisonCharts();
         }
 
@@ -1310,29 +1407,23 @@
             if (!comparisonMode) return;
             if (popChart) popChart.destroy();
             const baseOrder=['isis','atos','naturetex','lotus','school'];
-            const labels=baseOrder.filter(key => key in comparisonData1.companies || key in comparisonData2.companies).map(key => {
-                switch(key){
-                    case 'isis': return 'Isis';
-                    case 'atos': return 'Atos';
-                    case 'naturetex': return 'Nature Tex';
-                    case 'lotus': return 'Lotus';
-                    case 'school': return 'School';
-                    default: return key;
-                }
-            });
+            const labelMap={isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
             const keys=baseOrder.filter(key => key in comparisonData1.companies || key in comparisonData2.companies);
+            const labels=keys.map(key => labelMap[key]);
             const d1=keys.map(key => comparisonData1.companies[key]||0);
             const d2=keys.map(key => comparisonData2.companies[key]||0);
             const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const lbl1=`${mn[parseInt(document.getElementById('compareMonth1').value)-1]} ${document.getElementById('compareYear1').value}`;
             const lbl2=`${mn[parseInt(document.getElementById('compareMonth2').value)-1]} ${document.getElementById('compareYear2').value}`;
-            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(245,158,11,0.6)',borderRadius:8},{label:lbl2,data:d2,backgroundColor:'rgba(249,115,22,0.6)',borderRadius:8}] }, options:{ responsive:true, plugins:{legend:{position:'top',labels:{color:'var(--text-dark)',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(92,64,51,0.1)'}}} } });
+            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(255,105,0,0.75)',borderRadius:10,borderSkipped:false},{label:lbl2,data:d2,backgroundColor:'rgba(62,139,255,0.75)',borderRadius:10,borderSkipped:false}] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8}}} } });
             if (compChart) compChart.destroy();
             const labels2=['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'];
-            const aggComplaints = (complaints) => Object.values(complaints).reduce((acc, arr) => arr.map((value, index) => (acc[index] || 0) + (value || 0)), Array(labels2.length).fill(0));
-            const comp1 = aggComplaints(comparisonData1.complaints);
-            const comp2 = aggComplaints(comparisonData2.complaints);
-            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[{label:lbl1,data:comp1,borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.2)',fill:false,tension:.3,pointRadius:3,pointHoverRadius:6},{label:lbl2,data:comp2,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.2)',fill:false,tension:.3,pointRadius:3,pointHoverRadius:6}] }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}, legend:{labels:{color:'var(--text-dark)',font:{family:'Cairo'}}}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(92,64,51,0.1)'}}} } });
+            const comp1 = aggregateComplaints(comparisonData1.complaints);
+            const comp2 = aggregateComplaints(comparisonData2.complaints);
+            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[
+                { label: lbl1, data: comp1, borderColor: '#ff6900', backgroundColor: 'rgba(255,105,0,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 },
+                { label: lbl2, data: comp2, borderColor: '#3e8bff', backgroundColor: 'rgba(62,139,255,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 }
+            ] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},padding:12,cornerRadius:12,boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
         }
 
         function resetComparison() {
@@ -1355,13 +1446,32 @@
             }
         }
 
+        const doughnutCenterPlugin={
+            id:'doughnutCenter',
+            afterDraw(chart){
+                const labels=chart.data.labels||[];
+                if(!labels.length||labels[0]==='No data') return;
+                const meta=chart.getDatasetMeta(0);
+                if(!meta.data.length) return;
+                const {x,y}=meta.data[0];
+                const ctx=chart.ctx;
+                const total=(chart.data.datasets[0].data||[]).reduce((a,b)=>a+(Number(b)||0),0);
+                ctx.save();
+                ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.font='600 24px MiSans, sans-serif'; ctx.fillStyle='rgba(0,0,0,.9)';
+                ctx.fillText(total.toLocaleString(), x, y-8);
+                ctx.font='500 10px MiSans, sans-serif'; ctx.fillStyle='rgba(0,0,0,.45)';
+                ctx.fillText('SCREENED', x, y+13);
+                ctx.restore();
+            }
+        };
+
         function updateCharts(d) {
-            const gc='rgba(92,64,51,0.1)',tc='var(--text-dark)';
             if (popChart&&!comparisonMode) popChart.destroy();
             if (!comparisonMode) {
                 const companyOrder=['isis','atos','naturetex','lotus','school'];
                 const labelMap={isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
-                const colors=['rgba(245,158,11,.65)','rgba(249,115,22,.65)','rgba(239,68,68,.65)','rgba(132,204,22,.65)','rgba(6,182,212,.65)'];
+                const colors=['rgba(255,105,0,.78)','rgba(62,139,255,.78)','rgba(34,172,56,.78)','rgba(0,184,217,.78)','rgba(143,91,255,.78)'];
                 const labels=[]; const values=[]; const bg=[];
                 companyOrder.forEach((key,index)=>{
                     if (key in d.companies) {
@@ -1370,49 +1480,48 @@
                         bg.push(colors[index]);
                     }
                 });
-                if (labels.length===0) { labels.push('No data'); values.push(1); bg.push('rgba(148,163,184,0.3)'); }
-                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:1,borderColor:'rgba(15,23,42,.8)'}] }, options:{ responsive:true, cutout:'55%', animation:{animateScale:true,animateRotate:true}, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:16,color:tc,font:{family:'Cairo',size:11}}}}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const idx=activeEls[0].index; const companyOrder=['isis','atos','naturetex','lotus','school']; const key=companyOrder[idx]; showDrilldownCardsSekem(key); } } } });
+                if (labels.length===0) { labels.push('No data'); values.push(1); bg.push('rgba(152,162,179,0.35)'); }
+                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const companyOrder=['isis','atos','naturetex','lotus','school']; showDrilldownCardsSekem(companyOrder[activeEls[0].index]); } }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
             }
             if (compChart) compChart.destroy();
             const companyOrder=['isis','atos','naturetex','lotus','school'];
             const labelMap={isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
-            const colors=['#f59e0b','#f97316','#ef4444','#84cc16','#06b6d4'];
-            const lineBackgrounds=['rgba(245,158,11,0.2)','rgba(249,115,22,0.2)','rgba(239,68,68,0.2)','rgba(132,204,22,0.2)','rgba(6,182,212,0.2)'];
+            const lineColors=['#ff6900','#3e8bff','#22ac38','#00b8d9','#8f5bff'];
+            const lineBackgrounds=['rgba(255,105,0,0.08)','rgba(62,139,255,0.08)','rgba(34,172,56,0.08)','rgba(0,184,217,0.08)','rgba(143,91,255,0.08)'];
             const datasets = companyOrder.filter(key => Array.isArray(d.complaints[key])).map((key,index) => ({
                 label: labelMap[key],
                 data: d.complaints[key],
-                borderColor: colors[index],
+                borderColor: lineColors[index],
                 backgroundColor: lineBackgrounds[index],
-                fill:false,
-                tension:.4,
-                pointRadius:3,
-                pointHoverRadius:6
+                borderWidth:2.5,
+                fill:true,
+                tension:.35,
+                pointRadius:0,
+                pointHoverRadius:5,
+                pointHoverBorderWidth:2,
+                pointHoverBorderColor:'#ffffff'
             }));
             if (datasets.length === 0) {
-                datasets.push({ label:'No data', data:Array(23).fill(0), borderColor:'var(--wood-dark)', backgroundColor:'rgba(148,163,184,0.2)', fill:false, tension:.4, pointRadius:3, pointHoverRadius:6 });
+                datasets.push({ label:'No data', data:Array(23).fill(0), borderColor:'#98a2b3', backgroundColor:'rgba(152,162,179,0.08)', borderWidth:2.5, fill:true, tension:.35, pointRadius:0, pointHoverRadius:5 });
             }
-            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'], datasets:datasets }, options:{ responsive:true, plugins:{tooltip:{backgroundColor:'rgba(30,41,59,0.9)',titleFont:{family:'Cairo',size:14},bodyFont:{family:'Cairo',size:13},padding:12,cornerRadius:8}}, scales:{y:{beginAtZero:true,grid:{color:'rgba(92,64,51,0.1)'}}} } });
+            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['No diagnosis','Acute Gastritis','Frequent Headache','Upper Respiratory Tract Infection','Dental Problems','Eye Problems','Anemia','Acute Tonsillitis','Acute Sinusitis','Environmental Allergy','Food Allergy','Diabetes','Thyroid dysfunction','Hypertension','Asthma','Heart Disease','Urinary Tract Problems','Chronic Pain Disorders','Multiple Sclerosis','Mental Health Disorders','Liver Diseases','Rheumatoid Arthritis','Other'], datasets:datasets }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',padding:12,cornerRadius:12,titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
         }
 
-        function showDrilldownCardsSekem(companyKey) {
-            const source = getDataForDate(currentYear,currentMonth);
-            const data = applyFiltersToData(source);
-            const names = {isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
-            const companyName = names[companyKey] || companyKey;
-            const raw = source.rawData[companyKey] || {};
-            const totals = Object.entries(raw).sort((a,b)=>b[1]-a[1]);
-            const topComplaints = totals.slice(0,3).map(([key,value]) => `${DISEASE_MAP[key]||key}: ${value}`);
-            const totalParticipants = data.companies[companyKey]||0;
-            const topComplaint = topComplaints[0] || 'No complaint data';
-            const averageRisk = totals.length ? (totals.reduce((sum,[k,v])=>sum+v,0) / totals.length).toFixed(1) : '0';
-            const cards = [];
-            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Company</div><div class="drilldown-card-value">${companyName}</div><div class="drilldown-card-sub">Selected company summary</div></div>`);
-            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Participants</div><div class="drilldown-card-value">${totalParticipants.toLocaleString()}</div><div class="drilldown-card-sub">Total participants for this month</div></div>`);
-            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Top Complaints</div><div class="drilldown-card-value">${topComplaint}</div><div class="drilldown-card-sub">Highest reported medical condition</div></div>`);
-            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Top 3 Complaints</div><div class="drilldown-card-value">${topComplaints.slice(0,3).join('<br>')}</div><div class="drilldown-card-sub">Most common conditions by reported counts</div></div>`);
-            cards.push(`<div class="drilldown-card"><div class="drilldown-card-title">Data freshness</div><div class="drilldown-card-value">${currentMonth}/${currentYear}</div><div class="drilldown-card-sub">Current period in view</div></div>`);
-            document.getElementById('drilldownCards').innerHTML = cards.join('');
-            document.getElementById('drilldownSection').style.display = 'block';
+        function createDrilldownCard(title, value, note) {
+            return `<div class="col-md-4"><div class="drilldown-card"><div class="drilldown-card-title">${title}</div><div class="drilldown-card-value">${value}</div><div class="drilldown-card-sub">${note}</div></div></div>`;
+        }
+
+        function showDrilldownCardsSekem(key) {
+            const source=getDataForDate(currentYear,currentMonth);
+            const companyNames={isis:'Isis',atos:'Atos',naturetex:'Nature Tex',lotus:'Lotus',school:'School'};
+            const companyName=companyNames[key]||key;
+            const riskDetail=getCompanyDetailedRisk(key, source.rawData[key]||{}, source.companies[key]||0);
+            const cards=[];
+            cards.push(createDrilldownCard('Company', companyName, `Detailed insight for ${companyName}`));
+            cards.push(createDrilldownCard('Risk Level', riskDetail.riskLevel.toUpperCase(), `Estimated risk score ${Math.round(riskDetail.totalRiskScore*100)}%`));
+            cards.push(createDrilldownCard('Top Condition', riskDetail.diseases.length ? `${riskDetail.diseases[0].name} (${riskDetail.diseases[0].count})` : 'No condition data', riskDetail.diseases.length ? 'Top diagnosed condition' : 'No diagnosed condition data'));
+            document.getElementById('drilldownCards').innerHTML=cards.join('');
+            document.getElementById('drilldownSection').style.display='block';
         }
 
         function hideDrilldownSection() {

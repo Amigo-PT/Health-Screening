@@ -1,656 +1,111 @@
 ﻿<!DOCTYPE html>
-<html lang="en" dir="ltr" data-theme="naruto">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#f6f6f8" />
     <title>Interventions & Outcomes - Health Screening</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    
+    <link rel="stylesheet" href="hig.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        // Maintenance Mode Check
-        (function() {
-            // Check session storage first
-            if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                 // Check if maintenance mode is enabled - NEW LINK
-                 Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=263939704&single=true&output=csv", {
-                    download: true,
-                    header: true,
-                    complete: function(results) {
-                        if (results.data && results.data.length > 0) {
-                            const row = results.data[0];
-                            const status = row.Status || row.status || row.Maintenance || row.maintenance || Object.values(row)[0];
-                            if (status && (status.toString().toUpperCase() === 'ON' || status.toString().toUpperCase() === 'TRUE')) {
-                                window.location.reload();
-                            } else {
-                                // If not maintenance, check login
-                                if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                    window.location.href = 'login.html';
-                                }
-                            }
-                        } else {
-                             // Fallback if sheet fails or is empty
-                             if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                                window.location.href = 'login.html';
-                            }
-                        }
-                    },
-                    error: function(err) {
-                        console.error("Maintenance check failed", err);
-                         // Fallback on error
-                         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-                            window.location.href = 'login.html';
-                        }
-                    }
-                });
-            }
-        })();
-    </script>
-
-    <style>
-        :root {
-            --naruto-orange: #FF8C00;
-            --naruto-orange-dark: #E67600;
-            --leaf-green: #2E5A2B;
-            --leaf-green-light: #4A7C3F;
-            --clay-bg: #F4F1E1;
-            --wood-dark: #5C4033;
-            --wood-light: #8B6914;
-            --shadow-color: #1a1a2e;
-            --text-dark: #2F2E2E;
-            --text-light: #F5F5DC;
-            --scroll-bg: #FFF8E7;
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 32px;
-        }
-
-        * { box-sizing: border-box; }
-
-        @keyframes cloudsFloat {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-        @keyframes fadeInPage { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-
-        body {
-            font-family: 'Poppins', 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #1a472a 0%, #2d5a2b 30%, #8B7355 80%, #D2B48C 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            animation: fadeInPage .8s ease-out;
-        }
-        body::before {
-            content: "☁️";
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            font-size: 120px;
-            white-space: nowrap;
-            color: rgba(255,255,240,0.08);
-            animation: cloudsFloat 40s linear infinite;
-            z-index: 0;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: rgba(44, 34, 24, 0.95);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 2px solid var(--naruto-orange);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            padding: 12px 0;
-            z-index: 100;
-        }
-        .navbar-brand {
-            font-weight: 900;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .konoha-logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-weight: 900;
-            color: var(--text-light);
-            font-size: 0.85rem;
-            box-shadow: 0 0 12px rgba(255,140,0,0.3);
-        }
-        .nav-link {
-            font-weight: 700;
-            color: #e8d5b7 !important;
-            padding: 8px 18px !important;
-            border-radius: 30px;
-            transition: all 0.25s;
-            font-size: 0.85rem;
-            margin: 0 2px;
-        }
-        .nav-link:hover {
-            background: rgba(255, 140, 0, 0.2);
-            color: var(--naruto-orange) !important;
-            transform: translateY(-2px);
-        }
-        .nav-link.active {
-            background: rgba(255, 140, 0, 0.3) !important;
-            color: var(--naruto-orange) !important;
-            border: 1px solid var(--naruto-orange) !important;
-            box-shadow: 0 0 10px rgba(255,140,0,0.3);
-        }
-        .sharingan-hover { transition: all 0.3s ease; }
-        .sharingan-hover:hover {
-            animation: sharinganSpin 0.6s ease-in-out;
-            color: var(--naruto-orange) !important;
-        }
-        @keyframes sharinganSpin {
-            0% { transform: rotate(0deg); text-shadow: 0 0 0px red; }
-            50% { transform: rotate(180deg); text-shadow: 0 0 8px red; }
-            100% { transform: rotate(360deg); text-shadow: 0 0 0px red; }
-        }
-
-        /* HERO */
-        .page-hero { position: relative; z-index: 1; padding: 150px 0 70px; text-align: center; }
-        .hero-eyebrow {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px;
-            padding: 6px 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
-        }
-        .page-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 16px;
-            color: var(--text-light);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .title-gradient {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700, var(--leaf-green-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: chakraFlow 3s ease infinite;
-        }
-        @keyframes chakraFlow {
-            0%, 100% { background-position: 0% center; }
-            50% { background-position: 100% center; }
-        }
-        .page-sub, .page-subtitle {
-            font-size: 1rem;
-            color: #F5F5DC;
-            line-height: 1.7;
-            max-width: 500px;
-            margin: 0 auto 40px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-        .scroll-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-radius: 16px;
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            padding: 28px 22px;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-            z-index: 0;
-        }
-        .scroll-card:hover {
-            transform: translateY(-5px) rotate(0.5deg);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .section-eyebrow {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(46, 90, 43, 0.8);
-            border: 1px solid var(--naruto-orange);
-            border-radius: 50px; padding: 5px 14px;
-            font-size: 0.7rem; font-weight: 700;
-            color: var(--naruto-orange);
-            letter-spacing: 0.05em; margin-bottom: 15px;
-        }
-        .section-title {
-            font-size: clamp(1.4rem, 3vw, 2rem);
-            font-weight: 900;
-            color: var(--text-light);
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            margin-bottom: 10px;
-        }
-
-        /* Scroll wooden rollers */
-        .stat-card::before, .stat-card::after,
-        .intervention-card::before, .intervention-card::after,
-        .scroll-card::before, .scroll-card::after,
-        .outcome-box::before, .outcome-box::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .stat-card::before, .intervention-card::before, .scroll-card::before, .outcome-box::before { top: -9px; }
-        .stat-card::after,  .intervention-card::after,  .scroll-card::after,  .outcome-box::after  { bottom: -9px; }
-
-        /* Ninja stamp */
-        .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
-
-        .hero-stats {
-            display:flex; justify-content:center; margin-top:32px; gap:18px; flex-wrap:wrap;
-        }
-        .stat-card {
-            position: relative;
-            overflow: visible;
-            z-index: 0;
-            display: flex; align-items: center; gap: 14px;
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px; padding: 24px 24px;
-            min-width: 180px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .stat-icon {
-            width: 44px; height: 44px;
-            display: inline-flex; align-items: center; justify-content: center;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(255,140,0,0.2), rgba(255,215,0,0.2));
-            border: 1px solid rgba(255,140,0,0.25);
-            color: var(--naruto-orange); font-size: 1.2rem;
-            animation: float 4s ease-in-out infinite;
-        }
-        .stat-label { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.65rem; color: #5a4a3a; margin-bottom: 2px; font-weight: 700; }
-        .stat-value { 
-            font-size: 1.6rem; 
-            font-weight: 900; 
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            line-height: 1; 
-        }
-
-        /* CARDS */
-        .cards-section { position:relative; z-index:1; padding-bottom:100px; }
-
-        .intervention-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding:0; margin-bottom:28px; overflow:visible;
-            transition:all .45s cubic-bezier(.23,1,.32,1);
-            position:relative; z-index:0;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-        .intervention-card:hover {
-            transform:translateY(-8px);
-            box-shadow:0 15px 30px rgba(0,0,0,0.3);
-        }
-
-        /* accent left bar */
-        .card-accent {
-            position:absolute; left:0; top:0; bottom:0; width:4px;
-            background:linear-gradient(to bottom, var(--naruto-orange), var(--naruto-orange-dark));
-        }
-
-        .card-inner { padding:36px 36px 36px 48px; }
-
-        /* Left side */
-        .card-icon-wrap {
-            width:56px; height:56px; border-radius:16px;
-            display:flex; align-items:center; justify-content:center;
-            font-size:1.5rem; flex-shrink:0;
-            transition:.4s;
-        }
-        .intervention-card:hover .card-icon-wrap { transform:rotate(8deg) scale(1.08); }
-
-        .card-title { font-size:1.3rem; font-weight:800; color:#3d2b1f; margin:0; }
-        .card-desc { font-size:.9rem; color:#5a4a3a; line-height:1.7; margin:12px 0 20px; }
-
-        .beneficiaries-badge {
-            display:inline-flex; align-items:center; gap:7px;
-            background:rgba(255,140,0,.08); border:1px solid rgba(255,140,0,.18);
-            border-radius:50px; padding:7px 16px;
-            font-size:.82rem; font-weight:700; color:var(--naruto-orange);
-        }
-
-        /* Right side – outcome boxes */
-        .outcome-wrap {
-            display:flex; align-items:center; gap:12px; height:100%;
-        }
-
-        .outcome-box {
-            flex:1; border-radius:16px; padding:24px 16px;
-            text-align:center; transition:.35s; position:relative; overflow:visible; z-index:0;
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,200,0.5);
-        }
-        .outcome-box.before {
-        }
-        .outcome-box.after {
-        }
-        .outcome-box:hover { transform:translateY(-4px); }
-
-        .outcome-val {
-            font-size:2.2rem; font-weight:900; line-height:1.1;
-            margin-bottom:6px;
-        }
-        .before .outcome-val { color:#f87171; }
-        .after  .outcome-val { color:#34d399; }
-
-        .outcome-lbl { font-size:.8rem; font-weight:700; color:#5a4a3a; letter-spacing:.04em; text-transform:uppercase; }
-
-        /* Arrow */
-        .arrow-wrap {
-            width:44px; height:44px; border-radius:12px; flex-shrink:0;
-            background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);
-            display:flex; align-items:center; justify-content:center;
-            color:#334155; font-size:1.1rem; transition:.4s;
-        }
-        .intervention-card:hover .arrow-wrap { background:rgba(255,140,0,.1); border-color:rgba(255,140,0,.25); color:var(--naruto-orange); }
-
-        /* divider between left/right on large */
-        .card-divider { width:1px; background:rgba(255,255,255,.06); align-self:stretch; }
-
-        /* SKELETON */
-        .skeleton { background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.04) 75%); background-size:200% 100%; animation:shimmer 1.6s infinite; border-radius:8px; }
-        .skel-card { background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:36px; margin-bottom:28px; }
-        .skel-line { height:14px; margin-bottom:10px; }
-        .skel-title { height:22px; width:40%; margin-bottom:16px; }
-        .skel-desc { height:50px; margin-bottom:20px; }
-        .skel-outcomes { display:flex; gap:12px; }
-        .skel-box { flex:1; height:100px; border-radius:18px; }
-
-        /* EMPTY */
-        .empty-state { text-align:center; padding:80px 20px; color:var(--muted); }
-        .empty-state i { font-size:3.5rem; opacity:.2; display:block; margin-bottom:16px; }
-
-        /* Buttons */
-        .btn-rasengan {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: linear-gradient(135deg, var(--naruto-orange), var(--naruto-orange-dark));
-            border: none; padding: 12px 32px;
-            border-radius: 40px; color: white;
-            font-weight: 800; font-size: 0.9rem;
-            box-shadow: 0 5px 15px rgba(255,140,0,0.4);
-            transition: all 0.35s; text-decoration: none;
-            position: relative; overflow: hidden;
-        }
-        .btn-rasengan:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(255,140,0,0.6);
-            color: white;
-        }
-        .btn-konoha {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(92, 64, 51, 0.8);
-            border: 1px solid var(--naruto-orange);
-            padding: 12px 32px; border-radius: 40px;
-            color: var(--text-light); font-weight: 800; font-size: 0.9rem;
-            transition: all 0.35s; text-decoration: none;
-        }
-        .btn-konoha:hover {
-            background: rgba(255, 140, 0, 0.3);
-            border-color: var(--naruto-orange);
-            color: var(--naruto-orange);
-            transform: translateY(-4px);
-        }
-
-        /* Footer */
-        .modern-footer {
-            background: rgba(44, 34, 24, 0.95);
-            border-top: 3px solid var(--naruto-orange);
-            padding: 60px 0 30px;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        .footer-card {
-            background: var(--scroll-bg);
-            background-image: repeating-linear-gradient(to bottom, transparent, transparent 28px, rgba(139, 69, 19, 0.05) 28px, rgba(139, 69, 19, 0.05) 32px);
-            border-left: 8px solid var(--wood-dark);
-            border-right: 8px solid var(--wood-dark);
-            border-top: none;
-            border-bottom: none;
-            border-radius: 16px;
-            padding: 28px 22px;
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,200,0.5);
-            transition: all 0.3s ease;
-            z-index: 0;
-        }
-        .footer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-        }
-        .footer-card::before, .footer-card::after {
-            content: '';
-            position: absolute;
-            left: -4px; right: -4px;
-            height: 18px;
-            z-index: 3;
-            border-radius: 9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,200,0.3);
-            background:
-                repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.06) 4px, rgba(0,0,0,0.06) 5px),
-                linear-gradient(to bottom,
-                    #b8845a 0%, #9a6b42 25%, #8b5e3c 50%, #7a5030 75%, #6b401f 100%
-                );
-        }
-        .footer-card::before { top: -9px; }
-        .footer-card::after  { bottom: -9px; }
-        .footer-card .scroll-stamp {
-            position: absolute;
-            top: 10px; right: 14px;
-            font-size: 1.4rem;
-            z-index: 3;
-            opacity: 0.5;
-            transform: rotate(-15deg);
-            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-            pointer-events: none;
-        }
-        .footer-logo {
-            font-size: 1.1rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .footer-copyright {
-            font-size: 0.85rem;
-            color: #c4b08a;
-            letter-spacing: 0.03em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .footer-copyright .copy-icon {
-            color: var(--naruto-orange);
-            font-size: 0.9rem;
-        }
-        .footer-copyright .dev-by {
-            color: #a09070;
-            font-weight: 400;
-        }
-        .footer-copyright .dev-name {
-            background: linear-gradient(135deg, var(--naruto-orange), #FFD700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-        }
-        .footer-copyright .pipe {
-            color: rgba(255,140,0,0.3);
-            font-weight: 300;
-        }
-    </style>
-        <link rel="stylesheet" href="claymorphism.css">
 </head>
-<body class="page-intervention">
+<body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <span class="konoha-logo">🍃</span>
-                Health Screening
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
             </a>
-            <button class="navbar-toggler border-0 bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="index.html"><i class="bi bi-house-door-fill me-1"></i>Home</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="screening.html"><i class="bi bi-clipboard-pulse me-1"></i>Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover active" href="intervention.html"><i class="bi bi-hand-index-thumb me-1"></i>Interventions</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="activities.html"><i class="bi bi-people-fill me-1"></i>Activities</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="surveys.html"><i class="bi bi-database-fill me-1"></i>Data</a></li>
-                    <li class="nav-item"><a class="nav-link sharingan-hover" href="reports.html"><i class="bi bi-file-text-fill me-1"></i>Reports</a></li>
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="page-hero">
+    <header class="hero-section">
         <div class="container">
-            <div data-aos="fade-down" data-aos-duration="900">
-                <div class="hero-eyebrow"><i class="bi bi-arrow-left-right"></i> Before & After</div>
-                <h1 class="page-title">Interventions &<br><span class="title-gradient">Outcomes</span></h1>
-                <p class="page-sub">Comparing results before and after applying therapeutic and preventive programs across the community.</p>
-            </div>
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <span class="scroll-stamp">🍃</span>
-                    <div class="stat-icon"><i class="bi bi-arrow-left-right"></i></div>
-                    <div>
+            <h1 class="display-hero" data-reveal>
+                Interventions &<br><span class="text-accent-gradient">Outcomes</span>
+            </h1>
+            <p class="hero-sub mt-3" data-reveal data-reveal-delay="160">
+                Comparing results before and after applying therapeutic and preventive programs across the community.
+            </p>
+            <div class="d-flex justify-content-center flex-wrap gap-3 mt-4" data-reveal data-reveal-delay="240">
+                <div class="glass-panel stat-tile justify-content-center">
+                    <span class="stat-icon"><i class="bi bi-arrow-left-right"></i></span>
+                    <div class="text-center">
                         <div class="stat-label">Total Interventions</div>
                         <div class="stat-value" id="interventionsCount">0</div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
-    <!-- Cards -->
-    <section class="cards-section">
-        <div class="container">
-            <div id="interventions-container">
-                <!-- Skeletons injected by JS -->
-            </div>
-        </div>
-    </section>
+    <main class="section-block pb-5">
+        <div class="container" id="interventions-container"></div>
+    </main>
 
-    <footer class="modern-footer">
+    <footer class="site-footer">
         <div class="container">
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-5" data-aos="fade-up">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-activity" style="color: var(--naruto-orange); font-size: 1.3rem;"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Health Screening - Konoha</div>
-                        <p style="font-size: 0.8rem; color: #5a4a3a; line-height: 1.6;">
-                            A scientific preventive approach for a sustainable quality of life within the SEKEM community.
-                        </p>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
                     </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
                 </div>
-                <div class="col-lg-5" data-aos="fade-up" data-aos-delay="100">
-                    <div class="footer-card">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="footer-card-icon" style="background: rgba(255,140,0,0.2); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-                            <i class="bi bi-headset" style="color: var(--naruto-orange);"></i>
-                        </div>
-                        <div class="footer-card-title" style="font-weight: 800; color: var(--naruto-orange);">Contact the Hokage</div>
-                        <div class="d-flex flex-column gap-2 mt-2">
-                            <a href="https://wa.me/201032318537" target="_blank" style="color: #25D366; text-decoration: none;">
-                                <i class="bi bi-whatsapp me-2"></i> Ninja WhatsApp
-                            </a>
-                            <a href="mailto:mamdouhabdalaziz952@gmail.com" style="color: #60a5fa; text-decoration: none;">
-                                <i class="bi bi-envelope-fill me-2"></i> Email
-                            </a>
-                        </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
                     </div>
                 </div>
             </div>
-            <div class="footer-divider" style="height:1px; background: var(--naruto-orange); margin: 35px 0 20px;"></div>
-            <div class="footer-bottom text-center">
-                <div class="footer-logo mb-2">🍃 Konoha | Health Screening</div>
-                <p class="footer-copyright"><span class="copy-icon">🍃</span> 2026 Health Screening Project <span class="pipe">|</span> <span class="dev-by">Developed by</span> <span class="dev-name">Dr. Mamdouh Abd Elaziz</span></p>
-            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project &middot; Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 950, once: true, offset: 40 });</script>
+    <script src="hig.js"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=685252747&single=true&output=csv";
 
-        // Icon color palettes cycling
         const palettes = [
-            { bg:'rgba(37,99,235,.12)',  color:'#60a5fa' },
-            { bg:'rgba(245,158,11,.12)', color:'#fbbf24' },
-            { bg:'rgba(6,182,212,.12)',  color:'#22d3ee' },
-            { bg:'rgba(16,185,129,.12)', color:'#34d399' },
-            { bg:'rgba(168,85,247,.12)', color:'#c084fc' },
+            { bg:'rgba(62,139,255,.12)',  color:'#2f6bdb' },
+            { bg:'rgba(255,149,0,.12)',   color:'#d97a00' },
+            { bg:'rgba(0,184,217,.12)',   color:'#0093ab' },
+            { bg:'rgba(34,172,56,.12)',   color:'#1d9631' },
+            { bg:'rgba(143,91,255,.12)',  color:'#7440e0' },
         ];
 
         function showSkeletons() {
@@ -658,14 +113,16 @@
             c.innerHTML = '';
             for (let i = 0; i < 4; i++) {
                 c.innerHTML += `
-                    <div class="skel-card">
-                        <div class="skeleton skel-line" style="width:20%;margin-bottom:14px;"></div>
-                        <div class="skeleton skel-title"></div>
-                        <div class="skeleton skel-desc"></div>
-                        <div class="skel-outcomes">
-                            <div class="skeleton skel-box"></div>
-                            <div style="width:44px;flex-shrink:0;"></div>
-                            <div class="skeleton skel-box"></div>
+                    <div class="col-lg-6" data-reveal data-reveal-delay="${i * 80}">
+                        <div class="skel-card">
+                            <div class="skeleton" style="width:20%;height:14px;margin-bottom:14px;"></div>
+                            <div class="skeleton" style="width:40%;height:22px;margin-bottom:16px;"></div>
+                            <div class="skeleton" style="height:50px;margin-bottom:20px;"></div>
+                            <div class="d-flex gap-12">
+                                <div class="skeleton" style="flex:1;height:100px;border-radius:18px;"></div>
+                                <div style="width:44px;flex-shrink:0;"></div>
+                                <div class="skeleton" style="flex:1;height:100px;border-radius:18px;"></div>
+                            </div>
                         </div>
                     </div>`;
             }
@@ -678,18 +135,14 @@
             const valid = data.filter(d => d.Title);
             if (!valid.length) {
                 container.innerHTML = `
-                    <div class="col-12" data-aos="fade-up">
-                        <div class="scroll-card" style="max-width:420px; margin:0 auto; text-align:center; padding:50px 36px;">
-                            <span class="scroll-stamp">🍃</span>
-                            <div style="margin-bottom:20px;">
-                                <i class="bi bi-clipboard-x" style="font-size:2.8rem; color:var(--naruto-orange); opacity:0.5;"></i>
-                            </div>
-                            <h5 style="font-weight:900; color:#3d2b1f; margin-bottom:8px;">No Interventions Found</h5>
-                            <p style="font-size:0.9rem; color:#5a4a3a; margin-bottom:0;">
-                                There are no interventions available at the moment.
-                            </p>
+                    <div class="col-12" data-reveal>
+                        <div class="glass-panel state-panel">
+                            <div class="state-icon"><i class="bi bi-clipboard-x"></i></div>
+                            <h5 class="state-title">No Interventions Found</h5>
+                            <p class="state-text">There are no interventions available at the moment.</p>
                         </div>
                     </div>`;
+                HIG.refreshReveals(container);
                 return;
             }
 
@@ -699,77 +152,57 @@
                 const icon  = item.Icon || 'bi-activity';
 
                 container.innerHTML += `
-                    <div class="intervention-card" data-aos="fade-up" data-aos-delay="${delay}" data-aos-duration="900">
-                        <span class="scroll-stamp">🍃</span>
-                        <div class="card-accent"></div>
-                        <div class="card-inner">
-                            <div class="row align-items-center g-4">
-
-                                <!-- LEFT -->
-                                <div class="col-lg-5">
-                                    <div class="d-flex align-items-center gap-3 mb-3">
-                                        <div class="card-icon-wrap" style="background:${pal.bg};color:${pal.color};">
-                                            <i class="bi ${icon}"></i>
+                    <div class="col-lg-6" data-reveal data-reveal-delay="${delay}">
+                        <article class="hig-card intervention-card" style="--chip:${pal.color}">
+                            <div class="card-media" style="aspect-ratio:auto;height:auto;min-height:220px;background:transparent;padding:36px 36px 36px 48px;">
+                                <div class="row align-items-center g-4 h-100">
+                                    <div class="col-lg-5">
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <div class="card-icon-wrap" style="background:${pal.bg};color:${pal.color};">
+                                                <i class="bi ${icon}"></i>
+                                            </div>
+                                            <h3 class="card-title mb-0">${HIG.escapeHtml(item.Title)}</h3>
                                         </div>
-                                        <h3 class="card-title">${item.Title}</h3>
+                                        <p class="card-desc">${HIG.escapeHtml(item.Description || '')}</p>
+                                        <div class="beneficiaries-badge">
+                                            <i class="bi bi-people-fill"></i>
+                                            Beneficiaries: <strong>${item.Beneficiaries || 0}</strong>
+                                        </div>
                                     </div>
-                                    <p class="card-desc">${item.Description || ''}</p>
-                                    <div class="beneficiaries-badge">
-                                        <i class="bi bi-people-fill"></i>
-                                        Beneficiaries: <strong>${item.Beneficiaries || 0}</strong>
+
+                                    <div class="d-none d-lg-flex col-lg-auto px-0" style="padding:0 8px;">
+                                        <div class="card-divider"></div>
                                     </div>
-                                </div>
 
-                                <!-- DIVIDER -->
-                                <div class="d-none d-lg-flex col-lg-auto px-0" style="padding:0 8px;">
-                                    <div class="card-divider"></div>
-                                </div>
-
-                                <!-- RIGHT -->
-                                <div class="col-lg">
-                                    <div class="outcome-wrap">
-                                        <div class="outcome-box before">
-                                            <span class="scroll-stamp">🍃</span>
-                                            <div class="outcome-val">${item.Value_Before || '-'}</div>
-                                            <div class="outcome-lbl">${item.Label_Before || 'Before'}</div>
-                                        </div>
-                                        <div class="arrow-wrap">
-                                            <i class="bi bi-arrow-right"></i>
-                                        </div>
-                                        <div class="outcome-box after">
-                                            <span class="scroll-stamp">🍃</span>
-                                            <div class="outcome-val">${item.Value_After || '-'}</div>
-                                            <div class="outcome-lbl">${item.Label_After || 'After'}</div>
+                                    <div class="col-lg">
+                                        <div class="outcome-wrap">
+                                            <div class="hig-card outcome-box before" style="--chip:#eb4435">
+                                                <span class="summary-label"><i class="bi bi-arrow-left"></i> ${HIG.escapeHtml(item.Label_Before || 'Before')}</span>
+                                                <div class="outcome-val">${HIG.escapeHtml(item.Value_Before || '—')}</div>
+                                            </div>
+                                            <div class="arrow-wrap">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </div>
+                                            <div class="hig-card outcome-box after" style="--chip:#22ac38">
+                                                <span class="summary-label"><i class="bi bi-arrow-right"></i> ${HIG.escapeHtml(item.Label_After || 'After')}</span>
+                                                <div class="outcome-val">${HIG.escapeHtml(item.Value_After || '—')}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                        </div>
+                        </article>
                     </div>`;
             });
+
+            HIG.refreshReveals(container);
         }
 
         function updateInterventionCount(data) {
             const el = document.getElementById('interventionsCount');
             if (!el) return;
             const valid = Array.isArray(data) ? data.filter(item => item && item.Title).length : 0;
-            animateCounter(el, valid);
-        }
-
-        function animateCounter(el, target) {
-            const duration = 1500;
-            const start = 0;
-            const startTime = performance.now();
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(start + (target - start) * easeOut);
-                el.textContent = current.toLocaleString();
-                if (progress < 1) requestAnimationFrame(update);
-            }
-            requestAnimationFrame(update);
+            HIG.countUp(el, valid);
         }
 
         function fetchData() {
@@ -779,16 +212,19 @@
                 complete: r => { renderInterventions(r.data); updateInterventionCount(r.data); },
                 error: () => {
                     document.getElementById('interventions-container').innerHTML =
-                        `<div class="empty-state"><i class="bi bi-wifi-off"></i><h5 style="color:#475569;">Connection Error</h5><p style="font-size:.9rem;color:#1e293b;">Could not load data. Please check your connection.</p></div>`;
+                        `<div class="col-12" data-reveal>
+                            <div class="glass-panel state-panel">
+                                <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
+                                <h5 class="state-title">Connection Error</h5>
+                                <p class="state-text">Could not load data. Please check your connection.</p>
+                            </div>
+                        </div>`;
+                    HIG.refreshReveals(document.getElementById('interventions-container'));
                 }
             });
         }
 
         document.addEventListener('DOMContentLoaded', fetchData);
     </script>
-
 </body>
 </html>
-
-
-
