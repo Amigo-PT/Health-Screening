@@ -536,12 +536,14 @@
 
             const succeed = () => {
                 if (token !== pdfLoadToken) return;
+                clearTimeout(pdfFrame._failTimer);
                 loadingDiv.style.display = 'none';
                 errorDiv.style.display = 'none';
                 pdfFrame.style.display = 'block';
             };
             const fail = () => {
                 if (token !== pdfLoadToken) return;
+                if (pdfFrame.style.display === 'block') return;
                 loadingDiv.style.display = 'none';
                 errorDiv.style.display = 'flex';
                 pdfFrame.style.display = 'none';
