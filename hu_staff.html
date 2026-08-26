@@ -938,8 +938,13 @@
         }
 
         function showComparisonControls() {
-            document.getElementById('comparisonControls').style.display='flex';
-            populateComparisonSelects();
+            const el = document.getElementById('comparisonControls');
+            if (el.style.display === 'none' || el.style.display === '') {
+                el.style.display = 'flex';
+                populateComparisonSelects();
+            } else {
+                el.style.display = 'none';
+            }
         }
 
         function performComparison() {
