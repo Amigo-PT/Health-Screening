@@ -699,27 +699,39 @@ body.is-scrolled .navbar-hig,
 
 .month-count { margin-left: auto; }
 
-/* ---------- Gallery ---------- */
+/* ---------- Gallery (Xiaomi HyperOS style) ---------- */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 225px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 260px;
     grid-auto-flow: dense;
-    gap: 14px;
+    gap: 16px;
 }
 
 .gallery-item {
     position: relative;
     margin: 0;
-    border-radius: var(--radius-md);
+    border-radius: 20px;
     overflow: hidden;
     cursor: zoom-in;
     background: var(--surface-2);
-    border: 1px solid var(--hairline);
-    transition: transform var(--dur-slow) var(--ease-spring),
-                box-shadow var(--dur-slow) var(--ease-spring),
-                border-color var(--dur-base) ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px -4px rgba(0,0,0,0.06);
+    transition: transform 0.4s var(--ease-spring),
+                box-shadow 0.4s var(--ease-spring);
 }
+
+.gallery-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.28) 0%, transparent 40%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.gallery-item:hover::after { opacity: 1; }
 
 .gallery-item img {
     position: absolute;
@@ -728,17 +740,15 @@ body.is-scrolled .navbar-hig,
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.9s var(--ease-spring);
+    transition: transform 0.5s var(--ease-spring);
 }
 
 .gallery-item:hover {
-    transform: scale(1.02);
-    z-index: 2;
-    border-color: color-mix(in srgb, var(--accent-color) 30%, transparent);
-    box-shadow: var(--shadow-pop);
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 28px -6px rgba(0,0,0,0.12), 0 2px 8px -2px rgba(0,0,0,0.06);
 }
 
-.gallery-item:hover img { transform: scale(1.07); }
+.gallery-item:hover img { transform: scale(1.05); }
 
 .gallery-item.wide { grid-column: span 2; }
 .gallery-item.portrait { grid-row: span 2; }
@@ -746,14 +756,38 @@ body.is-scrolled .navbar-hig,
 
 .gallery-item .idx {
     position: absolute;
-    left: 12px;
-    bottom: 12px;
+    right: 14px;
+    bottom: 14px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--text-primary);
     opacity: 0;
     transform: translateY(6px);
-    transition: opacity var(--dur-base) var(--ease-spring), transform var(--dur-base) var(--ease-spring);
+    transition: opacity 0.3s var(--ease-spring), transform 0.3s var(--ease-spring);
 }
 
+.gallery-item .idx i { font-size: 0.65rem; color: var(--accent-color); }
+
 .gallery-item:hover .idx { opacity: 1; transform: none; }
+
+@media (max-width: 768px) {
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; gap: 10px; }
+    .gallery-item { border-radius: 16px; }
+    .gallery-item.portrait { grid-row: span 2; }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid { grid-auto-rows: 150px; }
+}
 
 /* ---------- Skeletons ---------- */
 .skeleton {
@@ -1330,8 +1364,6 @@ body.is-scrolled .navbar-hig,
 @media (max-width: 768px) {
     .hero-section { padding: calc(var(--nav-height) + 48px) 0 24px; }
     .section-block { padding: 40px 0; }
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; gap: 10px; }
-    .gallery-item.portrait { grid-row: span 2; }
     .card-body { padding: 16px 18px 15px; }
     .card-title { font-size: 0.97rem; }
     .stat-value { font-size: 1.45rem; }

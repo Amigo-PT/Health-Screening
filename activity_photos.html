@@ -193,7 +193,7 @@
                 figure.setAttribute('data-reveal-delay', String((idx % 10) * 50));
                 figure.innerHTML = `
                     <img src="${item.url}" alt="Activity moment ${idx + 1}" loading="lazy">
-                    <figcaption class="badge-glass idx"><i class="bi bi-camera-fill"></i>${String(idx + 1).padStart(2, '0')}</figcaption>`;
+                    <figcaption class="idx"><i class="bi bi-camera-fill"></i>${String(idx + 1).padStart(2, '0')}</figcaption>`;
                 figure.addEventListener('click', () => HIG.lightbox.open(lightboxSources, idx));
                 photosContainer.appendChild(figure);
             });
