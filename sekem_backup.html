@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#f6f6f8" />
-    <title>HU Staff Screening - Health Screening</title>
     <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <title>SEKEM Screening - Health Screening</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
@@ -57,10 +57,10 @@
     <header class="hero-section">
         <div class="container">
             <h1 class="display-hero" data-reveal>
-                HU Staff <span class="text-accent-gradient">Screening Dashboard</span>
+                SEKEM <span class="text-accent-gradient">Screening Dashboard</span>
             </h1>
 <p class="hero-sub mt-3" data-reveal data-reveal-delay="160">
-                BMI distribution analysis for Heliopolis University — Students, Faculty & Staff.
+                BMI distribution analysis for SEKEM — Atos Pharma, Biodynamic Association, Eco Energy, Eco Health, Eco Village, ISIS Foods, Lotus Organic, Naturetex, SDF Association, Sekem Lab & Sekem Reclamation.
             </p>
         </div>
     </header>
@@ -75,15 +75,19 @@
                 </div>
                 <div class="year-tabs" id="yearContainer"></div>
                 <div class="filter-actions">
-                    <select id="sectorFilter" class="comparison-select">
-                        <option value="all">Show all sectors</option>
-                        <option value="students">Students</option>
-                        <option value="pt">Faculty of Physical Therapy</option>
-                        <option value="pharmacy">Faculty of Pharmacy</option>
-                        <option value="eng">Faculty of Engineering</option>
-                        <option value="business">Faculty of Business</option>
-                        <option value="agri">Faculty of Agriculture</option>
-                        <option value="workers">University Workers</option>
+                    <select id="companyFilter" class="comparison-select">
+                        <option value="all">Show all companies</option>
+                        <option value="atos-pharma">Atos Pharma</option>
+                        <option value="biodynamic-association">Biodynamic Association</option>
+                        <option value="eco-energy">Eco Energy</option>
+                        <option value="eco-health">Eco Health</option>
+                        <option value="eco-village">Eco Village</option>
+                        <option value="isis-foods">ISIS Foods</option>
+                        <option value="lotus-organic">Lotus Organic</option>
+                        <option value="naturetex">Naturetex</option>
+                        <option value="sdf-association">SDF Association</option>
+                        <option value="sekem-lab">Sekem Lab</option>
+                        <option value="sekem-reclamation">Sekem Reclamation</option>
                     </select>
                 </div>
                 <div class="month-timeline" id="monthContainer"></div>
@@ -113,10 +117,10 @@
                     </div>
                     <div class="col-md-6" data-reveal data-reveal-delay="160">
                         <div class="hig-card stat-card justify-content-center">
-                            <span class="stat-icon"><i class="bi bi-building"></i></span>
+                            <span class="stat-icon"><i class="bi bi-buildings"></i></span>
                             <div class="text-center">
-                                <div class="stat-num">7</div>
-                                <div class="stat-lbl"><i class="bi bi-grid-3x3-gap me-2"></i>Targeted Sectors</div>
+                                <div class="stat-num">11</div>
+                                <div class="stat-lbl"><i class="bi bi-grid-3x3-gap me-2"></i>SEKEM Companies</div>
                             </div>
                         </div>
                     </div>
@@ -134,17 +138,17 @@
                         <div class="risk-stat-item" style="background:rgba(62,139,255,.08);border-color:rgba(62,139,255,.25);" onclick="showRiskCategoryModal('high')">
                             <div class="risk-number" id="highRiskCount" style="color:#3e8bff;">--</div>
                             <div class="risk-label">&#9660; Underweight</div>
-                            <div class="risk-description">Total count across all sectors</div>
+                            <div class="risk-description">Total count across all companies</div>
                         </div>
                         <div class="risk-stat-item" style="background:rgba(34,172,56,.08);border-color:rgba(34,172,56,.25);" onclick="showRiskCategoryModal('low')">
                             <div class="risk-number" id="moderateRiskCount" style="color:#22ac38;">--</div>
                             <div class="risk-label">&#10003; Normal</div>
-                            <div class="risk-description">Total count across all sectors</div>
+                            <div class="risk-description">Total count across all companies</div>
                         </div>
                         <div class="risk-stat-item" style="background:rgba(235,68,53,.08);border-color:rgba(235,68,53,.25);" onclick="showRiskCategoryModal('moderate')">
                             <div class="risk-number" id="lowRiskCount" style="color:#eb4435;">--</div>
                             <div class="risk-label">&#9650; Overweight & Obesity</div>
-                            <div class="risk-description">Total count across all sectors</div>
+                            <div class="risk-description">Total count across all companies</div>
                         </div>
                     </div>
                     <div class="risk-summary-compact" id="topDiseasesSummary">
@@ -156,55 +160,83 @@
 
             <!-- Sectors -->
             <div class="sectors-section mb-5">
-                <div class="section-eyebrow" data-reveal><i class="bi bi-grid-3x3-gap"></i> HU Sectors Breakdown</div>
+                <div class="section-eyebrow" data-reveal><i class="bi bi-grid-3x3-gap"></i> SEKEM Companies Breakdown</div>
                 <div class="row g-4 justify-content-center">
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="60">
-                        <div class="hig-card info-card center sector-card" style="--tile:#3e8bff">
-                            <span class="info-icon"><i class="bi bi-mortarboard"></i></span>
-                            <div class="entity-num" id="num-students">0</div>
-                            <p class="entity-name sector-name mb-0">Students</p>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="60">
+                        <div class="hig-card info-card center sector-card" style="--tile:#1e3a8a">
+                            <span class="info-icon"><i class="bi bi-pill"></i></span>
+                            <div class="entity-num" id="num-atos-pharma">0</div>
+                            <p class="entity-name sector-name mb-0">Atos Pharma</p>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="120">
-                        <div class="hig-card info-card center sector-card" style="--tile:#22ac38">
-                            <span class="info-icon"><i class="bi bi-heart-pulse"></i></span>
-                            <div class="entity-num" id="num-pt">0</div>
-                            <p class="entity-name sector-name mb-0">Faculty of Physical Therapy</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="180">
-                        <div class="hig-card info-card center sector-card" style="--tile:#8f5bff">
-                            <span class="info-icon"><i class="bi bi-capsule"></i></span>
-                            <div class="entity-num" id="num-pharmacy">0</div>
-                            <p class="entity-name sector-name mb-0">Faculty of Pharmacy</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="240">
-                        <div class="hig-card info-card center sector-card" style="--tile:#ff9500">
-                            <span class="info-icon"><i class="bi bi-gear"></i></span>
-                            <div class="entity-num" id="num-eng">0</div>
-                            <p class="entity-name sector-name mb-0">Faculty of Engineering</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="300">
-                        <div class="hig-card info-card center sector-card" style="--tile:#00b8d9">
-                            <span class="info-icon"><i class="bi bi-briefcase"></i></span>
-                            <div class="entity-num" id="num-business">0</div>
-                            <p class="entity-name sector-name mb-0">Faculty of Business</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="360">
-                        <div class="hig-card info-card center sector-card" style="--tile:#ffc300">
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="80">
+                        <div class="hig-card info-card center sector-card" style="--tile:#166534">
                             <span class="info-icon"><i class="bi bi-flower1"></i></span>
-                            <div class="entity-num" id="num-agri">0</div>
-                            <p class="entity-name sector-name mb-0">Faculty of Agriculture</p>
+                            <div class="entity-num" id="num-biodynamic-association">0</div>
+                            <p class="entity-name sector-name mb-0">Biodynamic Association</p>
                         </div>
                     </div>
-                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="420">
-                        <div class="hig-card info-card center sector-card" style="--tile:#98a2b3">
-                            <span class="info-icon"><i class="bi bi-person-gear"></i></span>
-                            <div class="entity-num" id="num-workers">0</div>
-                            <p class="entity-name sector-name mb-0">University Workers</p>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="100">
+                        <div class="hig-card info-card center sector-card" style="--tile:#f59e0b">
+                            <span class="info-icon"><i class="bi bi-lightning-charge"></i></span>
+                            <div class="entity-num" id="num-eco-energy">0</div>
+                            <p class="entity-name sector-name mb-0">Eco Energy</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="120">
+                        <div class="hig-card info-card center sector-card" style="--tile:#0e7490">
+                            <span class="info-icon"><i class="bi bi-heart-pulse"></i></span>
+                            <div class="entity-num" id="num-eco-health">0</div>
+                            <p class="entity-name sector-name mb-0">Eco Health</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="140">
+                        <div class="hig-card info-card center sector-card" style="--tile:#65a30d">
+                            <span class="info-icon"><i class="bi bi-house"></i></span>
+                            <div class="entity-num" id="num-eco-village">0</div>
+                            <p class="entity-name sector-name mb-0">Eco Village</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="160">
+                        <div class="hig-card info-card center sector-card" style="--tile:#c2410c">
+                            <span class="info-icon"><i class="bi bi-egg-fill"></i></span>
+                            <div class="entity-num" id="num-isis-foods">0</div>
+                            <p class="entity-name sector-name mb-0">ISIS Foods</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="180">
+                        <div class="hig-card info-card center sector-card" style="--tile:#9333ea">
+                            <span class="info-icon"><i class="bi bi-flower2"></i></span>
+                            <div class="entity-num" id="num-lotus-organic">0</div>
+                            <p class="entity-name sector-name mb-0">Lotus Organic</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="200">
+                        <div class="hig-card info-card center sector-card" style="--tile:#065f46">
+                            <span class="info-icon"><i class="bi bi-tree"></i></span>
+                            <div class="entity-num" id="num-naturetex">0</div>
+                            <p class="entity-name sector-name mb-0">Naturetex</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="220">
+                        <div class="hig-card info-card center sector-card" style="--tile:#7f1d1d">
+                            <span class="info-icon"><i class="bi bi-people"></i></span>
+                            <div class="entity-num" id="num-sdf-association">0</div>
+                            <p class="entity-name sector-name mb-0">SDF Association</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="240">
+                        <div class="hig-card info-card center sector-card" style="--tile:#4c1d95">
+                            <span class="info-icon"><i class="bi bi-flask"></i></span>
+                            <div class="entity-num" id="num-sekem-lab">0</div>
+                            <p class="entity-name sector-name mb-0">Sekem Lab</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-6" data-reveal data-reveal-delay="260">
+                        <div class="hig-card info-card center sector-card" style="--tile:#92400e">
+                            <span class="info-icon"><i class="bi bi-geo-fill"></i></span>
+                            <div class="entity-num" id="num-sekem-reclamation">0</div>
+                            <p class="entity-name sector-name mb-0">Sekem Reclamation</p>
                         </div>
                     </div>
                 </div>
@@ -218,7 +250,7 @@
                                 <span class="chart-icon"><i class="bi bi-pie-chart-fill"></i></span>
                                 <div>
                                     <div class="chart-title">Participation</div>
-                                    <div class="chart-sub">Screened participants across sectors</div>
+                                    <div class="chart-sub">Screened participants across companies</div>
                                 </div>
                             </div>
                             <div class="chart-canvas chart-canvas-sm"><canvas id="populationChart"></canvas></div>
@@ -229,8 +261,8 @@
                             <div class="chart-head">
                                 <span class="chart-icon"><i class="bi bi-graph-up-arrow"></i></span>
                                 <div>
-                                    <div class="chart-title">BMI Distribution in HU Sectors</div>
-                                    <div class="chart-sub">BMI categories per sector over time</div>
+                                    <div class="chart-title">BMI Distribution in SEKEM Companies</div>
+                                    <div class="chart-sub">BMI categories per company over time</div>
                                 </div>
                             </div>
                             <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart"></canvas></div>
@@ -321,7 +353,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="hig.js"></script>
     <script>
-        // Chart theme (Xiaomi MIUI light palette)
         const CHART_GRID = 'rgba(0,0,0,0.07)';
         const CHART_TEXT = 'rgba(0,0,0,0.65)';
         const CHART_TICKS = 'rgba(0,0,0,0.45)';
@@ -332,20 +363,19 @@
         let currentFullData = null;
         let comparisonMode = false, comparisonData1 = null, comparisonData2 = null;
         let comparisonData1Raw = null, comparisonData2Raw = null;
-        let populationChartKeys = [];
-        let activeSectorFilter='all';
+        let activeCompanyFilter='all';
+        let lastSyncTime = null;
 
-        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=0&single=true&output=csv";
+        const sheetURL = "https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=2058048191&single=true&output=csv";
 
         // ========== BMI CATEGORIES DATABASE ==========
         const BMI_CATEGORIES = [
-            { key: 'Under_weight', name: 'Underweight', color: '#3e8bff', recommendation: 'Nutritional counseling recommended - Increase caloric intake with nutrient-dense foods - Monitor for underlying conditions' },
-            { key: 'Normal_Weight', name: 'Normal', color: '#22ac38', recommendation: 'Maintain current lifestyle - Regular physical activity and balanced diet' },
-            { key: 'Overweight_Obesity', name: 'Overweight & Obesity', color: '#eb4435', recommendation: 'Medical evaluation - Structured weight management program - Screen for metabolic syndrome - Lifestyle modification required' }
+            { key: 'Under_weight', name: 'Underweight', color: '#3e8bff', riskLevel: 'moderate', recommendation: 'Nutritional counseling recommended - Increase caloric intake with nutrient-dense foods - Monitor for underlying conditions' },
+            { key: 'Normal_Weight', name: 'Normal', color: '#22ac38', riskLevel: 'healthy', recommendation: 'Maintain current lifestyle - Regular physical activity and balanced diet' },
+            { key: 'Overweight_Obesity', name: 'Overweight & Obesity', color: '#eb4435', riskLevel: 'high', recommendation: 'Medical evaluation - Structured weight management program - Screen for metabolic syndrome - Lifestyle modification required' }
         ];
 
         const BMI_KEYS = ['Under_weight', 'Normal_Weight', 'Over_weight', 'Obesity'];
-        let lastSyncTime = null;
 
         function formatLastSync(date) {
             return date ? date.toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : 'not available';
@@ -372,12 +402,34 @@
 
         function fetchData() {
             showLoadingState();
-            Papa.parse(sheetURL, { download:true, header:true, dynamicTyping:true, complete:r=>{ lastSyncTime=new Date(); processData(r.data); updateLastSyncLabel(); updateDataStatus('ok'); }, error:err=>{ console.error(err); lastSyncTime=null; updateLastSyncLabel(); updateDataStatus('error'); } });
+            Papa.parse(sheetURL, { 
+                download:true, 
+                header:true, 
+                dynamicTyping:true, 
+                complete:r=>{ 
+                    console.log('Data loaded:', r.data.length, 'rows');
+                    console.log('Columns:', r.meta.fields);
+                    lastSyncTime=new Date(); 
+                    processData(r.data); 
+                    updateLastSyncLabel(); 
+                    updateDataStatus('ok'); 
+                }, 
+                error:err=>{ 
+                    console.error('PapaParse error:', err);
+                    console.error('Sheet URL:', sheetURL);
+                    lastSyncTime=null; 
+                    updateLastSyncLabel(); 
+                    updateDataStatus('error'); 
+                } 
+            });
         }
 
         function showLoadingState() {
-            ['total-participants','num-students','num-pt','num-pharmacy','num-eng','num-business','num-agri','num-workers'].forEach(id => {
+            ['total-participants','num-atos-pharma','num-biodynamic-association','num-eco-energy','num-eco-health','num-eco-village','num-isis-foods','num-lotus-organic','num-naturetex','num-sdf-association','num-sekem-lab','num-sekem-reclamation'].forEach(id => {
                 const el = document.getElementById(id); if(el) el.textContent='0';
+            });
+            ['rate-atos-pharma','rate-biodynamic-association','rate-eco-energy','rate-eco-health','rate-eco-village','rate-isis-foods','rate-lotus-organic','rate-naturetex','rate-sdf-association','rate-sekem-lab','rate-sekem-reclamation'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.textContent='';
             });
             document.getElementById('highRiskCount').textContent='--';
             document.getElementById('moderateRiskCount').textContent='--';
@@ -386,50 +438,67 @@
             updateDataStatus('loading');
         }
 
+        function emptyPeriod() {
+            const empty={ companies:{}, complaints:{}, rawData:{}, totals:{} };
+            const companies=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            companies.forEach(k=>{ empty.companies[k]=0; empty.complaints[k]=Array(4).fill(0); empty.totals[k]=0; });
+            return empty;
+        }
+
         function processData(rows) {
-            screeningData={}; let yearsSet=new Set(), facultyCounts={};
+            screeningData={}; let yearsSet=new Set();
+            const companies=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
             rows.forEach(row => {
-                if (!row.Year||!row.Month) return;
+                if (!row.Year||!row.Month||!row.Company) return;
                 yearsSet.add(row.Year);
                 const key=`${row.Year}-${row.Month}`;
                 if (!screeningData[key]) {
-                    screeningData[key]={ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(23).fill(0),workers:Array(23).fill(0),faculties:Array(23).fill(0)}, rawData:{}, details:{students:[],pt:[],pharmacy:[],eng:[],business:[],agri:[],workers:[]} };
-                    facultyCounts[key]=0;
+                    const initialCompanies={};
+                    const initialComplaints={};
+                    const initialDetails={};
+                    const initialTotals={};
+                    companies.forEach(ck=>{
+                        initialCompanies[ck]=0;
+                        initialComplaints[ck]=Array(23).fill(0);
+                        initialDetails[ck]=[];
+                        initialTotals[ck]=0;
+                    });
+                    screeningData[key]={ companies:initialCompanies, complaints:initialComplaints, rawData:{}, details:initialDetails, totals:initialTotals };
                 }
-                const s=(row.Sector||'').toLowerCase().trim();
-                let sk='';
-                if (s.includes('student')) sk='students';
-                else if (s.includes('physical')||s==='pt') sk='pt';
-                else if (s.includes('pharmacy')) sk='pharmacy';
-                else if (s.includes('engineer')) sk='eng';
-                else if (s.includes('business')) sk='business';
-                else if (s.includes('agri')) sk='agri';
-                else if (s.includes('worker')) sk='workers';
+                const c=(row.Company||'').toString().toLowerCase().trim();
+                let ck='';
+                if (c.includes('atos pharma')) ck='atos-pharma';
+                else if (c.includes('biodynamic')) ck='biodynamic-association';
+                else if (c.includes('eco energy')) ck='eco-energy';
+                else if (c.includes('eco health')) ck='eco-health';
+                else if (c.includes('eco village')) ck='eco-village';
+                else if (c.includes('isis food')) ck='isis-foods';
+                else if (c.includes('lotus organic')) ck='lotus-organic';
+                else if (c.includes('naturetex') || c.includes('nature tex')) ck='naturetex';
+                else if (c.includes('sdf')) ck='sdf-association';
+                else if (c.includes('sekem lab')) ck='sekem-lab';
+                else if (c.includes('sekem reclamation')) ck='sekem-reclamation';
+                else if (c.includes('isis')) ck='isis-foods';
+                else if (c.includes('atos')) ck='atos-pharma';
+                else if (c.includes('nature')) ck='naturetex';
+                else if (c.includes('lotus')) ck='lotus-organic';
+                else if (c.includes('eco')) ck='eco-health';
+                if (!ck) return;
 
-                if (sk) {
-                    screeningData[key].sectors[sk]=row.Total_Count||0;
-                    if (!screeningData[key].rawData[sk]) screeningData[key].rawData[sk]={};
-                    BMI_KEYS.forEach(col => { screeningData[key].rawData[sk][col]=row[col]||0; });
-                    screeningData[key].details[sk].push(row);
-                }
-                const underweight = row.Under_weight||0;
-                const normal = row.Normal_Weight||0;
-                const overweight = row.Over_weight||0;
-                const obesity = row.Obesity||0;
-                const overweightObesity = overweight + obesity;
-                const bmi = [underweight, normal, overweightObesity];
-                if (sk==='students') screeningData[key].complaints.students=bmi;
-                else if (sk==='workers') screeningData[key].complaints.workers=bmi;
-                else if (['pt','pharmacy','eng','business','agri'].includes(sk)) { for(let i=0;i<3;i++) screeningData[key].complaints.faculties[i]+=bmi[i]; facultyCounts[key]++; }
+                screeningData[key].companies[ck]=row.Total_Count||0;
+                screeningData[key].totals[ck]=row.Total||0;
+                if (!screeningData[key].rawData[ck]) screeningData[key].rawData[ck]={};
+                BMI_KEYS.forEach(col => { screeningData[key].rawData[ck][col]=row[col]||0; });
+                screeningData[key].complaints[ck]=BMI_KEYS.map(col => row[col]||0);
+                screeningData[key].details[ck].push(row);
             });
-            Object.keys(screeningData).forEach(k=>{ const n=facultyCounts[k]||1; for(let i=0;i<3;i++) screeningData[k].complaints.faculties[i]=Math.round(screeningData[k].complaints.faculties[i]/n); });
             availableYears=Array.from(yearsSet).sort((a,b)=>b-a);
             if (availableYears.length>0&&currentYear===null) currentYear=availableYears[0];
             generateYearTabs(); generateMonthDots(); updateDashboard();
         }
 
         function getDataForDate(y,m) {
-            return screeningData[`${y}-${m}`]||{ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(3).fill(0),workers:Array(3).fill(0),faculties:Array(3).fill(0)}, rawData:{} };
+            return screeningData[`${y}-${m}`]||emptyPeriod();
         }
 
         function animateValue(id,end,dur=1000) {
@@ -441,7 +510,7 @@
 
         function generateYearTabs() {
             const c=document.getElementById('yearContainer'); c.innerHTML='';
-            (availableYears.length?availableYears:[2025]).forEach(y=>{
+            (availableYears.length?availableYears:[new Date().getFullYear()]).forEach(y=>{
                 const btn=document.createElement('button');
                 btn.className=`year-tab${y===currentYear?' active':''}`;
                 btn.textContent=y;
@@ -454,10 +523,10 @@
             const NAMES=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const c=document.getElementById('monthContainer'); c.innerHTML='';
             let available=new Set();
-            Object.keys(screeningData).forEach(k=>{ const[y,m]=k.split('-'); if(parseInt(y)===currentYear&&Object.values(screeningData[k].sectors).reduce((a,b)=>a+b,0)>0) available.add(parseInt(m)); });
+            Object.keys(screeningData).forEach(k=>{ const[y,m]=k.split('-'); if(parseInt(y)===currentYear&&Object.values(screeningData[k].companies).reduce((a,b)=>a+b,0)>0) available.add(parseInt(m)); });
             const sorted=[...available].sort((a,b)=>a-b);
-            if (!sorted.length) { c.innerHTML='<span class="sync-note mt-0">No data for this year</span>'; return; }
-            if (!available.has(currentMonth)) currentMonth=sorted[0];
+            if (!sorted.length) { c.innerHTML='<span class="sync-note mt-0">No data for this year</span>'; currentMonth=1; return; }
+            if (!available.has(currentMonth)) currentMonth=sorted[sorted.length-1];
             sorted.forEach(mi=>{
                 const item=document.createElement('div');
                 item.className=`month-item has-data${mi===currentMonth?' active':''}`;
@@ -468,13 +537,29 @@
         }
 
         // ========== RISK STRATIFICATION ==========
-        function getSectorDetailedRisk(sectorName, sectorData, totalCount) {
-            if (!sectorData || totalCount === 0) return { bmiList: [], recommendations: [] };
+        /**
+         * Risk Score Formula:
+         * 1. Exclude "No diagnosis" cases completely.
+         * 2. Weighted sum = sum(weight_i * count_i) for all diagnosed diseases
+         * 3. Average weight per diagnosed person = weightedSum / diagnosedCount
+         * 4. Prevalence rate = diagnosedCount / totalCount  (0 to 1)
+         * 5. Risk Score = (avgWeight / 5) * prevalenceRate  — normalized 0–1
+         *
+         * Thresholds:
+         *   > 0.30     → High Risk
+         *   0.10–0.30  → Moderate Risk
+         *   < 0.10     → Low Risk
+         */
+        function getCompanyDetailedRisk(a, b, c) {
+            let companyData, totalCount;
+            if (typeof b === 'number') { companyData = a || {}; totalCount = b; }
+            else { companyData = b || {}; totalCount = c || 0; }
+            if (!companyData || totalCount === 0) return { bmiList: [], recommendations: [] };
 
-            const underweight = parseInt(sectorData.Under_weight) || 0;
-            const normal = parseInt(sectorData.Normal_Weight) || 0;
-            const overweight = parseInt(sectorData.Over_weight) || 0;
-            const obesity = parseInt(sectorData.Obesity) || 0;
+            const underweight = parseInt(companyData.Under_weight) || 0;
+            const normal = parseInt(companyData.Normal_Weight) || 0;
+            const overweight = parseInt(companyData.Over_weight) || 0;
+            const obesity = parseInt(companyData.Obesity) || 0;
             const overweightObesity = overweight + obesity;
 
             const bmiList = [
@@ -490,20 +575,32 @@
         }
 
         function calculateDetailedRiskStats(data) {
-            if (!data || !data.sectors || !data.rawData) return { sectorDetails:{}, topBmi:[] };
+            if (!data || !data.companies || !data.rawData) return { companyDetails:{}, topBmi:[] };
 
-            const sectorDetails={};
+            const companyDetails={};
             const allBmiCount={};
 
-            const sectors=['students','pt','pharmacy','eng','business','agri','workers'];
-            const sectorNames={ students:'Students', pt:'Physical Therapy', pharmacy:'Pharmacy', eng:'Engineering', business:'Business', agri:'Agriculture', workers:'Workers' };
+            const companies=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            const companyNames={ 
+                'atos-pharma': 'Atos Pharma', 
+                'biodynamic-association': 'Biodynamic Association', 
+                'eco-energy': 'Eco Energy', 
+                'eco-health': 'Eco Health', 
+                'eco-village': 'Eco Village', 
+                'isis-foods': 'ISIS Foods', 
+                'lotus-organic': 'Lotus Organic', 
+                'naturetex': 'Naturetex', 
+                'sdf-association': 'SDF Association', 
+                'sekem-lab': 'Sekem Lab', 
+                'sekem-reclamation': 'Sekem Reclamation' 
+            };
 
-            sectors.forEach(sector => {
-                const count = data.sectors[sector]||0;
-                const rawData = data.rawData[sector]||{};
+            companies.forEach(company => {
+                const count = data.companies[company]||0;
+                const rawData = data.rawData[company]||{};
                 if (count > 0) {
-                    const detail = getSectorDetailedRisk(sector, rawData, count);
-                    sectorDetails[sector] = { ...detail, name:sectorNames[sector], totalCount:count };
+                    const detail = getCompanyDetailedRisk(company, rawData, count);
+                    companyDetails[company] = { ...detail, name:companyNames[company], totalCount:count };
 
                     detail.bmiList.forEach(d => {
                         if (!allBmiCount[d.name]) allBmiCount[d.name]=0;
@@ -517,14 +614,14 @@
                 .sort((a,b) => b.count - a.count)
                 .slice(0,4);
 
-            return { sectorDetails, topBmi };
+            return { companyDetails, topBmi };
         }
 
         function updateDetailedRiskDisplay(data) {
             const stats = calculateDetailedRiskStats(data);
             currentFullData = data;
 
-            const totalScreened = Object.values(data.sectors).reduce((a,b)=>a+b,0);
+            const totalScreened = Object.values(data.companies).reduce((a,b)=>a+b,0);
             animateValue('total-participants', totalScreened, 1500);
 
             let totalUnderweight = 0, totalNormal = 0, totalOverOb = 0;
@@ -544,33 +641,38 @@
                 topBmiText.innerHTML = 'No BMI data recorded';
             }
 
-            addSectorDetailButtons(stats.sectorDetails);
+            addCompanyDetailButtons(stats.companyDetails);
         }
 
-        function addSectorDetailButtons(sectorDetails) {
-            const sectors=['students','pt','pharmacy','eng','business','agri','workers'];
-            sectors.forEach((sector,idx) => {
+        function addCompanyDetailButtons(companyDetails) {
+            const companies=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            companies.forEach((company,idx) => {
                 const card=document.querySelectorAll('.sector-card')[idx];
-                if (!card||!sectorDetails[sector]) return;
+                if (!card||!companyDetails[company]) return;
 
-                const oldBtn=card.querySelector('.sector-risk-detail-btn'); if(oldBtn) oldBtn.remove();
+                const oldBtn=card.querySelector('.company-risk-detail-btn'); if(oldBtn) oldBtn.remove();
+                const existingTag=card.querySelector('.risk-tag'); if(existingTag) existingTag.remove();
 
                 const detailBtn=document.createElement('button');
                 detailBtn.className='sector-risk-detail-btn';
                 detailBtn.innerHTML=`<i class="bi bi-info-circle"></i> View Details`;
-                detailBtn.onclick=(e)=>{ e.stopPropagation(); showSectorRiskModal(sector,sectorDetails[sector]); };
+                detailBtn.onclick=(e)=>{ e.stopPropagation(); showSectorRiskModal(company,companyDetails[company]); };
                 card.appendChild(detailBtn);
             });
         }
 
-        function showSectorRiskModal(sectorId, detail) {
+        function showSectorRiskModal(companyId, detail) {
             const openModals = document.querySelectorAll('.modal.show');
             openModals.forEach(m => { const inst=bootstrap.Modal.getInstance(m); if(inst) inst.hide(); });
 
             setTimeout(() => {
+                const source = getDataForDate(currentYear, currentMonth);
+                const total = source.totals[companyId] || 0;
+                const participationRate = total > 0 ? Math.round((detail.totalCount / total) * 100) : 0;
+
                 const modal = new bootstrap.Modal(document.getElementById('sectorRiskModal'), { backdrop:true, keyboard:true });
-                document.getElementById('modalSectorName').innerHTML = detail.name || sectorId;
-                document.getElementById('modalSectorStats').innerHTML = `Total Screened: ${detail.totalCount}`;
+                document.getElementById('modalSectorName').innerHTML = detail.name || companyId;
+                document.getElementById('modalSectorStats').innerHTML = `Total Screened: ${detail.totalCount} ${total > 0 ? `· Total Employees: ${total} · Participation: ${participationRate}%` : ''}`;
 
                 const riskScoreEl = document.getElementById('modalRiskScore');
                 if (riskScoreEl) riskScoreEl.innerHTML = '';
@@ -579,7 +681,7 @@
                 const bmiToShow = detail.bmiList || [];
 
                 if (bmiToShow.length === 0) {
-                    container.innerHTML = `<div class="glass-panel state-panel m-0"><div class="state-icon"><i class="bi bi-check-circle"></i></div><h5 class="state-title">No BMI Data Recorded</h5><p class="state-text">This sector has no recorded BMI data.</p></div>`;
+                    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dark);opacity:0.6;"><i class="bi bi-check-circle" style="font-size:2rem;"></i><p style="margin-top:12px;">No BMI data recorded in this company</p></div>`;
                 } else {
                     container.innerHTML = bmiToShow.map(d => {
                         const barColor = d.color;
@@ -589,7 +691,7 @@
                                     <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${barColor};margin-right:8px;"></span>
                                     <span>${d.name}</span>
                                 </div>
-                                <div class="disease-count">${d.count} <small>(${d.percentage}%)</small></div>
+                                <div class="disease-count">${d.count} <span style="font-size:0.8rem;color:var(--text-dark);opacity:0.6;">(${d.percentage}%)</span></div>
                             </div>
                             <div class="progress-risk"><div class="progress-risk-fill" style="width:${Math.min(parseFloat(d.percentage),100)}%;background:${barColor};"></div></div>
                         </div>`;
@@ -600,7 +702,7 @@
                 const recs = detail.recommendations || [];
                 if (recs.length > 0) {
                     recBox.style.display='block';
-                    document.getElementById('recommendationText').innerHTML = recs.map(r=>`<div class="mb-1"><i class="bi bi-check2-circle me-2" style="color:var(--accent-color);"></i>${r}</div>`).join('');
+                    document.getElementById('recommendationText').innerHTML = recs.map(r=>`<div style="margin-bottom:6px;"><i class="bi bi-check2-circle me-2" style="color:var(--naruto-orange);"></i>${r}</div>`).join('');
                 } else { recBox.style.display='none'; }
 
                 modal.show();
@@ -612,54 +714,53 @@
             const stats = calculateDetailedRiskStats(currentFullData);
 
             const titles = {
-                high:     { title:'High Overweight/Obesity',     subtitle:'Sectors with highest Overweight & Obesity counts' },
-                moderate: { title:'Moderate Overweight/Obesity', subtitle:'Sectors with moderate Overweight & Obesity counts' },
-                low:      { title:'Low Overweight/Obesity',      subtitle:'Sectors with lowest Overweight & Obesity counts' }
+                high:     { title:'High Overweight/Obesity',     subtitle:'Companies with highest Overweight & Obesity counts' },
+                moderate: { title:'Moderate Overweight/Obesity', subtitle:'Companies with moderate Overweight & Obesity counts' },
+                low:      { title:'Low Overweight/Obesity',      subtitle:'Companies with lowest Overweight & Obesity counts' }
             };
             document.getElementById('categoryModalTitle').innerHTML = titles[riskCategory].title;
             document.getElementById('categoryModalSubtitle').innerHTML = titles[riskCategory].subtitle;
 
-            const sectorsSorted = Object.entries(stats.sectorDetails)
-                .map(([sectorId, detail]) => ({ ...detail, sectorId }))
+            const companiesSorted = Object.entries(stats.companyDetails)
+                .map(([companyId, detail]) => ({ ...detail, companyId }))
                 .sort((a, b) => {
                     const aOverOb = a.bmiList?.find(d => d.key === 'Overweight_Obesity')?.count || 0;
                     const bOverOb = b.bmiList?.find(d => d.key === 'Overweight_Obesity')?.count || 0;
                     return bOverOb - aOverOb;
                 });
 
-            let sectorsInCategory = sectorsSorted;
-            const third = Math.ceil(sectorsSorted.length / 3);
-            if (riskCategory === 'high') sectorsInCategory = sectorsSorted.slice(0, third);
-            else if (riskCategory === 'moderate') sectorsInCategory = sectorsSorted.slice(third, third * 2);
-            else sectorsInCategory = sectorsSorted.slice(third * 2);
+            let companiesInCategory = companiesSorted;
+            const third = Math.ceil(companiesSorted.length / 3);
+            if (riskCategory === 'high') companiesInCategory = companiesSorted.slice(0, third);
+            else if (riskCategory === 'moderate') companiesInCategory = companiesSorted.slice(third, third * 2);
+            else companiesInCategory = companiesSorted.slice(third * 2);
 
             const container = document.getElementById('categoryDetailsContainer');
-            if (sectorsInCategory.length === 0) {
-                container.innerHTML = `<div class="glass-panel state-panel m-0"><div class="state-icon"><i class="bi bi-emoji-smile"></i></div><h5 class="state-title">All Clear!</h5><p class="state-text">No sectors in this category.</p></div>`;
+            if (companiesInCategory.length === 0) {
+                container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dark);opacity:0.6;"><i class="bi bi-emoji-smile" style="font-size:2rem;"></i><p style="margin-top:12px;">No companies in this category</p></div>`;
             } else {
-                container.innerHTML = sectorsInCategory.map(detail => {
+                container.innerHTML = companiesInCategory.map(detail => {
                     const overOb = detail.bmiList?.find(d => d.key === 'Overweight_Obesity');
                     const under = detail.bmiList?.find(d => d.key === 'Under_weight');
                     const normal = detail.bmiList?.find(d => d.key === 'Normal_Weight');
                     const overObCount = overOb ? overOb.count : 0;
                     const underCount = under ? under.count : 0;
                     const normalCount = normal ? normal.count : 0;
-                    return `<div class="disease-item" onclick="showSectorRiskModal('${detail.sectorId}', window._lastStats['${detail.sectorId}'])" style="cursor:pointer;">
+                    return `<div class="disease-item" onclick="showSectorRiskModal('${detail.companyId}', window._lastStats['${detail.companyId}'])" style="cursor:pointer;">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <div>
                                 <strong style="font-size:1rem;">${detail.name}</strong>
-                                <div class="caption">${detail.totalCount} screened | Underweight: ${underCount} | Normal: ${normalCount} | Overweight & Obesity: ${overObCount}</div>
+                                <div style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;">${detail.totalCount} screened | Underweight: ${underCount} | Normal: ${normalCount} | Overweight & Obesity: ${overObCount}</div>
                             </div>
                         </div>
                     </div>`;
                 }).join('');
-                window._lastStats = stats.sectorDetails;
+                window._lastStats = stats.companyDetails;
             }
 
             const modal = new bootstrap.Modal(document.getElementById('riskCategoryModal'), { backdrop:true, keyboard:true });
             modal.show();
         }
-
 
         // ========== COMPARISON FUNCTIONS ==========
         function populateComparisonSelects() {
@@ -688,127 +789,86 @@
             monthSelect1.value=currentMonth; monthSelect2.value=currentMonth;
         }
 
-        function getSectorKey(label) {
-            const map = {students:'students', pt:'pt', pharmacy:'pharmacy', eng:'eng', business:'business', agri:'agri', workers:'workers'};
+        function getCompanyKey(label) {
+            const map={
+                'atos-pharma':'atos-pharma',
+                'biodynamic-association':'biodynamic-association',
+                'eco-energy':'eco-energy',
+                'eco-health':'eco-health',
+                'eco-village':'eco-village',
+                'isis-foods':'isis-foods',
+                'lotus-organic':'lotus-organic',
+                'naturetex':'naturetex',
+                'sdf-association':'sdf-association',
+                'sekem-lab':'sekem-lab',
+                'sekem-reclamation':'sekem-reclamation'
+            };
             return map[label] || 'all';
         }
 
+        function getRiskFilteredCompanies(data) {
+            const keys=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            return keys.filter(key => {
+                const count=data.companies[key]||0;
+                if (count <= 0) return false;
+                const detail=getCompanyDetailedRisk(data.rawData[key], count);
+                return detail.riskLevel==='high';
+            });
+        }
+
         function applyFiltersToData(data) {
-            if (!data || !data.sectors) return data;
-            const filtered = { sectors:{}, complaints:{}, rawData:{} };
-            const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
-            const facultyKeys = ['pt','pharmacy','eng','business','agri'];
-            const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
-            const allowed = new Set(selected);
-            sectorKeys.forEach(key => {
+            if (!data || !data.companies) return data;
+            const filtered={companies:{},complaints:{},rawData:{}};
+            const companyKeys=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            const selected=activeCompanyFilter==='all' ? companyKeys : [getCompanyKey(activeCompanyFilter)];
+            const allowed=new Set(selected);
+            companyKeys.forEach(key=>{
                 if (allowed.has(key)) {
-                    filtered.sectors[key] = data.sectors[key] || 0;
-                    filtered.complaints[key] = data.complaints[key] || Array(3).fill(0);
-                    filtered.rawData[key] = data.rawData[key] || {};
+                    filtered.companies[key]=data.companies[key]||0;
+                    filtered.complaints[key]=data.complaints[key]||Array(3).fill(0);
+                    filtered.rawData[key]=data.rawData[key]||{};
                 }
             });
-            if (facultyKeys.some(key => allowed.has(key))) {
-                filtered.complaints.faculties = data.complaints.faculties || Array(3).fill(0);
-            }
             return filtered;
         }
 
         function aggregateComplaints(complaints) {
-            const keys = Object.keys(complaints || {});
-            const total = Array(3).fill(0);
-            keys.forEach(key => {
-                const values = complaints[key] || Array(3).fill(0);
-                values.forEach((val, idx) => { total[idx] += Number(val) || 0; });
+            const keys=Object.keys(complaints||{});
+            const total=Array(23).fill(0);
+            keys.forEach(key=>{
+                const values=complaints[key]||Array(23).fill(0);
+                values.forEach((val, idx)=>{ total[idx]+=Number(val)||0; });
             });
             return total;
         }
 
-        function getFieldFromRow(row, keys) {
-            if (!row) return null;
-            for (const key of keys) {
-                if (row[key] != null && row[key] !== '') return row[key];
-            }
-            return null;
-        }
-
-        function parseAge(value) {
-            const n = Number(value);
-            return Number.isFinite(n) && n > 0 ? n : null;
-        }
-
-        function summarizeRowDetails(rows) {
-            const ages=[];
-            const departments={};
-            rows.forEach(row => {
-                const age = parseAge(getFieldFromRow(row,['Age','age','Age_Years','age_years','AgeYears','ageYears']));
-                if (age) ages.push(age);
-                const dept = getFieldFromRow(row,['Department','department','Dept','dept','Faculty','faculty','Unit','unit']);
-                if (dept) {
-                    const label=String(dept).trim();
-                    if (label) departments[label]=(departments[label]||0)+1;
-                }
-            });
-            const averageAge = ages.length ? Math.round(ages.reduce((a,b)=>a+b,0)/ages.length) : null;
-            const sortedDepartments = Object.entries(departments).sort((a,b)=>b[1]-a[1]);
-            const topDepartments = sortedDepartments.slice(0,3).map(([name,count])=>`${name} (${count})`);
-            return { averageAge, topDepartments, detailCount: rows.length };
-        }
-
-        function createDrilldownCard(title, value, note) {
-            return `<div class="col-md-4"><div class="drilldown-card"><div class="drilldown-card-title">${title}</div><div class="drilldown-card-value">${value}</div><div class="drilldown-card-sub">${note}</div></div></div>`;
-        }
-
-        function showDrilldownCards(type,key) {
-            const data=getDataForDate(currentYear,currentMonth);
-            const sectorNames={students:'Students',pt:'Physical Therapy',pharmacy:'Pharmacy',eng:'Engineering',business:'Business',agri:'Agriculture',workers:'University Workers'};
-            const itemName = type==='sector' ? sectorNames[key] || key : key;
-            const chartData = data.details && data.details[key] ? data.details[key] : [];
-            const summary = summarizeRowDetails(chartData);
-            const riskDetail = getSectorDetailedRisk(key, data.rawData[key]||{}, data.sectors[key]||0);
-            const cards=[];
-            cards.push(createDrilldownCard('Sector', itemName, `Detailed insight for ${itemName}`));
-            const under = riskDetail.bmiList.find(d => d.key === 'Under_weight');
-            const normal = riskDetail.bmiList.find(d => d.key === 'Normal_Weight');
-            const overOb = riskDetail.bmiList.find(d => d.key === 'Overweight_Obesity');
-            cards.push(createDrilldownCard('Underweight', under ? under.count : 0, `${under ? under.percentage : 0}%`));
-            cards.push(createDrilldownCard('Normal', normal ? normal.count : 0, `${normal ? normal.percentage : 0}%`));
-            cards.push(createDrilldownCard('Overweight & Obesity', overOb ? overOb.count : 0, `${overOb ? overOb.percentage : 0}%`));
-            document.getElementById('drilldownCards').innerHTML = cards.join('');
-            document.getElementById('drilldownSection').style.display='block';
-        }
-
-        function onPopulationChartClick(index) {
-            const key = populationChartKeys[index];
-            if (key) showDrilldownCards('sector', key);
-        }
-
-        function updateSectorVisibility(sourceData) {
-            const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
-            const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
-            const allowed = new Set(selected);
-            sectorKeys.forEach(key => {
+        function updateFilterVisuals() {
+            const btn=document.getElementById('highRiskFilterBtn');
+            function updateCompanyVisibility(sourceData) {
+            const companyKeys=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            const selected=activeCompanyFilter==='all' ? companyKeys : [getCompanyKey(activeCompanyFilter)];
+            const allowed=new Set(selected);
+            companyKeys.forEach(key=>{
                 const numEl=document.getElementById(`num-${key}`);
                 if (!numEl) return;
-                const card = numEl.closest('.sector-card');
+                const card=numEl.closest('.sector-card');
                 if (!card) return;
-                card.style.display = allowed.has(key) ? '' : 'none';
+                card.style.display=allowed.has(key) ? '' : 'none';
             });
         }
 
         function updateFilterState() {
-            const sourceData = getDataForDate(currentYear,currentMonth);
-            updateFilterVisuals();
-            updateSectorVisibility(sourceData);
+            const sourceData=getDataForDate(currentYear,currentMonth);
+            updateCompanyVisibility(sourceData);
             if (!comparisonMode) updateDashboard();
             else updateComparisonDashboard();
         }
 
         function initFilterEvents() {
-            const sectorSelect = document.getElementById('sectorFilter');
-            const highRiskBtn = document.getElementById('highRiskFilterBtn');
-            if (sectorSelect) {
-                sectorSelect.addEventListener('change', () => {
-                    activeSectorFilter = sectorSelect.value;
+            const companySelect=document.getElementById('companyFilter');
+            if (companySelect) {
+                companySelect.addEventListener('change', ()=>{
+                    activeCompanyFilter=companySelect.value;
                     updateFilterState();
                 });
             }
@@ -842,20 +902,26 @@
             if (!comparisonMode||!comparisonData1Raw||!comparisonData2Raw) return;
             comparisonData1 = applyFiltersToData(comparisonData1Raw);
             comparisonData2 = applyFiltersToData(comparisonData2Raw);
-            const sectors=['students','pt','pharmacy','eng','business','agri','workers'];
-            sectors.forEach(sector=>{
-                const val1=comparisonData1.sectors[sector]||0, val2=comparisonData2.sectors[sector]||0;
+            const companies=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            companies.forEach(company=>{
+                const val1=comparisonData1.companies[company]||0, val2=comparisonData2.companies[company]||0;
                 const diff=val2-val1, pct=val1>0?((diff/val1)*100).toFixed(1):(val2>0?100:0);
-                const numEl=document.getElementById(`num-${sector}`);
+                const numEl=document.getElementById(`num-${company}`);
                 if (numEl) {
                     const parent=numEl.closest('.sector-card');
                     let span=parent.querySelector('.comparison-change');
                     if (!span) { span=document.createElement('div'); span.className='comparison-change'; numEl.after(span); }
                     const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#22ac38':(diff<0?'#eb4435':'#98a2b3');
-                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:var(--text-tertiary);">(${val1} → ${val2})</span>`;
+                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:var(--text-dark);opacity:0.5;">(${val1} → ${val2})</span>`;
                 }
+                const total1 = comparisonData1Raw.totals[company] || 0;
+                const total2 = comparisonData2Raw.totals[company] || 0;
+                const rate1 = total1 > 0 ? Math.round((val1 / total1) * 100) : 0;
+                const rate2 = total2 > 0 ? Math.round((val2 / total2) * 100) : 0;
+                const rateEl = document.getElementById(`rate-${company}`);
+                if (rateEl) rateEl.textContent = total1 > 0 || total2 > 0 ? `${rate1}% vs ${rate2}% Participation` : '';
             });
-            const t1=Object.values(comparisonData1.sectors).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.sectors).reduce((a,b)=>a+b,0);
+            const t1=Object.values(comparisonData1.companies).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.companies).reduce((a,b)=>a+b,0);
             const td=t2-t1, tp=t1>0?((td/t1)*100).toFixed(1):0;
             const tEl=document.getElementById('total-participants');
             if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#22ac38':(td<0?'#eb4435':'#98a2b3')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
@@ -865,25 +931,29 @@
         function updateComparisonCharts() {
             if (!comparisonMode) return;
             if (popChart) popChart.destroy();
-            const baseOrder=['students','pt','pharmacy','eng','business','agri','workers'];
-            const labels = baseOrder.filter(key => key in comparisonData1.sectors || key in comparisonData2.sectors).map(key => {
-                switch(key){
-                    case 'students': return 'Students';
-                    case 'pt': return 'Physical Therapy';
-                    case 'pharmacy': return 'Pharmacy';
-                    case 'eng': return 'Engineering';
-                    case 'business': return 'Business';
-                    case 'agri': return 'Agriculture';
-                    case 'workers': return 'Workers';
-                    default: return key;
-                }
-            });
-            const d1 = baseOrder.filter(key => key in comparisonData1.sectors || key in comparisonData2.sectors).map(key => comparisonData1.sectors[key] || 0);
-            const d2 = baseOrder.filter(key => key in comparisonData1.sectors || key in comparisonData2.sectors).map(key => comparisonData2.sectors[key] || 0);
+            const baseOrder=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            const labelMap={
+                'atos-pharma': 'Atos Pharma',
+                'biodynamic-association': 'Biodynamic Association',
+                'eco-energy': 'Eco Energy',
+                'eco-health': 'Eco Health',
+                'eco-village': 'Eco Village',
+                'isis-foods': 'ISIS Foods',
+                'lotus-organic': 'Lotus Organic',
+                'naturetex': 'Naturetex',
+                'sdf-association': 'SDF Association',
+                'sekem-lab': 'Sekem Lab',
+                'sekem-reclamation': 'Sekem Reclamation'
+            };
+            const keys=baseOrder.filter(key => key in comparisonData1.companies || key in comparisonData2.companies);
+            const labels=keys.map(key => labelMap[key]);
+            const d1=keys.map(key => comparisonData1.companies[key]||0);
+            const d2=keys.map(key => comparisonData2.companies[key]||0);
             const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             const lbl1=`${mn[parseInt(document.getElementById('compareMonth1').value)-1]} ${document.getElementById('compareYear1').value}`;
             const lbl2=`${mn[parseInt(document.getElementById('compareMonth2').value)-1]} ${document.getElementById('compareYear2').value}`;
-            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(255,105,0,0.75)',borderRadius:10,borderSkipped:false},{label:lbl2,data:d2,backgroundColor:'rgba(255,149,0,0.75)',borderRadius:10,borderSkipped:false}] }, options:{ responsive:true, plugins:{legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8}}} } });
+            const colors=['rgba(255,105,0,0.75)','rgba(62,139,255,0.75)','rgba(34,172,56,0.75)','rgba(0,184,217,0.75)','rgba(143,91,255,0.75)','rgba(255,149,0,0.75)','rgba(0,200,150,0.75)','rgba(200,0,200,0.75)','rgba(255,0,100,0.75)','rgba(100,255,0,0.75)','rgba(0,100,255,0.75)'];
+            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:colors[0],borderRadius:10,borderSkipped:false},{label:lbl2,data:d2,backgroundColor:colors[1],borderRadius:10,borderSkipped:false}] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8}}} } });
             if (compChart) compChart.destroy();
             const labels2=['Underweight','Normal','Overweight & Obesity'];
             const comp1 = aggregateComplaints(comparisonData1.complaints);
@@ -892,7 +962,7 @@
             compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[
                 { label: lbl1, data: comp1, borderColor: bmiColors[0], backgroundColor: 'rgba(62,139,255,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 },
                 { label: lbl2, data: comp2, borderColor: bmiColors[1], backgroundColor: 'rgba(34,172,56,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 }
-            ] }, options:{ responsive:true, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},padding:12,cornerRadius:12,boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
+            ] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},padding:12,cornerRadius:12,boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
         }
 
         function resetComparison() {
@@ -903,14 +973,23 @@
         }
 
         function updateDashboard() {
-            const source = getDataForDate(currentYear,currentMonth);
-            const d = applyFiltersToData(source);
+            hideDrilldownSection();
+            const source=getDataForDate(currentYear,currentMonth);
+            const d=applyFiltersToData(source);
             if (!comparisonMode) {
-                ['students','pt','pharmacy','eng','business','agri','workers'].forEach(s=> animateValue(`num-${s}`, d.sectors[s]||0));
-                animateValue('total-participants', Object.values(d.sectors).reduce((a,b)=>a+b,0),1500);
+                const companies=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+                companies.forEach(c=>{
+                    animateValue(`num-${c}`,d.companies[c]||0);
+                    const total = source.totals[c] || 0;
+                    const screened = source.companies[c] || 0;
+                    const rate = total > 0 ? Math.round((screened / total) * 100) : 0;
+                    const rateEl = document.getElementById(`rate-${c}`);
+                    if (rateEl) rateEl.textContent = total > 0 ? `${rate}% Participation (${screened}/${total})` : '';
+                });
+                animateValue('total-participants',Object.values(d.companies).reduce((a,b)=>a+b,0),1500);
                 updateCharts(d);
                 updateDetailedRiskDisplay(d);
-                updateSectorVisibility(source);
+                updateCompanyVisibility(source);
             }
         }
 
@@ -937,33 +1016,69 @@
         function updateCharts(d) {
             if (popChart&&!comparisonMode) popChart.destroy();
             if (!comparisonMode) {
-                const sectorOrder=['students','pt','pharmacy','eng','business','agri','workers'];
-                const labelMap={students:'Students',pt:'Physical Therapy',pharmacy:'Pharmacy',eng:'Engineering',business:'Business',agri:'Agriculture',workers:'Workers'};
-                const colors=['rgba(255,105,0,.78)','rgba(62,139,255,.78)','rgba(34,172,56,.78)','rgba(255,149,0,.78)','rgba(0,184,217,.78)','rgba(143,91,255,.78)','rgba(152,162,179,.78)'];
+                const companyOrder=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+                const labelMap={
+                    'atos-pharma': 'Atos Pharma',
+                    'biodynamic-association': 'Biodynamic Association',
+                    'eco-energy': 'Eco Energy',
+                    'eco-health': 'Eco Health',
+                    'eco-village': 'Eco Village',
+                    'isis-foods': 'ISIS Foods',
+                    'lotus-organic': 'Lotus Organic',
+                    'naturetex': 'Naturetex',
+                    'sdf-association': 'SDF Association',
+                    'sekem-lab': 'Sekem Lab',
+                    'sekem-reclamation': 'Sekem Reclamation'
+                };
+                const colors=[
+                    'rgba(255,105,0,.78)',
+                    'rgba(62,139,255,.78)',
+                    'rgba(34,172,56,.78)',
+                    'rgba(0,184,217,.78)',
+                    'rgba(143,91,255,.78)',
+                    'rgba(255,149,0,.78)',
+                    'rgba(0,200,150,.78)',
+                    'rgba(200,0,200,.78)',
+                    'rgba(255,0,100,.78)',
+                    'rgba(100,255,0,.78)',
+                    'rgba(0,100,255,.78)'
+                ];
                 const labels=[]; const values=[]; const bg=[];
-                sectorOrder.forEach((key, index) => {
-                    if (key in d.sectors) {
+                companyOrder.forEach((key,index)=>{
+                    if (key in d.companies) {
                         labels.push(labelMap[key]);
-                        values.push(d.sectors[key] || 0);
-                        bg.push(colors[index]);
+                        values.push(d.companies[key]||0);
+                        bg.push(colors[index % colors.length]);
                     }
                 });
-                if (labels.length === 0) {
-                    labels.push('No data'); values.push(1); bg.push('rgba(142,142,147,.35)');
-                }
-                populationChartKeys = sectorOrder.filter(key => key in d.sectors);
-                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt,elements)=>{ if(elements.length) onPopulationChartClick(elements[0].index); }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
+                if (labels.length===0) { labels.push('No data'); values.push(1); bg.push('rgba(152,162,179,0.35)'); }
+                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const companyOrder=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation']; showDrilldownCardsSekem(companyOrder[activeEls[0].index]); } }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
             }
             if (compChart) compChart.destroy();
-            const lineKeys=['students','faculties','workers'];
-            const lineLabels={students:'Students',faculties:'Faculties',workers:'Workers'};
-            const lineColors=['#ff6900','#3e8bff','#22ac38'];
-            const lineBackgrounds=['rgba(255,105,0,0.08)','rgba(62,139,255,0.08)','rgba(34,172,56,0.08)'];
-            const datasets=lineKeys.filter(key => Array.isArray(d.complaints[key])).map((key,index) => ({
-                label: lineLabels[key],
+            const companyOrder=['atos-pharma','biodynamic-association','eco-energy','eco-health','eco-village','isis-foods','lotus-organic','naturetex','sdf-association','sekem-lab','sekem-reclamation'];
+            const labelMap={
+                'atos-pharma': 'Atos Pharma',
+                'biodynamic-association': 'Biodynamic Association',
+                'eco-energy': 'Eco Energy',
+                'eco-health': 'Eco Health',
+                'eco-village': 'Eco Village',
+                'isis-foods': 'ISIS Foods',
+                'lotus-organic': 'Lotus Organic',
+                'naturetex': 'Naturetex',
+                'sdf-association': 'SDF Association',
+                'sekem-lab': 'Sekem Lab',
+                'sekem-reclamation': 'Sekem Reclamation'
+            };
+            const lineColors=[
+                '#ff6900','#3e8bff','#22ac38','#00b8d9','#8f5bff',
+                '#ff9500','#00c896','#c800c8','#ff0064','#64ff00','#0064ff'
+            ];
+            const lineBackgrounds=lineColors.map(c=>c.replace('#','rgba(').replace(')',',0.08)').replace(/([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i, (m,r,g,b)=>parseInt(r,16)+','+parseInt(g,16)+','+parseInt(b,16)));
+            const datasets = companyOrder.filter(key => Array.isArray(d.complaints[key])).map((key,index) => ({
+                label: labelMap[key],
                 data: d.complaints[key],
-                borderColor: lineColors[index],
-                backgroundColor: lineBackgrounds[index],
+                borderColor: lineColors[index % lineColors.length],
+                backgroundColor: lineBackgrounds[index % lineBackgrounds.length],
                 borderWidth:2.5,
                 fill:true,
                 tension:.35,
@@ -978,6 +1093,44 @@
             compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['Underweight','Normal','Overweight & Obesity'], datasets:datasets }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',padding:12,cornerRadius:12,titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
         }
 
+        function createDrilldownCard(title, value, note) {
+            return `<div class="col-md-4"><div class="drilldown-card"><div class="drilldown-card-title">${title}</div><div class="drilldown-card-value">${value}</div><div class="drilldown-card-sub">${note}</div></div></div>`;
+        }
+
+        function showDrilldownCardsSekem(key) {
+            const source=getDataForDate(currentYear,currentMonth);
+            const companyNames={
+                'atos-pharma': 'Atos Pharma',
+                'biodynamic-association': 'Biodynamic Association',
+                'eco-energy': 'Eco Energy',
+                'eco-health': 'Eco Health',
+                'eco-village': 'Eco Village',
+                'isis-foods': 'ISIS Foods',
+                'lotus-organic': 'Lotus Organic',
+                'naturetex': 'Naturetex',
+                'sdf-association': 'SDF Association',
+                'sekem-lab': 'Sekem Lab',
+                'sekem-reclamation': 'Sekem Reclamation'
+            };
+            const companyName=companyNames[key]||key;
+            const riskDetail=getCompanyDetailedRisk(key, source.rawData[key]||{}, source.companies[key]||0);
+            const cards=[];
+            cards.push(createDrilldownCard('Company', companyName, `Detailed insight for ${companyName}`));
+            const under = riskDetail.bmiList.find(d => d.key === 'Under_weight');
+            const normal = riskDetail.bmiList.find(d => d.key === 'Normal_Weight');
+            const overOb = riskDetail.bmiList.find(d => d.key === 'Overweight_Obesity');
+            cards.push(createDrilldownCard('Underweight', under ? under.count : 0, `${under ? under.percentage : 0}%`));
+            cards.push(createDrilldownCard('Normal', normal ? normal.count : 0, `${normal ? normal.percentage : 0}%`));
+            cards.push(createDrilldownCard('Overweight & Obesity', overOb ? overOb.count : 0, `${overOb ? overOb.percentage : 0}%`));
+            document.getElementById('drilldownCards').innerHTML=cards.join('');
+            document.getElementById('drilldownSection').style.display='block';
+        }
+
+        function hideDrilldownSection() {
+            const section = document.getElementById('drilldownSection');
+            if (section) section.style.display = 'none';
+        }
+
         function initComparisonEvents() {
             const compareBtn=document.createElement('button');
             compareBtn.className='btn-compare'; compareBtn.style.cssText='margin-top:16px;margin-right:auto;';
@@ -988,18 +1141,20 @@
             document.getElementById('btnResetCompare').addEventListener('click',resetComparison);
         }
 
-        // Globals for onclick
-        window.showSectorRiskModal  = showSectorRiskModal;
+        window.showSectorRiskModal = showSectorRiskModal;
         window.showRiskCategoryModal = showRiskCategoryModal;
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchData();
             setTimeout(()=>{ 
-                if(document.getElementById('btnCompare')) initComparisonEvents(); 
-                if(document.getElementById('sectorFilter')) initFilterEvents(); 
+                if(document.getElementById('btnCompare')) initComparisonEvents();
+                if(document.getElementById('companyFilter')) initFilterEvents();
             }, 1000);
         });
     </script>
 
 </body>
 </html>
+
+
+
