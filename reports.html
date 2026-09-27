@@ -552,7 +552,7 @@
             };
             pdfFrame.onerror = fail;
 
-            pdfFrame.src = pdfUrl;
+            pdfFrame.src = pdfUrl + '#toolbar=0&navpanes=0';
             clearTimeout(pdfFrame._failTimer);
             pdfFrame._failTimer = setTimeout(fail, 6500);
         }
@@ -720,9 +720,6 @@
                                     <button class="btn-hig btn-primary-hig" onclick="openPDFViewer('${pdfUrl.replace(/'/g, "\\'")}', '${escapeHtml(item.Title).replace(/'/g, "\\'")}')">
                                         <i class="bi bi-eye-fill"></i> View PDF
                                     </button>
-                                    <a href="${pdfUrl}" target="_blank" download class="btn-hig btn-glass-hig">
-                                        <i class="bi bi-file-earmark-arrow-down"></i> Download
-                                    </a>
                                 </div>
                             </div>
                         </div>
