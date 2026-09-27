@@ -611,12 +611,12 @@
             populateYearFilter();
             populateMonthFilter();
             renderTimeline(allReports);
-            updateReportCount();
+            updateReportCount(allReports.length);
         }
 
-        function updateReportCount() {
+        function updateReportCount(count) {
             const el = document.getElementById('reportsCount');
-            if (el) HIG.countUp(el, allReports.length);
+            if (el) HIG.countUp(el, count !== undefined ? count : allReports.length);
         }
 
         function populateYearFilter() {
@@ -648,12 +648,14 @@
             const q = document.getElementById('searchInput').value.toLowerCase();
             const yr = document.getElementById('yearFilter').value;
             const mo = document.getElementById('monthFilter').value;
-            renderTimeline(allReports.filter(r => {
+            const filtered = allReports.filter(r => {
                 const titleMatch = r.Title && r.Title.toString().toLowerCase().includes(q);
                 const yearMatch = yr === 'all' || String(r.Year) === yr;
                 const monthMatch = mo === 'all' || toMonthNum(r.Month) === parseInt(mo);
                 return titleMatch && yearMatch && monthMatch;
-            }));
+            });
+            renderTimeline(filtered);
+            updateReportCount(filtered.length);
         }
 
         function clearFilters() {
@@ -661,6 +663,7 @@
             document.getElementById('yearFilter').value = 'all';
             document.getElementById('monthFilter').value = 'all';
             renderTimeline(allReports);
+            updateReportCount(allReports.length);
         }
 
         function escapeHtml(str) {
