@@ -103,18 +103,18 @@
             <div class="stats-row">
                 <div class="row g-4">
                     <div class="col-md-6" data-reveal data-reveal-delay="80">
-                        <div class="hig-card stat-card justify-content-center">
+                        <div class="hig-card stat-card">
                             <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
-                            <div class="text-center">
+                            <div>
                                 <div class="stat-num" id="total-participants">0</div>
                                 <div class="stat-lbl"><i class="bi bi-clipboard2-pulse me-2"></i>Total Screened (BMI)</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6" data-reveal data-reveal-delay="160">
-                        <div class="hig-card stat-card justify-content-center">
+                        <div class="hig-card stat-card">
                             <span class="stat-icon"><i class="bi bi-building"></i></span>
-                            <div class="text-center">
+                            <div>
                                 <div class="stat-num">7</div>
                                 <div class="stat-lbl"><i class="bi bi-grid-3x3-gap me-2"></i>Targeted Sectors</div>
                             </div>
@@ -131,19 +131,19 @@
                         BMI Distribution Summary
                     </div>
                     <div class="risk-stats" id="riskStats">
-                        <div class="risk-stat-item" style="background:rgba(62,139,255,.08);border-color:rgba(62,139,255,.25);" onclick="showRiskCategoryModal('high')">
-                            <div class="risk-number" id="highRiskCount" style="color:#3e8bff;">--</div>
-                            <div class="risk-label">&#9660; Underweight</div>
+                        <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('high')">
+                            <div class="risk-number" id="highRiskCount">--</div>
+                            <div class="risk-label">▼ Underweight</div>
                             <div class="risk-description">Total count across all sectors</div>
                         </div>
-                        <div class="risk-stat-item" style="background:rgba(34,172,56,.08);border-color:rgba(34,172,56,.25);" onclick="showRiskCategoryModal('low')">
-                            <div class="risk-number" id="moderateRiskCount" style="color:#22ac38;">--</div>
-                            <div class="risk-label">&#10003; Normal</div>
+                        <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('low')">
+                            <div class="risk-number" id="moderateRiskCount">--</div>
+                            <div class="risk-label">✓ Normal</div>
                             <div class="risk-description">Total count across all sectors</div>
                         </div>
-                        <div class="risk-stat-item" style="background:rgba(235,68,53,.08);border-color:rgba(235,68,53,.25);" onclick="showRiskCategoryModal('moderate')">
-                            <div class="risk-number" id="lowRiskCount" style="color:#eb4435;">--</div>
-                            <div class="risk-label">&#9650; Overweight & Obesity</div>
+                        <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('moderate')">
+                            <div class="risk-number" id="lowRiskCount">--</div>
+                            <div class="risk-label">▲ Overweight & Obesity</div>
                             <div class="risk-description">Total count across all sectors</div>
                         </div>
                     </div>
@@ -163,6 +163,7 @@
                             <span class="info-icon"><i class="bi bi-mortarboard"></i></span>
                             <div class="entity-num" id="num-students">0</div>
                             <p class="entity-name sector-name mb-0">Students</p>
+                            <div class="participation-rate" id="part-students" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="120">
@@ -170,6 +171,7 @@
                             <span class="info-icon"><i class="bi bi-heart-pulse"></i></span>
                             <div class="entity-num" id="num-pt">0</div>
                             <p class="entity-name sector-name mb-0">Faculty of Physical Therapy</p>
+                            <div class="participation-rate" id="part-pt" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="180">
@@ -177,6 +179,7 @@
                             <span class="info-icon"><i class="bi bi-capsule"></i></span>
                             <div class="entity-num" id="num-pharmacy">0</div>
                             <p class="entity-name sector-name mb-0">Faculty of Pharmacy</p>
+                            <div class="participation-rate" id="part-pharmacy" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="240">
@@ -184,6 +187,7 @@
                             <span class="info-icon"><i class="bi bi-gear"></i></span>
                             <div class="entity-num" id="num-eng">0</div>
                             <p class="entity-name sector-name mb-0">Faculty of Engineering</p>
+                            <div class="participation-rate" id="part-eng" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="300">
@@ -191,6 +195,7 @@
                             <span class="info-icon"><i class="bi bi-briefcase"></i></span>
                             <div class="entity-num" id="num-business">0</div>
                             <p class="entity-name sector-name mb-0">Faculty of Business</p>
+                            <div class="participation-rate" id="part-business" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="360">
@@ -198,6 +203,7 @@
                             <span class="info-icon"><i class="bi bi-flower1"></i></span>
                             <div class="entity-num" id="num-agri">0</div>
                             <p class="entity-name sector-name mb-0">Faculty of Agriculture</p>
+                            <div class="participation-rate" id="part-agri" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="420">
@@ -205,6 +211,7 @@
                             <span class="info-icon"><i class="bi bi-person-gear"></i></span>
                             <div class="entity-num" id="num-workers">0</div>
                             <p class="entity-name sector-name mb-0">University Workers</p>
+                            <div class="participation-rate" id="part-workers" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
                         </div>
                     </div>
                 </div>
@@ -393,7 +400,7 @@
                 yearsSet.add(row.Year);
                 const key=`${row.Year}-${row.Month}`;
                 if (!screeningData[key]) {
-                    screeningData[key]={ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(23).fill(0),workers:Array(23).fill(0),faculties:Array(23).fill(0)}, rawData:{}, details:{students:[],pt:[],pharmacy:[],eng:[],business:[],agri:[],workers:[]} };
+                    screeningData[key]={ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, totals:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, participation:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(3).fill(0),workers:Array(3).fill(0),faculties:Array(3).fill(0)}, rawData:{}, details:{students:[],pt:[],pharmacy:[],eng:[],business:[],agri:[],workers:[]} };
                     facultyCounts[key]=0;
                 }
                 const s=(row.Sector||'').toLowerCase().trim();
@@ -407,7 +414,13 @@
                 else if (s.includes('worker')) sk='workers';
 
                 if (sk) {
-                    screeningData[key].sectors[sk]=row.Total_Count||0;
+                    const totalCount = row.Total_Count || 0;
+                    const companyTotal = row.Total || 0;
+                    const participationRate = companyTotal > 0 ? ((totalCount / companyTotal) * 100) : 0;
+
+                    screeningData[key].sectors[sk]=totalCount;
+                    screeningData[key].totals[sk]=companyTotal;
+                    screeningData[key].participation[sk]=participationRate;
                     if (!screeningData[key].rawData[sk]) screeningData[key].rawData[sk]={};
                     BMI_KEYS.forEach(col => { screeningData[key].rawData[sk][col]=row[col]||0; });
                     screeningData[key].details[sk].push(row);
@@ -429,7 +442,7 @@
         }
 
         function getDataForDate(y,m) {
-            return screeningData[`${y}-${m}`]||{ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(3).fill(0),workers:Array(3).fill(0),faculties:Array(3).fill(0)}, rawData:{} };
+            return screeningData[`${y}-${m}`]||{ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, totals:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, participation:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(3).fill(0),workers:Array(3).fill(0),faculties:Array(3).fill(0)}, rawData:{} };
         }
 
         function animateValue(id,end,dur=1000) {
@@ -567,10 +580,16 @@
             const openModals = document.querySelectorAll('.modal.show');
             openModals.forEach(m => { const inst=bootstrap.Modal.getInstance(m); if(inst) inst.hide(); });
 
+            // Get source data for participation rate
+            const source = getDataForDate(currentYear, currentMonth);
+            const participationRate = source.participation[sectorId] || 0;
+            const totalEmployees = source.totals[sectorId] || 0;
+            const screened = source.sectors[sectorId] || 0;
+
             setTimeout(() => {
                 const modal = new bootstrap.Modal(document.getElementById('sectorRiskModal'), { backdrop:true, keyboard:true });
                 document.getElementById('modalSectorName').innerHTML = detail.name || sectorId;
-                document.getElementById('modalSectorStats').innerHTML = `Total Screened: ${detail.totalCount}`;
+                document.getElementById('modalSectorStats').innerHTML = `Total Screened: ${detail.totalCount} | Participation: ${participationRate.toFixed(1)}% (${screened.toLocaleString()} / ${totalEmployees.toLocaleString()})`;
 
                 const riskScoreEl = document.getElementById('modalRiskScore');
                 if (riskScoreEl) riskScoreEl.innerHTML = '';
@@ -695,7 +714,7 @@
 
         function applyFiltersToData(data) {
             if (!data || !data.sectors) return data;
-            const filtered = { sectors:{}, complaints:{}, rawData:{} };
+            const filtered = { sectors:{}, totals:{}, participation:{}, complaints:{}, rawData:{} };
             const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
             const facultyKeys = ['pt','pharmacy','eng','business','agri'];
             const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
@@ -703,6 +722,8 @@
             sectorKeys.forEach(key => {
                 if (allowed.has(key)) {
                     filtered.sectors[key] = data.sectors[key] || 0;
+                    filtered.totals[key] = data.totals[key] || 0;
+                    filtered.participation[key] = data.participation[key] || 0;
                     filtered.complaints[key] = data.complaints[key] || Array(3).fill(0);
                     filtered.rawData[key] = data.rawData[key] || {};
                 }
@@ -765,8 +786,12 @@
             const chartData = data.details && data.details[key] ? data.details[key] : [];
             const summary = summarizeRowDetails(chartData);
             const riskDetail = getSectorDetailedRisk(key, data.rawData[key]||{}, data.sectors[key]||0);
+            const participationRate = data.participation[key] || 0;
+            const totalEmployees = data.totals[key] || 0;
+            const screened = data.sectors[key] || 0;
             const cards=[];
             cards.push(createDrilldownCard('Sector', itemName, `Detailed insight for ${itemName}`));
+            cards.push(createDrilldownCard('Participation', `${participationRate.toFixed(1)}%`, `${screened.toLocaleString()} / ${totalEmployees.toLocaleString()} employees`));
             const under = riskDetail.bmiList.find(d => d.key === 'Under_weight');
             const normal = riskDetail.bmiList.find(d => d.key === 'Normal_Weight');
             const overOb = riskDetail.bmiList.find(d => d.key === 'Overweight_Obesity');
@@ -906,7 +931,21 @@
             const source = getDataForDate(currentYear,currentMonth);
             const d = applyFiltersToData(source);
             if (!comparisonMode) {
-                ['students','pt','pharmacy','eng','business','agri','workers'].forEach(s=> animateValue(`num-${s}`, d.sectors[s]||0));
+                const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
+                sectorKeys.forEach(s=>{
+                    animateValue(`num-${s}`, d.sectors[s]||0);
+                    const partEl = document.getElementById(`part-${s}`);
+                    if (partEl) {
+                        const rate = source.participation[s] || 0;
+                        const total = source.totals[s] || 0;
+                        const screened = source.sectors[s] || 0;
+                        if (total > 0) {
+                            partEl.innerHTML = `<i class="bi bi-people"></i> ${rate.toFixed(1)}% participation (${screened.toLocaleString()} / ${total.toLocaleString()})`;
+                        } else {
+                            partEl.innerHTML = '';
+                        }
+                    }
+                });
                 animateValue('total-participants', Object.values(d.sectors).reduce((a,b)=>a+b,0),1500);
                 updateCharts(d);
                 updateDetailedRiskDisplay(d);
