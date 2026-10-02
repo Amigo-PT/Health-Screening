@@ -817,6 +817,11 @@
             });
         }
 
+        function updateFilterVisuals() {
+            const sectorSelect = document.getElementById('sectorFilter');
+            if (sectorSelect && sectorSelect.value !== activeSectorFilter) sectorSelect.value = activeSectorFilter;
+        }
+
         function updateFilterState() {
             const sourceData = getDataForDate(currentYear,currentMonth);
             updateFilterVisuals();
@@ -827,7 +832,6 @@
 
         function initFilterEvents() {
             const sectorSelect = document.getElementById('sectorFilter');
-            const highRiskBtn = document.getElementById('highRiskFilterBtn');
             if (sectorSelect) {
                 sectorSelect.addEventListener('change', () => {
                     activeSectorFilter = sectorSelect.value;
@@ -1029,11 +1033,9 @@
         window.showRiskCategoryModal = showRiskCategoryModal;
 
         document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('btnCompare')) initComparisonEvents();
+            if(document.getElementById('sectorFilter')) initFilterEvents();
             fetchData();
-            setTimeout(()=>{ 
-                if(document.getElementById('btnCompare')) initComparisonEvents(); 
-                if(document.getElementById('sectorFilter')) initFilterEvents(); 
-            }, 1000);
         });
     </script>
 

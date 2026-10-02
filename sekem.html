@@ -373,6 +373,7 @@
         let comparisonMode = false, comparisonData1 = null, comparisonData2 = null;
         let comparisonData1Raw = null, comparisonData2Raw = null;
         let activeCompanyFilter='all';
+        let populationChartKeys = [];
         let highRiskOnly=false;
         let lastSyncTime = null;
 
@@ -1048,7 +1049,8 @@ function addCompanyDetailButtons(companyDetails) {
                     }
                 });
                 if (labels.length===0) { labels.push('No data'); values.push(1); bg.push('rgba(152,162,179,0.35)'); }
-                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const clickedCompany = COMPANIES[activeEls[0].index]; showDrilldownCardsSekem(clickedCompany.key); } }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
+                populationChartKeys = COMPANIES.filter(c => c.key in d.companies).map(c => c.key);
+                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const clickedCompany = populationChartKeys[activeEls[0].index]; if(clickedCompany) showDrilldownCardsSekem(clickedCompany); } }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
             }
             if (compChart) compChart.destroy();
             const datasets = COMPANIES.filter(company => Array.isArray(d.complaints[company.key])).map((company,index) => ({
@@ -1114,11 +1116,9 @@ function addCompanyDetailButtons(companyDetails) {
         window.showRiskCategoryModal = showRiskCategoryModal;
 
         document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('btnCompare')) initComparisonEvents();
+            if(document.getElementById('companyFilter')) initFilterEvents();
             fetchData();
-            setTimeout(()=>{ 
-                if(document.getElementById('btnCompare')) initComparisonEvents();
-                if(document.getElementById('companyFilter')) initFilterEvents();
-            }, 1000);
         });
     </script>
 
