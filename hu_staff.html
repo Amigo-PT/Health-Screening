@@ -82,6 +82,7 @@
                         <option value="agri">Faculty of Agriculture</option>
                         <option value="workers">University Workers</option>
                     </select>
+                    <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Obesity Only</button>
                 </div>
                 <div class="month-timeline" id="monthContainer"></div>
                 <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
@@ -338,6 +339,7 @@
         let comparisonData1Raw = null, comparisonData2Raw = null;
         let populationChartKeys = [];
         let activeSectorFilter='all';
+        let highRiskOnly=false;
 
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=0&single=true&output=csv";
 
@@ -479,7 +481,7 @@
 
         // ========== RISK STRATIFICATION ==========
         function getSectorDetailedRisk(sectorName, sectorData, totalCount) {
-            if (!sectorData || totalCount === 0) return { bmiList: [], recommendations: [] };
+            if (!sectorData || totalCount === 0) return { bmiList: [], totalRiskScore:0, riskLevel:'low', recommendations:[], totalCount:0 };
 
             const underweight = parseInt(sectorData.Under_weight) || 0;
             const normal = parseInt(sectorData.Normal_Weight) || 0;
@@ -493,10 +495,21 @@
                 { ...BMI_CATEGORIES[2], count: overweightObesity, percentage: totalCount > 0 ? ((overweightObesity / totalCount) * 100).toFixed(1) : '0.0' }
             ];
 
+            // Risk based on overweight/obesity prevalence
+            const overObRate = totalCount > 0 ? (overweightObesity / totalCount) : 0;
+            let totalRiskScore = overObRate;
+            let riskLevel = 'low';
+            if (totalRiskScore > 0.30) riskLevel = 'high';
+            else if (totalRiskScore > 0.10) riskLevel = 'moderate';
+            else riskLevel = 'low';
+
             const recommendations = [];
             recommendations.push(`Underweight: ${underweight} | Normal: ${normal} | Overweight & Obesity: ${overweightObesity} (Total: ${totalCount})`);
+            if (totalRiskScore > 0.30) recommendations.push("Action Required: High overweight/obesity prevalence - Implement weight management programs");
+            else if (totalRiskScore > 0.10) recommendations.push("Action Recommended: Moderate overweight/obesity - Promote healthy lifestyle initiatives");
+            else recommendations.push("Status: Healthy BMI distribution - Maintain wellness programs");
 
-            return { bmiList, recommendations, totalCount };
+            return { bmiList, totalRiskScore, riskLevel, recommendations, totalCount };
         }
 
         function calculateDetailedRiskStats(data) {
@@ -709,6 +722,17 @@
             return map[label] || 'all';
         }
 
+        function getRiskFilteredSectors(data) {
+            if (!data || !data.sectors) return [];
+            const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
+            return sectorKeys.filter(key => {
+                const count = data.sectors[key] || 0;
+                if (count <= 0) return false;
+                const detail = getSectorDetailedRisk(key, data.rawData[key] || {}, count);
+                return detail.riskLevel === 'high';
+            });
+        }
+
         function applyFiltersToData(data) {
             if (!data || !data.sectors) return data;
             const filtered = { sectors:{}, totals:{}, participation:{}, complaints:{}, rawData:{} };
@@ -716,6 +740,10 @@
             const facultyKeys = ['pt','pharmacy','eng','business','agri'];
             const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
             const allowed = new Set(selected);
+            if (highRiskOnly) {
+                const highRiskKeys = getRiskFilteredSectors(data);
+                [...allowed].forEach(key => { if (!highRiskKeys.includes(key)) allowed.delete(key); });
+            }
             sectorKeys.forEach(key => {
                 if (allowed.has(key)) {
                     filtered.sectors[key] = data.sectors[key] || 0;
@@ -808,6 +836,10 @@
             const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
             const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
             const allowed = new Set(selected);
+            if (highRiskOnly) {
+                const highRiskKeys = getRiskFilteredSectors(sourceData);
+                sectorKeys.forEach(key => { if (!highRiskKeys.includes(key)) allowed.delete(key); });
+            }
             sectorKeys.forEach(key => {
                 const numEl=document.getElementById(`num-${key}`);
                 if (!numEl) return;
@@ -820,6 +852,11 @@
         function updateFilterVisuals() {
             const sectorSelect = document.getElementById('sectorFilter');
             if (sectorSelect && sectorSelect.value !== activeSectorFilter) sectorSelect.value = activeSectorFilter;
+            const btn = document.getElementById('highRiskFilterBtn');
+            if (btn) {
+                btn.classList.toggle('active', highRiskOnly);
+                btn.innerHTML = highRiskOnly ? '<i class="bi bi-shield-exclamation"></i> High Obesity Only' : '<i class="bi bi-shield-check"></i> High Obesity Only';
+            }
         }
 
         function updateFilterState() {
@@ -832,9 +869,16 @@
 
         function initFilterEvents() {
             const sectorSelect = document.getElementById('sectorFilter');
+            const highRiskBtn = document.getElementById('highRiskFilterBtn');
             if (sectorSelect) {
                 sectorSelect.addEventListener('change', () => {
                     activeSectorFilter = sectorSelect.value;
+                    updateFilterState();
+                });
+            }
+            if (highRiskBtn) {
+                highRiskBtn.addEventListener('click', () => {
+                    highRiskOnly = !highRiskOnly;
                     updateFilterState();
                 });
             }
