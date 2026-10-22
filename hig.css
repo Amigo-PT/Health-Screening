@@ -1344,6 +1344,134 @@ body.is-scrolled .navbar-hig,
 
 .modal-hig .btn-close { filter: none; }
 
+/* =========================================================
+   Intervention cards (intervention page)
+   Built on the same primitives as the rest of the site:
+   flat surface, icon square, meta pill, hairline rule.
+   ========================================================= */
+.intervention-card .card-body { gap: 12px; }
+
+.intervention-card {
+    cursor: pointer;
+}
+
+.intervention-card:hover .link-action { gap: 11px; }
+
+.intervention-card .card-foot,
+.skel-card .card-foot {
+    padding-top: 12px;
+}
+
+.skel-card .card-foot {
+    margin-top: 12px;
+}
+
+.intervention-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.intervention-title {
+    flex: 1;
+    min-width: 0;
+    font-size: 1.06rem;
+}
+
+.intervention-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.intervention-meta .meta-pill i {
+    color: var(--chip, var(--accent-color));
+}
+
+.intervention-meta .meta-pill strong {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-feature-settings: "tnum";
+}
+
+.intervention-outcomes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    padding-top: 16px;
+    border-top: 1px solid var(--hairline);
+}
+
+.outcome-box {
+    min-width: 0;
+    text-align: center;
+}
+
+.outcome-box .summary-label {
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.outcome-val {
+    font-size: 1.7rem;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-feature-settings: "tnum";
+    color: var(--text-primary);
+    overflow-wrap: anywhere;
+}
+
+.outcome-before .outcome-val { color: var(--text-secondary); }
+
+.outcome-arrow {
+    color: var(--chip, var(--accent-color));
+    font-size: 1rem;
+}
+
+/* Skeleton mirrors the card anatomy so the swap causes no shift */
+.skel-card.intervention-skel {
+    height: auto;
+    padding: 20px 22px 18px;
+}
+
+.intervention-skel-rule {
+    border-top: 1px solid var(--hairline);
+    margin-bottom: 16px;
+}
+
+/* Detail modal */
+.intervention-modal-desc {
+    margin: 0 0 18px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    white-space: pre-line;
+}
+
+.intervention-modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.intervention-modal-meta .meta-pill i {
+    color: var(--chip, var(--accent-color));
+}
+
+.intervention-modal-meta .meta-pill strong {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-feature-settings: "tnum";
+}
+
+.iv-modal-outcomes {
+    margin-top: 22px;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 991px) {
     .navbar-collapse {
@@ -1366,6 +1494,9 @@ body.is-scrolled .navbar-hig,
     .section-block { padding: 40px 0; }
     .card-body { padding: 16px 18px 15px; }
     .card-title { font-size: 0.97rem; }
+    .intervention-title { font-size: 0.97rem; }
+    .outcome-val { font-size: 1.5rem; }
+    .skel-card.intervention-skel { padding: 16px 18px 15px; }
     .stat-value { font-size: 1.45rem; }
     .summary-card strong { font-size: 1.6rem; }
     .exec-summary-header { flex-direction: column; align-items: stretch; }
@@ -1381,6 +1512,7 @@ body.is-scrolled .navbar-hig,
     .desc-panel { padding: 15px 20px; }
     .summary-card strong { font-size: 1.45rem; }
     .summary-card { padding: 18px; }
+    .outcome-val { font-size: 1.38rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

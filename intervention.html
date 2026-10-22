@@ -90,6 +90,28 @@
         <div class="container" id="interventions-container"></div>
     </main>
 
+    <div class="modal fade modal-hig" id="interventionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph" id="ivModalGlyph"><i class="bi bi-activity"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="ivModalTitle"></h3>
+                            <p class="caption mb-0" id="ivModalCaption">Intervention details</p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="intervention-modal-desc" id="ivModalDesc"></p>
+                    <div class="intervention-modal-meta" id="ivModalMeta"></div>
+                    <div class="intervention-outcomes iv-modal-outcomes" id="ivModalOutcomes"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="site-footer">
         <div class="container">
             <div class="row g-4 align-items-start">
@@ -118,31 +140,100 @@
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=685252747&single=true&output=csv";
 
         const palettes = [
-            { bg:'rgba(62,139,255,.12)',  color:'#2f6bdb' },
-            { bg:'rgba(255,149,0,.12)',   color:'#d97a00' },
-            { bg:'rgba(0,184,217,.12)',   color:'#0093ab' },
-            { bg:'rgba(34,172,56,.12)',   color:'#1d9631' },
-            { bg:'rgba(143,91,255,.12)',  color:'#7440e0' },
+            { color:'#3e8bff' },
+            { color:'#ff9500' },
+            { color:'#00b8d9' },
+            { color:'#22ac38' },
+            { color:'#8f5bff' },
         ];
+
+        const field = (v) => {
+            if (v === null || v === undefined) return '—';
+            const s = String(v).trim();
+            return s === '' ? '—' : s;
+        };
+
+        const interventionsContainer = document.getElementById('interventions-container');
+        let interventions = [];
+
+        function openIntervention(index) {
+            const item = interventions[index];
+            if (!item) return;
+
+            const pal  = palettes[index % palettes.length];
+            const icon = item.Icon || 'bi-activity';
+
+            const glyph = document.getElementById('ivModalGlyph');
+            glyph.style.setProperty('--tile', pal.color);
+            glyph.innerHTML = `<i class="bi ${HIG.escapeHtml(icon)}"></i>`;
+
+            document.getElementById('ivModalTitle').textContent = item.Title;
+            document.getElementById('ivModalDesc').textContent = item.Description || 'No description available.';
+
+            document.getElementById('ivModalMeta').innerHTML = `
+                <span class="meta-pill">
+                    <i class="bi bi-people-fill"></i>
+                    Beneficiaries <strong>${HIG.escapeHtml(String(item.Beneficiaries ?? 0))}</strong>
+                </span>`;
+
+            document.getElementById('ivModalOutcomes').style.setProperty('--chip', pal.color);
+            document.getElementById('ivModalOutcomes').innerHTML = `
+                <div class="outcome-box outcome-before">
+                    <span class="summary-label">${HIG.escapeHtml(item.Label_Before || 'Before')}</span>
+                    <div class="outcome-val">${HIG.escapeHtml(field(item.Value_Before))}</div>
+                </div>
+                <i class="bi bi-arrow-right outcome-arrow"></i>
+                <div class="outcome-box outcome-after">
+                    <span class="summary-label">${HIG.escapeHtml(item.Label_After || 'After')}</span>
+                    <div class="outcome-val">${HIG.escapeHtml(field(item.Value_After))}</div>
+                </div>`;
+
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('interventionModal')).show();
+        }
+
+        interventionsContainer.addEventListener('click', (e) => {
+            const card = e.target.closest('.intervention-card');
+            if (card) openIntervention(Number(card.dataset.index));
+        });
+
+        interventionsContainer.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+            const card = e.target.closest('.intervention-card');
+            if (!card) return;
+            e.preventDefault();
+            openIntervention(Number(card.dataset.index));
+        });
 
         function showSkeletons() {
             const c = document.getElementById('interventions-container');
-            c.innerHTML = '';
-            for (let i = 0; i < 4; i++) {
-                c.innerHTML += `
-                    <div class="col-lg-6" data-reveal data-reveal-delay="${i * 80}">
-                        <div class="skel-card">
-                            <div class="skeleton" style="width:20%;height:14px;margin-bottom:14px;"></div>
-                            <div class="skeleton" style="width:40%;height:22px;margin-bottom:16px;"></div>
-                            <div class="skeleton" style="height:50px;margin-bottom:20px;"></div>
-                            <div class="d-flex gap-12">
-                                <div class="skeleton" style="flex:1;height:100px;border-radius:18px;"></div>
-                                <div style="width:44px;flex-shrink:0;"></div>
-                                <div class="skeleton" style="flex:1;height:100px;border-radius:18px;"></div>
+            c.innerHTML = `<div class="row g-4">${[1, 2, 3, 4].map(() => `
+                <div class="col-lg-6">
+                    <div class="skel-card intervention-skel">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="skeleton" style="width:46px;height:46px;border-radius:15px;flex-shrink:0;"></div>
+                            <div class="skeleton" style="flex:1;height:20px;"></div>
+                        </div>
+                        <div class="skeleton" style="height:15px;margin-bottom:8px;"></div>
+                        <div class="skeleton" style="height:15px;margin-bottom:8px;"></div>
+                        <div class="skeleton" style="width:68%;height:15px;margin-bottom:12px;"></div>
+                        <div class="skeleton" style="width:150px;height:29px;border-radius:999px;margin-bottom:16px;"></div>
+                        <div class="intervention-skel-rule"></div>
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="flex:1;min-width:0;">
+                                <div class="skeleton" style="width:58%;height:17px;margin:0 auto 4px;"></div>
+                                <div class="skeleton" style="height:33px;"></div>
+                            </div>
+                            <div style="width:16px;flex-shrink:0;"></div>
+                            <div style="flex:1;min-width:0;">
+                                <div class="skeleton" style="width:58%;height:17px;margin:0 auto 4px;"></div>
+                                <div class="skeleton" style="height:33px;"></div>
                             </div>
                         </div>
-                    </div>`;
-            }
+                        <div class="card-foot">
+                            <div class="skeleton" style="width:88px;height:18px;"></div>
+                        </div>
+                    </div>
+                </div>`).join('')}</div>`;
         }
 
         function renderInterventions(data) {
@@ -150,67 +241,68 @@
             container.innerHTML = '';
 
             const valid = data.filter(d => d.Title);
+            interventions = valid;
             if (!valid.length) {
                 container.innerHTML = `
-                    <div class="col-12" data-reveal>
-                        <div class="glass-panel state-panel">
-                            <div class="state-icon"><i class="bi bi-clipboard-x"></i></div>
-                            <h5 class="state-title">No Interventions Found</h5>
-                            <p class="state-text">There are no interventions available at the moment.</p>
+                    <div class="row g-4">
+                        <div class="col-12" data-reveal>
+                            <div class="glass-panel state-panel">
+                                <div class="state-icon"><i class="bi bi-clipboard-x"></i></div>
+                                <h5 class="state-title">No Interventions Found</h5>
+                                <p class="state-text">There are no interventions available at the moment.</p>
+                            </div>
                         </div>
                     </div>`;
                 HIG.refreshReveals(container);
                 return;
             }
 
-            valid.forEach((item, index) => {
+            const cardsHtml = valid.map((item, index) => {
                 const delay = index * 90;
                 const pal   = palettes[index % palettes.length];
                 const icon  = item.Icon || 'bi-activity';
 
-                container.innerHTML += `
+                return `
                     <div class="col-lg-6" data-reveal data-reveal-delay="${delay}">
-                        <article class="hig-card intervention-card" style="--chip:${pal.color}">
-                            <div class="card-media" style="aspect-ratio:auto;height:auto;min-height:220px;background:transparent;padding:36px 36px 36px 48px;">
-                                <div class="row align-items-center g-4 h-100">
-                                    <div class="col-lg-5">
-                                        <div class="d-flex align-items-center gap-3 mb-3">
-                                            <div class="card-icon-wrap" style="background:${pal.bg};color:${pal.color};">
-                                                <i class="bi ${icon}"></i>
-                                            </div>
-                                            <h3 class="card-title mb-0">${HIG.escapeHtml(item.Title)}</h3>
-                                        </div>
-                                        <p class="card-desc">${HIG.escapeHtml(item.Description || '')}</p>
-                                        <div class="beneficiaries-badge">
-                                            <i class="bi bi-people-fill"></i>
-                                            Beneficiaries: <strong>${item.Beneficiaries || 0}</strong>
-                                        </div>
-                                    </div>
+                        <article class="hig-card intervention-card" style="--tile:${pal.color};--chip:${pal.color}"
+                                 role="button" tabindex="0" data-index="${index}"
+                                 aria-label="Read full details of ${HIG.escapeHtml(item.Title)}">
+                            <div class="card-body">
+                                <div class="intervention-head">
+                                    <span class="info-icon"><i class="bi ${HIG.escapeHtml(icon)}"></i></span>
+                                    <h3 class="card-title intervention-title">${HIG.escapeHtml(item.Title)}</h3>
+                                </div>
 
-                                    <div class="d-none d-lg-flex col-lg-auto px-0" style="padding:0 8px;">
-                                        <div class="card-divider"></div>
-                                    </div>
+                                <p class="card-desc">${HIG.escapeHtml(item.Description || 'No description available.')}</p>
 
-                                    <div class="col-lg">
-                                        <div class="outcome-wrap">
-                                            <div class="hig-card outcome-box before" style="--chip:#eb4435">
-                                                <span class="summary-label"><i class="bi bi-arrow-left"></i> ${HIG.escapeHtml(item.Label_Before || 'Before')}</span>
-                                                <div class="outcome-val">${HIG.escapeHtml(item.Value_Before || '—')}</div>
-                                            </div>
-                                            <div class="arrow-wrap">
-                                                <i class="bi bi-arrow-right"></i>
-                                            </div>
-                                            <div class="hig-card outcome-box after" style="--chip:#22ac38">
-                                                <span class="summary-label"><i class="bi bi-arrow-right"></i> ${HIG.escapeHtml(item.Label_After || 'After')}</span>
-                                                <div class="outcome-val">${HIG.escapeHtml(item.Value_After || '—')}</div>
-                                            </div>
-                                        </div>
+                                <div class="intervention-meta">
+                                    <span class="meta-pill">
+                                        <i class="bi bi-people-fill"></i>
+                                        Beneficiaries <strong>${HIG.escapeHtml(String(item.Beneficiaries ?? 0))}</strong>
+                                    </span>
+                                </div>
+
+                                <div class="intervention-outcomes">
+                                    <div class="outcome-box outcome-before">
+                                        <span class="summary-label">${HIG.escapeHtml(item.Label_Before || 'Before')}</span>
+                                        <div class="outcome-val">${HIG.escapeHtml(field(item.Value_Before))}</div>
                                     </div>
+                                    <i class="bi bi-arrow-right outcome-arrow"></i>
+                                    <div class="outcome-box outcome-after">
+                                        <span class="summary-label">${HIG.escapeHtml(item.Label_After || 'After')}</span>
+                                        <div class="outcome-val">${HIG.escapeHtml(field(item.Value_After))}</div>
+                                    </div>
+                                </div>
+
+                                <div class="card-foot">
+                                    <span class="link-action">Read more <i class="bi bi-arrow-right"></i></span>
                                 </div>
                             </div>
                         </article>
                     </div>`;
-            });
+            }).join('');
+
+            container.innerHTML = `<div class="row g-4">${cardsHtml}</div>`;
 
             HIG.refreshReveals(container);
         }
@@ -224,21 +316,32 @@
 
         function fetchData() {
             showSkeletons();
-            Papa.parse(sheetURL, {
-                download:true, header:true, dynamicTyping:true,
-                complete: r => { renderInterventions(r.data); updateInterventionCount(r.data); },
-                error: () => {
+            const minDelay = new Promise(r => setTimeout(r, 600));
+            const dataFetch = new Promise((resolve, reject) => {
+                Papa.parse(sheetURL, {
+                    download: true, header: true, dynamicTyping: true,
+                    complete: r => resolve(r.data),
+                    error: e => reject(e)
+                });
+            });
+            Promise.all([minDelay, dataFetch])
+                .then(([_, data]) => {
+                    renderInterventions(data);
+                    updateInterventionCount(data);
+                })
+                .catch(() => {
                     document.getElementById('interventions-container').innerHTML =
-                        `<div class="col-12" data-reveal>
-                            <div class="glass-panel state-panel">
-                                <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
-                                <h5 class="state-title">Connection Error</h5>
-                                <p class="state-text">Could not load data. Please check your connection.</p>
+                        `<div class="row g-4">
+                            <div class="col-12" data-reveal>
+                                <div class="glass-panel state-panel">
+                                    <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
+                                    <h5 class="state-title">Connection Error</h5>
+                                    <p class="state-text">Could not load data. Please check your connection.</p>
+                                </div>
                             </div>
                         </div>`;
                     HIG.refreshReveals(document.getElementById('interventions-container'));
-                }
-            });
+                });
         }
 
         document.addEventListener('DOMContentLoaded', fetchData);
