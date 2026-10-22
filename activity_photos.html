@@ -134,8 +134,10 @@
                 `<span class="text-accent-gradient">${HIG.escapeHtml(title)}</span>`;
 
             if (desc) {
-                document.getElementById('activity-description').innerHTML =
+                const descBox = document.getElementById('activity-description');
+                descBox.innerHTML =
                     `<div class="glass-panel desc-panel" data-reveal data-reveal-delay="140">${HIG.escapeHtml(desc)}</div>`;
+                HIG.refreshReveals(descBox);
             }
 
             showSkeletons();
