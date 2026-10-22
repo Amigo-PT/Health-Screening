@@ -343,15 +343,18 @@
 
 .risk-stat-item.high-risk     { background: rgba(235, 68, 53, .06);  border-color: rgba(235, 68, 53, .25); }
 .risk-stat-item.high-risk:hover { border-color: rgba(235, 68, 53, .55); box-shadow: var(--shadow-pop), 0 0 30px -14px rgba(235, 68, 53, .55); }
-.risk-stat-item.moderate-risk { background: rgba(255, 149, 0, .07); border-color: rgba(255, 149, 0, .28); }
+.risk-stat-item.moderate-risk { background: rgba(255, 149, 0, .07);  border-color: rgba(255, 149, 0, .28); }
 .risk-stat-item.moderate-risk:hover { border-color: rgba(255, 149, 0, .55); box-shadow: var(--shadow-pop), 0 0 30px -14px rgba(255, 149, 0, .55); }
 .risk-stat-item.low-risk      { background: rgba(34, 172, 56, .07);  border-color: rgba(34, 172, 56, .28); }
 .risk-stat-item.low-risk:hover { border-color: rgba(34, 172, 56, .55); box-shadow: var(--shadow-pop), 0 0 30px -14px rgba(34, 172, 56, .55); }
+.risk-stat-item.info-risk      { background: rgba(62, 139, 255, .06);  border-color: rgba(62, 139, 255, .25); }
+.risk-stat-item.info-risk:hover { border-color: rgba(62, 139, 255, .55); box-shadow: var(--shadow-pop), 0 0 30px -14px rgba(62, 139, 255, .55); }
 
 .risk-number { font-size: 2.3rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em; font-feature-settings: "tnum"; }
 .high-risk .risk-number     { color: #eb4435; }
 .moderate-risk .risk-number { color: #ff9500; }
 .low-risk .risk-number      { color: #22ac38; }
+.info-risk .risk-number     { color: #3e8bff; }
 
 .risk-label { font-size: .85rem; font-weight: 500; margin-top: 8px; color: var(--text-primary); }
 .risk-description { font-size: .72rem; color: var(--text-secondary); margin-top: 4px; }
@@ -462,16 +465,89 @@
 }
 
 .chart-canvas { position: relative; width: 100%; }
-.chart-canvas-sm { height: 280px; }
+.chart-canvas-sm { height: 224px; }
 .chart-canvas-lg { height: 340px; }
 
 @media (max-width: 768px) {
-    .chart-canvas-sm { height: 240px; }
+    .chart-canvas-sm { height: 200px; }
     .chart-canvas-lg { height: 280px; }
+}
+
+/* ---------- Minimal viz legend ---------- */
+.viz-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px 18px;
+    margin-top: 14px;
+}
+
+.viz-legend-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    margin: 0 0 14px;
+}
+
+.viz-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.73rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.viz-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) ease;
+}
+
+.viz-legend-row:hover { background: var(--surface-2); }
+
+.viz-legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.viz-legend-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.73rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.viz-legend-share {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.viz-note {
+    margin-top: 10px;
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
 }
 
 /* ---------- Drilldown ---------- */
 .drilldown-section { margin-top: 28px; }
+
+.sector-card.is-clickable { cursor: pointer; }
+
+.sector-card.is-clickable:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 3px;
+}
 
 .drilldown-card {
     height: 100%;

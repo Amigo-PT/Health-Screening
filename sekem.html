@@ -4,8 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#f6f6f8" />
+    <meta name="description" content="Health screening dashboard for SEKEM community showing BMI distribution, risk stratification and participation.">
+    <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="The Health Screening Project">
+    <link rel="canonical" href="https://amigo-pt.github.io/Health-Screening/sekem.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="SEKEM Health Screening Dashboard">
+    <meta property="og:description" content="Health screening dashboard for SEKEM community showing BMI distribution, risk stratification and participation.">
+    <meta property="og:url" content="https://amigo-pt.github.io/Health-Screening/sekem.html">
+    <meta property="og:site_name" content="The Health Screening Project">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="SEKEM Health Screening Dashboard">
+    <meta name="twitter:description" content="Health screening dashboard for SEKEM community showing BMI distribution, risk stratification and participation.">
+
     <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
-    <title>SEKEM Screening - Health Screening</title>
+    <title>SEKEM Health Screening Dashboard | The Health Screening Project</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
@@ -133,19 +152,24 @@
                         BMI Distribution Summary
                     </div>
                     <div class="risk-stats" id="riskStats">
-                        <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('high')">
-                            <div class="risk-number" id="highRiskCount">--</div>
+                        <div class="risk-stat-item info-risk" onclick="showRiskCategoryModal('Under_weight')">
+                            <div class="risk-number" id="countUnderweight">--</div>
                             <div class="risk-label">▼ Underweight</div>
                             <div class="risk-description">Total count across all companies</div>
                         </div>
-                        <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('low')">
-                            <div class="risk-number" id="moderateRiskCount">--</div>
+                        <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('Normal_Weight')">
+                            <div class="risk-number" id="countNormal">--</div>
                             <div class="risk-label">✓ Normal</div>
                             <div class="risk-description">Total count across all companies</div>
                         </div>
-                        <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('moderate')">
-                            <div class="risk-number" id="lowRiskCount">--</div>
-                            <div class="risk-label">▲ Overweight & Obesity</div>
+                        <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('Over_weight')">
+                            <div class="risk-number" id="countOverweight">--</div>
+                            <div class="risk-label">▲ Overweight</div>
+                            <div class="risk-description">Total count across all companies</div>
+                        </div>
+                        <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('Obesity')">
+                            <div class="risk-number" id="countObesity">--</div>
+                            <div class="risk-label">■ Obesity</div>
                             <div class="risk-description">Total count across all companies</div>
                         </div>
                     </div>
@@ -253,28 +277,17 @@
 
             <div class="charts-section">
                 <div class="row g-4">
-                    <div class="col-md-4" data-reveal>
-                        <div class="hig-card chart-card">
-                            <div class="chart-head">
-                                <span class="chart-icon"><i class="bi bi-pie-chart-fill"></i></span>
-                                <div>
-                                    <div class="chart-title">Participation</div>
-                                    <div class="chart-sub">Screened participants across companies</div>
-                                </div>
-                            </div>
-                            <div class="chart-canvas chart-canvas-sm"><canvas id="populationChart"></canvas></div>
-                        </div>
-                    </div>
-                    <div class="col-md-8" data-reveal data-reveal-delay="100">
+                    <div class="col-md-12" data-reveal data-reveal-delay="100">
                         <div class="hig-card chart-card">
                             <div class="chart-head">
                                 <span class="chart-icon"><i class="bi bi-graph-up-arrow"></i></span>
                                 <div>
                                     <div class="chart-title">BMI Distribution in SEKEM Companies</div>
-                                    <div class="chart-sub">BMI categories per company over time</div>
                                 </div>
                             </div>
+                            <div class="viz-legend" id="bmiLegend"></div>
                             <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart"></canvas></div>
+                            <div class="viz-note" id="bmiNote"></div>
                         </div>
                     </div>
                 </div>
@@ -362,18 +375,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="hig.js"></script>
     <script>
-        const CHART_GRID = 'rgba(0,0,0,0.07)';
-        const CHART_TEXT = 'rgba(0,0,0,0.65)';
-        const CHART_TICKS = 'rgba(0,0,0,0.45)';
 
-        let popChart=null, compChart=null;
+        let compChart=null;
         let currentYear=null, currentMonth=1;
         let availableYears=[], screeningData={};
         let currentFullData = null;
         let comparisonMode = false, comparisonData1 = null, comparisonData2 = null;
         let comparisonData1Raw = null, comparisonData2Raw = null;
         let activeCompanyFilter='all';
-        let populationChartKeys = [];
         let highRiskOnly=false;
         let lastSyncTime = null;
 
@@ -398,14 +407,13 @@
         const COMPANY_NAMES = Object.fromEntries(COMPANIES.map(c => [c.key, c.name]));
         const COMPANY_ICONS = Object.fromEntries(COMPANIES.map(c => [c.key, c.icon]));
         const COMPANY_COLORS = Object.fromEntries(COMPANIES.map(c => [c.key, c.color]));
-        const COMPANY_LINE_COLORS = ['#ff6900','#3e8bff','#22ac38','#00b8d9','#8f5bff','#ff9500','#eb4435','#009688','#9c27b0','#00bcd4','#4caf50'];
-        const COMPANY_LINE_BG = COMPANY_LINE_COLORS.map(c => c.replace(')', ',0.08)').replace('rgb', 'rgba'));
 
         // ========== BMI CATEGORIES ==========
         const BMI_CATEGORIES = [
             { key: 'Under_weight', name: 'Underweight', color: '#3e8bff', recommendation: 'Nutritional counseling recommended - Increase caloric intake with nutrient-dense foods - Monitor for underlying conditions' },
             { key: 'Normal_Weight', name: 'Normal', color: '#22ac38', recommendation: 'Maintain current lifestyle - Regular physical activity and balanced diet' },
-            { key: 'Overweight_Obesity', name: 'Overweight & Obesity', color: '#eb4435', recommendation: 'Medical evaluation - Structured weight management program - Screen for metabolic syndrome - Lifestyle modification required' }
+            { key: 'Over_weight', name: 'Overweight', color: '#ff9500', recommendation: 'Calorie control and physical activity counseling - Structured weight management program - Lifestyle modification recommended' },
+            { key: 'Obesity', name: 'Obesity', color: '#eb4435', recommendation: 'Medical evaluation - Structured weight management program - Screen for metabolic syndrome - Lifestyle modification required' }
         ];
 
         function formatLastSync(date) {
@@ -444,16 +452,16 @@
                 const partEl = document.getElementById(`part-${k}`);
                 if (partEl) partEl.innerHTML = '';
             });
-            document.getElementById('highRiskCount').textContent='--';
-            document.getElementById('moderateRiskCount').textContent='--';
-            document.getElementById('lowRiskCount').textContent='--';
+            ['countUnderweight','countNormal','countOverweight','countObesity'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.textContent='--';
+            });
             const label = document.getElementById('lastSyncLabel'); if(label) label.textContent='Last sync: loading...';
             updateDataStatus('loading');
         }
 
         function emptyPeriod() {
             const empty={ companies:{}, totals:{}, participation:{}, complaints:{}, rawData:{} };
-            COMPANY_KEYS.forEach(k=>{ empty.companies[k]=0; empty.totals[k]=0; empty.participation[k]=0; empty.complaints[k]=Array(3).fill(0); });
+            COMPANY_KEYS.forEach(k=>{ empty.companies[k]=0; empty.totals[k]=0; empty.participation[k]=0; empty.complaints[k]=Array(4).fill(0); });
             return empty;
         }
 
@@ -469,7 +477,7 @@
                         screeningData[key].companies[ck]=0;
                         screeningData[key].totals[ck]=0;
                         screeningData[key].participation[ck]=0;
-                        screeningData[key].complaints[ck]=Array(23).fill(0);
+                        screeningData[key].complaints[ck]=Array(4).fill(0);
                         screeningData[key].details[ck]=[];
                     });
                 }
@@ -503,13 +511,12 @@
                 // Read BMI columns
                 const bmiCols = ['Under_weight', 'Normal_Weight', 'Over_weight', 'Obesity'];
                 bmiCols.forEach(col => { screeningData[key].rawData[ck][col]=row[col]||0; });
-                // BMI categories: Underweight, Normal, Overweight & Obesity
+                // BMI categories: Underweight, Normal, Overweight, Obesity
                 const underweight = row.Under_weight || 0;
                 const normal = row.Normal_Weight || 0;
                 const overweight = row.Over_weight || 0;
                 const obesity = row.Obesity || 0;
-                const overweightObesity = overweight + obesity;
-                screeningData[key].complaints[ck]=[underweight, normal, overweightObesity];
+                screeningData[key].complaints[ck]=[underweight, normal, overweight, obesity];
                 screeningData[key].details[ck].push(row);
             });
             availableYears=Array.from(yearsSet).sort((a,b)=>b-a);
@@ -572,7 +579,8 @@
             const bmiList = [
                 { ...BMI_CATEGORIES[0], count: underweight, percentage: totalCount > 0 ? ((underweight / totalCount) * 100).toFixed(1) : '0.0' },
                 { ...BMI_CATEGORIES[1], count: normal, percentage: totalCount > 0 ? ((normal / totalCount) * 100).toFixed(1) : '0.0' },
-                { ...BMI_CATEGORIES[2], count: overweightObesity, percentage: totalCount > 0 ? ((overweightObesity / totalCount) * 100).toFixed(1) : '0.0' }
+                { ...BMI_CATEGORIES[2], count: overweight, percentage: totalCount > 0 ? ((overweight / totalCount) * 100).toFixed(1) : '0.0' },
+                { ...BMI_CATEGORIES[3], count: obesity, percentage: totalCount > 0 ? ((obesity / totalCount) * 100).toFixed(1) : '0.0' }
             ];
 
             // Risk based on overweight/obesity prevalence
@@ -584,7 +592,7 @@
             else riskLevel = 'low';
 
             const recommendations = [];
-            recommendations.push(`Underweight: ${underweight} (${bmiList[0].percentage}%) | Normal: ${normal} (${bmiList[1].percentage}%) | Overweight & Obesity: ${overweightObesity} (${bmiList[2].percentage}%)`);
+            recommendations.push(`Underweight: ${underweight} (${bmiList[0].percentage}%) | Normal: ${normal} (${bmiList[1].percentage}%) | Overweight: ${overweight} (${bmiList[2].percentage}%) | Obesity: ${obesity} (${bmiList[3].percentage}%)`);
             if (totalRiskScore > 0.30) recommendations.push("Action Required: High overweight/obesity prevalence - Implement weight management programs");
             else if (totalRiskScore > 0.10) recommendations.push("Action Recommended: Moderate overweight/obesity - Promote healthy lifestyle initiatives");
             else recommendations.push("Status: Healthy BMI distribution - Maintain wellness programs");
@@ -630,15 +638,17 @@
             currentFullData = data;
 
             // Show BMI categories in risk stats
-            let totalUnderweight = 0, totalNormal = 0, totalOverOb = 0;
+            let totalUnderweight = 0, totalNormal = 0, totalOverweight = 0, totalObesity = 0;
             Object.values(data.rawData).forEach(raw => {
                 totalUnderweight += parseInt(raw.Under_weight) || 0;
                 totalNormal += parseInt(raw.Normal_Weight) || 0;
-                totalOverOb += (parseInt(raw.Over_weight) || 0) + (parseInt(raw.Obesity) || 0);
+                totalOverweight += parseInt(raw.Over_weight) || 0;
+                totalObesity += parseInt(raw.Obesity) || 0;
             });
-            animateValue('highRiskCount', totalUnderweight, 800);
-            animateValue('moderateRiskCount', totalNormal, 800);
-            animateValue('lowRiskCount', totalOverOb, 800);
+            animateValue('countUnderweight', totalUnderweight, 800);
+            animateValue('countNormal', totalNormal, 800);
+            animateValue('countOverweight', totalOverweight, 800);
+            animateValue('countObesity', totalObesity, 800);
 
             const topBmiText = document.getElementById('topDiseaseText');
             if (stats.topBmi.length > 0) {
@@ -704,9 +714,11 @@ function addCompanyDetailButtons(companyDetails) {
                     if      (s>0.30) { rColor='#eb4435'; rLabel='High Overweight/Obesity'; }
                     else if (s>0.10) { rColor='#ff9500'; rLabel='Moderate Overweight/Obesity'; }
                     else { rColor='#22ac38'; rLabel='Low Overweight/Obesity'; }
-                    const overOb = detail.bmiList?.find(d => d.key === 'Overweight_Obesity');
-                    const overObPct = overOb ? overOb.percentage : 0;
-                    riskScoreEl.innerHTML = `<span style="color:${rColor};font-weight:700;">● ${rLabel}</span> — Overweight & Obesity: <span style="color:var(--text-dark);opacity:0.6;">${overObPct}%</span>`;
+                    const over = detail.bmiList?.find(d => d.key === 'Over_weight');
+                    const obese = detail.bmiList?.find(d => d.key === 'Obesity');
+                    const overPct = over ? over.percentage : 0;
+                    const obesePct = obese ? obese.percentage : 0;
+                    riskScoreEl.innerHTML = `<span style="color:${rColor};font-weight:700;">● ${rLabel}</span> — Overweight: <span style="color:var(--text-dark);opacity:0.6;">${overPct}%</span> · Obesity: <span style="color:var(--text-dark);opacity:0.6;">${obesePct}%</span>`;
                 }
 
                 const container = document.getElementById('diseaseListContainer');
@@ -741,49 +753,38 @@ function addCompanyDetailButtons(companyDetails) {
             }, openModals.length > 0 ? 300 : 0);
         }
 
-        function showRiskCategoryModal(bmiCategory) {
+        function showRiskCategoryModal(bmiKey) {
             if (!currentFullData) return;
             const stats = calculateDetailedRiskStats(currentFullData);
+            const category = BMI_CATEGORIES.find(c => c.key === bmiKey) || BMI_CATEGORIES[1];
 
-            const titles = {
-                high:     { title:'High Overweight/Obesity',     subtitle:'Companies with highest Overweight & Obesity counts' },
-                moderate: { title:'Normal Weight Companies',     subtitle:'Companies with most Normal BMI' },
-                low:      { title:'Underweight Companies',       subtitle:'Companies with most Underweight cases' }
-            };
-            document.getElementById('categoryModalTitle').innerHTML = titles[bmiCategory].title;
-            document.getElementById('categoryModalSubtitle').innerHTML = titles[bmiCategory].subtitle;
+            document.getElementById('categoryModalTitle').innerHTML = `${category.name} by Company`;
+            document.getElementById('categoryModalSubtitle').innerHTML = `Companies ranked by ${category.name} count`;
 
             const companiesSorted = Object.entries(stats.companyDetails)
                 .map(([companyId, detail]) => ({ ...detail, companyId }))
                 .sort((a, b) => {
-                    const aOverOb = a.bmiList?.find(d => d.key === 'Overweight_Obesity')?.count || 0;
-                    const bOverOb = b.bmiList?.find(d => d.key === 'Overweight_Obesity')?.count || 0;
-                    return bOverOb - aOverOb;
+                    const aCount = a.bmiList?.find(d => d.key === bmiKey)?.count || 0;
+                    const bCount = b.bmiList?.find(d => d.key === bmiKey)?.count || 0;
+                    return bCount - aCount;
                 });
 
-            let companiesInCategory = companiesSorted;
-            const third = Math.ceil(companiesSorted.length / 3);
-            if (bmiCategory === 'high') companiesInCategory = companiesSorted.slice(0, third);
-            else if (bmiCategory === 'moderate') companiesInCategory = companiesSorted.slice(third, third * 2);
-            else companiesInCategory = companiesSorted.slice(third * 2);
-
             const container = document.getElementById('categoryDetailsContainer');
-            if (companiesInCategory.length === 0) {
-                container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dark);opacity:0.6;"><i class="bi bi-emoji-smile" style="font-size:2rem;"></i><p style="margin-top:12px;">No companies in this category</p></div>`;
+            if (companiesSorted.length === 0) {
+                container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dark);opacity:0.6;"><i class="bi bi-emoji-smile" style="font-size:2rem;"></i><p style="margin-top:12px;">No companies with data for this category</p></div>`;
             } else {
-                container.innerHTML = companiesInCategory.map(detail => {
-                    const overOb = detail.bmiList?.find(d => d.key === 'Overweight_Obesity');
+                container.innerHTML = companiesSorted.map(detail => {
                     const under = detail.bmiList?.find(d => d.key === 'Under_weight');
                     const normal = detail.bmiList?.find(d => d.key === 'Normal_Weight');
-                    const overObCount = overOb ? overOb.count : 0;
-                    const underCount = under ? under.count : 0;
-                    const normalCount = normal ? normal.count : 0;
+                    const over = detail.bmiList?.find(d => d.key === 'Over_weight');
+                    const obese = detail.bmiList?.find(d => d.key === 'Obesity');
                     return `<div class="disease-item" onclick="showCompanyRiskModal('${detail.companyId}', window._lastStats['${detail.companyId}'])" style="cursor:pointer;">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <div>
                                 <strong style="font-size:1rem;">${detail.name}</strong>
-                                <div style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;">${detail.totalCount} workers | Underweight: ${underCount} | Normal: ${normalCount} | Overweight & Obesity: ${overObCount}</div>
+                                <div style="font-size:0.75rem;color:var(--text-dark);opacity:0.6;">${detail.totalCount} workers | Underweight: ${under ? under.count : 0} | Normal: ${normal ? normal.count : 0} | Overweight: ${over ? over.count : 0} | Obesity: ${obese ? obese.count : 0}</div>
                             </div>
+                            <div class="disease-count">${category.name}: ${(detail.bmiList?.find(d => d.key === bmiKey)?.count) || 0}</div>
                         </div>
                     </div>`;
                 }).join('');
@@ -849,21 +850,11 @@ function addCompanyDetailButtons(companyDetails) {
                     filtered.companies[key]=data.companies[key]||0;
                     filtered.totals[key]=data.totals[key]||0;
                     filtered.participation[key]=data.participation[key]||0;
-                    filtered.complaints[key]=data.complaints[key]||Array(23).fill(0);
+                    filtered.complaints[key]=data.complaints[key]||Array(4).fill(0);
                     filtered.rawData[key]=data.rawData[key]||{};
                 }
             });
             return filtered;
-        }
-
-        function aggregateComplaints(complaints) {
-            const keys=Object.keys(complaints||{});
-            const total=Array(23).fill(0);
-            keys.forEach(key=>{
-                const values=complaints[key]||Array(23).fill(0);
-                values.forEach((val, idx)=>{ total[idx]+=Number(val)||0; });
-            });
-            return total;
         }
 
         function updateFilterVisuals() {
@@ -926,6 +917,7 @@ function addCompanyDetailButtons(companyDetails) {
         }
 
         function performComparison() {
+            hideDrilldownSection();
             const y1=parseInt(document.getElementById('compareYear1').value), m1=parseInt(document.getElementById('compareMonth1').value);
             const y2=parseInt(document.getElementById('compareYear2').value), m2=parseInt(document.getElementById('compareMonth2').value);
             comparisonData1Raw = getDataForDate(y1,m1); comparisonData2Raw = getDataForDate(y2,m2);
@@ -964,24 +956,17 @@ function addCompanyDetailButtons(companyDetails) {
 
         function updateComparisonCharts() {
             if (!comparisonMode) return;
-            if (popChart) popChart.destroy();
-            const labelMap = COMPANY_NAMES;
-            const keys=COMPANY_KEYS.filter(key => key in comparisonData1.companies || key in comparisonData2.companies);
-            const labels=keys.map(key => labelMap[key]);
-            const d1=keys.map(key => comparisonData1.companies[key]||0);
-            const d2=keys.map(key => comparisonData2.companies[key]||0);
-            const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            const lbl1=`${mn[parseInt(document.getElementById('compareMonth1').value)-1]} ${document.getElementById('compareYear1').value}`;
-            const lbl2=`${mn[parseInt(document.getElementById('compareMonth2').value)-1]} ${document.getElementById('compareYear2').value}`;
-            popChart=new Chart(document.getElementById('populationChart'),{ type:'bar', data:{ labels, datasets:[{label:lbl1,data:d1,backgroundColor:'rgba(255,105,0,0.75)',borderRadius:10,borderSkipped:false},{label:lbl2,data:d2,backgroundColor:'rgba(62,139,255,0.75)',borderRadius:10,borderSkipped:false}] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8}}} } });
+            const { lbl1, lbl2 } = comparePeriodLabels();
             if (compChart) compChart.destroy();
-            const labels2=['Underweight','Normal','Overweight & Obesity'];
-            const comp1 = aggregateComplaints(comparisonData1.complaints);
-            const comp2 = aggregateComplaints(comparisonData2.complaints);
-            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:labels2, datasets:[
-                { label: lbl1, data: comp1, borderColor: '#ff6900', backgroundColor: 'rgba(255,105,0,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 },
-                { label: lbl2, data: comp2, borderColor: '#3e8bff', backgroundColor: 'rgba(62,139,255,0.08)', borderWidth: 2.5, fill: true, tension: .35, pointRadius: 0, pointHoverRadius: 5 }
-            ] }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},padding:12,cornerRadius:12,boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
+            const comp1 = aggregateBmi(comparisonData1.complaints, COMPANY_KEYS);
+            const comp2 = aggregateBmi(comparisonData2.complaints, COMPANY_KEYS);
+            const rows = [
+                { label: lbl1, counts: comp1, total: comp1.reduce((a, b) => a + b, 0) },
+                { label: lbl2, counts: comp2, total: comp2.reduce((a, b) => a + b, 0) }
+            ].filter(r => r.total > 0);
+            renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
+            renderBmiNote(bmiCoverageNote(rows.length, COMPANY_KEYS.length, 'companies'));
+            compChart = bmiStackChart('comparisonChart', rows, 46);
         }
 
         function resetComparison() {
@@ -1017,59 +1002,163 @@ function addCompanyDetailButtons(companyDetails) {
             }
         }
 
-        const doughnutCenterPlugin={
-            id:'doughnutCenter',
-            afterDraw(chart){
-                const labels=chart.data.labels||[];
-                if(!labels.length||labels[0]==='No data') return;
-                const meta=chart.getDatasetMeta(0);
-                if(!meta.data.length) return;
-                const {x,y}=meta.data[0];
-                const ctx=chart.ctx;
-                const total=(chart.data.datasets[0].data||[]).reduce((a,b)=>a+(Number(b)||0),0);
+        // ========== AESTHETIC VIZ SYSTEM ==========
+        const VIZ = {
+            font: 'MiSans, sans-serif',
+            ink: 'rgba(28,28,30,0.9)',
+            text: 'rgba(28,28,30,0.62)',
+            faint: 'rgba(28,28,30,0.32)',
+            hair: 'rgba(28,28,30,0.06)',
+            surface: '#ffffff',
+            muted: 'rgba(28,28,30,0.2)',
+            accent: '#ff6900',
+            bmi: ['#6e93b8', '#5e9e76', '#e0a94a', '#c4695c'],
+            bmiLabels: ['Underweight', 'Normal', 'Overweight', 'Obesity']
+        };
+
+        function vizTooltip(callbacks) {
+            return {
+                backgroundColor: 'rgba(255,255,255,0.97)',
+                titleColor: VIZ.ink,
+                bodyColor: VIZ.text,
+                titleFont: { family: VIZ.font, size: 12, weight: '500' },
+                bodyFont: { family: VIZ.font, size: 12 },
+                padding: { top: 10, bottom: 10, left: 13, right: 15 },
+                cornerRadius: 12,
+                caretSize: 5,
+                caretPadding: 6,
+                displayColors: false,
+                borderColor: 'rgba(28,28,30,0.08)',
+                borderWidth: 1,
+                titleMarginBottom: 4,
+                boxPadding: 4,
+                callbacks
+            };
+        }
+
+        function pctOf(part, total) { return total > 0 ? (part / total) * 100 : 0; }
+
+        function renderInlineLegend(boxId, items) {
+            const box = document.getElementById(boxId);
+            if (!box) return;
+            box.classList.add('viz-legend-inline');
+            box.innerHTML = items.map(it => `<span class="viz-legend-item"><span class="viz-legend-dot" style="background:${it.color}"></span>${it.label}</span>`).join('');
+        }
+
+        function bmiCounts(values) {
+            const v = Array.isArray(values) ? values : [];
+            return [Number(v[0]) || 0, Number(v[1]) || 0, Number(v[2]) || 0, Number(v[3]) || 0];
+        }
+
+        function aggregateBmi(complaints, keys) {
+            const total = [0, 0, 0, 0];
+            keys.forEach(key => {
+                const c = bmiCounts(complaints[key]);
+                c.forEach((v, i) => { total[i] += v; });
+            });
+            return total;
+        }
+
+        function comparePeriodLabels() {
+            const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const y1 = document.getElementById('compareYear1').value;
+            const m1 = parseInt(document.getElementById('compareMonth1').value);
+            const y2 = document.getElementById('compareYear2').value;
+            const m2 = parseInt(document.getElementById('compareMonth2').value);
+            const fmt = (m, y) => (m && y) ? `${mn[m-1]} ${y}` : '';
+            return { lbl1: fmt(m1, y1) || 'Period 1', lbl2: fmt(m2, y2) || 'Period 2' };
+        }
+
+        const segmentLabels = {
+            id: 'segmentLabels',
+            afterDatasetsDraw(chart) {
+                if (chart.options.indexAxis !== 'y') return;
+                const ctx = chart.ctx;
                 ctx.save();
-                ctx.textAlign='center'; ctx.textBaseline='middle';
-                ctx.font='600 24px MiSans, sans-serif'; ctx.fillStyle='rgba(0,0,0,.9)';
-                ctx.fillText(total.toLocaleString(), x, y-8);
-                ctx.font='500 10px MiSans, sans-serif'; ctx.fillStyle='rgba(0,0,0,.45)';
-                ctx.fillText('SCREENED', x, y+13);
+                ctx.font = `500 10px ${VIZ.font}`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                chart.data.datasets.forEach((ds, di) => {
+                    const meta = chart.getDatasetMeta(di);
+                    if (!meta || meta.hidden) return;
+                    meta.data.forEach((bar, i) => {
+                        if (!bar) return;
+                        const base = typeof bar.base === 'number' ? bar.base : bar.x;
+                        const width = Math.abs(bar.x - base);
+                        const val = ds.data[i] || 0;
+                        if (width < 40 || val < 7) return;
+                        ctx.fillStyle = 'rgba(255,255,255,0.94)';
+                        ctx.fillText(`${val.toFixed(0)}%`, (bar.x + base) / 2, bar.y);
+                    });
+                });
                 ctx.restore();
             }
         };
 
-        function updateCharts(d) {
-            if (popChart&&!comparisonMode) popChart.destroy();
-            if (!comparisonMode) {
-                const labels=[]; const values=[]; const bg=[];
-                COMPANIES.forEach((company,index)=>{
-                    if (company.key in d.companies) {
-                        labels.push(company.name);
-                        values.push(d.companies[company.key]||0);
-                        bg.push(company.color);
-                    }
-                });
-                if (labels.length===0) { labels.push('No data'); values.push(1); bg.push('rgba(152,162,179,0.35)'); }
-                populationChartKeys = COMPANIES.filter(c => c.key in d.companies).map(c => c.key);
-                popChart=new Chart(document.getElementById('populationChart'),{ type:'doughnut', data:{ labels, datasets:[{data:values,backgroundColor:bg,borderWidth:3,borderColor:'#ffffff',hoverOffset:10}] }, options:{ responsive:true, maintainAspectRatio:false, cutout:'64%', layout:{padding:6}, animation:{animateScale:true,animateRotate:true}, onClick:(evt, activeEls)=>{ if(activeEls && activeEls.length){ const clickedCompany = populationChartKeys[activeEls[0].index]; if(clickedCompany) showDrilldownCardsSekem(clickedCompany); } }, plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}} }, plugins:[doughnutCenterPlugin] });
-            }
-            if (compChart) compChart.destroy();
-            const datasets = COMPANIES.filter(company => Array.isArray(d.complaints[company.key])).map((company,index) => ({
-                label: company.name,
-                data: d.complaints[company.key],
-                borderColor: COMPANY_LINE_COLORS[index % COMPANY_LINE_COLORS.length],
-                backgroundColor: COMPANY_LINE_BG[index % COMPANY_LINE_BG.length],
-                borderWidth:2.5,
-                fill:true,
-                tension:.35,
-                pointRadius:0,
-                pointHoverRadius:5,
-                pointHoverBorderWidth:2,
-                pointHoverBorderColor:'#ffffff'
+        function renderBmiNote(text) {
+            const box = document.getElementById('bmiNote');
+            if (box) box.innerHTML = text || '';
+        }
+
+        function bmiCoverageNote(shown, total, noun) {
+            if (!shown) return 'No BMI data for this selection';
+            if (shown >= total) return '';
+            return `BMI categories recorded for ${shown} of ${total} ${noun}`;
+        }
+
+        // Composition view: one row per company, split into its BMI categories
+        function bmiStackChart(canvasId, rows, maxBarThickness) {
+            const datasets = VIZ.bmiLabels.map((label, i) => ({
+                label,
+                data: rows.map(r => pctOf(r.counts[i], r.total)),
+                counts: rows.map(r => r.counts[i]),
+                backgroundColor: VIZ.bmi[i],
+                borderRadius: i === 0 ? { topLeft: 4, bottomLeft: 4 } : i === VIZ.bmiLabels.length - 1 ? { topRight: 4, bottomRight: 4 } : 0,
+                borderSkipped: false,
+                barPercentage: 0.72,
+                categoryPercentage: 0.86,
+                maxBarThickness
             }));
-            if (datasets.length === 0) {
-                datasets.push({ label:'No data', data:Array(3).fill(0), borderColor:'#98a2b3', backgroundColor:'rgba(152,162,179,0.08)', borderWidth:2.5, fill:true, tension:.35, pointRadius:0, pointHoverRadius:5 });
-            }
-            compChart=new Chart(document.getElementById('comparisonChart'),{ type:'line', data:{ labels:['Underweight','Normal','Overweight & Obesity'], datasets:datasets }, options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{tooltip:{backgroundColor:'rgba(28,28,30,0.92)',padding:12,cornerRadius:12,titleFont:{family:'MiSans',size:13},bodyFont:{family:'MiSans',size:12},boxPadding:4}, legend:{position:'top',align:'end',labels:{usePointStyle:true,pointStyle:'circle',boxWidth:7,padding:14,color:CHART_TEXT,font:{family:'MiSans',size:11}}}}, scales:{x:{grid:{display:false},border:{color:'rgba(0,0,0,0.1)'},ticks:{color:CHART_TICKS,maxRotation:45,autoSkip:true,maxTicksLimit:12,font:{family:'MiSans',size:10}}},y:{beginAtZero:true,grid:{color:CHART_GRID,drawTicks:false,borderDash:[4,6]},border:{display:false},ticks:{color:CHART_TICKS,padding:8,font:{family:'MiSans',size:10}}}} } });
+            const chart = new Chart(document.getElementById(canvasId), {
+                type: 'bar',
+                data: { labels: rows.map(r => r.label), datasets },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', axis: 'y', intersect: false },
+                    animation: { duration: 650, easing: 'easeOutQuart' },
+                    layout: { padding: { top: 6 } },
+                    scales: {
+                        x: { stacked: true, min: 0, max: 100, grid: { color: VIZ.hair, drawTicks: false }, border: { display: false }, ticks: { color: VIZ.faint, font: { family: VIZ.font, size: 10 }, padding: 6, callback: v => v + '%' } },
+                        y: { stacked: true, grid: { display: false }, border: { display: false }, ticks: { color: VIZ.text, font: { family: VIZ.font, size: 11 } } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: vizTooltip({
+                            label: ctx => { const c = ctx.dataset.counts[ctx.dataIndex] || 0; return ` ${ctx.dataset.label}: ${c.toLocaleString()} (${ctx.parsed.x.toFixed(1)}%)`; },
+                            footer: items => { const sum = items.reduce((a, b) => a + (b.dataset.counts[b.dataIndex] || 0), 0); return `Total: ${sum.toLocaleString()}`; }
+                        })
+                    }
+                },
+                plugins: [segmentLabels]
+            });
+            return chart;
+        }
+
+        function buildBmiChart(d) {
+            const rows = COMPANIES
+                .filter(c => Array.isArray(d.complaints[c.key]))
+                .map(c => { const counts = bmiCounts(d.complaints[c.key]); return { label: c.name, counts, total: counts.reduce((a, b) => a + b, 0) }; })
+                .filter(r => r.total > 0);
+            renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
+            renderBmiNote(bmiCoverageNote(rows.length, Object.keys(d.companies).length, 'companies'));
+            compChart = bmiStackChart('comparisonChart', rows, 22);
+        }
+
+        function updateCharts(d) {
+            if (compChart) compChart.destroy();
+            buildBmiChart(d);
         }
 
         function createDrilldownCard(title, value, note) {
@@ -1087,18 +1176,39 @@ function addCompanyDetailButtons(companyDetails) {
             const cards=[];
             cards.push(createDrilldownCard('Company', companyName, `Detailed insight for ${companyName}`));
             cards.push(createDrilldownCard('Participation', `${participationRate.toFixed(1)}%`, `${screened.toLocaleString()} / ${totalEmployees.toLocaleString()} employees`));
-            const overOb = riskDetail.bmiList.find(d => d.key === 'Overweight_Obesity');
-            const overObPct = overOb ? overOb.percentage : 0;
-            cards.push(createDrilldownCard('Overweight & Obesity', `${overObPct}%`, `${overOb ? overOb.count : 0} of ${source.companies[key]||0} employees`));
-            cards.push(createDrilldownCard('Normal', riskDetail.bmiList[1] ? `${riskDetail.bmiList[1].percentage}%` : '0%', riskDetail.bmiList[1] ? 'Normal weight' : 'No data'));
-            cards.push(createDrilldownCard('Underweight', riskDetail.bmiList[0] ? `${riskDetail.bmiList[0].percentage}%` : '0%', riskDetail.bmiList[0] ? 'Underweight' : 'No data'));
+            const over = riskDetail.bmiList.find(d => d.key === 'Over_weight');
+            const obese = riskDetail.bmiList.find(d => d.key === 'Obesity');
+            const normal = riskDetail.bmiList.find(d => d.key === 'Normal_Weight');
+            const under = riskDetail.bmiList.find(d => d.key === 'Under_weight');
+            cards.push(createDrilldownCard('Overweight', over ? `${over.percentage}%` : '0%', `${over ? over.count : 0} of ${source.companies[key]||0} employees`));
+            cards.push(createDrilldownCard('Obesity', obese ? `${obese.percentage}%` : '0%', `${obese ? obese.count : 0} of ${source.companies[key]||0} employees`));
+            cards.push(createDrilldownCard('Normal', normal ? `${normal.percentage}%` : '0%', normal ? 'Normal weight' : 'No data'));
+            cards.push(createDrilldownCard('Underweight', under ? `${under.percentage}%` : '0%', under ? 'Underweight' : 'No data'));
             document.getElementById('drilldownCards').innerHTML=cards.join('');
-            document.getElementById('drilldownSection').style.display='block';
+            const section = document.getElementById('drilldownSection');
+            section.style.display='block';
+            section.scrollIntoView({ behavior:'smooth', block:'center' });
         }
 
         function hideDrilldownSection() {
             const section = document.getElementById('drilldownSection');
             if (section) section.style.display = 'none';
+        }
+
+        function bindCompanyDrilldown() {
+            document.querySelectorAll('.sector-card').forEach((card, idx) => {
+                if (card.dataset.drilldownBound) return;
+                card.dataset.drilldownBound = '1';
+                card.classList.add('is-clickable');
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                const key = COMPANY_KEYS[idx];
+                if (!key) return;
+                card.addEventListener('click', () => { if (!comparisonMode) showDrilldownCardsSekem(key); });
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!comparisonMode) showDrilldownCardsSekem(key); }
+                });
+            });
         }
 
         function initComparisonEvents() {
@@ -1118,6 +1228,7 @@ function addCompanyDetailButtons(companyDetails) {
         document.addEventListener('DOMContentLoaded', () => {
             if(document.getElementById('btnCompare')) initComparisonEvents();
             if(document.getElementById('companyFilter')) initFilterEvents();
+            bindCompanyDrilldown();
             fetchData();
         });
     </script>
