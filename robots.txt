@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://amigo-pt.github.io/Health-Screening/sitemap.xml

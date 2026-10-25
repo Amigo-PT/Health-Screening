@@ -1,0 +1,1296 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fff8e9" />
+    <meta name="description" content="Health screening dashboard for HU Staff showing BMI distribution, risk stratification and participation.">
+    <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="The Health Screening Project">
+    <link rel="canonical" href="https://amigo-pt.github.io/Health-Screening/hu_staff.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HU Staff Health Screening Dashboard">
+    <meta property="og:description" content="Health screening dashboard for HU Staff showing BMI distribution, risk stratification and participation.">
+    <meta property="og:url" content="https://amigo-pt.github.io/Health-Screening/hu_staff.html">
+    <meta property="og:site_name" content="The Health Screening Project">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="HU Staff Health Screening Dashboard">
+    <meta name="twitter:description" content="Health screening dashboard for HU Staff showing BMI distribution, risk stratification and participation.">
+
+    <title>HU Staff Health Screening Dashboard | The Health Screening Project</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="hig.css">
+    <link rel="stylesheet" href="dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn-hig btn-glass-hig btn-sm-hig" href="screening.html"><i class="bi bi-chevron-left"></i> Screening</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-hero" data-reveal>
+                HU Staff <span class="text-accent-gradient">Screening Dashboard</span>
+            </h1>
+        </div>
+    </header>
+
+    <main class="section-block pt-2">
+        <div class="container page-shell pb-5">
+
+            <div class="filter-card" data-reveal data-reveal-delay="80">
+                <div class="d-flex align-items-center flex-wrap">
+                    <span class="filter-label"><i class="bi bi-calendar3"></i>Filter by Period</span>
+                    <div class="status-indicator" role="status" aria-live="polite"><span id="statusDot" class="status-dot status-loading" aria-hidden="true"></span><span id="statusText">Connecting to server...</span></div>
+                </div>
+                <div class="year-tabs" id="yearContainer" role="group" aria-label="Filter by year"></div>
+                <div class="filter-actions">
+                    <label class="visually-hidden" for="sectorFilter">Filter by sector</label>
+                    <select id="sectorFilter" class="comparison-select" aria-label="Filter by sector">
+                        <option value="all">Show all sectors</option>
+                        <option value="students">Students</option>
+                        <option value="pt">Faculty of Physical Therapy</option>
+                        <option value="pharmacy">Faculty of Pharmacy</option>
+                        <option value="eng">Faculty of Engineering</option>
+                        <option value="business">Faculty of Business</option>
+                        <option value="agri">Faculty of Agriculture</option>
+                        <option value="workers">University Workers</option>
+                    </select>
+                </div>
+                <div class="month-timeline" id="monthContainer" role="group" aria-label="Filter by month"></div>
+                <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
+                <div class="comparison-controls" id="comparisonControls" style="display:none;">
+                    <div class="comparison-note">Compare screening totals and BMI mix across two month/year selections. Defaults to the same month in adjacent years when available.</div>
+                    <select id="compareYear1" class="comparison-select" aria-label="First comparison year"></select>
+                    <select id="compareMonth1" class="comparison-select" aria-label="First comparison month"></select>
+                    <span class="comparison-vs">vs</span>
+                    <select id="compareYear2" class="comparison-select" aria-label="Second comparison year"></select>
+                    <select id="compareMonth2" class="comparison-select" aria-label="Second comparison month"></select>
+                    <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
+                    <button class="btn-compare" id="btnResetCompare"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
+                </div>
+            </div>
+
+            <div class="data-notice data-notice-loading" id="dataNotice" role="status" aria-live="polite" hidden></div>
+            <div class="comparison-summary" id="periodComparisonSummary" role="status" aria-live="polite" hidden></div>
+
+            <div class="stats-row">
+                <div class="row g-4">
+                    <div class="col-md-6" data-reveal data-reveal-delay="80">
+                        <div class="hig-card stat-card">
+                            <span class="stat-icon"><i class="bi bi-people-fill"></i></span>
+                            <div>
+                                <div class="stat-num" id="total-participants">0</div>
+                                <div class="stat-lbl"><i class="bi bi-clipboard2-pulse me-2"></i>Total Screened (BMI)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-reveal data-reveal-delay="160">
+                        <div class="hig-card stat-card">
+                            <span class="stat-icon"><i class="bi bi-building"></i></span>
+                            <div>
+                                <div class="stat-num">7</div>
+                                <div class="stat-lbl"><i class="bi bi-grid-3x3-gap me-2"></i>Targeted Sectors</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Stratification -->
+            <div class="risk-section" data-reveal data-reveal-delay="200">
+                <div class="risk-summary">
+                    <div class="risk-title">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        BMI Distribution Summary
+                    </div>
+                    <div class="risk-stats" id="riskStats">
+                        <div class="risk-stat-item info-risk" role="button" tabindex="0" aria-label="Show underweight details" onclick="showRiskCategoryModal('Under_weight')">
+                            <div class="risk-number" id="countUnderweight">--</div>
+                            <div class="risk-label">▼ Underweight</div>
+                            <div class="risk-description">Total count across all sectors</div>
+                        </div>
+                        <div class="risk-stat-item low-risk" role="button" tabindex="0" aria-label="Show normal weight details" onclick="showRiskCategoryModal('Normal_Weight')">
+                            <div class="risk-number" id="countNormal">--</div>
+                            <div class="risk-label">✓ Normal</div>
+                            <div class="risk-description">Total count across all sectors</div>
+                        </div>
+                        <div class="risk-stat-item moderate-risk" role="button" tabindex="0" aria-label="Show overweight details" onclick="showRiskCategoryModal('Over_weight')">
+                            <div class="risk-number" id="countOverweight">--</div>
+                            <div class="risk-label">▲ Overweight</div>
+                            <div class="risk-description">Total count across all sectors</div>
+                        </div>
+                        <div class="risk-stat-item high-risk" role="button" tabindex="0" aria-label="Show obesity details" onclick="showRiskCategoryModal('Obesity')">
+                            <div class="risk-number" id="countObesity">--</div>
+                            <div class="risk-label">■ Obesity</div>
+                            <div class="risk-description">Total count across all sectors</div>
+                        </div>
+                    </div>
+                    <div class="risk-summary-compact" id="topDiseasesSummary">
+                        <span><i class="bi bi-bar-chart-steps me-1"></i>Top BMI categories:</span>
+                        <span id="topDiseaseText">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sectors -->
+            <div class="sectors-section mb-5">
+                <div class="section-eyebrow" data-reveal><i class="bi bi-grid-3x3-gap"></i> HU Sectors Breakdown</div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="60">
+                        <div class="hig-card info-card center sector-card" style="--tile:#3e8bff">
+                            <span class="info-icon"><i class="bi bi-mortarboard"></i></span>
+                            <div class="entity-num" id="num-students">0</div>
+                            <p class="entity-name sector-name mb-0">Students</p>
+                            <div class="participation-rate" id="part-students" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="120">
+                        <div class="hig-card info-card center sector-card" style="--tile:#22ac38">
+                            <span class="info-icon"><i class="bi bi-heart-pulse"></i></span>
+                            <div class="entity-num" id="num-pt">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Physical Therapy</p>
+                            <div class="participation-rate" id="part-pt" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="180">
+                        <div class="hig-card info-card center sector-card" style="--tile:#8f5bff">
+                            <span class="info-icon"><i class="bi bi-capsule"></i></span>
+                            <div class="entity-num" id="num-pharmacy">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Pharmacy</p>
+                            <div class="participation-rate" id="part-pharmacy" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="240">
+                        <div class="hig-card info-card center sector-card" style="--tile:#ff9500">
+                            <span class="info-icon"><i class="bi bi-gear"></i></span>
+                            <div class="entity-num" id="num-eng">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Engineering</p>
+                            <div class="participation-rate" id="part-eng" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="300">
+                        <div class="hig-card info-card center sector-card" style="--tile:#00b8d9">
+                            <span class="info-icon"><i class="bi bi-briefcase"></i></span>
+                            <div class="entity-num" id="num-business">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Business</p>
+                            <div class="participation-rate" id="part-business" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="360">
+                        <div class="hig-card info-card center sector-card" style="--tile:#ffc300">
+                            <span class="info-icon"><i class="bi bi-flower1"></i></span>
+                            <div class="entity-num" id="num-agri">0</div>
+                            <p class="entity-name sector-name mb-0">Faculty of Agriculture</p>
+                            <div class="participation-rate" id="part-agri" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6" data-reveal data-reveal-delay="420">
+                        <div class="hig-card info-card center sector-card" style="--tile:#98a2b3">
+                            <span class="info-icon"><i class="bi bi-person-gear"></i></span>
+                            <div class="entity-num" id="num-workers">0</div>
+                            <p class="entity-name sector-name mb-0">University Workers</p>
+                            <div class="participation-rate" id="part-workers" style="font-size:.7rem;color:var(--text-tertiary);margin-top:4px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-section">
+                <div class="row g-4">
+                    <div class="col-md-12" data-reveal data-reveal-delay="100">
+                        <div class="hig-card chart-card">
+                            <div class="chart-head">
+                                <span class="chart-icon"><i class="bi bi-graph-up-arrow"></i></span>
+                                <div>
+                                    <h2 class="chart-title" id="bmiChartTitle">BMI Distribution in HU Sectors</h2>
+                                </div>
+                            </div>
+                            <div class="viz-legend" id="bmiLegend"></div>
+                            <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart" role="img" aria-label="BMI category distribution chart" aria-describedby="bmiNote bmiDataTable"></canvas></div>
+                            <div class="viz-note" id="bmiNote" aria-live="polite"></div>
+                            <details class="chart-data-table" id="bmiDataTable"></details>
+                        </div>
+                    </div>
+                </div>
+                <div class="drilldown-section" id="drilldownSection" style="display:none;" data-reveal>
+                    <div class="row g-4" id="drilldownCards"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Sector Risk Modal -->
+    <div class="modal fade modal-hig risk-detail-modal" id="sectorRiskModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph"><i class="bi bi-grid-3x3-gap-fill"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="modalSectorName" style="font-size:1.25rem;">Sector Name</h3>
+                            <p class="caption mb-0" id="modalSectorStats">Total Participants: --</p>
+                            <p class="caption mb-0" id="modalRiskScore"></p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-virus me-2" style="color:#eb4435;"></i>Disease Analysis</h6>
+                    <div id="diseaseListContainer" class="disease-list"></div>
+                    <div class="recommendation-box" id="recommendationBox">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <i class="bi bi-lightbulb-fill" style="color:#ff9500;font-size:1.15rem;"></i>
+                            <span class="fw-bold">Recommendations</span>
+                        </div>
+                        <div class="recommendation-text" id="recommendationText"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Category Modal -->
+    <div class="modal fade modal-hig risk-detail-modal" id="riskCategoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center gap-3 w-100 pe-2">
+                        <span class="modal-glyph"><i class="bi bi-shield-check"></i></span>
+                        <div class="flex-grow-1">
+                            <h3 class="modal-title mb-0" id="categoryModalTitle" style="font-size:1.25rem;">Risk Category</h3>
+                            <p class="caption mb-0" id="categoryModalSubtitle">Details</p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="categoryDetailsContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
+                    </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
+                </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project. All Rights Reserved to Dr. Mamdouh Abd Elaziz. Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="hig.js"></script>
+    <script>
+        // Chart theme
+
+        let compChart=null;
+        let currentYear=null, currentMonth=1;
+        let availableYears=[], screeningData={};
+        let currentFullData = null;
+        let comparisonMode = false, comparisonData1 = null, comparisonData2 = null;
+        let comparisonData1Raw = null, comparisonData2Raw = null;
+        let activeSectorFilter='all';
+
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=0&single=true&output=csv";
+
+        // ========== BMI CATEGORIES DATABASE ==========
+        const BMI_CATEGORIES = [
+            { key: 'Under_weight', name: 'Underweight', color: '#3e8bff', recommendation: 'Nutritional counseling recommended - Increase caloric intake with nutrient-dense foods - Monitor for underlying conditions' },
+            { key: 'Normal_Weight', name: 'Normal', color: '#22ac38', recommendation: 'Maintain current lifestyle - Regular physical activity and balanced diet' },
+            { key: 'Over_weight', name: 'Overweight', color: '#ff9500', recommendation: 'Calorie control and physical activity counseling - Structured weight management program - Lifestyle modification recommended' },
+            { key: 'Obesity', name: 'Obesity', color: '#eb4435', recommendation: 'Medical evaluation - Structured weight management program - Screen for metabolic syndrome - Lifestyle modification required' }
+        ];
+
+        const BMI_KEYS = ['Under_weight', 'Normal_Weight', 'Over_weight', 'Obesity'];
+        let lastSyncTime = null;
+
+        function formatLastSync(date) {
+            return date ? date.toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) : 'not available';
+        }
+
+        function updateLastSyncLabel() {
+            const el = document.getElementById('lastSyncLabel');
+            if (!el) return;
+            el.textContent = `Last sync: ${lastSyncTime ? formatLastSync(lastSyncTime) : 'not available'}`;
+        }
+
+        function updateDataStatus(state) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            const wrapper = document.querySelector('.status-indicator');
+            if (!dot || !text || !wrapper) return;
+            dot.className = `status-dot status-${state}`;
+            wrapper.className = `status-indicator status-${state}`;
+            if (state === 'ok') text.textContent = 'Connected to server';
+            else if (state === 'error') text.textContent = 'Server connection lost';
+            else if (state === 'loading') text.textContent = 'Connecting to server...';
+            else text.textContent = 'Status unknown';
+        }
+
+        function setDataNotice(state, message) {
+            const notice = document.getElementById('dataNotice');
+            if (!notice) return;
+            notice.hidden = false;
+            notice.className = `data-notice data-notice-${state}`;
+            notice.setAttribute('role', state === 'error' ? 'alert' : 'status');
+            notice.setAttribute('aria-live', state === 'error' ? 'assertive' : 'polite');
+            notice.replaceChildren();
+            const icon = document.createElement('i');
+            const iconName = state === 'error' ? 'bi-wifi-off' : state === 'loading' ? 'bi-arrow-repeat' : 'bi-info-circle';
+            icon.className = `bi ${iconName}`;
+            icon.setAttribute('aria-hidden', 'true');
+            const text = document.createElement('span');
+            text.className = 'data-notice-message';
+            text.textContent = message;
+            notice.append(icon, text);
+            if (state === 'error') {
+                const retry = document.createElement('button');
+                retry.type = 'button';
+                retry.textContent = 'Retry';
+                retry.addEventListener('click', fetchData);
+                notice.append(retry);
+            }
+        }
+
+        function handleDataError(error) {
+            console.error('Unable to load HU screening data:', error);
+            lastSyncTime = null;
+            updateLastSyncLabel();
+            updateDataStatus('error');
+            setDataNotice('error', 'Unable to load screening data. Check your connection and try again.');
+            const charts = document.querySelector('.charts-section');
+            if (charts) charts.setAttribute('aria-busy', 'false');
+        }
+
+        function fetchData() {
+            showLoadingState();
+            Papa.parse(sheetURL, {
+                download: true, header: true, dynamicTyping: true,
+                complete: result => {
+                    try {
+                        processData(result.data);
+                        lastSyncTime = new Date();
+                        updateLastSyncLabel();
+                        updateDataStatus('ok');
+                        const charts = document.querySelector('.charts-section');
+                        if (charts) charts.setAttribute('aria-busy', 'false');
+                        if (Object.keys(screeningData).length) {
+                            document.getElementById('dataNotice').hidden = true;
+                        } else {
+                            setDataNotice('empty', 'No screening records are available yet.');
+                        }
+                    } catch (error) {
+                        handleDataError(error);
+                    }
+                },
+                error: handleDataError
+            });
+        }
+
+        function showLoadingState() {
+            setDataNotice('loading', 'Loading screening data…');
+            const charts = document.querySelector('.charts-section');
+            if (charts) charts.setAttribute('aria-busy', 'true');
+            ['total-participants','num-students','num-pt','num-pharmacy','num-eng','num-business','num-agri','num-workers'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.textContent='0';
+            });
+            ['countUnderweight','countNormal','countOverweight','countObesity'].forEach(id => {
+                const el = document.getElementById(id); if(el) el.textContent='--';
+            });
+            const label = document.getElementById('lastSyncLabel'); if(label) label.textContent='Last sync: loading...';
+            updateDataStatus('loading');
+        }
+
+        function processData(rows) {
+            screeningData={}; let yearsSet=new Set(), facultyCounts={};
+            rows.forEach(row => {
+                if (!row.Year||!row.Month) return;
+                yearsSet.add(row.Year);
+                const key=`${row.Year}-${row.Month}`;
+                if (!screeningData[key]) {
+                    screeningData[key]={ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, totals:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, participation:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(4).fill(0),workers:Array(4).fill(0),faculties:Array(4).fill(0)}, rawData:{}, details:{students:[],pt:[],pharmacy:[],eng:[],business:[],agri:[],workers:[]} };
+                    facultyCounts[key]=0;
+                }
+                const s=(row.Sector||'').toLowerCase().trim();
+                let sk='';
+                if (s.includes('student')) sk='students';
+                else if (s.includes('physical')||s==='pt') sk='pt';
+                else if (s.includes('pharmacy')) sk='pharmacy';
+                else if (s.includes('engineer')) sk='eng';
+                else if (s.includes('business')) sk='business';
+                else if (s.includes('agri')) sk='agri';
+                else if (s.includes('worker')) sk='workers';
+
+                if (sk) {
+                    const totalCount = row.Total_Count || 0;
+                    const companyTotal = row.Total || 0;
+                    const participationRate = companyTotal > 0 ? ((totalCount / companyTotal) * 100) : 0;
+
+                    screeningData[key].sectors[sk]=totalCount;
+                    screeningData[key].totals[sk]=companyTotal;
+                    screeningData[key].participation[sk]=participationRate;
+                    if (!screeningData[key].rawData[sk]) screeningData[key].rawData[sk]={};
+                    BMI_KEYS.forEach(col => { screeningData[key].rawData[sk][col]=row[col]||0; });
+                    screeningData[key].details[sk].push(row);
+                }
+                const underweight = row.Under_weight||0;
+                const normal = row.Normal_Weight||0;
+                const overweight = row.Over_weight||0;
+                const obesity = row.Obesity||0;
+                const bmi = [underweight, normal, overweight, obesity];
+                if (sk==='students') screeningData[key].complaints.students=bmi;
+                else if (sk==='workers') screeningData[key].complaints.workers=bmi;
+                else if (['pt','pharmacy','eng','business','agri'].includes(sk)) { for(let i=0;i<4;i++) screeningData[key].complaints.faculties[i]+=bmi[i]; facultyCounts[key]++; }
+            });
+            Object.keys(screeningData).forEach(k=>{ const n=facultyCounts[k]||1; for(let i=0;i<4;i++) screeningData[k].complaints.faculties[i]=Math.round(screeningData[k].complaints.faculties[i]/n); });
+            availableYears=Array.from(yearsSet).sort((a,b)=>b-a);
+            if (availableYears.length>0&&currentYear===null) currentYear=availableYears[0];
+            generateYearTabs(); generateMonthDots(); updateDashboard();
+        }
+
+        function getDataForDate(y,m) {
+            return screeningData[`${y}-${m}`]||{ sectors:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, totals:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, participation:{students:0,pt:0,pharmacy:0,eng:0,business:0,agri:0,workers:0}, complaints:{students:Array(4).fill(0),workers:Array(4).fill(0),faculties:Array(4).fill(0)}, rawData:{} };
+        }
+
+        function animateValue(id,end,dur=1000) {
+            const el=document.getElementById(id); if(!el) return;
+            let start=null;
+            const step=ts=>{ if(!start) start=ts; const p=Math.min((ts-start)/dur,1); el.textContent=Math.floor(p*end).toLocaleString(); if(p<1) requestAnimationFrame(step); };
+            requestAnimationFrame(step);
+        }
+
+        function generateYearTabs() {
+            const c=document.getElementById('yearContainer'); c.innerHTML='';
+            (availableYears.length?availableYears:[2025]).forEach(y=>{
+                const btn=document.createElement('button');
+                btn.type='button';
+                btn.className=`year-tab${y===currentYear?' active':''}`;
+                btn.textContent=y;
+                btn.setAttribute('aria-pressed', y===currentYear ? 'true' : 'false');
+                btn.onclick=()=>{ currentYear=y; document.querySelectorAll('.year-tab').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }); btn.classList.add('active'); btn.setAttribute('aria-pressed','true'); generateMonthDots(); updateDashboard(); };
+                c.appendChild(btn);
+            });
+        }
+
+        function generateMonthDots() {
+            const NAMES=['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const c=document.getElementById('monthContainer'); c.innerHTML='';
+            let available=new Set();
+            Object.keys(screeningData).forEach(k=>{ const[y,m]=k.split('-'); if(parseInt(y)===currentYear&&Object.values(screeningData[k].sectors).reduce((a,b)=>a+b,0)>0) available.add(parseInt(m)); });
+            const sorted=[...available].sort((a,b)=>a-b);
+            if (!sorted.length) { c.innerHTML='<span class="sync-note mt-0">No data for this year</span>'; return; }
+            if (!available.has(currentMonth)) currentMonth=sorted[0];
+            sorted.forEach(mi=>{
+                const item=document.createElement('button');
+                item.type='button';
+                item.className=`month-item has-data${mi===currentMonth?' active':''}`;
+                item.setAttribute('aria-label', `${NAMES[mi]} ${currentYear}`);
+                item.setAttribute('aria-pressed', mi===currentMonth ? 'true' : 'false');
+                item.innerHTML=`<span class="month-dot" aria-hidden="true"></span><span class="month-lbl">${NAMES[mi]}</span>`;
+                item.onclick=()=>{ currentMonth=mi; document.querySelectorAll('.month-item').forEach(e=>{ e.classList.remove('active'); e.setAttribute('aria-pressed','false'); }); item.classList.add('active'); item.setAttribute('aria-pressed','true'); resetComparison(); updateDashboard(); };
+                c.appendChild(item);
+            });
+        }
+
+        // ========== RISK STRATIFICATION ==========
+        function getSectorDetailedRisk(sectorName, sectorData, totalCount) {
+            if (!sectorData || totalCount === 0) return { bmiList: [], totalRiskScore:0, riskLevel:'low', recommendations:[], totalCount:0 };
+
+            const underweight = parseInt(sectorData.Under_weight) || 0;
+            const normal = parseInt(sectorData.Normal_Weight) || 0;
+            const overweight = parseInt(sectorData.Over_weight) || 0;
+            const obesity = parseInt(sectorData.Obesity) || 0;
+            const overweightObesity = overweight + obesity;
+
+            const bmiList = [
+                { ...BMI_CATEGORIES[0], count: underweight, percentage: totalCount > 0 ? ((underweight / totalCount) * 100).toFixed(1) : '0.0' },
+                { ...BMI_CATEGORIES[1], count: normal, percentage: totalCount > 0 ? ((normal / totalCount) * 100).toFixed(1) : '0.0' },
+                { ...BMI_CATEGORIES[2], count: overweight, percentage: totalCount > 0 ? ((overweight / totalCount) * 100).toFixed(1) : '0.0' },
+                { ...BMI_CATEGORIES[3], count: obesity, percentage: totalCount > 0 ? ((obesity / totalCount) * 100).toFixed(1) : '0.0' }
+            ];
+
+            // Risk based on overweight/obesity prevalence
+            const overObRate = totalCount > 0 ? (overweightObesity / totalCount) : 0;
+            let totalRiskScore = overObRate;
+            let riskLevel = 'low';
+            if (totalRiskScore > 0.30) riskLevel = 'high';
+            else if (totalRiskScore > 0.10) riskLevel = 'moderate';
+            else riskLevel = 'low';
+
+            const recommendations = [];
+            recommendations.push(`Underweight: ${underweight} | Normal: ${normal} | Overweight: ${overweight} | Obesity: ${obesity} (Total: ${totalCount})`);
+            if (totalRiskScore > 0.30) recommendations.push("Action Required: High overweight/obesity prevalence - Implement weight management programs");
+            else if (totalRiskScore > 0.10) recommendations.push("Action Recommended: Moderate overweight/obesity - Promote healthy lifestyle initiatives");
+            else recommendations.push("Status: Healthy BMI distribution - Maintain wellness programs");
+
+            return { bmiList, totalRiskScore, riskLevel, recommendations, totalCount };
+        }
+
+        function calculateDetailedRiskStats(data) {
+            if (!data || !data.sectors || !data.rawData) return { sectorDetails:{}, topBmi:[] };
+
+            const sectorDetails={};
+            const allBmiCount={};
+
+            const sectors=['students','pt','pharmacy','eng','business','agri','workers'];
+            const sectorNames={ students:'Students', pt:'Physical Therapy', pharmacy:'Pharmacy', eng:'Engineering', business:'Business', agri:'Agriculture', workers:'Workers' };
+
+            sectors.forEach(sector => {
+                const count = data.sectors[sector]||0;
+                const rawData = data.rawData[sector]||{};
+                if (count > 0) {
+                    const detail = getSectorDetailedRisk(sector, rawData, count);
+                    sectorDetails[sector] = { ...detail, name:sectorNames[sector], totalCount:count };
+
+                    detail.bmiList.forEach(d => {
+                        if (!allBmiCount[d.name]) allBmiCount[d.name]=0;
+                        allBmiCount[d.name]+=d.count;
+                    });
+                }
+            });
+
+            const topBmi = Object.entries(allBmiCount)
+                .map(([name,count]) => ({ name, count }))
+                .sort((a,b) => b.count - a.count)
+                .slice(0,4);
+
+            return { sectorDetails, topBmi };
+        }
+
+        function updateDetailedRiskDisplay(data) {
+            const stats = calculateDetailedRiskStats(data);
+            currentFullData = data;
+
+            const totalScreened = Object.values(data.sectors).reduce((a,b)=>a+b,0);
+            animateValue('total-participants', totalScreened, 1500);
+
+            let totalUnderweight = 0, totalNormal = 0, totalOverweight = 0, totalObesity = 0;
+            Object.values(data.rawData).forEach(raw => {
+                totalUnderweight += parseInt(raw.Under_weight) || 0;
+                totalNormal += parseInt(raw.Normal_Weight) || 0;
+                totalOverweight += parseInt(raw.Over_weight) || 0;
+                totalObesity += parseInt(raw.Obesity) || 0;
+            });
+            animateValue('countUnderweight', totalUnderweight, 800);
+            animateValue('countNormal', totalNormal, 800);
+            animateValue('countOverweight', totalOverweight, 800);
+            animateValue('countObesity', totalObesity, 800);
+
+            const topBmiText = document.getElementById('topDiseaseText');
+            if (stats.topBmi.length > 0) {
+                topBmiText.innerHTML = stats.topBmi.map(d=>`<i class="bi bi-dot"></i>${d.name} (${d.count})`).join(' ');
+            } else {
+                topBmiText.innerHTML = 'No BMI data recorded';
+            }
+
+            addSectorDetailButtons(stats.sectorDetails);
+        }
+
+        function addSectorDetailButtons(sectorDetails) {
+            const sectors=['students','pt','pharmacy','eng','business','agri','workers'];
+            sectors.forEach((sector,idx) => {
+                const card=document.querySelectorAll('.sector-card')[idx];
+                if (!card||!sectorDetails[sector]) return;
+
+                const oldBtn=card.querySelector('.sector-risk-detail-btn'); if(oldBtn) oldBtn.remove();
+
+                const detailBtn=document.createElement('button');
+                detailBtn.className='sector-risk-detail-btn';
+                detailBtn.innerHTML=`<i class="bi bi-info-circle"></i> View Details`;
+                detailBtn.onclick=(e)=>{ e.stopPropagation(); showSectorRiskModal(sector,sectorDetails[sector]); };
+                card.appendChild(detailBtn);
+            });
+        }
+
+        function showSectorRiskModal(sectorId, detail) {
+            const openModals = document.querySelectorAll('.modal.show');
+            openModals.forEach(m => { const inst=bootstrap.Modal.getInstance(m); if(inst) inst.hide(); });
+
+            // Get source data for participation rate
+            const source = getDataForDate(currentYear, currentMonth);
+            const participationRate = source.participation[sectorId] || 0;
+            const totalEmployees = source.totals[sectorId] || 0;
+            const screened = source.sectors[sectorId] || 0;
+
+            setTimeout(() => {
+                const modal = new bootstrap.Modal(document.getElementById('sectorRiskModal'), { backdrop:true, keyboard:true });
+                document.getElementById('modalSectorName').innerHTML = detail.name || sectorId;
+                document.getElementById('modalSectorStats').innerHTML = `Total Screened: ${detail.totalCount} | Participation: ${participationRate.toFixed(1)}% (${screened.toLocaleString()} / ${totalEmployees.toLocaleString()})`;
+
+                const riskScoreEl = document.getElementById('modalRiskScore');
+                if (riskScoreEl) riskScoreEl.innerHTML = '';
+
+                const container = document.getElementById('diseaseListContainer');
+                const bmiToShow = detail.bmiList || [];
+
+                if (bmiToShow.length === 0) {
+                    container.innerHTML = `<div class="glass-panel state-panel m-0"><div class="state-icon"><i class="bi bi-check-circle"></i></div><h5 class="state-title">No BMI Data Recorded</h5><p class="state-text">This sector has no recorded BMI data.</p></div>`;
+                } else {
+                    container.innerHTML = bmiToShow.map(d => {
+                        const barColor = d.color;
+                        return `<div class="disease-item">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                                <div class="disease-name">
+                                    <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${barColor};margin-right:8px;"></span>
+                                    <span>${d.name}</span>
+                                </div>
+                                <div class="disease-count">${d.count} <small>(${d.percentage}%)</small></div>
+                            </div>
+                            <div class="progress-risk"><div class="progress-risk-fill" style="width:${Math.min(parseFloat(d.percentage),100)}%;background:${barColor};"></div></div>
+                        </div>`;
+                    }).join('');
+                }
+
+                const recBox = document.getElementById('recommendationBox');
+                const recs = detail.recommendations || [];
+                if (recs.length > 0) {
+                    recBox.style.display='block';
+                    document.getElementById('recommendationText').innerHTML = recs.map(r=>`<div class="mb-1"><i class="bi bi-check2-circle me-2" style="color:var(--accent-color);"></i>${r}</div>`).join('');
+                } else { recBox.style.display='none'; }
+
+                modal.show();
+            }, openModals.length > 0 ? 300 : 0);
+        }
+
+        function showRiskCategoryModal(bmiKey) {
+            if (!currentFullData) return;
+            const stats = calculateDetailedRiskStats(currentFullData);
+            const category = BMI_CATEGORIES.find(c => c.key === bmiKey) || BMI_CATEGORIES[1];
+
+            document.getElementById('categoryModalTitle').innerHTML = `${category.name} by Sector`;
+            document.getElementById('categoryModalSubtitle').innerHTML = `Sectors ranked by ${category.name} count`;
+
+            const sectorsSorted = Object.entries(stats.sectorDetails)
+                .map(([sectorId, detail]) => ({ ...detail, sectorId }))
+                .sort((a, b) => {
+                    const aCount = a.bmiList?.find(d => d.key === bmiKey)?.count || 0;
+                    const bCount = b.bmiList?.find(d => d.key === bmiKey)?.count || 0;
+                    return bCount - aCount;
+                });
+
+            const container = document.getElementById('categoryDetailsContainer');
+            if (sectorsSorted.length === 0) {
+                container.innerHTML = `<div class="glass-panel state-panel m-0"><div class="state-icon"><i class="bi bi-emoji-smile"></i></div><h5 class="state-title">All Clear!</h5><p class="state-text">No sectors with data for this category.</p></div>`;
+            } else {
+                container.innerHTML = sectorsSorted.map(detail => {
+                    const under = detail.bmiList?.find(d => d.key === 'Under_weight');
+                    const normal = detail.bmiList?.find(d => d.key === 'Normal_Weight');
+                    const over = detail.bmiList?.find(d => d.key === 'Over_weight');
+                    const obese = detail.bmiList?.find(d => d.key === 'Obesity');
+                    return `<div class="disease-item" onclick="showSectorRiskModal('${detail.sectorId}', window._lastStats['${detail.sectorId}'])" style="cursor:pointer;">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <strong style="font-size:1rem;">${detail.name}</strong>
+                                <div class="caption">${detail.totalCount} screened | Underweight: ${under ? under.count : 0} | Normal: ${normal ? normal.count : 0} | Overweight: ${over ? over.count : 0} | Obesity: ${obese ? obese.count : 0}</div>
+                            </div>
+                            <div class="disease-count">${category.name}: ${(detail.bmiList?.find(d => d.key === bmiKey)?.count) || 0}</div>
+                        </div>
+                    </div>`;
+                }).join('');
+                window._lastStats = stats.sectorDetails;
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('riskCategoryModal'), { backdrop:true, keyboard:true });
+            modal.show();
+        }
+
+
+        // ========== COMPARISON FUNCTIONS ==========
+        function populateComparisonSelects() {
+            const yearSelect1=document.getElementById('compareYear1'), yearSelect2=document.getElementById('compareYear2');
+            const monthSelect1=document.getElementById('compareMonth1'), monthSelect2=document.getElementById('compareMonth2');
+            const years=[...availableYears].sort((a,b)=>b-a);
+            yearSelect1.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
+            yearSelect2.innerHTML=years.map(y=>`<option value="${y}">${y}</option>`).join('');
+            if (years.length > 1) {
+                const baseYear = (typeof currentYear !== 'undefined' && currentYear !== null && years.includes(currentYear)) ? currentYear : years[0];
+                const baseIndex = years.indexOf(baseYear);
+                if (baseIndex > 0) {
+                    yearSelect2.value = baseYear;
+                    yearSelect1.value = years[baseIndex - 1];
+                } else {
+                    yearSelect2.value = years[0];
+                    yearSelect1.value = years[1];
+                }
+            } else if (years.length === 1) {
+                yearSelect1.value = years[0];
+                yearSelect2.value = years[0];
+            }
+            const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            monthSelect1.innerHTML=mn.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+            monthSelect2.innerHTML=mn.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+            monthSelect1.value=currentMonth; monthSelect2.value=currentMonth;
+        }
+
+        function getSectorKey(label) {
+            const map = {students:'students', pt:'pt', pharmacy:'pharmacy', eng:'eng', business:'business', agri:'agri', workers:'workers'};
+            return map[label] || 'all';
+        }
+
+        function applyFiltersToData(data) {
+            if (!data || !data.sectors) return data;
+            const filtered = { sectors:{}, totals:{}, participation:{}, complaints:{}, rawData:{} };
+            const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
+            const facultyKeys = ['pt','pharmacy','eng','business','agri'];
+            const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
+            const allowed = new Set(selected);
+            sectorKeys.forEach(key => {
+                if (allowed.has(key)) {
+                    filtered.sectors[key] = data.sectors[key] || 0;
+                    filtered.totals[key] = data.totals[key] || 0;
+                    filtered.participation[key] = data.participation[key] || 0;
+                    filtered.complaints[key] = data.complaints[key] || Array(4).fill(0);
+                    filtered.rawData[key] = data.rawData[key] || {};
+                }
+            });
+            if (facultyKeys.some(key => allowed.has(key))) {
+                filtered.complaints.faculties = data.complaints.faculties || Array(4).fill(0);
+            }
+            return filtered;
+        }
+
+        function getFieldFromRow(row, keys) {
+            if (!row) return null;
+            for (const key of keys) {
+                if (row[key] != null && row[key] !== '') return row[key];
+            }
+            return null;
+        }
+
+        function parseAge(value) {
+            const n = Number(value);
+            return Number.isFinite(n) && n > 0 ? n : null;
+        }
+
+        function summarizeRowDetails(rows) {
+            const ages=[];
+            const departments={};
+            rows.forEach(row => {
+                const age = parseAge(getFieldFromRow(row,['Age','age','Age_Years','age_years','AgeYears','ageYears']));
+                if (age) ages.push(age);
+                const dept = getFieldFromRow(row,['Department','department','Dept','dept','Faculty','faculty','Unit','unit']);
+                if (dept) {
+                    const label=String(dept).trim();
+                    if (label) departments[label]=(departments[label]||0)+1;
+                }
+            });
+            const averageAge = ages.length ? Math.round(ages.reduce((a,b)=>a+b,0)/ages.length) : null;
+            const sortedDepartments = Object.entries(departments).sort((a,b)=>b[1]-a[1]);
+            const topDepartments = sortedDepartments.slice(0,3).map(([name,count])=>`${name} (${count})`);
+            return { averageAge, topDepartments, detailCount: rows.length };
+        }
+
+        function createDrilldownCard(title, value, note) {
+            return `<div class="col-md-4"><div class="drilldown-card"><div class="drilldown-card-title">${title}</div><div class="drilldown-card-value">${value}</div><div class="drilldown-card-sub">${note}</div></div></div>`;
+        }
+
+        function showDrilldownCards(type,key) {
+            const data=getDataForDate(currentYear,currentMonth);
+            const sectorNames={students:'Students',pt:'Physical Therapy',pharmacy:'Pharmacy',eng:'Engineering',business:'Business',agri:'Agriculture',workers:'University Workers'};
+            const itemName = type==='sector' ? sectorNames[key] || key : key;
+            const chartData = data.details && data.details[key] ? data.details[key] : [];
+            const summary = summarizeRowDetails(chartData);
+            const riskDetail = getSectorDetailedRisk(key, data.rawData[key]||{}, data.sectors[key]||0);
+            const participationRate = data.participation[key] || 0;
+            const totalEmployees = data.totals[key] || 0;
+            const screened = data.sectors[key] || 0;
+            const cards=[];
+            cards.push(createDrilldownCard('Sector', itemName, `Detailed insight for ${itemName}`));
+            cards.push(createDrilldownCard('Participation', `${participationRate.toFixed(1)}%`, `${screened.toLocaleString()} / ${totalEmployees.toLocaleString()} employees`));
+            const under = riskDetail.bmiList.find(d => d.key === 'Under_weight');
+            const normal = riskDetail.bmiList.find(d => d.key === 'Normal_Weight');
+            const over = riskDetail.bmiList.find(d => d.key === 'Over_weight');
+            const obese = riskDetail.bmiList.find(d => d.key === 'Obesity');
+            cards.push(createDrilldownCard('Underweight', under ? under.count : 0, `${under ? under.percentage : 0}%`));
+            cards.push(createDrilldownCard('Normal', normal ? normal.count : 0, `${normal ? normal.percentage : 0}%`));
+            cards.push(createDrilldownCard('Overweight', over ? over.count : 0, `${over ? over.percentage : 0}%`));
+            cards.push(createDrilldownCard('Obesity', obese ? obese.count : 0, `${obese ? obese.percentage : 0}%`));
+            document.getElementById('drilldownCards').innerHTML = cards.join('');
+            const section = document.getElementById('drilldownSection');
+            section.style.display='block';
+            section.scrollIntoView({ behavior:'smooth', block:'center' });
+        }
+
+        function hideDrilldownSection() {
+            const section = document.getElementById('drilldownSection');
+            if (section) section.style.display = 'none';
+        }
+
+        function bindSectorDrilldown() {
+            const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
+            document.querySelectorAll('.sector-card').forEach((card, idx) => {
+                if (card.dataset.drilldownBound) return;
+                card.dataset.drilldownBound = '1';
+                card.classList.add('is-clickable');
+                card.setAttribute('role', 'button');
+                card.setAttribute('tabindex', '0');
+                const key = sectorKeys[idx];
+                if (!key) return;
+                card.addEventListener('click', () => { if (!comparisonMode) showDrilldownCards('sector', key); });
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (!comparisonMode) showDrilldownCards('sector', key); }
+                });
+            });
+        }
+
+        function updateSectorVisibility() {
+            const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
+            const selected = activeSectorFilter === 'all' ? sectorKeys : [getSectorKey(activeSectorFilter)];
+            const allowed = new Set(selected);
+            sectorKeys.forEach(key => {
+                const numEl=document.getElementById(`num-${key}`);
+                if (!numEl) return;
+                const card = numEl.closest('.sector-card');
+                if (!card) return;
+                card.style.display = allowed.has(key) ? '' : 'none';
+            });
+        }
+
+        function updateFilterState() {
+            updateSectorVisibility();
+            if (!comparisonMode) updateDashboard();
+            else updateComparisonDashboard();
+        }
+
+        function initFilterEvents() {
+            const sectorSelect = document.getElementById('sectorFilter');
+            if (sectorSelect) {
+                sectorSelect.addEventListener('change', () => {
+                    activeSectorFilter = sectorSelect.value;
+                    updateFilterState();
+                });
+            }
+        }
+
+        function showComparisonControls() {
+            const el = document.getElementById('comparisonControls');
+            if (el.style.display === 'none' || el.style.display === '') {
+                el.style.display = 'flex';
+                populateComparisonSelects();
+            } else {
+                el.style.display = 'none';
+            }
+        }
+
+        function performComparison() {
+            hideDrilldownSection();
+            const y1=parseInt(document.getElementById('compareYear1').value), m1=parseInt(document.getElementById('compareMonth1').value);
+            const y2=parseInt(document.getElementById('compareYear2').value), m2=parseInt(document.getElementById('compareMonth2').value);
+            comparisonData1Raw = getDataForDate(y1,m1); comparisonData2Raw = getDataForDate(y2,m2);
+            comparisonData1 = applyFiltersToData(comparisonData1Raw); comparisonData2 = applyFiltersToData(comparisonData2Raw);
+            comparisonMode=true;
+            updateComparisonDashboard();
+            const filterCard=document.querySelector('.filter-card');
+            let badge=filterCard.querySelector('.comparison-badge');
+            if (!badge) { badge=document.createElement('span'); badge.className='comparison-badge'; filterCard.querySelector('.filter-label').after(badge); }
+            const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            badge.innerHTML=`<i class="bi bi-graph-up"></i> Comparing ${mn[m1-1]} ${y1} vs ${mn[m2-1]} ${y2}`;
+        }
+
+        function updateComparisonDashboard() {
+            if (!comparisonMode||!comparisonData1Raw||!comparisonData2Raw) return;
+            comparisonData1 = applyFiltersToData(comparisonData1Raw);
+            comparisonData2 = applyFiltersToData(comparisonData2Raw);
+            const sectors=['students','pt','pharmacy','eng','business','agri','workers'];
+            sectors.forEach(sector=>{
+                const val1=comparisonData1.sectors[sector]||0, val2=comparisonData2.sectors[sector]||0;
+                const numEl=document.getElementById(`num-${sector}`);
+                if (numEl) {
+                    const parent=numEl.closest('.sector-card');
+                    let span=parent.querySelector('.comparison-change');
+                    if (!span) { span=document.createElement('div'); span.className='comparison-change'; numEl.after(span); }
+                    numEl.textContent=val2.toLocaleString();
+                    renderComparisonChange(span, val1, val2);
+                }
+            });
+            const t1=Object.values(comparisonData1.sectors).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.sectors).reduce((a,b)=>a+b,0);
+            const tEl=document.getElementById('total-participants');
+            if (tEl) tEl.textContent=t2.toLocaleString();
+            renderComparisonSummary(t1, t2);
+            updateComparisonCharts();
+        }
+
+        function comparisonChange(first, second) {
+            const difference = second - first;
+            return {
+                difference,
+                percentage: first === 0 ? null : (difference / first) * 100,
+                direction: difference > 0 ? 'up' : difference < 0 ? 'down' : 'steady'
+            };
+        }
+
+        function renderComparisonChange(element, first, second) {
+            const change = comparisonChange(first, second);
+            const arrow = change.direction === 'up' ? '↑' : change.direction === 'down' ? '↓' : '→';
+            const sign = change.difference > 0 ? '+' : change.difference < 0 ? '-' : '';
+            const percentage = change.percentage === null
+                ? (second === 0 ? '0.0%' : 'N/A (baseline is 0)')
+                : `${Math.abs(change.percentage).toFixed(1)}%`;
+            element.className = `comparison-change is-${change.direction}`;
+            element.textContent = `${arrow} ${sign}${Math.abs(change.difference).toLocaleString()} (${percentage}) · ${first.toLocaleString()} → ${second.toLocaleString()}`;
+        }
+
+        function renderComparisonSummary(first, second) {
+            const box = document.getElementById('periodComparisonSummary');
+            if (!box) return;
+            const { lbl1, lbl2 } = comparePeriodLabels();
+            const change = comparisonChange(first, second);
+            const arrow = change.direction === 'up' ? '↑' : change.direction === 'down' ? '↓' : '→';
+            const sign = change.difference > 0 ? '+' : change.difference < 0 ? '-' : '';
+            const direction = change.direction === 'up' ? 'Increase' : change.direction === 'down' ? 'Decrease' : 'No change';
+            const percentage = change.percentage === null
+                ? (second === 0 ? '0.0%' : 'N/A (baseline is 0)')
+                : `${Math.abs(change.percentage).toFixed(1)}%`;
+            box.innerHTML = `
+                <div class="comparison-summary-period"><span>${HIG.escapeHtml(lbl1)}</span><strong>${first.toLocaleString()}</strong></div>
+                <div class="comparison-summary-period"><span>${HIG.escapeHtml(lbl2)}</span><strong>${second.toLocaleString()}</strong></div>
+                <div class="comparison-summary-result is-${change.direction}">
+                    <span>${direction}</span>
+                    <strong>${arrow} ${sign}${Math.abs(change.difference).toLocaleString()} (${percentage})</strong>
+                </div>`;
+            box.hidden = false;
+        }
+
+        function updateComparisonCharts() {
+            if (!comparisonMode) return;
+            const { lbl1, lbl2 } = comparePeriodLabels();
+            if (compChart) compChart.destroy();
+            const groupKeys = ['students', 'faculties', 'workers'];
+            const comp1 = aggregateBmi(comparisonData1.complaints, groupKeys);
+            const comp2 = aggregateBmi(comparisonData2.complaints, groupKeys);
+            const rows = [
+                { label: lbl1, counts: comp1, total: comp1.reduce((a, b) => a + b, 0) },
+                { label: lbl2, counts: comp2, total: comp2.reduce((a, b) => a + b, 0) }
+            ].filter(r => r.total > 0);
+            renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
+            renderBmiNote(bmiCoverageNote(rows.length, groupKeys.length, 'groups'));
+            compChart = bmiStackChart('comparisonChart', rows, 46);
+        }
+
+        function resetComparison() {
+            comparisonMode=false; comparisonData1=null; comparisonData2=null; comparisonData1Raw=null; comparisonData2Raw=null;
+            document.querySelectorAll('.comparison-change').forEach(el=>el.remove());
+            const badge=document.querySelector('.comparison-badge'); if(badge) badge.remove();
+            document.getElementById('periodComparisonSummary').hidden = true;
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            hideDrilldownSection();
+            const source = getDataForDate(currentYear,currentMonth);
+            const d = applyFiltersToData(source);
+            if (!comparisonMode) {
+                const sectorKeys = ['students','pt','pharmacy','eng','business','agri','workers'];
+                sectorKeys.forEach(s=>{
+                    animateValue(`num-${s}`, d.sectors[s]||0);
+                    const partEl = document.getElementById(`part-${s}`);
+                    if (partEl) {
+                        const rate = source.participation[s] || 0;
+                        const total = source.totals[s] || 0;
+                        const screened = source.sectors[s] || 0;
+                        if (total > 0) {
+                            partEl.innerHTML = `<i class="bi bi-people"></i> ${rate.toFixed(1)}% participation (${screened.toLocaleString()} / ${total.toLocaleString()})`;
+                        } else {
+                            partEl.innerHTML = '';
+                        }
+                    }
+                });
+                animateValue('total-participants', Object.values(d.sectors).reduce((a,b)=>a+b,0),1500);
+                updateCharts(d);
+                updateDetailedRiskDisplay(d);
+                updateSectorVisibility(source);
+            }
+        }
+
+// ========== AESTHETIC VIZ SYSTEM ==========
+        const VIZ = {
+    font: 'Fredoka, Cairo, sans-serif',
+    ink: '#26354a',
+    text: '#536175',
+    faint: '#788396',
+    hair: 'rgba(38,53,74,0.12)',
+    surface: '#fffdf7',
+    muted: 'rgba(38,53,74,0.2)',
+            accent: '#f36b4f',
+    bmi: ['#55b9e8', '#63c98a', '#f5bd48', '#f17667'],
+            bmiLabels: ['Underweight', 'Normal', 'Overweight', 'Obesity']
+        };
+
+        function vizTooltip(callbacks) {
+            return {
+        backgroundColor: '#fffdf7',
+                titleColor: VIZ.ink,
+                bodyColor: VIZ.text,
+        titleFont: { family: VIZ.font, size: 14, weight: '600' },
+                bodyFont: { family: VIZ.font, size: 12 },
+        padding: { top: 11, bottom: 11, left: 14, right: 16 },
+        cornerRadius: 16,
+        caretSize: 7,
+        caretPadding: 7,
+                displayColors: false,
+        borderColor: VIZ.ink,
+        borderWidth: 2,
+        titleMarginBottom: 5,
+                boxPadding: 4,
+                callbacks
+            };
+        }
+
+        function pctOf(part, total) { return total > 0 ? (part / total) * 100 : 0; }
+
+        function renderInlineLegend(boxId, items) {
+            const box = document.getElementById(boxId);
+            if (!box) return;
+            box.classList.add('viz-legend-inline');
+            box.innerHTML = items.map((it, index) => `<button type="button" class="viz-legend-item" data-dataset-index="${index}" aria-pressed="true" aria-label="Hide ${HIG.escapeHtml(it.label)} data"><span class="viz-legend-dot" style="background:${it.color}" aria-hidden="true"></span>${HIG.escapeHtml(it.label)}</button>`).join('');
+            box.querySelectorAll('.viz-legend-item').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (!compChart) return;
+                    const index = Number(button.dataset.datasetIndex);
+                    const visible = !compChart.isDatasetVisible(index);
+                    compChart.setDatasetVisibility(index, visible);
+                    compChart.update();
+                    button.setAttribute('aria-pressed', String(visible));
+                    const label = items[index].label;
+                    button.setAttribute('aria-label', `${visible ? 'Hide' : 'Show'} ${label} data`);
+                    button.classList.toggle('is-hidden', !visible);
+                });
+            });
+        }
+
+        function bmiCounts(values) {
+            const v = Array.isArray(values) ? values : [];
+            return [Number(v[0]) || 0, Number(v[1]) || 0, Number(v[2]) || 0, Number(v[3]) || 0];
+        }
+
+        function aggregateBmi(complaints, keys) {
+            const total = [0, 0, 0, 0];
+            keys.forEach(key => {
+                const c = bmiCounts(complaints[key]);
+                c.forEach((v, i) => { total[i] += v; });
+            });
+            return total;
+        }
+
+        function comparePeriodLabels() {
+            const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const y1 = document.getElementById('compareYear1').value;
+            const m1 = parseInt(document.getElementById('compareMonth1').value);
+            const y2 = document.getElementById('compareYear2').value;
+            const m2 = parseInt(document.getElementById('compareMonth2').value);
+            const fmt = (m, y) => (m && y) ? `${mn[m-1]} ${y}` : '';
+            return { lbl1: fmt(m1, y1) || 'Period 1', lbl2: fmt(m2, y2) || 'Period 2' };
+        }
+
+        const segmentLabels = {
+            id: 'segmentLabels',
+            afterDatasetsDraw(chart) {
+                if (chart.options.indexAxis !== 'y') return;
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.font = `600 11px ${VIZ.font}`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                chart.data.datasets.forEach((ds, di) => {
+                    const meta = chart.getDatasetMeta(di);
+                    if (!meta || meta.hidden) return;
+                    meta.data.forEach((bar, i) => {
+                        if (!bar) return;
+                        const base = typeof bar.base === 'number' ? bar.base : bar.x;
+                        const width = Math.abs(bar.x - base);
+                        const val = ds.data[i] || 0;
+                        if (width < 40 || val < 7) return;
+                        ctx.fillStyle = di === 2 ? '#26354a' : '#fffdf7';
+                        ctx.shadowColor = 'rgba(38,53,74,0.2)';
+                        ctx.shadowBlur = 2;
+                        ctx.fillText(`${val.toFixed(0)}%`, (bar.x + base) / 2, bar.y);
+                    });
+                });
+                ctx.restore();
+            }
+        };
+
+        function renderBmiNote(text) {
+            const box = document.getElementById('bmiNote');
+            if (box) box.textContent = text || '';
+        }
+
+        function bmiCoverageNote(shown, total, noun) {
+            if (!shown) return 'No BMI data for this selection. Choose another period or adjust the filters.';
+            const coverage = shown < total ? ` BMI data is available for ${shown} of ${total} ${noun}.` : '';
+            return coverage.trim();
+        }
+
+        function renderBmiDataTable(rows) {
+            const details = document.getElementById('bmiDataTable');
+            if (!details) return;
+            if (!rows.length) {
+                details.innerHTML = '<summary>View chart data</summary><p>No BMI records are available for this selection.</p>';
+                return;
+            }
+            const headers = VIZ.bmiLabels.map(label => `<th scope="col">${HIG.escapeHtml(label)} count (%)</th>`).join('');
+            const body = rows.map(row => `<tr><th scope="row">${HIG.escapeHtml(row.label)}</th>${row.counts.map(count => `<td>${count.toLocaleString()} (${pctOf(count, row.total).toFixed(1)}%)</td>`).join('')}</tr>`).join('');
+            details.innerHTML = `<summary>View chart data</summary><div class="table-responsive"><table class="table table-sm align-middle"><caption class="visually-hidden">BMI category counts and percentages by group</caption><thead><tr><th scope="col">Group</th>${headers}</tr></thead><tbody>${body}</tbody></table></div>`;
+        }
+
+        // Composition view: one row per company, split into its BMI categories
+        function bmiStackChart(canvasId, rows, maxBarThickness) {
+            const datasets = VIZ.bmiLabels.map((label, i) => ({
+                label,
+                data: rows.map(r => pctOf(r.counts[i], r.total)),
+                counts: rows.map(r => r.counts[i]),
+                backgroundColor: VIZ.bmi[i],
+                borderColor: '#fffdf7',
+                borderWidth: 2,
+                borderRadius: i === 0
+                    ? { topLeft: 20, bottomLeft: 20 }
+                    : i === VIZ.bmiLabels.length - 1
+                        ? { topRight: 20, bottomRight: 20 }
+                        : 0,
+                borderSkipped: false,
+                barPercentage: 0.72,
+                categoryPercentage: 0.86,
+                maxBarThickness
+            }));
+            const chart = new Chart(document.getElementById(canvasId), {
+                type: 'bar',
+                data: { labels: rows.map(r => r.label), datasets },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', axis: 'y', intersect: false },
+                    animation: { duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650, easing: 'easeOutQuart' },
+                    layout: { padding: { top: 8, right: 4, left: 4 } },
+                    scales: {
+                        x: { stacked: true, min: 0, max: 100, grid: { color: VIZ.hair, lineWidth: 1.5, drawTicks: false }, border: { display: false }, ticks: { color: VIZ.text, font: { family: VIZ.font, size: 11, weight: '500' }, padding: 8, callback: v => v + '%' } },
+                        y: { stacked: true, grid: { display: false }, border: { display: false }, ticks: { color: VIZ.ink, padding: 8, font: { family: VIZ.font, size: 12, weight: '500' } } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: vizTooltip({
+                            label: ctx => { const c = ctx.dataset.counts[ctx.dataIndex] || 0; return ` ${ctx.dataset.label}: ${c.toLocaleString()} (${ctx.parsed.x.toFixed(1)}%)`; },
+                            footer: items => { const sum = items.reduce((a, b) => a + (b.dataset.counts[b.dataIndex] || 0), 0); return `Total: ${sum.toLocaleString()}`; }
+                        })
+                    }
+                },
+                plugins: [segmentLabels]
+            });
+            return chart;
+        }
+
+        function buildBmiChart(d) {
+            const groupKeys = ['students', 'faculties', 'workers'];
+            const groupLabels = { students: 'Students', faculties: 'Faculties', workers: 'Workers' };
+            const rows = groupKeys
+                .filter(key => Array.isArray(d.complaints[key]))
+                .map(key => { const counts = bmiCounts(d.complaints[key]); return { label: groupLabels[key], counts, total: counts.reduce((a, b) => a + b, 0) }; })
+                .filter(r => r.total > 0);
+            renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
+            renderBmiNote(bmiCoverageNote(rows.length, groupKeys.length, 'groups'));
+            renderBmiDataTable(rows);
+            const canvas = document.getElementById('comparisonChart');
+            if (canvas) canvas.setAttribute('aria-label', rows.length
+                ? `Stacked percentage bar chart showing BMI categories for ${rows.map(row => row.label).join(', ')}. Use the category buttons to show or hide categories, or expand the chart data table for exact counts and percentages.`
+                : 'No BMI data is available for this selection.');
+            compChart = bmiStackChart('comparisonChart', rows, 40);
+        }
+
+        function updateCharts(d) {
+            if (compChart) compChart.destroy();
+            buildBmiChart(d);
+        }
+
+        function initComparisonEvents() {
+            const compareBtn=document.createElement('button');
+            compareBtn.className='btn-compare'; compareBtn.style.cssText='margin-top:16px;margin-right:auto;';
+            compareBtn.innerHTML='<i class="bi bi-graph-up me-1"></i> Compare Periods';
+            compareBtn.onclick=showComparisonControls;
+            document.querySelector('.filter-card .filter-label').after(compareBtn);
+            document.getElementById('btnCompare').addEventListener('click',performComparison);
+            document.getElementById('btnResetCompare').addEventListener('click',resetComparison);
+        }
+
+        // Globals for onclick
+        window.showSectorRiskModal  = showSectorRiskModal;
+        window.showRiskCategoryModal = showRiskCategoryModal;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('btnCompare')) initComparisonEvents();
+            if(document.getElementById('sectorFilter')) initFilterEvents();
+            document.querySelectorAll('.risk-stat-item[role="button"]').forEach(item => {
+                item.addEventListener('keydown', event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    event.preventDefault();
+                    item.click();
+                });
+            });
+            bindSectorDrilldown();
+            fetchData();
+        });
+    </script>
+
+</body>
+</html>

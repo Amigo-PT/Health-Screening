@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fff8e9" />
+    <meta name="description" content="Health screening activities, events and initiatives of the project.">
+    <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="The Health Screening Project">
+    <link rel="canonical" href="https://amigo-pt.github.io/Health-Screening/activities.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Activities & Events">
+    <meta property="og:description" content="Health screening activities, events and initiatives of the project.">
+    <meta property="og:url" content="https://amigo-pt.github.io/Health-Screening/activities.html">
+    <meta property="og:site_name" content="The Health Screening Project">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Activities & Events">
+    <meta name="twitter:description" content="Health screening activities, events and initiatives of the project.">
+
+    <title>Activities & Events | The Health Screening Project</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="hig.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-hero" data-reveal data-reveal-delay="80">
+                Activities &amp;<br><span class="text-accent-gradient">Events Log</span>
+            </h1>
+
+            <div class="d-flex justify-content-center mt-4" data-reveal data-reveal-delay="240">
+                <div class="seg-control" id="category-seg" role="group" aria-label="Filter activities by category">
+                    <button class="seg-btn active" type="button" data-value="All">All</button>
+                    <button class="seg-btn" type="button" data-value="Workshop">Workshop</button>
+                    <button class="seg-btn" type="button" data-value="Campaign">Campaign</button>
+                    <button class="seg-btn" type="button" data-value="Event">Event</button>
+                    <button class="seg-btn" type="button" data-value="Other">Other</button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center flex-wrap gap-3 mt-4" data-reveal data-reveal-delay="320">
+                <div class="glass-panel stat-tile justify-content-center">
+                    <span class="stat-icon"><i class="bi bi-calendar3"></i></span>
+                    <div class="text-center">
+                        <div class="stat-label">Total Activities</div>
+                        <div class="stat-value" id="activitiesCount" aria-hidden="true">0</div>
+                        <span class="visually-hidden" id="activitiesCountLive" role="status" aria-live="polite" aria-atomic="true"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="section-block pb-5">
+        <div class="container" id="month-groups-container"></div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
+                    </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
+                </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project. All Rights Reserved to Dr. Mamdouh Abd Elaziz. Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="hig.js"></script>
+    <script>
+        const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=375204157&single=true&output=csv";
+
+        const CAT_COLORS = {
+            'All': '#3e8bff',
+            'Workshop': '#00b8d9',
+            'Campaign': '#ff9500',
+            'Event': '#8f5bff',
+            'Other': '#98a2b3'
+        };
+
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+        let allData = [];
+        let currentFilter = 'All';
+        const container = document.getElementById('month-groups-container');
+
+        function getCatColor(cat) {
+            return CAT_COLORS[cat] || CAT_COLORS['Other'];
+        }
+
+        function parseActivityDate(value) {
+            if (!value) return null;
+            const text = String(value).trim();
+            const parsed = new Date(text);
+            if (!isNaN(parsed)) return parsed;
+            const lower = text.toLowerCase();
+            for (let i = 0; i < monthNames.length; i++) {
+                if (lower.includes(monthNames[i].toLowerCase())) {
+                    const yearMatch = text.match(/(20\d{2}|19\d{2})/);
+                    return new Date(yearMatch ? parseInt(yearMatch[1]) : new Date().getFullYear(), i, 1);
+                }
+            }
+            const numeric = text.match(/(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/);
+            if (numeric) {
+                const monthPart = parseInt(numeric[2], 10);
+                const yearPart = numeric[3] ? parseInt(numeric[3], 10) : null;
+                const year = yearPart ? (yearPart < 100 ? 2000 + yearPart : yearPart) : new Date().getFullYear();
+                if (monthPart >= 1 && monthPart <= 12) return new Date(year, monthPart - 1, 1);
+            }
+            return null;
+        }
+
+        function showSkeletons() {
+            container.innerHTML = [1, 2].map(() => `
+                <div class="month-group">
+                    <div class="month-head">
+                        <div class="skeleton" style="width:40px;height:40px;border-radius:13px;"></div>
+                        <div class="skeleton" style="width:140px;height:18px;"></div>
+                    </div>
+                    <div class="row g-4">
+                        ${[1, 2, 3].map(() => `
+                            <div class="col-md-6 col-xl-4">
+                                <div class="skel-card">
+                                    <div class="skeleton" style="height:58%;border-radius:0;"></div>
+                                    <div class="p-4">
+                                        <div class="skeleton mb-2" style="width:60%;height:16px;"></div>
+                                        <div class="skeleton mb-2" style="height:11px;"></div>
+                                        <div class="skeleton" style="width:38%;height:11px;"></div>
+                                    </div>
+                                </div>
+                            </div>`).join('')}
+                    </div>
+                </div>`).join('');
+        }
+
+        function statePanel(icon, title, text) {
+            return `
+                <div class="glass-panel state-panel" data-reveal>
+                    <div class="state-icon"><i class="bi ${icon}"></i></div>
+                    <h5 class="state-title">${title}</h5>
+                    <p class="state-text">${text}</p>
+                </div>`;
+        }
+
+        function activityCard(item, idx, monthName) {
+            const color = getCatColor(item.Category || 'Other');
+            const imgUrl = item.Image_URL || 'https://placehold.co/640x400/1c1c1e/48484a?text=No+Image';
+            const galleryUrl = `activity_photos.html?title=${encodeURIComponent(item.Title)}&desc=${encodeURIComponent(item.Description || '')}`;
+            const day = item.parsedDate.getDate();
+
+            return `
+                <div class="col-md-6 col-xl-4">
+                    <article class="hig-card" style="--chip:${color}" data-reveal data-reveal-delay="${Math.min(idx * 70, 420)}">
+                        <div class="card-media">
+                            <img src="${imgUrl}" alt="${HIG.escapeHtml(item.Title)}" loading="lazy">
+                            <span class="badge-glass media-badge-tl"><i class="bi bi-calendar3"></i>${day} ${monthName.slice(0, 3)}</span>
+                            <span class="chip media-badge-tr">${HIG.escapeHtml(item.Category || 'Other')}</span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">${HIG.escapeHtml(item.Title)}</h3>
+                            <p class="card-desc">${HIG.escapeHtml(item.Description || 'No description available.')}</p>
+                            <div class="card-foot">
+                                <a href="${galleryUrl}" class="link-action">View Photos</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>`;
+        }
+
+        function renderMonthGroups(data) {
+            if (container.getAttribute('aria-busy') === 'true') return;
+            container.innerHTML = '';
+
+            const filtered = data.filter(item => {
+                const categoryMatch = currentFilter === 'All' || (item.Category || 'Other') === currentFilter;
+                return categoryMatch;
+            });
+            const countLabel = `${filtered.length} ${filtered.length === 1 ? 'activity' : 'activities'} shown`;
+            document.getElementById('activitiesCountLive').textContent = countLabel;
+
+            if (filtered.length === 0) {
+                HIG.countUp(document.getElementById('activitiesCount'), 0);
+                container.innerHTML = statePanel('bi-calendar-x', 'No Activities Found', 'No entries match the selected filter.');
+                HIG.refreshReveals(container);
+                return;
+            }
+
+            const activitiesByMonth = {};
+            filtered.forEach(item => {
+                const date = parseActivityDate(item.Date || item.date || item.Activity_Date);
+                if (!date) return;
+                const key = date.getFullYear() + '-' + date.getMonth();
+                if (!activitiesByMonth[key]) activitiesByMonth[key] = [];
+                activitiesByMonth[key].push({ ...item, parsedDate: date });
+            });
+
+            const sortedKeys = Object.keys(activitiesByMonth).sort((a, b) => {
+                const [yearA, monthA] = a.split('-').map(Number);
+                const [yearB, monthB] = b.split('-').map(Number);
+                return (yearB * 12 + monthB) - (yearA * 12 + monthA);
+            });
+
+            const shownCount = sortedKeys.reduce((sum, key) => sum + activitiesByMonth[key].length, 0);
+            HIG.countUp(document.getElementById('activitiesCount'), shownCount);
+
+            sortedKeys.forEach(key => {
+                const [year, month] = key.split('-').map(Number);
+                const activities = activitiesByMonth[key].sort((a, b) => b.parsedDate - a.parsedDate);
+                const monthName = monthNames[month];
+
+                const cardsHtml = activities.map((item, idx) => activityCard(item, idx, monthName)).join('');
+
+                container.insertAdjacentHTML('beforeend', `
+                    <section class="month-group">
+                        <div class="month-head" data-reveal>
+                            <span class="month-icon"><i class="bi bi-calendar3"></i></span>
+                            <h2 class="month-name">${monthName} <span class="month-year">${year}</span></h2>
+                            <span class="chip month-count" style="--chip:var(--accent-color)">${activities.length}</span>
+                        </div>
+                        <div class="row g-4">${cardsHtml}</div>
+                    </section>`);
+            });
+
+            HIG.refreshReveals(container);
+        }
+
+        function fetchData() {
+            showSkeletons();
+            container.setAttribute('aria-busy', 'true');
+            const minDelay = new Promise(r => setTimeout(r, 600));
+            const dataFetch = new Promise((resolve, reject) => {
+                Papa.parse(sheetURL, {
+                    download: true, header: true, dynamicTyping: true,
+                    complete: r => resolve(r.data),
+                    error: e => reject(e)
+                });
+            });
+            Promise.all([minDelay, dataFetch])
+                .then(([_, data]) => {
+                    container.setAttribute('aria-busy', 'false');
+                    allData = data.filter(d => d.Title);
+                    renderMonthGroups(allData);
+                })
+                .catch(err => {
+                    console.error('Could not load activities:', err);
+                    container.setAttribute('aria-busy', 'false');
+                    container.innerHTML = `
+                        <div class="glass-panel state-panel" role="alert">
+                            <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
+                            <h5 class="state-title">Connection Error</h5>
+                            <p class="state-text">Could not load activities. Please check your connection and try again.</p>
+                            <button type="button" class="btn-hig btn-primary-hig" id="retryActivities">
+                                <i class="bi bi-arrow-repeat" aria-hidden="true"></i> Retry
+                            </button>
+                        </div>`;
+                    document.getElementById('retryActivities').addEventListener('click', fetchData);
+                    HIG.refreshReveals(container);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            HIG.initSegmented(document.getElementById('category-seg'), (value) => {
+                currentFilter = value;
+                HIG.setAccent(getCatColor(value));
+                renderMonthGroups(allData);
+            });
+            fetchData();
+        });
+    </script>
+
+</body>
+</html>

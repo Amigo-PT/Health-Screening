@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#fff8e9" />
+    <meta name="description" content="Photo gallery of health screening activities and events.">
+    <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="The Health Screening Project">
+    <link rel="canonical" href="https://amigo-pt.github.io/Health-Screening/activity_photos.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Activity Gallery">
+    <meta property="og:description" content="Photo gallery of health screening activities and events.">
+    <meta property="og:url" content="https://amigo-pt.github.io/Health-Screening/activity_photos.html">
+    <meta property="og:site_name" content="The Health Screening Project">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Activity Gallery">
+    <meta name="twitter:description" content="Photo gallery of health screening activities and events.">
+
+    <title>Activity Gallery | The Health Screening Project</title>
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="hig.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+
+    <div class="ambient" aria-hidden="true">
+        <div class="ambient-layer">
+            <div class="ambient-blob b1"></div>
+            <div class="ambient-blob b2"></div>
+            <div class="ambient-blob b3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-hig">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                <span class="brand-text">Health Screening</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="screening.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="intervention.html">Interventions</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="activities.html">Activities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="surveys.html">Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn-hig btn-glass-hig btn-sm-hig" href="activities.html"><i class="bi bi-chevron-left"></i> Activities</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-hero" id="activity-title" data-reveal data-reveal-delay="80">Loading&hellip;</h1>
+            <div id="activity-description"></div>
+            <div class="d-flex justify-content-center flex-wrap gap-3 mt-4" id="stats-row" hidden>
+                <div class="glass-panel stat-tile justify-content-center">
+                    <span class="stat-icon"><i class="bi bi-images"></i></span>
+                    <div class="text-center">
+                        <div class="stat-label">Photos</div>
+                        <div class="stat-value" id="photo-count" role="status" aria-live="polite" aria-atomic="true">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="section-block pb-5">
+        <div class="container">
+            <div id="photos-container" class="gallery-grid" aria-busy="true"></div>
+            <div id="error-message"></div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6" data-reveal>
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="brand-mark"><i class="bi bi-heart-pulse-fill"></i></span>
+                        <span class="brand-text">Health Screening</span>
+                    </div>
+                    <p class="footer-blurb">A scientific preventive approach for a sustainable quality of life within the SEKEM community.</p>
+                </div>
+                <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
+                    <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-rule" />
+            <p class="footer-copy">&copy; 2026 Health Screening Project. All Rights Reserved to Dr. Mamdouh Abd Elaziz. Developed by <span class="dev">Dr. Mamdouh Abd Elaziz</span></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="hig.js"></script>
+    <script>
+        let galleryImages = [];
+        let lightboxSources = [];
+        const photosContainer = document.getElementById('photos-container');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const title = params.get('title');
+            const desc = params.get('desc');
+
+            if (!title) { showError('Activity not specified.'); return; }
+
+            document.getElementById('activity-title').innerHTML =
+                `<span class="text-accent-gradient">${HIG.escapeHtml(title)}</span>`;
+
+            if (desc) {
+                const descBox = document.getElementById('activity-description');
+                descBox.innerHTML =
+                    `<div class="glass-panel desc-panel" data-reveal data-reveal-delay="140">${HIG.escapeHtml(desc)}</div>`;
+                HIG.refreshReveals(descBox);
+            }
+
+            photosContainer.setAttribute('aria-busy', 'true');
+            showSkeletons();
+            setTimeout(() => renderGallery(), 600);
+        });
+
+        function showSkeletons() {
+            photosContainer.innerHTML = Array.from({ length: 8 }, (_, i) => `
+                <div class="skel-card" style="${i % 5 === 0 ? 'grid-column:span 2;' : ''}">
+                    <div class="skeleton" style="height:100%;border-radius:0;"></div>
+                </div>`).join('');
+        }
+
+        async function renderGallery() {
+            const title = new URLSearchParams(window.location.search).get('title') || '';
+            const folderName = title.trim().replace(/\s+/g, '_').replace(/[^\w-]/g, '');
+            const basePath = `activity_images/${folderName}/`;
+            const exts = ['webp'];
+            const maxCheck = 100;
+            let validImages = [];
+            let promises = [];
+
+            for (let i = 1; i <= maxCheck; i++) {
+                const num = i.toString().padStart(3, '0');
+                for (const ext of exts) {
+                    const url = `${basePath}${num}.${ext}`;
+                    promises.push(new Promise(resolve => {
+                        const img = new Image();
+                        img.src = url;
+                        img.onload = () => {
+                            validImages.push({ url, num: i, width: img.width, height: img.height });
+                            resolve();
+                        };
+                        img.onerror = resolve;
+                    }));
+                }
+            }
+
+            await Promise.all(promises);
+            photosContainer.setAttribute('aria-busy', 'false');
+            validImages.sort((a, b) => a.num - b.num);
+            galleryImages = validImages.map(v => v.url);
+            lightboxSources = galleryImages.map(src => ({ src }));
+
+            photosContainer.innerHTML = '';
+
+            if (validImages.length === 0) {
+                document.getElementById('error-message').innerHTML = `
+                    <div class="glass-panel state-panel" role="status" data-reveal>
+                        <div class="state-icon"><i class="bi bi-images"></i></div>
+                        <h5 class="state-title">No Photos Found</h5>
+                        <p class="state-text">We couldn't find any photos for this activity yet.</p>
+                    </div>`;
+                HIG.refreshReveals(document.getElementById('error-message'));
+                return;
+            }
+
+            document.getElementById('photo-count').textContent = galleryImages.length;
+            document.getElementById('stats-row').hidden = false;
+
+            validImages.forEach((item, idx) => {
+                const aspectRatio = item.height / item.width;
+                let sizeClass = '';
+                if (idx % 7 === 0 && validImages.length > 3) {
+                    sizeClass = 'wide';
+                } else if (idx % 5 === 0 && aspectRatio > 1.2) {
+                    sizeClass = 'portrait';
+                } else if (idx % 3 === 0 && idx % 2 === 0) {
+                    sizeClass = 'featured';
+                }
+
+                const figure = document.createElement('figure');
+                figure.className = `gallery-item ${sizeClass}`.trim();
+                figure.setAttribute('role', 'button');
+                figure.setAttribute('tabindex', '0');
+                figure.setAttribute('aria-label', `Open activity photo ${idx + 1}`);
+                figure.setAttribute('data-reveal', '');
+                figure.setAttribute('data-reveal-delay', String((idx % 10) * 50));
+                figure.innerHTML = `
+                    <img src="${item.url}" alt="Activity moment ${idx + 1}" loading="lazy">
+                    <figcaption class="idx"><i class="bi bi-camera-fill"></i>${String(idx + 1).padStart(2, '0')}</figcaption>`;
+                figure.addEventListener('click', () => HIG.lightbox.open(lightboxSources, idx, figure));
+                figure.addEventListener('keydown', event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    event.preventDefault();
+                    HIG.lightbox.open(lightboxSources, idx, figure);
+                });
+                photosContainer.appendChild(figure);
+            });
+
+            HIG.refreshReveals(photosContainer);
+        }
+
+        function showError(msg) {
+            photosContainer.setAttribute('aria-busy', 'false');
+            document.getElementById('activity-title').textContent = 'Error';
+            photosContainer.innerHTML = '';
+            document.getElementById('error-message').innerHTML = `
+                <div class="glass-panel state-panel" role="alert">
+                    <div class="state-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                    <h5 class="state-title">${HIG.escapeHtml(msg)}</h5>
+                </div>`;
+        }
+    </script>
+
+</body>
+</html>
