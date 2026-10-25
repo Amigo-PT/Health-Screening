@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#f6f6f8" />
+    <meta name="theme-color" content="#fff8e9" />
     <meta name="description" content="Photo gallery of health screening activities and events.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
@@ -24,13 +24,13 @@
     <meta name="twitter:description" content="Photo gallery of health screening activities and events.">
 
     <title>Activity Gallery | The Health Screening Project</title>
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="hig.css">
 
@@ -80,7 +80,7 @@
                     <span class="stat-icon"><i class="bi bi-images"></i></span>
                     <div class="text-center">
                         <div class="stat-label">Photos</div>
-                        <div class="stat-value" id="photo-count">0</div>
+                        <div class="stat-value" id="photo-count" role="status" aria-live="polite" aria-atomic="true">0</div>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
 
     <main class="section-block pb-5">
         <div class="container">
-            <div id="photos-container" class="gallery-grid"></div>
+            <div id="photos-container" class="gallery-grid" aria-busy="true"></div>
             <div id="error-message"></div>
         </div>
     </main>
@@ -140,6 +140,7 @@
                 HIG.refreshReveals(descBox);
             }
 
+            photosContainer.setAttribute('aria-busy', 'true');
             showSkeletons();
             setTimeout(() => renderGallery(), 600);
         });
@@ -177,6 +178,7 @@
             }
 
             await Promise.all(promises);
+            photosContainer.setAttribute('aria-busy', 'false');
             validImages.sort((a, b) => a.num - b.num);
             galleryImages = validImages.map(v => v.url);
             lightboxSources = galleryImages.map(src => ({ src }));
@@ -185,7 +187,7 @@
 
             if (validImages.length === 0) {
                 document.getElementById('error-message').innerHTML = `
-                    <div class="glass-panel state-panel" data-reveal>
+                    <div class="glass-panel state-panel" role="status" data-reveal>
                         <div class="state-icon"><i class="bi bi-images"></i></div>
                         <h5 class="state-title">No Photos Found</h5>
                         <p class="state-text">We couldn't find any photos for this activity yet.</p>
@@ -210,12 +212,20 @@
 
                 const figure = document.createElement('figure');
                 figure.className = `gallery-item ${sizeClass}`.trim();
+                figure.setAttribute('role', 'button');
+                figure.setAttribute('tabindex', '0');
+                figure.setAttribute('aria-label', `Open activity photo ${idx + 1}`);
                 figure.setAttribute('data-reveal', '');
                 figure.setAttribute('data-reveal-delay', String((idx % 10) * 50));
                 figure.innerHTML = `
                     <img src="${item.url}" alt="Activity moment ${idx + 1}" loading="lazy">
                     <figcaption class="idx"><i class="bi bi-camera-fill"></i>${String(idx + 1).padStart(2, '0')}</figcaption>`;
-                figure.addEventListener('click', () => HIG.lightbox.open(lightboxSources, idx));
+                figure.addEventListener('click', () => HIG.lightbox.open(lightboxSources, idx, figure));
+                figure.addEventListener('keydown', event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    event.preventDefault();
+                    HIG.lightbox.open(lightboxSources, idx, figure);
+                });
                 photosContainer.appendChild(figure);
             });
 
@@ -223,10 +233,11 @@
         }
 
         function showError(msg) {
+            photosContainer.setAttribute('aria-busy', 'false');
             document.getElementById('activity-title').textContent = 'Error';
             photosContainer.innerHTML = '';
             document.getElementById('error-message').innerHTML = `
-                <div class="glass-panel state-panel">
+                <div class="glass-panel state-panel" role="alert">
                     <div class="state-icon"><i class="bi bi-exclamation-triangle"></i></div>
                     <h5 class="state-title">${HIG.escapeHtml(msg)}</h5>
                 </div>`;

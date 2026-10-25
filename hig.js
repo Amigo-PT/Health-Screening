@@ -4,6 +4,7 @@
     const HIG = {};
     const root = document.documentElement;
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const countUpFrames = new WeakMap();
 
     HIG.escapeHtml = (str = "") =>
         String(str).replace(/[&<>"']/g, (m) => ({
@@ -20,6 +21,9 @@
 
     HIG.countUp = (el, target, duration = 1400) => {
         if (!el) return;
+        const previousFrame = countUpFrames.get(el);
+        if (previousFrame) cancelAnimationFrame(previousFrame);
+        countUpFrames.delete(el);
         if (prefersReduced) {
             el.textContent = Number(target).toLocaleString();
             return;
@@ -29,9 +33,13 @@
             const p = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - p, 3);
             el.textContent = Math.round(target * eased).toLocaleString();
-            if (p < 1) requestAnimationFrame(tick);
+            if (p < 1) {
+                countUpFrames.set(el, requestAnimationFrame(tick));
+            } else {
+                countUpFrames.delete(el);
+            }
         };
-        requestAnimationFrame(tick);
+        countUpFrames.set(el, requestAnimationFrame(tick));
     };
 
     let scrollTicking = false;
@@ -88,7 +96,7 @@
             buttons.forEach((b) => {
                 const on = b === btn;
                 b.classList.toggle("active", on);
-                b.setAttribute("aria-selected", on ? "true" : "false");
+                b.setAttribute("aria-pressed", on ? "true" : "false");
             });
             place(btn);
             if (fire && onChange) onChange(btn.dataset.value || btn.textContent.trim(), btn);
@@ -104,7 +112,7 @@
         activate(buttons.find((b) => b.classList.contains("active")) || buttons[0], false);
     };
 
-    let lbEl = null, lbImg = null, lbCurrent = null, lbTotal = null;
+    let lbEl = null, lbImg = null, lbCurrent = null, lbTotal = null, lbTrigger = null;
     let lbImages = [], lbIndex = 0;
 
     const preload = (i) => {
@@ -140,8 +148,13 @@
         if (!lbEl) return;
         lbEl.classList.remove("open");
         document.body.style.overflow = "";
+        const trigger = lbTrigger;
+        lbTrigger = null;
         window.setTimeout(() => {
-            if (!lbEl.classList.contains("open")) lbEl.style.visibility = "";
+            if (!lbEl.classList.contains("open")) {
+                lbEl.style.visibility = "";
+                if (trigger && trigger.isConnected) trigger.focus();
+            }
         }, 500);
     };
 
@@ -157,12 +170,13 @@
         lbEl.className = "lightbox";
         lbEl.setAttribute("role", "dialog");
         lbEl.setAttribute("aria-modal", "true");
+        lbEl.setAttribute("aria-label", "Photo viewer");
         lbEl.innerHTML = `
             <div class="lb-stage"><img class="lb-img" alt=""></div>
             <button type="button" class="lb-btn lb-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
             <button type="button" class="lb-btn lb-prev" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
             <button type="button" class="lb-btn lb-next" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
-            <div class="lb-counter"><span class="lb-current">1</span><span class="lb-sep">/</span><span class="lb-total">1</span></div>`;
+            <div class="lb-counter" aria-live="polite" aria-atomic="true"><span class="lb-current">1</span><span class="lb-sep">/</span><span class="lb-total">1</span></div>`;
         document.body.appendChild(lbEl);
 
         lbImg = lbEl.querySelector(".lb-img");
@@ -182,18 +196,37 @@
             if (e.key === "Escape") closeLightbox();
             else if (e.key === "ArrowRight") stepLightbox(1);
             else if (e.key === "ArrowLeft") stepLightbox(-1);
+            else if (e.key === "Tab") {
+                const controls = Array.from(lbEl.querySelectorAll("button:not([disabled])"));
+                const first = controls[0];
+                const last = controls[controls.length - 1];
+                if (!lbEl.contains(document.activeElement)) {
+                    e.preventDefault();
+                    first.focus();
+                } else if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
         });
     };
 
     HIG.lightbox = {
-        open(images, index = 0) {
+        open(images, index = 0, trigger = null) {
             if (!images || !images.length) return;
             lbImages = images.map((i) => (typeof i === "string" ? { src: i } : i));
             ensureLightbox();
+            lbTrigger = trigger || (document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null);
             lbEl.style.visibility = "visible";
             lbIndex = Math.max(0, Math.min(index, lbImages.length - 1));
             renderLbImage();
-            requestAnimationFrame(() => lbEl.classList.add("open"));
+            requestAnimationFrame(() => {
+                lbEl.classList.add("open");
+                lbEl.querySelector(".lb-close").focus();
+            });
             document.body.style.overflow = "hidden";
         },
         close: closeLightbox,

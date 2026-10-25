@@ -1,56 +1,53 @@
 /* =========================================================
-   Xiaomi MIUI / HyperOS-inspired design system
-   Light · Clean · Orange · MiSans · Soft rounded geometry
+   Playful cartoon-inspired design system
+   Warm paper · Candy colors · Rounded shapes · Bold outlines
    ========================================================= */
 
 @property --accent-color {
     syntax: "<color>";
     inherits: true;
-    initial-value: #ff6900;
+    initial-value: #f36b4f;
 }
 
 :root {
-    --accent-color: #ff6900;
-    --accent-deep: #e85d00;
-    --accent-soft: rgba(255, 105, 0, 0.1);
+    --accent-color: #f36b4f;
+    --accent-deep: #d94f3b;
+    --accent-soft: #ffe2d8;
 
-    /* MiSans is Xiaomi's official typeface */
-    --font-hig: "MiSans", "MiSans VF", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", "Helvetica Neue", Arial, sans-serif;
+    --font-hig: "Fredoka", "Cairo", "Trebuchet MS", sans-serif;
 
-    /* HyperOS light surfaces */
-    --bg-base: #f6f6f8;
-    --surface-1: #ffffff;
-    --surface-2: #f2f3f5;
+    --bg-base: #fff8e9;
+    --surface-1: #fffdf7;
+    --surface-2: #fff0d4;
 
-    --text-primary: rgba(0, 0, 0, 0.9);
-    --text-secondary: rgba(0, 0, 0, 0.58);
-    --text-tertiary: rgba(0, 0, 0, 0.38);
+    --text-primary: #26354a;
+    --text-secondary: #536175;
+    --text-tertiary: #788396;
 
-    --hairline: rgba(0, 0, 0, 0.07);
-    --hairline-strong: rgba(0, 0, 0, 0.12);
+    --hairline: #e9ddc6;
+    --hairline-strong: #d9c9aa;
 
-    --fill-thin: rgba(0, 0, 0, 0.045);
-    --fill-medium: rgba(0, 0, 0, 0.08);
+    --fill-thin: #fff1d9;
+    --fill-medium: #fce5c4;
 
-    --glass-bg: rgba(255, 255, 255, 0.72);
-    --glass-blur: blur(20px) saturate(180%);
+    --glass-bg: #fffdf7;
+    --glass-blur: none;
 
-    /* MIUI spring motion */
+    /* Bouncy motion */
     --ease-spring: cubic-bezier(0.34, 1.3, 0.48, 1);
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     --dur-fast: 0.22s;
     --dur-base: 0.35s;
     --dur-slow: 0.55s;
 
-    /* MIUI generous corner radii */
-    --radius-sm: 12px;
-    --radius-md: 16px;
-    --radius-lg: 24px;
-    --radius-xl: 30px;
+    --radius-sm: 14px;
+    --radius-md: 20px;
+    --radius-lg: 26px;
+    --radius-xl: 34px;
 
-    --shadow-card: 0 2px 6px rgba(17, 17, 17, 0.04), 0 12px 32px -14px rgba(17, 17, 17, 0.12);
-    --shadow-pop: 0 4px 10px rgba(17, 17, 17, 0.05), 0 26px 60px -22px rgba(17, 17, 17, 0.22);
-    --shadow-accent: 0 10px 26px -10px color-mix(in srgb, var(--accent-color) 55%, transparent);
+    --shadow-card: 0 5px 0 #e8d8bd, 0 8px 18px rgba(67, 53, 30, .08);
+    --shadow-pop: 0 7px 0 #e8d8bd, 0 15px 26px rgba(67, 53, 30, .14);
+    --shadow-accent: 0 5px 0 #d64c38;
 
     --nav-height: 64px;
 }
@@ -310,7 +307,7 @@ body.is-scrolled .navbar-hig,
 
 .navbar-toggler:focus { box-shadow: none; }
 
-/* ---------- Buttons : MIUI pill CTAs ---------- */
+/* ---------- Buttons ---------- */
 .btn-hig {
     display: inline-flex;
     align-items: center;
@@ -572,7 +569,7 @@ body.is-scrolled .navbar-hig,
 
 .info-card.center .info-icon { width: 56px; height: 56px; border-radius: 19px; font-size: 1.45rem; margin-bottom: 8px; }
 
-/* ---------- Segmented control (MIUI style) ---------- */
+/* ---------- Segmented control ---------- */
 .seg-control {
     position: relative;
     display: inline-flex;
@@ -699,7 +696,7 @@ body.is-scrolled .navbar-hig,
 
 .month-count { margin-left: auto; }
 
-/* ---------- Gallery (Xiaomi HyperOS style) ---------- */
+/* ---------- Gallery ---------- */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -954,7 +951,7 @@ body.is-scrolled .navbar-hig,
 .lb-counter .lb-current { color: var(--text-primary); }
 .lb-counter .lb-sep { color: var(--text-tertiary); }
 
-/* ---------- Modals : HyperOS sheets ---------- */
+/* ---------- Modals ---------- */
 .modal-backdrop.show { opacity: 0.32; }
 
 .modal-hig .modal-content {
@@ -1133,7 +1130,7 @@ body.is-scrolled .navbar-hig,
 
 .footer-copy .dev { color: var(--accent-deep); font-weight: 500; }
 
-/* ---------- Scroll reveal (MIUI fluid motion) ---------- */
+/* ---------- Scroll reveal ---------- */
 [data-reveal] {
     opacity: 0;
     transform: translateY(26px) scale(0.985);
@@ -1246,7 +1243,7 @@ body.is-scrolled .navbar-hig,
     text-decoration: none;
 }
 
-.sel-card.hu    { --sel: #ff6900; }
+.sel-card.hu    { --sel: #f36b4f; }
 .sel-card.sekem { --sel: #22ac38; }
 
 .sel-icon-wrap { position: relative; width: 84px; height: 84px; margin: 0 auto 18px; }
@@ -1318,10 +1315,434 @@ body.is-scrolled .navbar-hig,
 .pdf-error { color: var(--text-secondary); }
 .pdf-error p { color: var(--text-tertiary); }
 
+/* ---------- Playful illustrated identity ---------- */
+body {
+    background-color: #c9efff;
+    background-image:
+        radial-gradient(rgba(38, 53, 74, .1) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, .24), transparent 48%);
+    background-size: 24px 24px, 100% 100%;
+}
+
+h1, h2, h3, h4, h5, h6 { font-weight: 600; letter-spacing: 0; }
+
+.ambient {
+    background: transparent;
+    opacity: 1;
+}
+
+.ambient::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: min(78vh, 680px);
+    background:
+        radial-gradient(ellipse 76px 44px at 13% 20%, #fffdf7 98%, transparent 100%),
+        radial-gradient(ellipse 56px 52px at 10% 19%, #fffdf7 98%, transparent 100%),
+        radial-gradient(ellipse 58px 47px at 16% 17%, #fffdf7 98%, transparent 100%),
+        radial-gradient(ellipse 82px 46px at 88% 35%, #fffdf7 98%, transparent 100%),
+        radial-gradient(ellipse 58px 56px at 84% 34%, #fffdf7 98%, transparent 100%),
+        radial-gradient(ellipse 62px 50px at 91% 32%, #fffdf7 98%, transparent 100%),
+        radial-gradient(circle at 92% 12%, #ffcf54 0 31px, transparent 32px);
+    opacity: .88;
+    pointer-events: none;
+}
+
+.ambient::after {
+    display: block;
+    inset: auto 0 0;
+    height: 16px;
+    background: repeating-linear-gradient(135deg, #f36b4f 0 12px, #ffdf67 12px 24px, #69c8e8 24px 36px, #8bd18c 36px 48px);
+    opacity: .5;
+}
+
+.ambient-blob { display: none; }
+
+.navbar-hig { height: 72px; }
+
+body.is-scrolled .navbar-hig,
+.navbar-hig:has(.collapse.show) {
+    background: #fffdf7;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 3px solid var(--text-primary);
+    box-shadow: 0 5px 0 rgba(38, 53, 74, .18);
+}
+
+.brand-mark {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--text-primary);
+    border-radius: 15px 18px 14px 17px;
+    background: #ffcc5c;
+    color: var(--text-primary);
+    box-shadow: 0 3px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .7);
+}
+
+.navbar-hig .nav-link {
+    font-weight: 500;
+    border: 2px solid transparent;
+}
+
+.navbar-hig .nav-link:hover {
+    background: #ffdf67;
+    border-color: var(--text-primary);
+}
+
+.navbar-hig .nav-link.active {
+    color: var(--text-primary) !important;
+    background: #ff8b72;
+    border-color: var(--text-primary);
+    box-shadow: 0 3px 0 var(--text-primary);
+}
+
+.btn-hig {
+    border: 2px solid var(--text-primary);
+    border-radius: 22px 18px 23px 19px;
+    font-weight: 600;
+}
+
+.btn-primary-hig {
+    background: #ffdf67;
+    color: var(--text-primary);
+    box-shadow: 0 4px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .6);
+    transition: transform .24s var(--ease-spring), box-shadow .24s ease, background-color .24s ease;
+}
+
+.btn-primary-hig:hover {
+    color: var(--text-primary);
+    background: #ffe98a;
+    transform: translateY(-2px) rotate(-1deg);
+    box-shadow: 0 6px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .7);
+}
+
+.btn-glass-hig {
+    border: 2px solid var(--text-primary);
+    box-shadow: 0 4px 0 var(--text-primary);
+}
+
+.glass-panel,
+.hig-card,
+.year-tile {
+    border: 2.5px solid var(--text-primary);
+    border-radius: 30px 24px 32px 25px;
+    box-shadow: 0 5px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .65);
+}
+
+.glass-panel { background: var(--surface-1); backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+.hig-card:hover,
+.year-tile:hover {
+    border-color: var(--text-primary);
+    transform: translateY(-3px) rotate(-.35deg);
+    box-shadow: 0 8px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .65);
+}
+
+.hig-card:nth-child(even) { border-radius: 24px 32px 25px 31px; }
+.info-card { background: color-mix(in srgb, var(--tile, #ffcc5c) 22%, #fffdf7); }
+.info-card.center { border-radius: 32px 24px 34px 26px; }
+.card-foot { border-top: 1.5px dashed rgba(38, 53, 74, .42); }
+
+.info-icon,
+.stat-icon,
+.month-icon,
+.chart-icon,
+.year-icon,
+.sel-icon,
+.state-icon {
+    border: 2px solid currentColor;
+    border-radius: 18px 14px 19px 13px;
+}
+
+.chip,
+.badge-glass,
+.comparison-badge,
+.meta-pill,
+.footer-link-chip {
+    border: 1.5px solid var(--hairline-strong);
+    font-weight: 600;
+}
+
+.seg-control,
+.summary-tabs,
+.year-tabs {
+    border: 3px solid var(--text-primary);
+    border-radius: 17px;
+    background: #fffdf7;
+    box-shadow: 0 4px 0 var(--text-primary);
+}
+
+.seg-indicator {
+    top: 4px;
+    height: calc(100% - 8px);
+    border-radius: 14px;
+    background: #fffdf7;
+    box-shadow: 0 2px 0 rgba(38, 53, 74, .2);
+}
+
+.seg-btn.active { color: var(--text-primary); }
+
+.hero-section {
+    overflow: hidden;
+    padding-top: calc(var(--nav-height) + 66px);
+}
+
+.hero-section > .container { position: relative; z-index: 1; }
+
+.hero-section h1.display-hero {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 16px 30px 20px;
+    border: 3px solid var(--text-primary);
+    border-radius: 32px 24px 34px 26px;
+    background: linear-gradient(155deg, #fffef9 0 72%, #fff2c6 100%);
+    box-shadow: 0 6px 0 var(--text-primary), inset 0 3px 0 rgba(255, 255, 255, .9);
+    transform: rotate(-1deg);
+    font-weight: 700;
+    animation: title-bob 5s ease-in-out infinite;
+}
+
+.hero-section h1.display-hero::before,
+.hero-section h1.display-hero::after {
+    position: absolute;
+    z-index: -1;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    line-height: 1;
+    -webkit-text-fill-color: #ffcc5c;
+    color: #ffcc5c;
+    -webkit-text-stroke: 1.5px var(--text-primary);
+    filter: drop-shadow(0 2px 0 var(--text-primary));
+}
+
+.hero-section h1.display-hero::before {
+    content: "✦";
+    top: -30px;
+    left: -28px;
+    font-size: 42px;
+    transform: rotate(-12deg);
+}
+
+.hero-section h1.display-hero::after {
+    content: "✦";
+    right: -27px;
+    bottom: -20px;
+    font-size: 34px;
+    transform: rotate(12deg);
+}
+
+.hero-section h1.display-hero::before { animation: doodle-wiggle 4s ease-in-out infinite; }
+.hero-section h1.display-hero::after { animation: doodle-wiggle 4s ease-in-out infinite reverse; }
+
+.hero-section .text-accent-gradient,
+.section-title .text-accent-gradient {
+    background: none;
+    color: #f05f49;
+    -webkit-text-fill-color: #f05f49;
+    -webkit-text-stroke: .4px var(--text-primary);
+    text-shadow: 1.5px 2px 0 rgba(38, 53, 74, .1);
+}
+
+.welcome-line {
+    display: table;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 7px 18px;
+    border: 2px solid var(--text-primary);
+    border-radius: 999px;
+    background: #b9e9fb;
+    box-shadow: 0 3px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .8);
+}
+
+.section-title { font-weight: 700; }
+
+.hig-card,
+.year-tile,
+.stat-card,
+.risk-summary,
+.filter-card,
+.chart-card,
+.summary-card,
+.sel-card {
+    border-width: 2.5px;
+    border-color: var(--text-primary);
+    box-shadow: 0 5px 0 var(--text-primary);
+}
+
+.hig-card:hover,
+.year-tile:hover { box-shadow: 0 8px 0 var(--text-primary); }
+
+.gallery-item {
+    border: 3px solid var(--text-primary);
+    border-radius: 22px 18px 24px 17px;
+    box-shadow: 0 5px 0 var(--text-primary);
+}
+
+.gallery-item:hover { box-shadow: 0 7px 0 var(--text-primary); }
+
+.lightbox::before {
+    background: rgba(38, 53, 74, .84);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.lb-img { border: 3px solid var(--text-primary); border-radius: 22px; }
+.lb-btn { border: 2px solid var(--text-primary); box-shadow: 0 3px 0 var(--text-primary); }
+
+.site-footer {
+    border-top: 3px solid var(--text-primary);
+    background: #fffdf7;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.footer-rule { border-top: 2px dashed var(--text-primary); }
+
+.year-tab.active {
+    color: var(--text-primary);
+    background: #ffdf67;
+    box-shadow: 0 3px 0 rgba(38, 53, 74, .4);
+}
+
+body .miui-table thead th { background: #ffdf67; border-bottom: 3px solid var(--text-primary); }
+body .miui-table tbody td { border-bottom: 1px dashed var(--text-primary); }
+body .miui-table tbody tr:hover td { background: #e5f7ff; }
+
+body .mi-input {
+    border: 3px solid var(--text-primary);
+    background: var(--surface-1);
+    box-shadow: 0 4px 0 rgba(38, 53, 74, .3);
+}
+
+body .mi-input:focus {
+    border-color: var(--accent-color);
+    background: #fffdf7;
+    box-shadow: 0 4px 0 rgba(38, 53, 74, .3), 0 0 0 3px rgba(243, 107, 79, .18);
+}
+
+body .mi-clear-btn {
+    border: 3px solid var(--text-primary);
+    background: #ff8b72;
+    box-shadow: 0 4px 0 var(--text-primary);
+}
+
+@keyframes title-bob {
+    0%, 100% { transform: rotate(-1deg) translateY(0); }
+    50% { transform: rotate(-.3deg) translateY(-3px); }
+}
+
+@keyframes doodle-wiggle {
+    0%, 100% { rotate: -8deg; }
+    50% { rotate: 9deg; }
+}
+
+@media (max-width: 767px) {
+    .hero-section h1.display-hero { padding: 14px 20px 17px; animation-duration: 6s; }
+    .hero-section h1.display-hero::before { left: -11px; top: -26px; font-size: 32px; }
+    .hero-section h1.display-hero::after { right: -10px; bottom: -19px; font-size: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-section h1.display-hero,
+    .hero-section h1.display-hero::before,
+    .hero-section h1.display-hero::after { animation: none; }
+}
+
+.modal-content {
+    border: 2px solid var(--text-primary);
+    border-radius: 26px 21px 28px 20px;
+    box-shadow: 0 7px 0 var(--text-primary);
+}
+
+.form-control,
+.form-select,
+input,
+select,
+textarea {
+    border-color: var(--hairline-strong);
+    border-radius: 14px;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(243, 107, 79, .18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+}
+
 .text-accent { color: var(--accent-color) !important; }
 
 .bg-accent-subtle { background: var(--accent-soft) !important; }
 .text-body { color: var(--text-primary) !important; }
+
+.chart-data-table {
+    margin-top: 18px;
+    color: var(--text-primary);
+}
+
+.chart-data-table summary {
+    width: fit-content;
+    padding: 8px 14px;
+    border: 2px solid var(--text-primary);
+    border-radius: 999px;
+    background: #fff0bd;
+    box-shadow: 0 3px 0 var(--text-primary);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.chart-data-table[open] summary { margin-bottom: 12px; }
+
+.chart-data-table .table-responsive {
+    border: 2px solid rgba(38, 53, 74, .2);
+    border-radius: 16px;
+    background: #fffdf7;
+}
+
+.chart-data-table table { margin: 0; }
+.chart-data-table th,
+.chart-data-table td { padding: 9px 12px; white-space: nowrap; }
+
+.data-notice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    margin: -18px 0 26px;
+    border: 2px solid var(--text-primary);
+    border-radius: 18px;
+    background: #e8f8ff;
+    box-shadow: 0 4px 0 var(--text-primary);
+}
+
+.data-notice[hidden] { display: none; }
+.data-notice-error { background: #fff0e9; }
+.data-notice-loading { background: #fff5cf; }
+.data-notice-message { flex: 1; }
+
+.data-notice button {
+    flex: 0 0 auto;
+    border: 2px solid var(--text-primary);
+    border-radius: 999px;
+    padding: 7px 14px;
+    background: #fffdf7;
+    color: var(--text-primary);
+    font: inherit;
+    font-weight: 600;
+}
+
+@media (max-width: 575px) {
+    .data-notice { align-items: flex-start; flex-wrap: wrap; margin-top: -8px; }
+    .chart-data-table table { font-size: .82rem; }
+}
 
 /* ---------- Bootstrap form overrides for light theme ---------- */
 .form-control, .form-select {
@@ -1343,6 +1764,117 @@ body.is-scrolled .navbar-hig,
 }
 
 .modal-hig .btn-close { filter: none; }
+
+/* ---------- Cartoon modal system ---------- */
+.modal-backdrop.show {
+    background-color: #26354a;
+    opacity: .58;
+}
+
+.modal-hig .modal-content {
+    color: var(--text-primary);
+    background: #fffdf7;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 3px solid var(--text-primary);
+    border-radius: 30px 23px 32px 24px;
+    box-shadow: 0 7px 0 var(--text-primary), 0 18px 38px rgba(38, 53, 74, .2);
+}
+
+.modal-hig .modal-header {
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(110deg, #fff0bd, #e8f8ff);
+    border-bottom: 2px dashed rgba(38, 53, 74, .32);
+}
+
+.modal-hig .modal-title {
+    color: var(--text-primary);
+    font-family: var(--font-hig);
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.modal-hig .modal-body { padding: 22px 24px 26px; }
+
+.modal-hig .caption {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.modal-hig .modal-glyph,
+.modal-hig .mi-stage-glyph,
+.modal-hig .pdf-glyph {
+    border: 2px solid var(--text-primary);
+    border-radius: 17px 13px 18px 14px;
+    box-shadow: 0 3px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .65);
+}
+
+.modal-hig .btn-close {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 2px solid var(--text-primary);
+    border-radius: 50%;
+    background-color: #ffdf67;
+    background-size: 11px;
+    opacity: 1;
+    box-shadow: 0 3px 0 var(--text-primary);
+    transition: transform .2s var(--ease-spring), box-shadow .2s ease;
+}
+
+.modal-hig .btn-close:hover {
+    transform: rotate(8deg) scale(1.06);
+    box-shadow: 0 4px 0 var(--text-primary);
+}
+
+.modal-hig .modal-body h5,
+.modal-hig .modal-body h6 {
+    font-weight: 700;
+}
+
+.modal-hig .issue-row,
+.modal-hig .mi-field,
+.modal-hig .mi-desc,
+.modal-hig .intervention-modal-desc,
+.modal-hig .outcome-box {
+    border: 2px solid rgba(38, 53, 74, .24);
+    border-radius: 20px 16px 21px 17px;
+    background: #f0f9ff;
+}
+
+.modal-hig .issue-row { border-color: color-mix(in srgb, var(--tile, #f36b4f) 38%, white); }
+
+.modal-hig .mi-field,
+.modal-hig .mi-desc,
+.modal-hig .intervention-modal-desc { padding: 16px; }
+
+.modal-hig .issue-num,
+.modal-hig .status-badge,
+.modal-hig .meta-pill {
+    border: 1.5px solid rgba(38, 53, 74, .2);
+    font-weight: 600;
+}
+
+.modal-hig .pdf-frame-wrap {
+    border: 2px solid var(--text-primary);
+    border-radius: 21px;
+    background: #e8f8ff;
+}
+
+@media (max-width: 575px) {
+    .modal-hig .modal-dialog { margin: 14px; }
+    .modal-hig .modal-header { padding: 16px 17px; }
+    .modal-hig .modal-body { padding: 18px 17px 21px; }
+    .modal-hig .modal-glyph,
+    .modal-hig .mi-stage-glyph,
+    .modal-hig .pdf-glyph { width: 42px; height: 42px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-hig .btn-close { transition: none; }
+}
 
 /* =========================================================
    Intervention cards (intervention page)

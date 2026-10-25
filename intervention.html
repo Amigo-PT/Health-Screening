@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#f6f6f8" />
+    <meta name="theme-color" content="#fff8e9" />
     <meta name="description" content="Health interventions and outcomes from the HU and SEKEM screening programs.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
@@ -24,13 +24,13 @@
     <meta name="twitter:description" content="Health interventions and outcomes from the HU and SEKEM screening programs.">
 
     <title>Interventions & Outcomes | The Health Screening Project</title>
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="hig.css">
 
@@ -315,6 +315,8 @@
         }
 
         function fetchData() {
+            const container = document.getElementById('interventions-container');
+            container.setAttribute('aria-busy', 'true');
             showSkeletons();
             const minDelay = new Promise(r => setTimeout(r, 600));
             const dataFetch = new Promise((resolve, reject) => {
@@ -326,21 +328,28 @@
             });
             Promise.all([minDelay, dataFetch])
                 .then(([_, data]) => {
+                    container.setAttribute('aria-busy', 'false');
                     renderInterventions(data);
                     updateInterventionCount(data);
                 })
-                .catch(() => {
-                    document.getElementById('interventions-container').innerHTML =
+                .catch(error => {
+                    console.error('Could not load intervention data:', error);
+                    container.setAttribute('aria-busy', 'false');
+                    container.innerHTML =
                         `<div class="row g-4">
                             <div class="col-12" data-reveal>
-                                <div class="glass-panel state-panel">
+                                <div class="glass-panel state-panel" role="alert">
                                     <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
                                     <h5 class="state-title">Connection Error</h5>
                                     <p class="state-text">Could not load data. Please check your connection.</p>
+                                    <button type="button" class="btn-hig btn-primary-hig" id="retryInterventions">
+                                        <i class="bi bi-arrow-repeat" aria-hidden="true"></i> Retry
+                                    </button>
                                 </div>
                             </div>
                         </div>`;
-                    HIG.refreshReveals(document.getElementById('interventions-container'));
+                    document.getElementById('retryInterventions').addEventListener('click', fetchData);
+                    HIG.refreshReveals(container);
                 });
         }
 

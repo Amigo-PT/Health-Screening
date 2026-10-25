@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f6f6f8" />
+    <meta name="theme-color" content="#fff8e9" />
     <meta name="description" content="Survey data and delivery insights from the Health Screening Project.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
@@ -24,13 +24,13 @@
     <meta name="twitter:description" content="Survey data and delivery insights from the Health Screening Project.">
 
     <title>Data & Delivery | The Health Screening Project</title>
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="hig.css" />
     <style>
@@ -38,7 +38,10 @@
         .status-dot {
             display: inline-block;
             width: 15px; height: 15px;
+            padding: 0;
+            border: 0;
             border-radius: 50%;
+            vertical-align: middle;
             cursor: pointer;
             transition: transform .35s var(--ease-spring), box-shadow .25s ease;
         }
@@ -63,7 +66,7 @@
             letter-spacing: .02em;
         }
 
-        /* ---------- MIUI milestone table ---------- */
+        /* ---------- Milestone table ---------- */
         .miui-table {
             width: 100%;
             border-collapse: separate;
@@ -121,13 +124,14 @@
             color: var(--text-tertiary);
         }
 
-        /* ---------- MIUI detail modal ---------- */
-        #detailModal .modal-content { border-radius: 26px; }
+        /* ---------- Detail modal ---------- */
+        #detailModal .modal-content { border: 3px solid var(--text-primary); border-radius: 30px 23px 32px 24px; box-shadow: 0 7px 0 var(--text-primary), 0 18px 38px rgba(38, 53, 74, .2); }
         #detailModal .modal-header {
-            border-bottom: 0;
-            padding: 24px 26px 8px;
+            border-bottom: 2px dashed rgba(38, 53, 74, .32);
+            padding: 20px 24px;
+            background: linear-gradient(110deg, #fff0bd, #e8f8ff);
         }
-        #detailModal .modal-body { padding: 10px 26px 26px; }
+        #detailModal .modal-body { padding: 22px 24px 26px; }
 
         .mi-stage-glyph {
             width: 54px;
@@ -144,8 +148,9 @@
         }
 
         .mi-field {
-            background: var(--fill-thin);
-            border-radius: 16px;
+            background: #f0f9ff;
+            border: 2px solid rgba(38, 53, 74, .24);
+            border-radius: 20px 16px 21px 17px;
             padding: 14px 16px;
             height: 100%;
         }
@@ -164,11 +169,18 @@
         }
 
         .mi-desc {
-            background: var(--fill-thin);
-            border-radius: 16px;
+            background: #f0f9ff;
+            border: 2px solid rgba(38, 53, 74, .24);
+            border-radius: 20px 16px 21px 17px;
             padding: 16px;
             color: var(--text-secondary);
             line-height: 1.7;
+        }
+
+        #detailModal .mi-stage-glyph {
+            border: 2px solid var(--text-primary);
+            border-radius: 17px 13px 18px 14px;
+            box-shadow: 0 3px 0 var(--text-primary), inset 0 2px 0 rgba(255,255,255,.65);
         }
     </style>
 
@@ -218,9 +230,12 @@
         <div class="container">
             <div class="row g-4 justify-content-center" data-reveal data-reveal-delay="100">
                 <div class="col-12">
-                    <div class="hig-card" style="--chip:#ff6900">
+                    <div class="hig-card" style="--chip:#f36b4f">
+                        <div class="text-end mb-3">
+                            <span id="programCount" role="status" aria-live="polite" aria-atomic="true">Loading programs…</span>
+                        </div>
                         <div class="table-responsive">
-                            <table class="miui-table" id="screeningTable">
+                            <table class="miui-table" id="screeningTable" aria-busy="true">
                                 <thead>
                                     <tr>
                                         <th style="min-width:220px;">Milestone</th>
@@ -312,6 +327,7 @@
     <script src="hig.js"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=86792494&single=true&output=csv";
+        let allPrograms = [];
 
         function getDotClass(status) {
             if (!status) return 'idle';
@@ -352,17 +368,18 @@
                     const statusLabel = getStatusLabel(p.status);
                     const delay = (ri * 4 + pi) * 40;
                     return `<td class="text-center">
-                        <span class="status-dot ${dc}"
-                            style="animation-delay:${delay}ms;"
-                            data-bs-toggle="modal" data-bs-target="#detailModal"
+                        <button type="button" class="status-dot ${dc}"
+                        aria-label="${HIG.escapeHtml(row.Program_Name)} — ${p.label}: ${statusLabel}. Open details."
+                        aria-haspopup="dialog"
+                        style="animation-delay:${delay}ms;"
+                        data-bs-toggle="modal" data-bs-target="#detailModal"
                             data-program="${HIG.escapeHtml(row.Program_Name)}"
                             data-stage="${HIG.escapeHtml(p.label)}"
                             data-icon="${p.icon}"
                             data-state="${dc}"
                             data-status="${statusLabel}"
                             data-date="${HIG.escapeHtml(p.date || 'TBD')}"
-                            data-desc="${HIG.escapeHtml(p.desc || 'No details available.')}">
-                        </span>
+                            data-desc="${HIG.escapeHtml(p.desc || 'No details available.')}"></button>
                     </td>`;
                 }).join('');
 
@@ -381,30 +398,44 @@
                             <div class="glass-panel state-panel" style="text-align:center;padding:60px 20px;">
                                 <div class="state-icon"><i class="bi bi-inbox"></i></div>
                                 <h5 class="state-title">No Programs Found</h5>
-                                <p class="state-text">No data available at the moment.</p>
+                                <p class="state-text">No programs or indicators match your search.</p>
                             </div>
                         </td>
                     </tr>`;
             }
 
+            document.getElementById('programCount').textContent = `${count} ${count === 1 ? 'program' : 'programs'}`;
+            document.getElementById('screeningTable').setAttribute('aria-busy', 'false');
             HIG.refreshReveals(tbody);
         }
 
         function fetchData() {
+            const table = document.getElementById('screeningTable');
+            table.setAttribute('aria-busy', 'true');
             Papa.parse(sheetURL, {
                 download: true, header: true, dynamicTyping: true,
-                complete: r => renderTable(r.data),
-                error: () => {
+                complete: r => {
+                    allPrograms = r.data.filter(row => row.Program_Name);
+                    renderTable(allPrograms);
+                },
+                error: err => {
+                    console.error('Failed to load program milestones:', err);
                     document.getElementById('table-body').innerHTML = `
                         <tr>
                             <td colspan="6" data-reveal>
-                                <div class="glass-panel state-panel" style="text-align:center;padding:60px 20px;">
+                                <div class="glass-panel state-panel" role="alert" style="text-align:center;padding:60px 20px;">
                                     <div class="state-icon"><i class="bi bi-wifi-off"></i></div>
                                     <h5 class="state-title">Connection Error</h5>
                                     <p class="state-text">Failed to load data. Please check your connection.</p>
+                                    <button type="button" class="btn-hig btn-primary-hig" id="retryPrograms">
+                                        <i class="bi bi-arrow-repeat" aria-hidden="true"></i> Retry
+                                    </button>
                                 </div>
                             </td>
                         </tr>`;
+                    document.getElementById('programCount').textContent = 'Programs unavailable';
+                    table.setAttribute('aria-busy', 'false');
+                    document.getElementById('retryPrograms').addEventListener('click', fetchData);
                     HIG.refreshReveals(document.getElementById('table-body'));
                 }
             });
@@ -430,7 +461,9 @@
             else { badge.style.cssText = 'background:rgba(152,162,179,.14);color:#6b7686;border:1px solid rgba(152,162,179,.38);'; }
         });
 
-        document.addEventListener('DOMContentLoaded', fetchData);
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchData();
+        });
     </script>
 </body>
 </html>

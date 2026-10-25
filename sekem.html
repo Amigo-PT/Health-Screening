@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#f6f6f8" />
+    <meta name="theme-color" content="#fff8e9" />
     <meta name="description" content="Health screening dashboard for SEKEM community showing BMI distribution, risk stratification and participation.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
@@ -23,14 +23,14 @@
     <meta name="twitter:title" content="SEKEM Health Screening Dashboard">
     <meta name="twitter:description" content="Health screening dashboard for SEKEM community showing BMI distribution, risk stratification and participation.">
 
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <title>SEKEM Health Screening Dashboard | The Health Screening Project</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="hig.css">
     <link rel="stylesheet" href="dashboard.css">
@@ -87,11 +87,12 @@
             <div class="filter-card" data-reveal data-reveal-delay="80">
                 <div class="d-flex align-items-center flex-wrap">
                     <span class="filter-label"><i class="bi bi-calendar3"></i>Filter by Period</span>
-                    <div class="status-indicator"><span id="statusDot" class="status-dot status-loading"></span><span id="statusText">Connecting to server...</span></div>
+                    <div class="status-indicator" role="status" aria-live="polite"><span id="statusDot" class="status-dot status-loading" aria-hidden="true"></span><span id="statusText">Connecting to server...</span></div>
                 </div>
-                <div class="year-tabs" id="yearContainer"></div>
+                <div class="year-tabs" id="yearContainer" role="group" aria-label="Filter by year"></div>
                 <div class="filter-actions">
-                    <select id="companyFilter" class="comparison-select">
+                    <label class="visually-hidden" for="companyFilter">Filter by company</label>
+                    <select id="companyFilter" class="comparison-select" aria-label="Filter by company">
                         <option value="all">Show all companies</option>
                         <option value="atos-pharma">Atos Pharma</option>
                         <option value="biodynamic-association">Biodynamic Association</option>
@@ -105,21 +106,23 @@
                         <option value="sekem-lab">Sekem Lab</option>
                         <option value="sekem-reclamation">Sekem Reclamation</option>
                     </select>
-                    <button type="button" class="btn-compare" id="highRiskFilterBtn"><i class="bi bi-shield-exclamation"></i> High Obesity Only</button>
                 </div>
-                <div class="month-timeline" id="monthContainer"></div>
+                <div class="month-timeline" id="monthContainer" role="group" aria-label="Filter by month"></div>
                 <div class="sync-note" id="lastSyncLabel">Last sync: loading...</div>
                 <div class="comparison-controls" id="comparisonControls" style="display:none;">
-                    <div class="comparison-note">Default compares current period with same period in the previous year. Change any two periods below to compare other ranges.</div>
-                    <select id="compareYear1" class="comparison-select"></select>
-                    <select id="compareMonth1" class="comparison-select"></select>
+                    <div class="comparison-note">Compare screening totals and BMI mix across two month/year selections. Defaults to the same month in adjacent years when available.</div>
+                    <select id="compareYear1" class="comparison-select" aria-label="First comparison year"></select>
+                    <select id="compareMonth1" class="comparison-select" aria-label="First comparison month"></select>
                     <span class="comparison-vs">vs</span>
-                    <select id="compareYear2" class="comparison-select"></select>
-                    <select id="compareMonth2" class="comparison-select"></select>
+                    <select id="compareYear2" class="comparison-select" aria-label="Second comparison year"></select>
+                    <select id="compareMonth2" class="comparison-select" aria-label="Second comparison month"></select>
                     <button class="btn-compare" id="btnCompare"><i class="bi bi-graph-up me-1"></i>Compare</button>
                     <button class="btn-compare" id="btnResetCompare"><i class="bi bi-arrow-repeat me-1"></i>Reset</button>
                 </div>
             </div>
+
+            <div class="data-notice data-notice-loading" id="dataNotice" role="status" aria-live="polite" hidden></div>
+            <div class="comparison-summary" id="periodComparisonSummary" role="status" aria-live="polite" hidden></div>
 
             <div class="stats-row">
                 <div class="row g-4">
@@ -152,22 +155,22 @@
                         BMI Distribution Summary
                     </div>
                     <div class="risk-stats" id="riskStats">
-                        <div class="risk-stat-item info-risk" onclick="showRiskCategoryModal('Under_weight')">
+                        <div class="risk-stat-item info-risk" role="button" tabindex="0" aria-label="Show underweight details" onclick="showRiskCategoryModal('Under_weight')">
                             <div class="risk-number" id="countUnderweight">--</div>
                             <div class="risk-label">▼ Underweight</div>
                             <div class="risk-description">Total count across all companies</div>
                         </div>
-                        <div class="risk-stat-item low-risk" onclick="showRiskCategoryModal('Normal_Weight')">
+                        <div class="risk-stat-item low-risk" role="button" tabindex="0" aria-label="Show normal weight details" onclick="showRiskCategoryModal('Normal_Weight')">
                             <div class="risk-number" id="countNormal">--</div>
                             <div class="risk-label">✓ Normal</div>
                             <div class="risk-description">Total count across all companies</div>
                         </div>
-                        <div class="risk-stat-item moderate-risk" onclick="showRiskCategoryModal('Over_weight')">
+                        <div class="risk-stat-item moderate-risk" role="button" tabindex="0" aria-label="Show overweight details" onclick="showRiskCategoryModal('Over_weight')">
                             <div class="risk-number" id="countOverweight">--</div>
                             <div class="risk-label">▲ Overweight</div>
                             <div class="risk-description">Total count across all companies</div>
                         </div>
-                        <div class="risk-stat-item high-risk" onclick="showRiskCategoryModal('Obesity')">
+                        <div class="risk-stat-item high-risk" role="button" tabindex="0" aria-label="Show obesity details" onclick="showRiskCategoryModal('Obesity')">
                             <div class="risk-number" id="countObesity">--</div>
                             <div class="risk-label">■ Obesity</div>
                             <div class="risk-description">Total count across all companies</div>
@@ -185,7 +188,7 @@
                 <div class="section-eyebrow" data-reveal><i class="bi bi-grid-3x3-gap"></i> SEKEM Companies Breakdown</div>
                 <div class="row g-4 justify-content-center">
                     <div class="col-md-3 col-6" data-reveal data-reveal-delay="60">
-                        <div class="hig-card info-card center sector-card" style="--tile:#ff6900">
+                        <div class="hig-card info-card center sector-card" style="--tile:#f36b4f">
                             <span class="info-icon"><i class="bi bi-capsule"></i></span>
                             <div class="entity-num" id="num-atos-pharma">0</div>
                             <p class="entity-name sector-name mb-0">Atos Pharma</p>
@@ -282,12 +285,13 @@
                             <div class="chart-head">
                                 <span class="chart-icon"><i class="bi bi-graph-up-arrow"></i></span>
                                 <div>
-                                    <div class="chart-title">BMI Distribution in SEKEM Companies</div>
+                                    <h2 class="chart-title" id="bmiChartTitle">BMI Distribution in SEKEM Companies</h2>
                                 </div>
                             </div>
                             <div class="viz-legend" id="bmiLegend"></div>
-                            <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart"></canvas></div>
-                            <div class="viz-note" id="bmiNote"></div>
+                            <div class="chart-canvas chart-canvas-lg"><canvas id="comparisonChart" role="img" aria-label="BMI category distribution chart" aria-describedby="bmiNote bmiDataTable"></canvas></div>
+                            <div class="viz-note" id="bmiNote" aria-live="polite"></div>
+                            <details class="chart-data-table" id="bmiDataTable"></details>
                         </div>
                     </div>
                 </div>
@@ -383,7 +387,6 @@
         let comparisonMode = false, comparisonData1 = null, comparisonData2 = null;
         let comparisonData1Raw = null, comparisonData2Raw = null;
         let activeCompanyFilter='all';
-        let highRiskOnly=false;
         let lastSyncTime = null;
 
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=2058048191&single=true&output=csv";
@@ -439,12 +442,70 @@
             else text.textContent = 'Status unknown';
         }
 
+        function setDataNotice(state, message) {
+            const notice = document.getElementById('dataNotice');
+            if (!notice) return;
+            notice.hidden = false;
+            notice.className = `data-notice data-notice-${state}`;
+            notice.setAttribute('role', state === 'error' ? 'alert' : 'status');
+            notice.setAttribute('aria-live', state === 'error' ? 'assertive' : 'polite');
+            notice.replaceChildren();
+            const icon = document.createElement('i');
+            const iconName = state === 'error' ? 'bi-wifi-off' : state === 'loading' ? 'bi-arrow-repeat' : 'bi-info-circle';
+            icon.className = `bi ${iconName}`;
+            icon.setAttribute('aria-hidden', 'true');
+            const text = document.createElement('span');
+            text.className = 'data-notice-message';
+            text.textContent = message;
+            notice.append(icon, text);
+            if (state === 'error') {
+                const retry = document.createElement('button');
+                retry.type = 'button';
+                retry.textContent = 'Retry';
+                retry.addEventListener('click', fetchData);
+                notice.append(retry);
+            }
+        }
+
+        function handleDataError(error) {
+            console.error('Unable to load SEKEM screening data:', error);
+            lastSyncTime = null;
+            updateLastSyncLabel();
+            updateDataStatus('error');
+            setDataNotice('error', 'Unable to load screening data. Check your connection and try again.');
+            const charts = document.querySelector('.charts-section');
+            if (charts) charts.setAttribute('aria-busy', 'false');
+        }
+
         function fetchData() {
             showLoadingState();
-            Papa.parse(sheetURL, { download:true, header:true, dynamicTyping:true, complete:r=>{ lastSyncTime=new Date(); processData(r.data); updateLastSyncLabel(); updateDataStatus('ok'); }, error:err=>{ console.error(err); lastSyncTime=null; updateLastSyncLabel(); updateDataStatus('error'); } });
+            Papa.parse(sheetURL, {
+                download: true, header: true, dynamicTyping: true,
+                complete: result => {
+                    try {
+                        processData(result.data);
+                        lastSyncTime = new Date();
+                        updateLastSyncLabel();
+                        updateDataStatus('ok');
+                        const charts = document.querySelector('.charts-section');
+                        if (charts) charts.setAttribute('aria-busy', 'false');
+                        if (Object.keys(screeningData).length) {
+                            document.getElementById('dataNotice').hidden = true;
+                        } else {
+                            setDataNotice('empty', 'No screening records are available yet.');
+                        }
+                    } catch (error) {
+                        handleDataError(error);
+                    }
+                },
+                error: handleDataError
+            });
         }
 
         function showLoadingState() {
+            setDataNotice('loading', 'Loading screening data…');
+            const charts = document.querySelector('.charts-section');
+            if (charts) charts.setAttribute('aria-busy', 'true');
             ['total-participants', ...COMPANY_KEYS.map(k => `num-${k}`)].forEach(id => {
                 const el = document.getElementById(id); if(el) el.textContent='0';
             });
@@ -539,9 +600,11 @@
             const c=document.getElementById('yearContainer'); c.innerHTML='';
             (availableYears.length?availableYears:[new Date().getFullYear()]).forEach(y=>{
                 const btn=document.createElement('button');
+                btn.type='button';
                 btn.className=`year-tab${y===currentYear?' active':''}`;
                 btn.textContent=y;
-                btn.onclick=()=>{ currentYear=y; document.querySelectorAll('.year-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); generateMonthDots(); updateDashboard(); };
+                btn.setAttribute('aria-pressed', y===currentYear ? 'true' : 'false');
+                btn.onclick=()=>{ currentYear=y; document.querySelectorAll('.year-tab').forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }); btn.classList.add('active'); btn.setAttribute('aria-pressed','true'); generateMonthDots(); updateDashboard(); };
                 c.appendChild(btn);
             });
         }
@@ -555,10 +618,13 @@
             if (!sorted.length) { c.innerHTML='<span class="sync-note mt-0">No data for this year</span>'; currentMonth=1; return; }
             if (!available.has(currentMonth)) currentMonth=sorted[sorted.length-1];
             sorted.forEach(mi=>{
-                const item=document.createElement('div');
+                const item=document.createElement('button');
+                item.type='button';
                 item.className=`month-item has-data${mi===currentMonth?' active':''}`;
-                item.innerHTML=`<div class="month-dot"></div><div class="month-lbl">${NAMES[mi]}</div>`;
-                item.onclick=()=>{ currentMonth=mi; document.querySelectorAll('.month-item').forEach(e=>e.classList.remove('active')); item.classList.add('active'); resetComparison(); updateDashboard(); };
+                item.setAttribute('aria-label', `${NAMES[mi]} ${currentYear}`);
+                item.setAttribute('aria-pressed', mi===currentMonth ? 'true' : 'false');
+                item.innerHTML=`<span class="month-dot" aria-hidden="true"></span><span class="month-lbl">${NAMES[mi]}</span>`;
+                item.onclick=()=>{ currentMonth=mi; document.querySelectorAll('.month-item').forEach(e=>{ e.classList.remove('active'); e.setAttribute('aria-pressed','false'); }); item.classList.add('active'); item.setAttribute('aria-pressed','true'); resetComparison(); updateDashboard(); };
                 c.appendChild(item);
             });
         }
@@ -827,24 +893,11 @@ function addCompanyDetailButtons(companyDetails) {
             return map[label] || 'all';
         }
 
-        function getRiskFilteredCompanies(data) {
-            return COMPANY_KEYS.filter(key => {
-                const count=data.companies[key]||0;
-                if (count <= 0) return false;
-                const detail=getCompanyDetailedRisk(data.rawData[key], count);
-                return detail.riskLevel==='high';
-            });
-        }
-
         function applyFiltersToData(data) {
             if (!data || !data.companies) return data;
             const filtered={companies:{}, totals:{}, participation:{}, complaints:{}, rawData:{}};
             const selected=activeCompanyFilter==='all' ? COMPANY_KEYS : [getCompanyKey(activeCompanyFilter)];
             const allowed=new Set(selected);
-            if (highRiskOnly) {
-                const highRiskKeys=getRiskFilteredCompanies(data);
-                [...allowed].forEach(key => { if (!highRiskKeys.includes(key)) allowed.delete(key); });
-            }
             COMPANY_KEYS.forEach(key=>{
                 if (allowed.has(key)) {
                     filtered.companies[key]=data.companies[key]||0;
@@ -857,21 +910,9 @@ function addCompanyDetailButtons(companyDetails) {
             return filtered;
         }
 
-        function updateFilterVisuals() {
-            const btn=document.getElementById('highRiskFilterBtn');
-            if (btn) {
-                btn.classList.toggle('active', highRiskOnly);
-                btn.innerHTML=highRiskOnly ? '<i class="bi bi-shield-exclamation"></i> High Obesity Only' : '<i class="bi bi-shield-check"></i> High Obesity Only';
-            }
-        }
-
-        function updateCompanyVisibility(sourceData) {
+        function updateCompanyVisibility() {
             const selected=activeCompanyFilter==='all' ? COMPANY_KEYS : [getCompanyKey(activeCompanyFilter)];
             const allowed=new Set(selected);
-            if (highRiskOnly) {
-                const highRiskKeys=getRiskFilteredCompanies(sourceData);
-                COMPANY_KEYS.forEach(key => { if (!highRiskKeys.includes(key)) allowed.delete(key); });
-            }
             COMPANY_KEYS.forEach(key=>{
                 const numEl=document.getElementById(`num-${key}`);
                 if (!numEl) return;
@@ -882,25 +923,16 @@ function addCompanyDetailButtons(companyDetails) {
         }
 
         function updateFilterState() {
-            const sourceData=getDataForDate(currentYear,currentMonth);
-            updateFilterVisuals();
-            updateCompanyVisibility(sourceData);
+            updateCompanyVisibility();
             if (!comparisonMode) updateDashboard();
             else updateComparisonDashboard();
         }
 
         function initFilterEvents() {
             const companySelect=document.getElementById('companyFilter');
-            const highRiskBtn=document.getElementById('highRiskFilterBtn');
             if (companySelect) {
                 companySelect.addEventListener('change', ()=>{
                     activeCompanyFilter=companySelect.value;
-                    updateFilterState();
-                });
-            }
-            if (highRiskBtn) {
-                highRiskBtn.addEventListener('click', ()=>{
-                    highRiskOnly=!highRiskOnly;
                     updateFilterState();
                 });
             }
@@ -937,21 +969,61 @@ function addCompanyDetailButtons(companyDetails) {
             comparisonData2 = applyFiltersToData(comparisonData2Raw);
             COMPANY_KEYS.forEach(company=>{
                 const val1=comparisonData1.companies[company]||0, val2=comparisonData2.companies[company]||0;
-                const diff=val2-val1, pct=val1>0?((diff/val1)*100).toFixed(1):(val2>0?100:0);
                 const numEl=document.getElementById(`num-${company}`);
                 if (numEl) {
                     const parent=numEl.closest('.sector-card');
                     let span=parent.querySelector('.comparison-change');
                     if (!span) { span=document.createElement('div'); span.className='comparison-change'; numEl.after(span); }
-                    const arrow=diff>0?'↑':(diff<0?'↓':'→'), color=diff>0?'#22ac38':(diff<0?'#eb4435':'#98a2b3');
-                    span.innerHTML=`<span style="color:${color};">${arrow} ${Math.abs(pct)}%</span> <span style="color:var(--text-dark);opacity:0.5;">(${val1} → ${val2})</span>`;
+                    numEl.textContent=val2.toLocaleString();
+                    renderComparisonChange(span, val1, val2);
                 }
             });
             const t1=Object.values(comparisonData1.companies).reduce((a,b)=>a+b,0), t2=Object.values(comparisonData2.companies).reduce((a,b)=>a+b,0);
-            const td=t2-t1, tp=t1>0?((td/t1)*100).toFixed(1):0;
             const tEl=document.getElementById('total-participants');
-            if (tEl) tEl.innerHTML=`${t2.toLocaleString()}<span style="font-size:1rem;color:${td>0?'#22ac38':(td<0?'#eb4435':'#98a2b3')};"> ${td>0?'↑':(td<0?'↓':'→')} ${Math.abs(tp)}%</span>`;
+            if (tEl) tEl.textContent=t2.toLocaleString();
+            renderComparisonSummary(t1, t2);
             updateComparisonCharts();
+        }
+
+        function comparisonChange(first, second) {
+            const difference = second - first;
+            return {
+                difference,
+                percentage: first === 0 ? null : (difference / first) * 100,
+                direction: difference > 0 ? 'up' : difference < 0 ? 'down' : 'steady'
+            };
+        }
+
+        function renderComparisonChange(element, first, second) {
+            const change = comparisonChange(first, second);
+            const arrow = change.direction === 'up' ? '↑' : change.direction === 'down' ? '↓' : '→';
+            const sign = change.difference > 0 ? '+' : change.difference < 0 ? '-' : '';
+            const percentage = change.percentage === null
+                ? (second === 0 ? '0.0%' : 'N/A (baseline is 0)')
+                : `${Math.abs(change.percentage).toFixed(1)}%`;
+            element.className = `comparison-change is-${change.direction}`;
+            element.textContent = `${arrow} ${sign}${Math.abs(change.difference).toLocaleString()} (${percentage}) · ${first.toLocaleString()} → ${second.toLocaleString()}`;
+        }
+
+        function renderComparisonSummary(first, second) {
+            const box = document.getElementById('periodComparisonSummary');
+            if (!box) return;
+            const { lbl1, lbl2 } = comparePeriodLabels();
+            const change = comparisonChange(first, second);
+            const arrow = change.direction === 'up' ? '↑' : change.direction === 'down' ? '↓' : '→';
+            const sign = change.difference > 0 ? '+' : change.difference < 0 ? '-' : '';
+            const direction = change.direction === 'up' ? 'Increase' : change.direction === 'down' ? 'Decrease' : 'No change';
+            const percentage = change.percentage === null
+                ? (second === 0 ? '0.0%' : 'N/A (baseline is 0)')
+                : `${Math.abs(change.percentage).toFixed(1)}%`;
+            box.innerHTML = `
+                <div class="comparison-summary-period"><span>${HIG.escapeHtml(lbl1)}</span><strong>${first.toLocaleString()}</strong></div>
+                <div class="comparison-summary-period"><span>${HIG.escapeHtml(lbl2)}</span><strong>${second.toLocaleString()}</strong></div>
+                <div class="comparison-summary-result is-${change.direction}">
+                    <span>${direction}</span>
+                    <strong>${arrow} ${sign}${Math.abs(change.difference).toLocaleString()} (${percentage})</strong>
+                </div>`;
+            box.hidden = false;
         }
 
         function updateComparisonCharts() {
@@ -973,6 +1045,7 @@ function addCompanyDetailButtons(companyDetails) {
             comparisonMode=false; comparisonData1=null; comparisonData2=null; comparisonData1Raw=null; comparisonData2Raw=null;
             document.querySelectorAll('.comparison-change').forEach(el=>el.remove());
             const badge=document.querySelector('.comparison-badge'); if(badge) badge.remove();
+            document.getElementById('periodComparisonSummary').hidden = true;
             updateDashboard();
         }
 
@@ -1004,33 +1077,33 @@ function addCompanyDetailButtons(companyDetails) {
 
         // ========== AESTHETIC VIZ SYSTEM ==========
         const VIZ = {
-            font: 'MiSans, sans-serif',
-            ink: 'rgba(28,28,30,0.9)',
-            text: 'rgba(28,28,30,0.62)',
-            faint: 'rgba(28,28,30,0.32)',
-            hair: 'rgba(28,28,30,0.06)',
-            surface: '#ffffff',
-            muted: 'rgba(28,28,30,0.2)',
-            accent: '#ff6900',
-            bmi: ['#6e93b8', '#5e9e76', '#e0a94a', '#c4695c'],
+            font: 'Fredoka, Cairo, sans-serif',
+            ink: '#26354a',
+            text: '#536175',
+            faint: '#788396',
+            hair: 'rgba(38,53,74,0.12)',
+            surface: '#fffdf7',
+            muted: 'rgba(38,53,74,0.2)',
+            accent: '#f36b4f',
+            bmi: ['#55b9e8', '#63c98a', '#f5bd48', '#f17667'],
             bmiLabels: ['Underweight', 'Normal', 'Overweight', 'Obesity']
         };
 
         function vizTooltip(callbacks) {
             return {
-                backgroundColor: 'rgba(255,255,255,0.97)',
+                backgroundColor: '#fffdf7',
                 titleColor: VIZ.ink,
                 bodyColor: VIZ.text,
-                titleFont: { family: VIZ.font, size: 12, weight: '500' },
+                titleFont: { family: VIZ.font, size: 14, weight: '600' },
                 bodyFont: { family: VIZ.font, size: 12 },
-                padding: { top: 10, bottom: 10, left: 13, right: 15 },
-                cornerRadius: 12,
-                caretSize: 5,
-                caretPadding: 6,
+                padding: { top: 11, bottom: 11, left: 14, right: 16 },
+                cornerRadius: 16,
+                caretSize: 7,
+                caretPadding: 7,
                 displayColors: false,
-                borderColor: 'rgba(28,28,30,0.08)',
-                borderWidth: 1,
-                titleMarginBottom: 4,
+                borderColor: VIZ.ink,
+                borderWidth: 2,
+                titleMarginBottom: 5,
                 boxPadding: 4,
                 callbacks
             };
@@ -1042,7 +1115,20 @@ function addCompanyDetailButtons(companyDetails) {
             const box = document.getElementById(boxId);
             if (!box) return;
             box.classList.add('viz-legend-inline');
-            box.innerHTML = items.map(it => `<span class="viz-legend-item"><span class="viz-legend-dot" style="background:${it.color}"></span>${it.label}</span>`).join('');
+            box.innerHTML = items.map((it, index) => `<button type="button" class="viz-legend-item" data-dataset-index="${index}" aria-pressed="true" aria-label="Hide ${HIG.escapeHtml(it.label)} data"><span class="viz-legend-dot" style="background:${it.color}" aria-hidden="true"></span>${HIG.escapeHtml(it.label)}</button>`).join('');
+            box.querySelectorAll('.viz-legend-item').forEach(button => {
+                button.addEventListener('click', () => {
+                    if (!compChart) return;
+                    const index = Number(button.dataset.datasetIndex);
+                    const visible = !compChart.isDatasetVisible(index);
+                    compChart.setDatasetVisibility(index, visible);
+                    compChart.update();
+                    button.setAttribute('aria-pressed', String(visible));
+                    const label = items[index].label;
+                    button.setAttribute('aria-label', `${visible ? 'Hide' : 'Show'} ${label} data`);
+                    button.classList.toggle('is-hidden', !visible);
+                });
+            });
         }
 
         function bmiCounts(values) {
@@ -1075,7 +1161,7 @@ function addCompanyDetailButtons(companyDetails) {
                 if (chart.options.indexAxis !== 'y') return;
                 const ctx = chart.ctx;
                 ctx.save();
-                ctx.font = `500 10px ${VIZ.font}`;
+                ctx.font = `600 11px ${VIZ.font}`;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 chart.data.datasets.forEach((ds, di) => {
@@ -1087,7 +1173,9 @@ function addCompanyDetailButtons(companyDetails) {
                         const width = Math.abs(bar.x - base);
                         const val = ds.data[i] || 0;
                         if (width < 40 || val < 7) return;
-                        ctx.fillStyle = 'rgba(255,255,255,0.94)';
+                        ctx.fillStyle = di === 2 ? '#26354a' : '#fffdf7';
+                        ctx.shadowColor = 'rgba(38,53,74,0.2)';
+                        ctx.shadowBlur = 2;
                         ctx.fillText(`${val.toFixed(0)}%`, (bar.x + base) / 2, bar.y);
                     });
                 });
@@ -1097,13 +1185,25 @@ function addCompanyDetailButtons(companyDetails) {
 
         function renderBmiNote(text) {
             const box = document.getElementById('bmiNote');
-            if (box) box.innerHTML = text || '';
+            if (box) box.textContent = text || '';
         }
 
         function bmiCoverageNote(shown, total, noun) {
-            if (!shown) return 'No BMI data for this selection';
-            if (shown >= total) return '';
-            return `BMI categories recorded for ${shown} of ${total} ${noun}`;
+            if (!shown) return 'No BMI data for this selection. Choose another period or adjust the filters.';
+            const coverage = shown < total ? ` BMI data is available for ${shown} of ${total} ${noun}.` : '';
+            return coverage.trim();
+        }
+
+        function renderBmiDataTable(rows) {
+            const details = document.getElementById('bmiDataTable');
+            if (!details) return;
+            if (!rows.length) {
+                details.innerHTML = '<summary>View chart data</summary><p>No BMI records are available for this selection.</p>';
+                return;
+            }
+            const headers = VIZ.bmiLabels.map(label => `<th scope="col">${HIG.escapeHtml(label)} count (%)</th>`).join('');
+            const body = rows.map(row => `<tr><th scope="row">${HIG.escapeHtml(row.label)}</th>${row.counts.map(count => `<td>${count.toLocaleString()} (${pctOf(count, row.total).toFixed(1)}%)</td>`).join('')}</tr>`).join('');
+            details.innerHTML = `<summary>View chart data</summary><div class="table-responsive"><table class="table table-sm align-middle"><caption class="visually-hidden">BMI category counts and percentages by group</caption><thead><tr><th scope="col">Group</th>${headers}</tr></thead><tbody>${body}</tbody></table></div>`;
         }
 
         // Composition view: one row per company, split into its BMI categories
@@ -1113,7 +1213,13 @@ function addCompanyDetailButtons(companyDetails) {
                 data: rows.map(r => pctOf(r.counts[i], r.total)),
                 counts: rows.map(r => r.counts[i]),
                 backgroundColor: VIZ.bmi[i],
-                borderRadius: i === 0 ? { topLeft: 4, bottomLeft: 4 } : i === VIZ.bmiLabels.length - 1 ? { topRight: 4, bottomRight: 4 } : 0,
+                borderColor: '#fffdf7',
+                borderWidth: 2,
+                borderRadius: i === 0
+                    ? { topLeft: 20, bottomLeft: 20 }
+                    : i === VIZ.bmiLabels.length - 1
+                        ? { topRight: 20, bottomRight: 20 }
+                        : 0,
                 borderSkipped: false,
                 barPercentage: 0.72,
                 categoryPercentage: 0.86,
@@ -1127,11 +1233,11 @@ function addCompanyDetailButtons(companyDetails) {
                     responsive: true,
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', axis: 'y', intersect: false },
-                    animation: { duration: 650, easing: 'easeOutQuart' },
-                    layout: { padding: { top: 6 } },
+                    animation: { duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650, easing: 'easeOutQuart' },
+                    layout: { padding: { top: 8, right: 4, left: 4 } },
                     scales: {
-                        x: { stacked: true, min: 0, max: 100, grid: { color: VIZ.hair, drawTicks: false }, border: { display: false }, ticks: { color: VIZ.faint, font: { family: VIZ.font, size: 10 }, padding: 6, callback: v => v + '%' } },
-                        y: { stacked: true, grid: { display: false }, border: { display: false }, ticks: { color: VIZ.text, font: { family: VIZ.font, size: 11 } } }
+                        x: { stacked: true, min: 0, max: 100, grid: { color: VIZ.hair, lineWidth: 1.5, drawTicks: false }, border: { display: false }, ticks: { color: VIZ.text, font: { family: VIZ.font, size: 11, weight: '500' }, padding: 8, callback: v => v + '%' } },
+                        y: { stacked: true, grid: { display: false }, border: { display: false }, ticks: { color: VIZ.ink, padding: 8, font: { family: VIZ.font, size: 12, weight: '500' } } }
                     },
                     plugins: {
                         legend: { display: false },
@@ -1153,6 +1259,11 @@ function addCompanyDetailButtons(companyDetails) {
                 .filter(r => r.total > 0);
             renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
             renderBmiNote(bmiCoverageNote(rows.length, Object.keys(d.companies).length, 'companies'));
+            renderBmiDataTable(rows);
+            const canvas = document.getElementById('comparisonChart');
+            if (canvas) canvas.setAttribute('aria-label', rows.length
+                ? `Stacked percentage bar chart showing BMI categories for ${rows.map(row => row.label).join(', ')}. Use the category buttons to show or hide categories, or expand the chart data table for exact counts and percentages.`
+                : 'No BMI data is available for this selection.');
             compChart = bmiStackChart('comparisonChart', rows, 22);
         }
 
@@ -1228,6 +1339,13 @@ function addCompanyDetailButtons(companyDetails) {
         document.addEventListener('DOMContentLoaded', () => {
             if(document.getElementById('btnCompare')) initComparisonEvents();
             if(document.getElementById('companyFilter')) initFilterEvents();
+            document.querySelectorAll('.risk-stat-item[role="button"]').forEach(item => {
+                item.addEventListener('keydown', event => {
+                    if (event.key !== 'Enter' && event.key !== ' ') return;
+                    event.preventDefault();
+                    item.click();
+                });
+            });
             bindCompanyDrilldown();
             fetchData();
         });
