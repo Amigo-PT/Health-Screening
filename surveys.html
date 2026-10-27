@@ -76,6 +76,7 @@
             padding: 15px 22px;
             background: var(--surface-2);
             color: var(--text-secondary);
+            text-align: center;
             font-size: .72rem;
             font-weight: 600;
             letter-spacing: .09em;
@@ -101,10 +102,11 @@
             font-weight: 600;
             font-size: .95rem;
             line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            overflow-wrap: anywhere;
+        }
+
+        .miui-table tbody td:nth-child(2) {
+            text-align: center;
         }
 
         .ind-chip {
@@ -231,9 +233,6 @@
             <div class="row g-4 justify-content-center" data-reveal data-reveal-delay="100">
                 <div class="col-12">
                     <div class="hig-card" style="--chip:#f36b4f">
-                        <div class="text-end mb-3">
-                            <span id="programCount" role="status" aria-live="polite" aria-atomic="true">Loading programs…</span>
-                        </div>
                         <div class="table-responsive">
                             <table class="miui-table" id="screeningTable" aria-busy="true">
                                 <thead>
@@ -404,7 +403,6 @@
                     </tr>`;
             }
 
-            document.getElementById('programCount').textContent = `${count} ${count === 1 ? 'program' : 'programs'}`;
             document.getElementById('screeningTable').setAttribute('aria-busy', 'false');
             HIG.refreshReveals(tbody);
         }
@@ -433,7 +431,6 @@
                                 </div>
                             </td>
                         </tr>`;
-                    document.getElementById('programCount').textContent = 'Programs unavailable';
                     table.setAttribute('aria-busy', 'false');
                     document.getElementById('retryPrograms').addEventListener('click', fetchData);
                     HIG.refreshReveals(document.getElementById('table-body'));
