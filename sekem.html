@@ -1037,7 +1037,7 @@ function addCompanyDetailButtons(companyDetails) {
                 { label: lbl2, counts: comp2, total: comp2.reduce((a, b) => a + b, 0) }
             ].filter(r => r.total > 0);
             renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
-            renderBmiNote(bmiCoverageNote(rows.length, COMPANY_KEYS.length, 'companies'));
+            renderBmiNote(bmiCoverageNote(rows.length));
             compChart = bmiStackChart('comparisonChart', rows, 46);
         }
 
@@ -1188,10 +1188,9 @@ function addCompanyDetailButtons(companyDetails) {
             if (box) box.textContent = text || '';
         }
 
-        function bmiCoverageNote(shown, total, noun) {
+        function bmiCoverageNote(shown) {
             if (!shown) return 'No BMI data for this selection. Choose another period or adjust the filters.';
-            const coverage = shown < total ? ` BMI data is available for ${shown} of ${total} ${noun}.` : '';
-            return coverage.trim();
+            return '';
         }
 
         function renderBmiDataTable(rows) {
@@ -1258,7 +1257,7 @@ function addCompanyDetailButtons(companyDetails) {
                 .map(c => { const counts = bmiCounts(d.complaints[c.key]); return { label: c.name, counts, total: counts.reduce((a, b) => a + b, 0) }; })
                 .filter(r => r.total > 0);
             renderInlineLegend('bmiLegend', VIZ.bmiLabels.map((label, i) => ({ label, color: VIZ.bmi[i] })));
-            renderBmiNote(bmiCoverageNote(rows.length, Object.keys(d.companies).length, 'companies'));
+            renderBmiNote(bmiCoverageNote(rows.length));
             renderBmiDataTable(rows);
             const canvas = document.getElementById('comparisonChart');
             if (canvas) canvas.setAttribute('aria-label', rows.length
