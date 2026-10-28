@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#fff8e9" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="Health screening reports and documentation for HU Staff and SEKEM communities.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
@@ -24,13 +24,13 @@
     <meta name="twitter:description" content="Health screening reports and documentation for HU Staff and SEKEM communities.">
 
     <title>Reports Timeline | The Health Screening Project</title>
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="hig.css" />
 
@@ -50,9 +50,9 @@
             transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
         }
         .mi-input::placeholder { color: var(--text-tertiary); }
-        .mi-input:hover { background: var(--fill-medium); }
+        .mi-input:hover { background-color: var(--fill-medium); }
         .mi-input:focus {
-            background: var(--surface-1);
+            background-color: var(--surface-1);
             border-color: var(--accent-color);
             box-shadow: 0 0 0 4px rgba(255, 105, 0, .12);
         }
@@ -70,26 +70,52 @@
         }
 
         select.mi-input {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2398a2b3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            padding: 0 46px 0 18px;
+            border: 1px solid var(--hairline-strong);
+            border-radius: 14px;
+            background-color: var(--surface-1);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238c8c8c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 15px;
-            padding-right: 42px;
-            cursor: pointer;
+            background-position: right 18px center;
+            background-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
             appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+        }
+
+        select.mi-input:hover {
+            border-color: #c4c4c4;
+            background-color: var(--surface-1);
+        }
+
+        select.mi-input:focus {
+            border-color: var(--accent-color);
+            background-color: var(--surface-1);
+            box-shadow: 0 0 0 4px rgba(255, 105, 0, .1);
+        }
+
+        select.mi-input option {
+            padding: 10px 14px;
+            color: var(--text-primary);
+            background-color: var(--surface-1);
         }
 
         .mi-clear-btn {
             height: 48px;
-            border: none;
-            border-radius: 14px;
-            background: var(--fill-thin);
+            border: 1px solid var(--hairline-strong);
+            border-radius: 10px;
+            background: var(--surface-2);
             color: var(--text-secondary);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            transition: background .25s ease, color .25s ease, transform .25s var(--ease-spring, ease);
+            gap: 2px;
+            font-size: .9rem;
+            transition: background .25s ease, color .25s ease;
         }
         .mi-clear-btn:hover {
             background: rgba(235, 68, 53, .1);
@@ -98,11 +124,11 @@
         .mi-clear-btn:active { transform: scale(.93); }
 
         /* ---------- PDF viewer modal ---------- */
-        #pdfViewerModal .modal-content { border: 3px solid var(--text-primary); border-radius: 30px 23px 32px 24px; box-shadow: 0 7px 0 var(--text-primary), 0 18px 38px rgba(38, 53, 74, .2); }
+        #pdfViewerModal .modal-content { border: 1px solid var(--hairline); border-radius: 20px; box-shadow: 0 24px 64px rgba(0, 0, 0, .16); }
         #pdfViewerModal .modal-header {
-            border-bottom: 2px dashed rgba(38, 53, 74, .32);
+            border-bottom: 1px solid var(--hairline);
             padding: 20px 24px;
-            background: linear-gradient(110deg, #fff0bd, #e8f8ff);
+            background: var(--surface-1);
             align-items: center;
         }
         #pdfViewerModal .modal-body { padding: 18px 22px 22px; }
@@ -138,10 +164,10 @@
         }
 
         .pdf-frame-wrap {
-            border: 2px solid var(--text-primary);
-            border-radius: 21px;
+            border: 1px solid var(--hairline);
+            border-radius: 14px;
             overflow: hidden;
-            background: #e8f8ff;
+            background: var(--surface-2);
         }
 
         .pdf-state-title {
@@ -187,10 +213,9 @@
                         border-color .25s ease;
         }
         .rep-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 18px 40px -16px rgba(255, 105, 0, .22),
-                        0 8px 24px rgba(17, 17, 17, .06);
-            border-color: rgba(255, 105, 0, .26);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .08);
+            border-color: var(--hairline-strong);
         }
 
         .mi-timeline {
@@ -237,35 +262,33 @@
             width: 76px;
             min-width: 76px;
             height: 76px;
-            border-radius: 22px;
-            background: linear-gradient(145deg, #ff8a3d 0%, var(--accent-color) 55%, var(--accent-deep) 100%);
-            box-shadow: 0 10px 22px -8px rgba(255, 105, 0, .5),
-                        inset 0 1px 0 rgba(255, 255, 255, .35);
+            border-radius: 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--hairline);
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 2px;
-            transition: transform .45s var(--ease-spring, ease), box-shadow .35s ease;
+            transition: background-color .25s ease, border-color .25s ease;
         }
         .rep-card:hover .rep-date {
-            transform: scale(1.07) rotate(-3deg);
-            box-shadow: 0 14px 26px -8px rgba(255, 105, 0, .55),
-                        inset 0 1px 0 rgba(255, 255, 255, .35);
+            background: var(--accent-soft);
+            border-color: #ffd9bd;
         }
         .rep-month {
             font-size: .66rem;
             font-weight: 600;
             letter-spacing: .12em;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, .92);
+            color: var(--accent-color);
         }
         .rep-year {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-primary);
             line-height: 1.1;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, .1);
         }
 
         .rep-meta {
@@ -399,7 +422,7 @@
                             </div>
                             <div class="col-md-1">
                                 <button type="button" class="mi-clear-btn w-100" onclick="clearFilters()" aria-label="Clear filters">
-                                    <i class="bi bi-x-lg"></i>
+                                    <i class="bi bi-x-lg"></i><span class="d-md-none ms-2">Clear filters</span>
                                 </button>
                             </div>
                         </div>
@@ -471,6 +494,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="hig.js"></script>
+    <script src="custom-select.js"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
         let allReports = [];
@@ -587,7 +611,7 @@
             for (let i = 0; i < 4; i++) {
                 html += `
                     <div class="mi-tl-item"><span class="mi-tl-node"></span>
-                        <div class="hig-card rep-card skeleton-card" style="--chip:#f36b4f">
+                        <div class="hig-card rep-card skeleton-card" style="--chip:#ff6900">
                             <div class="d-flex gap-4">
                                 <div class="skeleton" style="width:60px;height:60px;border-radius:50%;flex-shrink:0;"></div>
                                 <div class="flex-grow-1">
@@ -742,7 +766,7 @@
 
                 items += `
                     <div class="mi-tl-item"><span class="mi-tl-node"></span>
-                        <div class="hig-card rep-card" style="--chip:#f36b4f" data-reveal data-reveal-delay="${Math.min(i * 70, 400)}">
+                        <div class="hig-card rep-card" style="--chip:#ff6900" data-reveal data-reveal-delay="${Math.min(i * 70, 400)}">
                             <div class="d-flex flex-column flex-md-row gap-3 gap-md-4 align-items-md-center">
                                 <div class="rep-date">
                                     <span class="rep-month">${shortMonth(item.Month)}</span>

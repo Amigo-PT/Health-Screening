@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#fff8e9" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="Health screening dashboard for HU Staff showing BMI distribution, risk stratification and participation.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
@@ -24,13 +24,13 @@
     <meta name="twitter:description" content="Health screening dashboard for HU Staff showing BMI distribution, risk stratification and participation.">
 
     <title>HU Staff Health Screening Dashboard | The Health Screening Project</title>
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23f36b4f"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="hig.css">
     <link rel="stylesheet" href="dashboard.css">
@@ -342,6 +342,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="hig.js"></script>
+    <script src="custom-select.js"></script>
     <script>
         // Chart theme
 
@@ -1066,32 +1067,32 @@
 
 // ========== AESTHETIC VIZ SYSTEM ==========
         const VIZ = {
-    font: 'Fredoka, Cairo, sans-serif',
-    ink: '#26354a',
-    text: '#536175',
-    faint: '#788396',
-    hair: 'rgba(38,53,74,0.12)',
-    surface: '#fffdf7',
-    muted: 'rgba(38,53,74,0.2)',
-            accent: '#f36b4f',
-    bmi: ['#55b9e8', '#63c98a', '#f5bd48', '#f17667'],
+    font: 'MiSans, Cairo, sans-serif',
+    ink: '#191919',
+    text: '#5c5c5c',
+    faint: '#8c8c8c',
+    hair: 'rgba(0,0,0,0.08)',
+    surface: '#ffffff',
+    muted: 'rgba(0,0,0,0.16)',
+            accent: '#ff6900',
+    bmi: ['#5b9cf5', '#42b883', '#f5b13d', '#ef6b5a'],
             bmiLabels: ['Underweight', 'Normal', 'Overweight', 'Obesity']
         };
 
         function vizTooltip(callbacks) {
             return {
-        backgroundColor: '#fffdf7',
+        backgroundColor: '#ffffff',
                 titleColor: VIZ.ink,
                 bodyColor: VIZ.text,
         titleFont: { family: VIZ.font, size: 14, weight: '600' },
                 bodyFont: { family: VIZ.font, size: 12 },
         padding: { top: 11, bottom: 11, left: 14, right: 16 },
-        cornerRadius: 16,
+        cornerRadius: 12,
         caretSize: 7,
         caretPadding: 7,
                 displayColors: false,
-        borderColor: VIZ.ink,
-        borderWidth: 2,
+        borderColor: 'rgba(0,0,0,0.08)',
+        borderWidth: 1,
         titleMarginBottom: 5,
                 boxPadding: 4,
                 callbacks
@@ -1162,8 +1163,8 @@
                         const width = Math.abs(bar.x - base);
                         const val = ds.data[i] || 0;
                         if (width < 40 || val < 7) return;
-                        ctx.fillStyle = di === 2 ? '#26354a' : '#fffdf7';
-                        ctx.shadowColor = 'rgba(38,53,74,0.2)';
+                        ctx.fillStyle = di === 2 ? '#191919' : '#ffffff';
+                        ctx.shadowColor = 'rgba(0,0,0,0.12)';
                         ctx.shadowBlur = 2;
                         ctx.fillText(`${val.toFixed(0)}%`, (bar.x + base) / 2, bar.y);
                     });
@@ -1202,12 +1203,12 @@
                 data: rows.map(r => pctOf(r.counts[i], r.total)),
                 counts: rows.map(r => r.counts[i]),
                 backgroundColor: VIZ.bmi[i],
-                borderColor: '#fffdf7',
-                borderWidth: 2,
+                borderColor: '#ffffff',
+                borderWidth: 1,
                 borderRadius: i === 0
-                    ? { topLeft: 20, bottomLeft: 20 }
+                    ? { topLeft: 8, bottomLeft: 8 }
                     : i === VIZ.bmiLabels.length - 1
-                        ? { topRight: 20, bottomRight: 20 }
+                        ? { topRight: 8, bottomRight: 8 }
                         : 0,
                 borderSkipped: false,
                 barPercentage: 0.72,

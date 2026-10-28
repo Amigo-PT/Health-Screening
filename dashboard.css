@@ -1,5 +1,5 @@
 /* =========================================================
-   Dashboard extensions — playful cartoon design
+   Dashboard extensions — Xiaomi-inspired data surfaces
    (shared by hu_staff.html & sekem.html)
    Requires hig.css design tokens.
    ========================================================= */
@@ -111,8 +111,8 @@
 .year-tab.active {
     color: #fff;
     font-weight: 500;
-    background: linear-gradient(135deg, #ff8a3c, var(--accent-color));
-    box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--accent-color) 70%, transparent);
+    background: var(--accent-color);
+    box-shadow: none;
 }
 
 .month-timeline { position: relative; display: flex; align-items: flex-start; padding: 12px 6px 4px; }
@@ -172,20 +172,22 @@
 .filter-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
 
 .comparison-select {
-    background: var(--surface-1);
+    height: 44px;
+    padding: 0 42px 0 16px;
     border: 1px solid var(--hairline-strong);
     border-radius: 12px;
-    padding: 9px 14px;
+    background-color: var(--surface-1);
     color: var(--text-primary);
     font-family: inherit;
     font-size: .85rem;
     font-weight: 500;
+    line-height: 1.2;
     cursor: pointer;
     transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
 }
 
-.comparison-select:hover  { border-color: rgba(0, 0, 0, 0.2); }
-.comparison-select:focus  { outline: none; border-color: color-mix(in srgb, var(--accent-color) 55%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color) 13%, transparent); }
+.comparison-select:hover  { border-color: #c4c4c4; background-color: var(--surface-1); }
+.comparison-select:focus  { outline: none; border-color: color-mix(in srgb, var(--accent-color) 55%, transparent); background-color: var(--surface-1); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color) 13%, transparent); }
 
 .btn-compare {
     display: inline-flex;
@@ -621,102 +623,166 @@
 
 .drilldown-card-sub { font-size: .76rem; line-height: 1.55; color: var(--text-secondary); }
 
-/* ---------- Playful dashboard data cards ---------- */
+/* ---------- Xiaomi-style dashboard data surfaces ---------- */
 .filter-card,
 .risk-summary,
 .chart-card {
     background: var(--surface-1);
-    border: 2px solid var(--text-primary);
-    border-radius: 24px 20px 26px 19px;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
 }
+
+.filter-card { padding: 26px 28px; }
+.risk-summary { padding: 26px 28px; }
 
 .filter-label,
 .risk-title,
 .stat-lbl {
-    font-weight: 600;
-    letter-spacing: .06em;
-    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
 }
 
-.comparison-select,
+.comparison-select {
+    border: 1px solid var(--hairline-strong);
+    border-radius: 12px;
+    box-shadow: none;
+    background-color: var(--surface-1);
+}
+
 .btn-compare {
-    border: 2px solid var(--text-primary);
-    border-radius: 14px 12px 15px 11px;
-    box-shadow: 0 3px 0 var(--text-primary);
+    border: 1px solid var(--hairline-strong);
+    border-radius: 10px;
+    box-shadow: none;
+    background: var(--surface-1);
+}
+
+.btn-compare:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: none;
 }
 
 .year-tabs {
-    border-color: var(--text-primary);
-    border-radius: 18px;
+    border: none;
+    background: var(--fill-thin);
+    border-radius: 999px;
+    padding: 4px;
 }
 
+.year-tab {
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 0.86rem;
+}
+
+.year-tab:hover { transform: none; }
+.year-tab:active { transform: none; }
+
 .year-tab.active {
-    color: var(--text-primary);
-    background: #ffcc5c;
-    box-shadow: 0 3px 0 var(--text-primary);
+    color: #fff;
+    font-weight: 500;
+    background: var(--accent-color);
+    box-shadow: none;
 }
 
 .month-timeline::before {
-    height: 3px;
-    top: 18px;
-    background: #d9c9aa;
+    height: 1px;
+    top: 19px;
+    background: var(--hairline-strong);
 }
 
-.month-dot { border-width: 3px; border-color: var(--text-primary); }
-.month-item.active .month-dot { box-shadow: 0 2px 0 var(--text-primary); }
+.month-dot {
+    width: 13px;
+    height: 13px;
+    border-width: 2px;
+    border-color: var(--hairline-strong);
+    background: var(--surface-1);
+}
+
+.month-item:hover .month-dot { border-color: var(--accent-color); }
+
+.month-item.active .month-dot {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: none;
+}
+
+.month-lbl { color: var(--text-tertiary); }
+.month-item:hover .month-lbl,
+.month-item.active .month-lbl { color: var(--accent-color); }
 
 .stat-card,
 .risk-stat-item,
 .drilldown-card,
 .disease-item {
-    border: 2px solid var(--text-primary);
-    border-radius: 20px 16px 22px 17px;
-    box-shadow: 0 3px 0 rgba(38, 53, 74, .18);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--dur-base) var(--ease-smooth),
+                border-color var(--dur-base) ease,
+                box-shadow var(--dur-base) ease,
+                background-color var(--dur-fast) ease;
 }
 
-.risk-stat-item { background: #fffdf7; }
-.risk-stat-item.high-risk { background: #ffe1d9; border-color: #ba5443; }
-.risk-stat-item.moderate-risk { background: #fff0c8; border-color: #ba8430; }
-.risk-stat-item.low-risk { background: #def1df; border-color: #4a8750; }
-.risk-stat-item.info-risk { background: #dcecff; border-color: #4b78ad; }
+.stat-card:hover,
+.risk-stat-item:hover,
+.drilldown-card:hover,
+.disease-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--hairline-strong);
+    box-shadow: var(--shadow-pop);
+}
+
+.risk-stat-item { background: var(--surface-1); }
+.risk-stat-item.high-risk     { background: #fff7f6; border-color: #f3d6d2; }
+.risk-stat-item.moderate-risk { background: #fffbf2; border-color: #f2e3c8; }
+.risk-stat-item.low-risk      { background: #f6fbf6; border-color: #d9ebdb; }
+.risk-stat-item.info-risk     { background: #f6f9ff; border-color: #dce5f2; }
+
+.risk-stat-item.high-risk:hover     { border-color: #e8bab4; }
+.risk-stat-item.moderate-risk:hover { border-color: #ead3a8; }
+.risk-stat-item.low-risk:hover      { border-color: #bfdfc3; }
+.risk-stat-item.info-risk:hover     { border-color: #c2d2ea; }
 
 .stat-icon,
 .chart-icon {
-    border: 2px solid currentColor;
-    border-radius: 16px 13px 18px 14px;
+    border: none;
+    border-radius: 11px;
 }
 
-.drilldown-card { background: #fff8e9; }
-.drilldown-card:hover { background: #fffdf7; }
+.drilldown-card { background: var(--surface-2); }
+.drilldown-card:hover { background: var(--surface-1); }
 
-.disease-item { background: #fff8e9; }
+.disease-item { background: var(--surface-1); }
 
-.viz-legend-row:hover { background: #fff0d4; }
+.viz-legend-row:hover { background: var(--fill-thin); }
+
+.recommendation-box {
+    background: #fffbf2;
+    border: 1px solid #f2e3c8;
+    border-radius: 12px;
+    box-shadow: none;
+}
 
 /* ---------- Disease modal components ---------- */
 .disease-list { display: flex; flex-direction: column; }
 
 .disease-item {
-    background: var(--surface-2);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius-sm);
     padding: 16px;
     margin-bottom: 12px;
-    transition: background-color var(--dur-fast) ease,
-                transform var(--dur-fast) var(--ease-spring),
-                border-color var(--dur-fast) ease;
 }
 
 .disease-item:hover {
-    background: #fff;
-    border-color: color-mix(in srgb, var(--accent-color) 30%, var(--hairline));
-    transform: translateX(3px);
+    background: var(--surface-1);
+    border-color: var(--hairline-strong);
+    transform: none;
 }
 
 .disease-name {
     font-weight: 500;
-    font-size: .95rem;
+    font-size: 0.95rem;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -725,228 +791,57 @@
 }
 
 .disease-count { font-size: 1.05rem; font-weight: 600; color: var(--text-primary); font-feature-settings: "tnum"; }
-.disease-count small { font-size: .76rem; font-weight: 400; color: var(--text-tertiary); }
+.disease-count small { font-size: 0.76rem; font-weight: 400; color: var(--text-tertiary); }
 
 .risk-level-badge {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: .64rem;
+    padding: 4px 10px;
+    border-radius: 7px;
+    font-size: 0.64rem;
     font-weight: 600;
-    letter-spacing: .05em;
+    letter-spacing: 0.04em;
 }
 
-.risk-critical { color: #d32f26; background: rgba(235, 68, 53, .12); }
-.risk-high     { color: #eb4435; background: rgba(235, 68, 53, .08); }
-.risk-moderate { color: #e07800; background: rgba(255, 149, 0, .1); }
-.risk-low      { color: #1d9631; background: rgba(34, 172, 56, .1); }
+.risk-critical { color: #d32f26; background: rgba(235, 68, 53, 0.1); }
+.risk-high     { color: #eb4435; background: rgba(235, 68, 53, 0.08); }
+.risk-moderate { color: #e07800; background: rgba(255, 149, 0, 0.1); }
+.risk-low      { color: #1d9631; background: rgba(34, 172, 56, 0.1); }
 
-.progress-risk { height: 6px; background: rgba(0, 0, 0, .06); border-radius: 3px; overflow: hidden; margin-top: 10px; }
-.progress-risk-fill { height: 100%; border-radius: 3px; transition: width .5s var(--ease-spring); }
+.progress-risk { height: 6px; background: var(--fill-thin); border-radius: 3px; overflow: hidden; margin-top: 10px; }
+.progress-risk-fill { height: 100%; border-radius: 3px; transition: width 0.4s var(--ease-smooth); }
 
-.recommendation-box {
-    background: rgba(255, 149, 0, .06);
-    border: 1px solid rgba(255, 149, 0, .22);
-    border-radius: var(--radius-sm);
-    padding: 18px;
-    margin-top: 20px;
-}
-
-.recommendation-box .recommendation-text { font-size: .86rem; line-height: 1.65; color: var(--text-secondary); }
+.recommendation-box .recommendation-text { font-size: 0.86rem; line-height: 1.65; color: var(--text-secondary); }
 
 /* ---------- Modal layout helpers ---------- */
 .risk-detail-modal .modal-content {
     display: flex;
     flex-direction: column;
     max-height: 90vh;
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
 }
 
 .risk-detail-modal .modal-body { overflow-y: auto; }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 768px) {
-    .filter-card { padding: 20px 18px; }
-    .month-lbl { font-size: .66rem; }
-    .stat-num { font-size: 1.7rem; }
-    .risk-number { font-size: 1.9rem; }
-    .comparison-controls .btn-compare { flex: 1 1 100%; }
-}
-
-/* Bold outlines and bright category colors keep dashboard visuals playful. */
-.filter-card,
-.risk-summary,
-.chart-card,
-.stat-card,
-.risk-stat-item,
-.drilldown-card,
-.disease-item,
-.recommendation-box {
-    border: 3px solid var(--text-primary);
-    border-radius: 22px 17px 24px 18px;
-    box-shadow: 0 6px 0 var(--text-primary);
-}
-
-.filter-card,
-.risk-summary,
-.chart-card { background: #fffdf7; }
-
-.comparison-select,
-.btn-compare {
-    border: 3px solid var(--text-primary);
-    box-shadow: 0 4px 0 var(--text-primary);
-}
-
-.year-tabs { border: 3px solid var(--text-primary); box-shadow: 0 4px 0 var(--text-primary); }
-.year-tab.active { background: #ffdf67; box-shadow: 0 3px 0 var(--text-primary); }
-.month-timeline::before { background: var(--text-primary); }
-.month-dot { border-color: var(--text-primary); }
-.month-item.active .month-dot { background: #ff6f59; border-color: var(--text-primary); box-shadow: 0 2px 0 var(--text-primary); }
-
-.risk-stat-item.high-risk { background: #ffd9d0; border-color: var(--text-primary); }
-.risk-stat-item.moderate-risk { background: #ffe89d; border-color: var(--text-primary); }
-.risk-stat-item.low-risk { background: #c9efc7; border-color: var(--text-primary); }
-.risk-stat-item.info-risk { background: #c9efff; border-color: var(--text-primary); }
-.drilldown-card,
-.disease-item { background: #edf9ff; }
-.drilldown-card:hover,
-.disease-item:hover { background: #fff0a8; border-color: var(--text-primary); }
-.recommendation-box { background: #fff0a8; }
-
-.stat-icon,
-.chart-icon { border: 3px solid currentColor; }
-
-.filter-card,
-.risk-summary,
-.chart-card,
-.stat-card,
-.risk-stat-item,
-.drilldown-card,
-.disease-item,
-.recommendation-box {
-    border-width: 2.5px;
-    border-radius: 27px 22px 29px 23px;
-    box-shadow: 0 5px 0 var(--text-primary), inset 0 2px 0 rgba(255, 255, 255, .75);
-}
-
-.filter-card { background: linear-gradient(145deg, #fffdf7, #fff5d8); }
-.risk-summary { background: linear-gradient(145deg, #fffdf7, #e8f8ff); }
-.chart-card:nth-child(3n + 1) { background: #fff5d8; }
-.chart-card:nth-child(3n + 2) { background: #e8f8ff; }
-.chart-card:nth-child(3n) { background: #f1eaff; }
-
-.stat-card:nth-child(odd) { background: #fff0d1; }
-.stat-card:nth-child(even) { background: #e5f7ff; }
-.risk-stat-item { transition: transform .28s var(--ease-spring), box-shadow .28s ease, background-color .28s ease; }
-.risk-stat-item:hover,
-.drilldown-card:hover,
-.disease-item:hover { transform: translateY(-3px) rotate(-.4deg); }
-
-.year-tab,
-.comparison-select,
-.btn-compare,
-.risk-stat-item,
-.drilldown-card,
-.disease-item {
-    transition-duration: .28s;
-}
-
-.year-tab.active { background: #ffdf67; box-shadow: 0 3px 0 var(--text-primary); }
-
-@media (prefers-reduced-motion: reduce) {
-    .risk-stat-item,
-    .drilldown-card,
-    .disease-item { transition: none; }
-}
-
-/* Friendly chart frame, legend chips, and labels. */
-.chart-card {
-    position: relative;
-    overflow: hidden;
-    padding: 24px;
-    background: linear-gradient(145deg, #fffdf7, #e9f8ff);
-}
-
-.chart-head { gap: 14px; margin-bottom: 16px; }
-
-.chart-icon {
-    color: var(--text-primary);
-    background: #ffdf67;
-    border: 2px solid var(--text-primary);
-    box-shadow: 0 3px 0 var(--text-primary);
-}
-
-.chart-title { font-size: 1rem; font-weight: 600; }
-
-.chart-canvas {
-    padding: 12px 12px 6px;
-    border: 2px dashed #8ccde2;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .72);
-}
-
-.viz-legend-inline {
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.viz-legend-item {
-    gap: 7px;
-    padding: 5px 10px;
-    border: 1.5px solid rgba(38, 53, 74, .24);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .78);
-    color: var(--text-primary);
-    font-size: .72rem;
-    font-weight: 500;
-}
-
-.viz-legend-dot {
-    width: 11px;
-    height: 11px;
-    border: 1.5px solid var(--text-primary);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55);
-}
-
-.viz-note {
-    padding: 8px 12px;
-    border: 1.5px dashed #8ccde2;
-    border-radius: 13px;
-    background: rgba(255, 255, 255, .72);
-}
-
-.viz-note:empty { display: none; }
-
-@media (max-width: 575px) {
-    .chart-card { padding: 18px 16px; }
-    .chart-canvas { padding: 8px 4px 4px; }
-    .viz-legend-inline { gap: 6px; }
-    .viz-legend-item { padding: 4px 8px; font-size: .68rem; }
-}
-
-.risk-detail-modal .modal-content {
-    border: 3px solid var(--text-primary);
-    border-radius: 30px 23px 32px 24px;
-    box-shadow: 0 7px 0 var(--text-primary), 0 18px 38px rgba(38, 53, 74, .2);
-}
-
 .risk-detail-modal .disease-item {
-    background: #f0f9ff;
-    border: 2px solid rgba(38, 53, 74, .22);
-    box-shadow: 0 3px 0 rgba(38, 53, 74, .14);
+    background: var(--surface-1);
+    border: 1px solid var(--hairline);
+    box-shadow: none;
 }
 
 .risk-detail-modal .recommendation-box {
-    background: #fff3c9;
-    border: 2px solid #e5b84b;
-    box-shadow: 0 3px 0 rgba(38, 53, 74, .14);
+    background: #fffbf2;
+    border: 1px solid #f2e3c8;
+    box-shadow: none;
 }
 
 .risk-detail-modal .drilldown-card {
-    background: #eaf8ff;
-    border: 2px solid rgba(38, 53, 74, .25);
-    box-shadow: 0 3px 0 rgba(38, 53, 74, .14);
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    box-shadow: none;
 }
 
 .month-item {
@@ -957,33 +852,112 @@
     font: inherit;
 }
 
-.viz-legend-item {
-    padding: 6px 11px;
-    border: 1.5px solid rgba(38, 53, 74, .2);
-    border-radius: 999px;
-    background: #fffdf7;
-    font: inherit;
-    cursor: pointer;
-    transition: opacity .18s ease, transform .18s ease, background-color .18s ease;
+/* ---------- Friendly chart frame, legend chips, labels ---------- */
+.chart-card {
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+    background: var(--surface-1);
 }
 
-.viz-legend-item:hover { transform: translateY(-1px); background: #fff4cf; }
-.viz-legend-item.is-hidden { opacity: .5; text-decoration: line-through; }
+.chart-head { gap: 14px; margin-bottom: 18px; }
+
+.chart-icon {
+    color: var(--accent-color);
+    background: var(--accent-soft);
+}
+
+.chart-title { font-size: 1rem; font-weight: 600; }
+
+.chart-canvas {
+    padding: 12px 12px 6px;
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    background: var(--surface-1);
+}
+
+.viz-legend-inline {
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.viz-legend-item {
+    gap: 7px;
+    padding: 5px 10px;
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    background: var(--surface-1);
+    color: var(--text-primary);
+    font-size: 0.72rem;
+    font-weight: 500;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.viz-legend-item:hover {
+    background: var(--fill-thin);
+    border-color: var(--hairline-strong);
+    transform: none;
+}
+
+.viz-legend-item.is-hidden { opacity: 0.45; text-decoration: line-through; }
+
+.viz-legend-dot {
+    width: 9px;
+    height: 9px;
+    border: none;
+    box-shadow: none;
+}
+
+.viz-note {
+    padding: 8px 12px;
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    background: var(--surface-2);
+    color: var(--text-tertiary);
+}
+
+.viz-note:empty { display: none; }
+
 .viz-legend-item:focus-visible,
 .month-item:focus-visible,
 .risk-stat-item[role="button"]:focus-visible,
-.btn-compare:focus-visible,
+.btn-compare:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
 .comparison-select:focus-visible {
-    outline: 3px solid #26354a;
-    outline-offset: 3px;
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-color) 13%, transparent);
 }
 
 .data-notice-loading .bi-arrow-repeat { animation: data-notice-spin 1.2s linear infinite; }
-.data-notice-empty { background: #e8f8ff; }
 
 @keyframes data-notice-spin { to { transform: rotate(360deg); } }
 
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .filter-card { padding: 20px 18px; }
+    .month-lbl { font-size: 0.66rem; }
+    .stat-num { font-size: 1.7rem; }
+    .risk-number { font-size: 1.9rem; }
+    .comparison-controls .btn-compare { flex: 1 1 100%; }
+}
+
+@media (max-width: 575px) {
+    .chart-card { padding: 18px 16px; }
+    .chart-canvas { padding: 8px 4px 4px; }
+    .viz-legend-inline { gap: 6px; }
+    .viz-legend-item { padding: 4px 8px; font-size: 0.68rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
+    .risk-stat-item,
+    .drilldown-card,
+    .disease-item { transition: none; }
     .data-notice-loading .bi-arrow-repeat { animation: none; }
     .viz-legend-item { transition: none; }
 }
