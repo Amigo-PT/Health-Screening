@@ -2,8 +2,6 @@
   "enabled": true,
   "scope": "pages",
   "pages": [
-    "hu_staff.html",
-    "sekem.html",
     "reports.html"
   ],
   "message": "This page is currently under maintenance."
