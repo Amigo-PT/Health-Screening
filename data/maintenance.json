@@ -2,7 +2,9 @@
   "enabled": true,
   "scope": "pages",
   "pages": [
+    "hu_staff.html",
+    "sekem.html",
     "reports.html"
   ],
-  "message": "We’re performing scheduled maintenance to improve your experience. Please check back soon."
+  "message": "This page is currently under maintenance."
 }
