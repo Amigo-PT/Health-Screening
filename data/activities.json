@@ -1,0 +1,50 @@
+[
+  {
+    "Date": "12/1/2025",
+    "Category": "Campaign",
+    "Title": "Muscle Week Campaign",
+    "Description": "Muscle Week Campaign was successfully held at the university, organized by Physical Therapy students in collaboration with the Student Activities Department and under the supervision of the Integrative Health Center. The event featured a series of awareness booths dedicated to musculoskeletal health and injury prevention, where individuals were assessed at the Posture Zone to identify issues resulting from incorrect postures. In addition, height and weight measurements were taken to calculate Body Mass Index (BMI), helping determine appropriate nutritional recommendations, and educational sessions were conducted on proper workspace ergonomics, including correct sitting and standing postures, as well as the proper setup of desks and chairs to prevent long-term musculoskeletal problems.",
+    "Image_URL": "https://github.com/Amigo-PT/Health-Screening/blob/main/activity_images/Muscle_Week_Campaign/001.webp?raw=true",
+    "Link_URL": ""
+  },
+  {
+    "Date": "1/1/2026",
+    "Category": "Other",
+    "Title": "Counselling Department",
+    "Description": "Based on the findings from the administered questionnaires, the Integrative Health Center established a dedicated Consultation Unit at the university as part of the intervention phase.",
+    "Image_URL": "",
+    "Link_URL": ""
+  },
+  {
+    "Date": "12/7/2025",
+    "Category": "Workshop",
+    "Title": "ICF Framework",
+    "Description": "Emphasis was placed on examining the interrelationship between body functions, activities, and participation as core elements in the analysis of cases.",
+    "Image_URL": "https://github.com/Amigo-PT/Health-Screening/blob/main/activity_images/ICF_Framework/001.webp?raw=true",
+    "Link_URL": ""
+  },
+  {
+    "Date": "1/1/2026",
+    "Category": "Event",
+    "Title": "Healthy Nutrition and Ergonomic Habits",
+    "Description": "Aimed at reaching a broad segment of the university community with clear, preventive health guidance, this initiative reflects the Integrative Health Center's commitment to proactive and accessible health promotion—supporting a healthier campus culture through small, consistent interventions that yield meaningful improvements in daily function and quality of life.",
+    "Image_URL": "https://github.com/Amigo-PT/Health-Screening/blob/main/activity_images/Healthy_Nutrition_and_Ergonomic_Habits/001.webp?raw=true",
+    "Link_URL": ""
+  },
+  {
+    "Date": "1/1/2026",
+    "Category": "Other",
+    "Title": "Takamol App",
+    "Description": "The free Takamol app was introduced to support accessible, practical integrative health habits across the university community, with the initiative focused on encouraging simple daily actions related to movement, mobility, posture awareness, and general wellbeing.",
+    "Image_URL": "https://github.com/Amigo-PT/Health-Screening/blob/main/activity_images/Takamol_App/007.webp?raw=true",
+    "Link_URL": ""
+  },
+  {
+    "Date": "11/1/2025",
+    "Category": "Workshop",
+    "Title": "Training Academy Musculoskeletal Health",
+    "Description": "By combining evidence-based education with hands-on daily exercise practice and introductory surface anatomy, the program equipped participants with the knowledge and skills to understand their bodies and apply safe movement strategies in the workplace, during commuting, and at home.",
+    "Image_URL": "https://github.com/Amigo-PT/Health-Screening/blob/main/activity_images/Training_Academy_Musculoskeletal_Health/006.webp?raw=true",
+    "Link_URL": ""
+  }
+]

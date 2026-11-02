@@ -1,0 +1,79 @@
+[
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Pharmacy",
+    "Total": 84,
+    "Total_Count": 84,
+    "Under_weight": 1,
+    "Normal_Weight": 33,
+    "Over_weight": 36,
+    "Obesity": 14
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Physical Therapy",
+    "Total": 34,
+    "Total_Count": 34,
+    "Under_weight": 2,
+    "Normal_Weight": 12,
+    "Over_weight": 16,
+    "Obesity": 4
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Engineering",
+    "Total": 18,
+    "Total_Count": 18,
+    "Under_weight": 1,
+    "Normal_Weight": 3,
+    "Over_weight": 10,
+    "Obesity": 4
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Agriculture",
+    "Total": 29,
+    "Total_Count": 29,
+    "Under_weight": 1,
+    "Normal_Weight": 14,
+    "Over_weight": 10,
+    "Obesity": 4
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Business",
+    "Total": 13,
+    "Total_Count": 13,
+    "Under_weight": 0,
+    "Normal_Weight": 4,
+    "Over_weight": 5,
+    "Obesity": 4
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Workers",
+    "Total": 215,
+    "Total_Count": 215,
+    "Under_weight": 6,
+    "Normal_Weight": 84,
+    "Over_weight": 73,
+    "Obesity": 52
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Sector": "Students",
+    "Total": 2850,
+    "Total_Count": 2790,
+    "Under_weight": 354,
+    "Normal_Weight": 1195,
+    "Over_weight": 662,
+    "Obesity": 579
+  }
+]

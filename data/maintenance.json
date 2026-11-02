@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "scope": "pages",
+  "pages": [
+    "reports.html"
+  ],
+  "message": "We’re performing scheduled maintenance to improve your experience. Please check back soon."
+}

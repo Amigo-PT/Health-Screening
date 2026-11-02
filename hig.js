@@ -19,20 +19,26 @@
         if (color) root.style.setProperty("--accent-color", color);
     };
 
-    HIG.countUp = (el, target, duration = 1400) => {
+    HIG.countUp = (el, target, duration = 1400, format, from = 0) => {
         if (!el) return;
+        const fmt = typeof format === "function"
+            ? format
+            : (value) => Math.round(Number(value)).toLocaleString();
         const previousFrame = countUpFrames.get(el);
         if (previousFrame) cancelAnimationFrame(previousFrame);
         countUpFrames.delete(el);
         if (prefersReduced) {
-            el.textContent = Number(target).toLocaleString();
+            el.textContent = fmt(target);
             return;
         }
         const start = performance.now();
+        const startValue = Number(from) || 0;
         const tick = (now) => {
-            const p = Math.min((now - start) / duration, 1);
+            /* A frame timestamp can precede `start` when the animation begins
+               inside the current frame, so clamp progress to 0–1. */
+            const p = Math.min(Math.max((now - start) / duration, 0), 1);
             const eased = 1 - Math.pow(1 - p, 3);
-            el.textContent = Math.round(target * eased).toLocaleString();
+            el.textContent = fmt(startValue + (Number(target) - startValue) * eased);
             if (p < 1) {
                 countUpFrames.set(el, requestAnimationFrame(tick));
             } else {
@@ -234,12 +240,312 @@
         prev: () => stepLightbox(-1)
     };
 
+    /* ---------- Shared UI helpers ---------- */
+
+    HIG.formatNumber = (value) => Number(value || 0).toLocaleString();
+
+    HIG.formatPercent = (value, digits = 1) =>
+        `${Number(value || 0).toFixed(digits)}%`;
+
+    /**
+     * Sanitize HTML string by escaping dangerous characters while preserving
+     * safe formatting tags: <b>, <i>, <br>, <ul>, <li>, <strong>, <em>.
+     * Use for trusted JSON data only.
+     */
+    HIG.sanitizeHtml = (html = "") => {
+        const str = String(html == null ? "" : html);
+        const div = document.createElement('div');
+        div.textContent = str;
+        // Escape all HTML first, then re-allow only safe tags
+        let safe = div.innerHTML;
+        safe = safe
+            .replace(/&lt;b&gt;/g, '<b>')
+            .replace(/&lt;\/b&gt;/g, '</b>')
+            .replace(/&lt;i&gt;/g, '<i>')
+            .replace(/&lt;\/i&gt;/g, '</i>')
+            .replace(/&lt;strong&gt;/g, '<strong>')
+            .replace(/&lt;\/strong&gt;/g, '</strong>')
+            .replace(/&lt;em&gt;/g, '<em>')
+            .replace(/&lt;\/em&gt;/g, '</em>')
+            .replace(/&lt;br\s*\/?&gt;/g, '<br>')
+            .replace(/&lt;ul&gt;/g, '<ul>')
+            .replace(/&lt;\/ul&gt;/g, '</ul>')
+            .replace(/&lt;li&gt;/g, '<li>')
+            .replace(/&lt;\/li&gt;/g, '</li>');
+        return safe;
+    };
+
+    /**
+     * Render trusted HTML content (e.g. from local JSON files that may contain
+     * <b>, <i>, <br>, <ul> etc. formatting tags).
+     * Use ONLY for data you control/trust — NOT for user-provided input.
+     * Returns sanitized HTML safe for innerHTML injection.
+     */
+    HIG.renderHtml = (html = "") => HIG.sanitizeHtml(String(html == null ? "" : html));
+
+    /* ---------- Pagination helpers ---------- */
+
+    /**
+     * Paginate an array of items.
+     * @param {Array} items - full array of items
+     * @param {number} page - current page (1-based)
+     * @param {number} pageSize - items per page
+     * @returns {object} { page, pageSize, totalPages, totalItems, items, start, end, hasPrev, hasNext }
+     */
+    HIG.paginate = (items = [], page = 1, pageSize = 10) => {
+        const totalItems = items.length;
+        const pageSizeN = Math.max(1, Number(pageSize) || 10);
+        const totalPages = Math.ceil(totalItems / pageSizeN) || 1;
+        const pageN = Math.max(1, Math.min(Number(page) || 1, totalPages));
+        const start = (pageN - 1) * pageSizeN;
+        const end = Math.min(start + pageSizeN, totalItems);
+        return {
+            page: pageN,
+            pageSize: pageSizeN,
+            totalPages,
+            totalItems,
+            items: items.slice(start, end),
+            start: start + 1,
+            end,
+            hasPrev: pageN > 1,
+            hasNext: pageN < totalPages
+        };
+    };
+
+    /**
+     * Render pagination controls HTML (Arabic labels).
+     * @param {object} pg - result from HIG.paginate
+     * @param {string} onPageChange - name of global function to call on page change
+     * @param {string} containerId - id of the paginated container (for aria-controls)
+     * @returns {string} HTML string
+     */
+    HIG.paginationControls = (pg, onPageChange = 'onPageChange', containerId = '') => {
+        if (pg.totalPages <= 1) return '';
+        const btn = (label, p, disabled) => `
+            <button type="button" class="btn btn-sm ${disabled ? 'btn-outline-secondary disabled' : 'btn-outline-secondary'}"
+                ${disabled ? 'disabled aria-disabled="true"' : ''}
+                onclick="${onPageChange}(${p})">${label}</button>`;
+        const pages = [];
+        pages.push(btn('Previous', pg.page - 1, !pg.hasPrev));
+        for (let i = 1; i <= pg.totalPages; i++) {
+            pages.push(`<button type="button" class="btn btn-sm ${i === pg.page ? 'btn-primary' : 'btn-outline-secondary'}"
+                onclick="${onPageChange}(${i})">${i}</button>`);
+        }
+        pages.push(btn('Next', pg.page + 1, !pg.hasNext));
+        return `<div class="pagination-controls d-flex justify-content-center align-items-center gap-2 mt-3" role="navigation" aria-label="التنقل بين الصفحات" ${containerId ? `aria-controls="${containerId}"` : ''}>
+            ${pages.join('')}
+            <span class="text-muted small">Page ${pg.page} of ${pg.totalPages}</span>
+        </div>`;
+    };
+
+    /**
+     * Unified empty / loading / error panel markup.
+     * Always returns escaped-safe markup.
+     */
+    HIG.statePanel = ({ icon = "bi-info-circle", title = "", text = "", action = "" } = {}) => `
+        <div class="glass-panel state-panel">
+            <div class="state-icon"><i class="bi ${icon}" aria-hidden="true"></i></div>
+            <h5 class="state-title">${HIG.escapeHtml(title)}</h5>
+            <p class="state-text">${HIG.escapeHtml(text)}</p>
+            ${action}
+        </div>`;
+
+    /**
+     * Render "Updated 3 minutes ago" plus an optional refresh button.
+     * The button is wired to the supplied handler.
+     */
+    /**
+     * Show a toast notification that auto-dismisses.
+     * kind: 'ok' | 'error' | 'loading' | 'info'
+     */
+    HIG.toast = (message, kind = 'ok', duration = 3000) => {
+        let el = document.getElementById('hig-toast');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'hig-toast';
+            el.className = 'hig-toast';
+            el.setAttribute('aria-live', 'polite');
+            el.setAttribute('role', 'status');
+            document.body.appendChild(el);
+        }
+        const iconMap = {
+            ok: 'bi-check-circle',
+            error: 'bi-exclamation-circle',
+            loading: 'bi-arrow-repeat',
+            info: 'bi-info-circle'
+        };
+        el.innerHTML = `<i class="bi ${iconMap[kind] || 'bi-info-circle'}"></i>
+            <span>${HIG.escapeHtml(message)}</span>`;
+        el.className = 'hig-toast hig-toast-show hig-toast-' + kind;
+        clearTimeout(HIG.toast._timer);
+        HIG.toast._timer = setTimeout(() => {
+            el.classList.remove('hig-toast-show');
+        }, duration);
+    };
+
+    /**
+     * Elegant empty state panel using HIG.statePanel tokens.
+     */
+    HIG.emptyState = ({ icon = "bi-inbox", title = "No data available", text = "", action = "" } = {}) => `
+        <div class="glass-panel state-panel empty-state">
+            <div class="state-icon"><i class="bi ${icon}" aria-hidden="true"></i></div>
+            <h5 class="state-title">${HIG.escapeHtml(title)}</h5>
+            <p class="state-text">${HIG.escapeHtml(text)}</p>
+            ${action}
+        </div>`;
+
+    HIG.lastUpdated = (el, timestamp, options = {}) => {
+        if (!el) return;
+        const ts = timestamp ? new Date(timestamp).getTime() : null;
+        const stale = options.stale === true;
+        el.classList.add("sync-stamp");
+        el.classList.toggle("is-stale", stale);
+
+        const icon = stale ? "bi-cloud-slash" : "bi-clock-history";
+        const label = ts ? `Updated ${HIG.relativeTime(ts)}` : "Not updated yet";
+        const exact = ts ? HIG.formatTime(ts) : "";
+
+        el.innerHTML = `<i class="bi ${icon}" aria-hidden="true"></i><span>${HIG.escapeHtml(label)}</span>`
+            + (exact ? `<span class="sync-stamp-exact">${HIG.escapeHtml(exact)}</span>` : "");
+        el.title = exact || "";
+
+        if (options.refreshTarget) {
+            options.refreshTarget.addEventListener("click", options.onRefresh);
+        }
+    };
+
+    HIG.relativeTime = (ts) => {
+        if (!ts) return "not yet updated";
+        const diff = Math.max(0, Date.now() - new Date(ts).getTime());
+        const minutes = Math.round(diff / 60000);
+        if (minutes < 1) return "just now";
+        if (minutes === 1) return "1 minute ago";
+        if (minutes < 60) return `${minutes} minutes ago`;
+        const hours = Math.round(minutes / 60);
+        if (hours === 1) return "1 hour ago";
+        if (hours < 24) return `${hours} hours ago`;
+        const days = Math.round(hours / 24);
+        return days === 1 ? "yesterday" : `${days} days ago`;
+    };
+
+    HIG.formatTime = (ts) => {
+        if (!ts) return "";
+        return new Date(ts).toLocaleString("en-US", {
+            year: "numeric", month: "short", day: "numeric",
+            hour: "2-digit", minute: "2-digit"
+        });
+    };
+
+    /** Keep every "last updated" label on the page in sync. */
+    HIG.syncStamps = (timestamp, options = {}) => {
+        document.querySelectorAll("[data-updated-stamp]").forEach((el) => {
+            HIG.lastUpdated(el, timestamp, options);
+        });
+    };
+
+    /* ---------- Dark mode (theme) ---------- */
+    const THEME_KEY = "theme";
+    const applyTheme = (theme) => {
+        if (theme === "dark") {
+            root.setAttribute("data-theme", "dark");
+            root.setAttribute("data-bs-theme", "dark");
+        } else {
+            root.removeAttribute("data-theme");
+            root.removeAttribute("data-bs-theme");
+        }
+    };
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+        applyTheme("dark");
+    }
+    const themeToggle = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const updateThemeIcon = () => {
+        if (!themeIcon) return;
+        if (root.getAttribute("data-theme") === "dark") {
+            themeIcon.className = "bi bi-sun-fill text-warning";
+        } else {
+            themeIcon.className = "bi bi-moon-stars-fill text-secondary";
+        }
+    };
+    updateThemeIcon();
+    const runToggle = () => {
+        if (root.getAttribute("data-theme") === "dark") {
+            applyTheme("light");
+            localStorage.removeItem(THEME_KEY);
+        } else {
+            applyTheme("dark");
+            localStorage.setItem(THEME_KEY, "dark");
+        }
+        updateThemeIcon();
+        window.dispatchEvent(new CustomEvent("themechange"));
+    };
+
+    if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+            if (typeof document.startViewTransition === "function") {
+                document.startViewTransition(runToggle);
+            } else {
+                runToggle();
+            }
+        });
+    }
+    try {
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+            if (!localStorage.getItem(THEME_KEY)) {
+                applyTheme(e.matches ? "dark" : "light");
+                updateThemeIcon();
+            }
+        });
+    } catch (e) {}
+
     const boot = () => HIG.refreshReveals();
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", boot);
     } else {
         boot();
     }
+
+    /* ---------- Security utilities ---------- */
+
+    /**
+     * Safely set element content. If allowHtml is true, uses sanitized HTML;
+     * otherwise uses textContent to prevent XSS.
+     */
+    HIG.safeSet = (el, content, allowHtml = false) => {
+        if (!el) return;
+        if (allowHtml) {
+            el.innerHTML = HIG.renderHtml(content);
+        } else {
+            el.textContent = String(content == null ? "" : content);
+        }
+    };
+
+    /**
+     * Escape a string for safe use inside HTML attribute values (onclick, data-*).
+     */
+    HIG.escapeAttr = (value = "") => {
+        return String(value)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    };
+
+    /**
+     * Global error handler to prevent uncaught exceptions from breaking the UI.
+     */
+    window.addEventListener('error', (event) => {
+        console.error('HIG Error:', event.message, 'at', event.filename, ':', event.lineno);
+        event.preventDefault();
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        console.error('HIG Unhandled Rejection:', event.reason);
+        event.preventDefault();
+    });
 
     window.HIG = HIG;
 })();

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#ffffff" />
-    <meta name="description" content="Overview of health screening data for HU Staff and SEKEM communities with statistics and insights.">
+    <meta name="description" content="Combined health screening overview for HU Staff and SEKEM: participation, BMI risk mix, priority groups and trends in one dashboard.">
     <meta name="keywords" content="The Health Screening Project, SEKEM Health Screening, HU Health Screening, Health Screening Egypt, preventive health, early detection, wellness">
     <meta name="robots" content="index, follow">
     <meta name="author" content="The Health Screening Project">
@@ -12,7 +12,7 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Health Screening Dashboard">
+    <meta property="og:title" content="Combined Screening Overview">
     <meta property="og:description" content="Overview of health screening data for HU Staff and SEKEM communities with statistics and insights.">
     <meta property="og:url" content="https://amigo-pt.github.io/Health-Screening/screening.html">
     <meta property="og:site_name" content="The Health Screening Project">
@@ -20,21 +20,24 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Health Screening Dashboard">
+    <meta name="twitter:title" content="Combined Screening Overview">
     <meta name="twitter:description" content="Overview of health screening data for HU Staff and SEKEM communities with statistics and insights.">
 
-    <title>Health Screening Dashboard | The Health Screening Project</title>
+    <title>Combined Screening Overview | The Health Screening Project</title>
     <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="hig.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="hig.css?v=20261031y">
+    <link rel="stylesheet" href="dashboard.css?v=20261031y">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js" crossorigin="anonymous"></script>
+<script>(function(){try{var t=localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="dark"||(!t&&d))document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
+    <script src="maintenance.js?v=20261102c"></script>
 </head>
 <body>
 
@@ -67,44 +70,97 @@
             </div>
         </div>
     </nav>
+            <button type="button" class="btn-hig btn-sm-hig theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="transition: none;">
+                <i class="bi bi-moon-stars-fill text-secondary" id="themeIcon"></i>
+            </button>
 
-    <header class="hero-section">
+
+    <header class="hero-section overview-hero">
         <div class="container">
             <h1 class="display-hero" data-reveal>
-                Select <span class="text-accent-gradient">Screening Dashboard</span>
+                Combined <span class="text-accent-gradient">screening overview</span>
             </h1>
-
+            <p class="sync-stamp page-stamp" data-updated-stamp data-reveal data-reveal-delay="120">Connecting to server…</p>
         </div>
     </header>
 
-    <section class="section-block">
-        <div class="container">
+    <main class="section-block pt-2">
+        <div class="container page-shell pb-5">
 
-            <div class="row g-5 justify-content-center">
-                <div class="col-md-5" data-reveal data-reveal-delay="80">
-                    <a href="hu_staff.html" class="hig-card sel-card hu" style="--chip:#ff6900">
-                        <div class="sel-icon-wrap">
-                            <div class="sel-icon-arc"></div>
-                            <div class="sel-icon"><i class="bi bi-mortarboard-fill"></i></div>
-                        </div>
-                        <h3 class="sel-title">HU Staff</h3>
-                        <p class="sel-desc">Detailed analysis for University Students, Faculty Members, and Staff across all departments.</p>
-                    </a>
+            <div class="data-notice data-notice-loading" id="overviewNotice" role="status" aria-live="polite" hidden></div>
+            <div id="overviewEmptyState" hidden></div>
+
+            <div class="overview-grid">
+                <div class="overview-card" data-reveal data-reveal-delay="60">
+                    <span class="ov-label"><i class="bi bi-people-fill" aria-hidden="true"></i>Total screened</span>
+                    <div class="ov-value" id="ovScreened">—</div>
+                    <p class="ov-sub" id="ovScreenedSub">Combining both communities</p>
                 </div>
-
-                <div class="col-md-5" data-reveal data-reveal-delay="160">
-                    <a href="sekem.html" class="hig-card sel-card sekem" style="--chip:#22ac38">
-                        <div class="sel-icon-wrap">
-                            <div class="sel-icon-arc"></div>
-                            <div class="sel-icon"><i class="bi bi-buildings-fill"></i></div>
-                        </div>
-                        <h3 class="sel-title">SEKEM</h3>
-                        <p class="sel-desc">Detailed analysis for SEKEM Company Workers and related sectors across multiple facilities.</p>
-                    </a>
+                <div class="overview-card" data-reveal data-reveal-delay="100">
+                    <span class="ov-label"><i class="bi bi-clipboard2-check" aria-hidden="true"></i>Participation</span>
+                    <div class="ov-value" id="ovParticipation">—</div>
+                    <p class="ov-sub">Screened people out of the target population</p>
+                </div>
+                <div class="overview-card" data-reveal data-reveal-delay="140">
+                    <span class="ov-label"><i class="bi bi-activity" aria-hidden="true"></i>Overweight + obesity</span>
+                    <div class="ov-value" id="ovExcess">—</div>
+                    <p class="ov-sub">Share of people screened with an elevated BMI</p>
+                </div>
+                <div class="overview-card" data-reveal data-reveal-delay="180">
+                    <span class="ov-label"><i class="bi bi-heart-pulse" aria-hidden="true"></i>Obesity</span>
+                    <div class="ov-value" id="ovObesity">—</div>
+                    <p class="ov-sub">Share of people screened living with obesity</p>
                 </div>
             </div>
+
+            <div class="overview-split">
+            <div class="overview-panel programme-panel" data-reveal>
+                <div class="overview-panel-head">
+                    <div>
+                        <span class="section-eyebrow"><i class="bi bi-diagram-3" aria-hidden="true"></i> Coverage</span>
+                        <h2>Participation by community</h2>
+                        <p>Latest reported screening period for each community.</p>
+                    </div>
+                </div>
+                <div class="programme-rows" id="programmeRows"></div>
+            </div>
+
+            <div class="overview-panel" data-reveal data-reveal-delay="90">
+                <div class="overview-panel-head">
+                    <div>
+                        <span class="section-eyebrow"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Priorities</span>
+                        <h2>Highest overweight + obesity</h2>
+                        <p>Groups ranked across both communities.</p>
+                    </div>
+                </div>
+                <div id="topRiskList"></div>
+            </div>
+            </div>
+
+            <div class="section-eyebrow mt-5" data-reveal><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i>Detailed dashboards</div>
+            <div class="entity-choice-grid">
+                <a href="hu_staff.html" class="hig-card sel-card hu" style="--chip:#ff6900" data-reveal>
+                    <div class="sel-icon-wrap">
+                        <div class="sel-icon-arc"></div>
+                        <div class="sel-icon"><i class="bi bi-mortarboard-fill" aria-hidden="true"></i></div>
+                    </div>
+                    <h3 class="sel-title">HU Staff</h3>
+                    <p class="sel-desc">Detailed analysis for University Students, Faculty Members, and Staff across all departments.</p>
+                    <span class="sel-cta">Open dashboard <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+                </a>
+                <a href="sekem.html" class="hig-card sel-card sekem" style="--chip:#22ac38" data-reveal data-reveal-delay="90">
+                    <div class="sel-icon-wrap">
+                        <div class="sel-icon-arc"></div>
+                        <div class="sel-icon"><i class="bi bi-buildings-fill" aria-hidden="true"></i></div>
+                    </div>
+                    <h3 class="sel-title">SEKEM</h3>
+                    <p class="sel-desc">Detailed analysis for SEKEM Company Workers and related sectors across multiple facilities.</p>
+                    <span class="sel-cta">Open dashboard <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+                </a>
+            </div>
+
         </div>
-    </section>
+    </main>
 
     <footer class="site-footer">
         <div class="container">
@@ -118,8 +174,8 @@
                 </div>
                 <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
                     <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
-                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener" id="whatsapp-link" data-phone="201032318537"><i class="bi bi-whatsapp"></i> Contact via WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="#" id="email-link" data-email="mamdouhabdalaziz952@gmail.com" data-domain="gmail.com"><i class="bi bi-envelope-fill"></i> Contact via Email</a>
                     </div>
                 </div>
             </div>
@@ -128,263 +184,28 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="hig.js"></script>
-    <script>
-        const SUMMARY_SHEETS = [
-            { name: 'HU Staff', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=0&single=true&output=csv' },
-            { name: 'SEKEM', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=2058048191&single=true&output=csv' }
-        ];
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="hig.js?v=20261031y"></script>
+    <script src="data.js?v=20261031y"></script>
+    <script src="overview.js?v=20261031y"></script>
 
-        const DISEASES = [
-            { name: 'No diagnosis', weight: 0 },
-            { name: 'Acute Gastritis', weight: 1.1 },
-            { name: 'Frequent Headache', weight: 0.7 },
-            { name: 'Upper Respiratory Tract Infection', weight: 0.2 },
-            { name: 'Dental Problems', weight: 0.1 },
-            { name: 'Eye Problems', weight: 0.3 },
-            { name: 'Anemia', weight: 0.5 },
-            { name: 'Acute Tonsillitis', weight: 0.5 },
-            { name: 'Acute Sinusitis', weight: 0.5 },
-            { name: 'Environmental Allergy', weight: 0.3 },
-            { name: 'Food Allergy', weight: 0.3 },
-            { name: 'Diabetes', weight: 1.6 },
-            { name: 'Thyroid dysfunction', weight: 1.1 },
-            { name: 'Hypertension', weight: 2.5 },
-            { name: 'Asthma', weight: 0.4 },
-            { name: 'Heart Disease', weight: 4.8 },
-            { name: 'Urinary Tract Problems', weight: 1.1 },
-            { name: 'Chronic Pain Disorders', weight: 2.2 },
-            { name: 'Multiple Sclerosis', weight: 4.5 },
-            { name: 'Mental Health Disorders', weight: 2.0 },
-            { name: 'Liver Diseases', weight: 3.8 },
-            { name: 'Rheumatoid Arthritis', weight: 2.9 },
-            { name: 'Other', weight: 1.0 }
-        ];
-
-        const DISEASE_MAP = {
-            'No_diagnosis': 'No diagnosis', 'Acute_Gastritis': 'Acute Gastritis', 'Frequent_Headache': 'Frequent Headache',
-            'Upper_Respiratory_Tract_Infection': 'Upper Respiratory Tract Infection', 'Dental_Problems': 'Dental Problems',
-            'Eye_Problems': 'Eye Problems', 'Anemia': 'Anemia', 'Acute_Tonsillitis': 'Acute Tonsillitis',
-            'Acute_Sinusitis': 'Acute Sinusitis', 'Environmental_Allergy': 'Environmental Allergy',
-            'Food_Allergy': 'Food Allergy', 'Diabetes': 'Diabetes', 'Thyroid_dysfunction': 'Thyroid dysfunction',
-            'Hypertension': 'Hypertension', 'Asthma': 'Asthma', 'Heart_Disease': 'Heart Disease',
-            'Urinary_Tract_Problems': 'Urinary Tract Problems', 'Chronic_Pain_Disorders': 'Chronic Pain Disorders',
-            'Multiple_Sclerosis': 'Multiple Sclerosis', 'Mental_Health_Disorders': 'Mental Health Disorders',
-            'Liver_Diseases': 'Liver Diseases', 'Rheumatoid_Arthritis': 'Rheumatoid Arthritis', 'Other': 'Other'
-        };
-
-        let executiveSummaryStore = {};
-        let summaryYears = [];
-        let currentSummaryYear = null;
-        let loadedSummarySources = 0;
-
-        function normalizeValue(value) {
-            return Number(value) || 0;
-        }
-
-        function getRiskDetails(rawData, totalCount) {
-            if (!rawData || totalCount <= 0) return { totalRiskScore: 0, riskLevel: 'low' };
-
-            let diagnosedCount = 0;
-            let weightedRiskSum = 0;
-
-            DISEASES.forEach(disease => {
-                const field = Object.keys(DISEASE_MAP).find(key => DISEASE_MAP[key] === disease.name);
-                const count = normalizeValue(rawData[field]);
-                if (count > 0 && disease.weight > 0) {
-                    diagnosedCount += count;
-                    weightedRiskSum += disease.weight * count;
+        <script>
+            // Hide contact information from bots
+            (function () {
+                const waLink = document.getElementById('whatsapp-link');
+                const emailLink = document.getElementById('email-link');
+                if (waLink) {
+                    const phone = waLink.dataset.phone || '';
+                    waLink.href = 'https://wa.me/' + phone;
+                    waLink.textContent = 'Contact via WhatsApp';
                 }
-            });
-
-            let totalRiskScore = 0;
-            if (diagnosedCount > 0) {
-                const avgWeight = weightedRiskSum / diagnosedCount;
-                const prevalenceRate = diagnosedCount / totalCount;
-                totalRiskScore = (avgWeight / 5) * prevalenceRate;
-            }
-
-            let riskLevel = 'low';
-            if (totalRiskScore > 0.30) riskLevel = 'high';
-            else if (totalRiskScore > 0.10) riskLevel = 'moderate';
-
-            return { totalRiskScore, riskLevel };
-        }
-
-        function updateSummaryControls(year) {
-            const summaryTabs = document.getElementById('summaryTabs');
-            if (!summaryTabs) return;
-            summaryTabs.innerHTML = '';
-
-            if (!summaryYears.length) {
-                summaryTabs.innerHTML = '<span class="summary-note" style="color:var(--text-tertiary);">No year data found from HU Staff or SEKEM.</span>';
-                return;
-            }
-
-            summaryYears.forEach(yearKey => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'seg-btn' + (yearKey === year ? ' active' : '');
-                btn.dataset.value = yearKey;
-                btn.textContent = yearKey;
-                btn.setAttribute('role', 'tab');
-                btn.addEventListener('click', () => {
-                    currentSummaryYear = yearKey;
-                    setActiveSummaryTab(btn);
-                    renderExecutiveSummary(yearKey);
-                });
-                summaryTabs.appendChild(btn);
-            });
-
-            HIG.initSegmented(summaryTabs, () => {});
-        }
-
-        function setActiveSummaryTab(activeButton) {
-            document.querySelectorAll('.summary-tab-btn, .seg-btn').forEach(btn => btn.classList.toggle('active', btn === activeButton));
-        }
-
-        function animateValue(id, end, options = {}) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            const suffix = options.suffix || '';
-            const startValue = Number(el.textContent.toString().replace(/[^0-9.-]/g, '')) || 0;
-            const duration = options.duration || 500;
-            const startTime = performance.now();
-            const delta = end - startValue;
-            const step = (now) => {
-                const progress = Math.min((now - startTime) / duration, 1);
-                const value = Math.round(startValue + delta * progress);
-                el.textContent = value.toLocaleString() + suffix;
-                if (progress < 1) requestAnimationFrame(step);
-            };
-            requestAnimationFrame(step);
-        }
-
-        function renderExecutiveSummary(year) {
-            const data = executiveSummaryStore[year];
-            if (!data) return;
-            animateValue('summaryTotal', data.totalParticipants);
-            animateValue('summaryRisk', data.riskRate, { suffix: '%' });
-            const cards = document.querySelectorAll('.summary-card strong');
-            cards.forEach(card => {
-                card.style.transform = 'scale(1.04)';
-                setTimeout(() => { card.style.transform = ''; }, 300);
-            });
-        }
-
-        function computeYearlyMetrics(yearKey) {
-            const entry = executiveSummaryStore[yearKey];
-            if (!entry) return;
-
-            const groups = Object.values(entry.groups);
-            const totals = { high: 0, moderate: 0, low: 0, count: 0 };
-            groups.forEach(group => {
-                const detail = getRiskDetails(group.rawData, group.total);
-                totals[detail.riskLevel] += group.total;
-                totals.count += group.total;
-            });
-
-            const totalParticipants = entry.totalParticipants;
-            const highPct = totalParticipants ? Math.round((totals.high / totalParticipants) * 100) : 0;
-            const moderatePct = totalParticipants ? Math.round((totals.moderate / totalParticipants) * 100) : 0;
-            const lowPct = Math.max(0, 100 - highPct - moderatePct);
-            const riskRate = totalParticipants ? Math.round(((totals.high + totals.moderate) / totalParticipants) * 100) : 0;
-
-            executiveSummaryStore[yearKey] = {
-                ...entry,
-                highCount: totals.high,
-                moderateCount: totals.moderate,
-                lowCount: totals.low,
-                highPct,
-                moderatePct,
-                lowPct,
-                riskRate
-            };
-        }
-
-        function finalizeExecutiveSummary() {
-            summaryYears = Object.keys(executiveSummaryStore).sort((a, b) => Number(b) - Number(a));
-            summaryYears.forEach(year => computeYearlyMetrics(year));
-            currentSummaryYear = currentSummaryYear || summaryYears[0] || null;
-            updateSummaryControls(currentSummaryYear);
-            if (currentSummaryYear) renderExecutiveSummary(currentSummaryYear);
-        }
-
-        function processSummaryRows(rows) {
-            rows.forEach(row => {
-                const year = String(row.Year || row.year || row.YEAR || '').trim();
-                const month = normalizeValue(row.Month || row.month || row.MONTH);
-                const totalCount = normalizeValue(row.Total_Count || row.Total_count || row.total_count || row.Total || row.total);
-                if (!year || !month || totalCount <= 0) return;
-
-                if (!executiveSummaryStore[year]) {
-                    executiveSummaryStore[year] = { totalParticipants: 0, groups: {} };
+                if (emailLink) {
+                    const user = emailLink.dataset.email || '';
+                    const domain = emailLink.dataset.domain || '';
+                    emailLink.href = 'mailto:' + user + '@' + domain;
+                    emailLink.textContent = 'Contact via Email';
                 }
-
-                const yearEntry = executiveSummaryStore[year];
-                yearEntry.totalParticipants += totalCount;
-
-                let groupKey = '';
-                if (row.Sector) groupKey = 'HU|' + String(row.Sector).trim();
-                else if (row.Company) groupKey = 'SEKEM|' + String(row.Company).trim();
-                else groupKey = 'Unknown|' + (row.Sector || row.Company || 'Unknown');
-
-                if (!yearEntry.groups[groupKey]) {
-                    yearEntry.groups[groupKey] = { total: 0, rawData: {} };
-                }
-
-                const group = yearEntry.groups[groupKey];
-                group.total += totalCount;
-
-                Object.keys(DISEASE_MAP).forEach(key => {
-                    const value = normalizeValue(row[key]);
-                    group.rawData[key] = normalizeValue(group.rawData[key]) + value;
-                });
-            });
-        }
-
-        function fetchExecutiveSummaryData() {
-            if (!document.getElementById('summaryTabs')) return;
-            executiveSummaryStore = {};
-            loadedSummarySources = 0;
-            resetExecutiveSummaryDisplay();
-
-            SUMMARY_SHEETS.forEach(source => {
-                Papa.parse(source.url, {
-                    download: true,
-                    header: true,
-                    dynamicTyping: true,
-                    complete: result => {
-                        if (result.data && result.data.length) {
-                            processSummaryRows(result.data);
-                        }
-                        loadedSummarySources += 1;
-                        if (loadedSummarySources === SUMMARY_SHEETS.length) {
-                            finalizeExecutiveSummary();
-                        }
-                    },
-                    error: err => {
-                        console.error('Executive summary source failed:', source.name, err);
-                        loadedSummarySources += 1;
-                        if (loadedSummarySources === SUMMARY_SHEETS.length) {
-                            finalizeExecutiveSummary();
-                        }
-                    }
-                });
-            });
-        }
-
-        function resetExecutiveSummaryDisplay() {
-            document.getElementById('summaryTotal').textContent = '…';
-            document.getElementById('summaryRisk').textContent = '…';
-            const summaryTabs = document.getElementById('summaryTabs');
-            if (summaryTabs) {
-                summaryTabs.innerHTML = '<span class="summary-note" style="color:var(--text-tertiary);">Loading years from HU Staff and SEKEM...</span>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', fetchExecutiveSummaryData);
-    </script>
+            })();
+        </script>
 </body>
 </html> 

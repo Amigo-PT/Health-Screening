@@ -25,14 +25,14 @@
 
     <title>Reports Timeline | The Health Screening Project</title>
     <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="hig.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="hig.css?v=20261031y" />
 
     <style>
         /* ---------- Filter bar ---------- */
@@ -342,7 +342,9 @@
         }
     </style>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js" crossorigin="anonymous"></script>
+<script>(function(){try{var t=localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="dark"||(!t&&d))document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
+    <script src="maintenance.js?v=20261102c"></script>
 </head>
 <body>
     <div class="ambient" aria-hidden="true">
@@ -374,6 +376,10 @@
             </div>
         </div>
     </nav>
+            <button type="button" class="btn-hig btn-sm-hig theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="transition: none;">
+                <i class="bi bi-moon-stars-fill text-secondary" id="themeIcon"></i>
+            </button>
+
 
     <header class="hero-section">
         <div class="container">
@@ -391,9 +397,11 @@
                     </div>
                 </div>
             </div>
+                <p class="sync-stamp page-stamp" data-updated-stamp data-reveal>Connecting to server…</p>
         </div>
     </header>
 
+    <main>
     <section class="section-block">
         <div class="container">
             <div class="row justify-content-center" data-reveal data-reveal-delay="100">
@@ -436,6 +444,7 @@
             <div id="timeline-container" data-reveal data-reveal-delay="100"></div>
         </div>
     </section>
+    </main>
 
     <div class="modal fade modal-hig" id="pdfViewerModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
@@ -482,8 +491,8 @@
                 </div>
                 <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
                     <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
-                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener" id="whatsapp-link" data-phone="201032318537"><i class="bi bi-whatsapp"></i> Contact via WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="#" id="email-link" data-email="mamdouhabdalaziz952@gmail.com" data-domain="gmail.com"><i class="bi bi-envelope-fill"></i> Contact via Email</a>
                     </div>
                 </div>
             </div>
@@ -492,9 +501,10 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="hig.js"></script>
-    <script src="custom-select.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="hig.js?v=20261031y"></script>
+    <script src="data.js?v=20261031y"></script>
+    <script src="custom-select.js?v=20261031y"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=265279315&single=true&output=csv";
         let allReports = [];
@@ -630,20 +640,11 @@
             showSkeletons();
             const timeline = document.getElementById('timeline-container');
             timeline.setAttribute('aria-busy', 'true');
-            const minDelay = new Promise(r => setTimeout(r, 700));
-            const dataPromise = new Promise((res, rej) => {
-                Papa.parse(sheetURL, {
-                    download: true,
-                    header: true,
-                    dynamicTyping: true,
-                    complete: r => res(r.data),
-                    error: e => rej(e)
-                });
-            });
-            Promise.all([minDelay, dataPromise])
-                .then(([_, data]) => {
+            HIGData.get('reports')
+                .then(result => {
                     timeline.setAttribute('aria-busy', 'false');
-                    processData(data);
+                    processData(result.rows);
+                    HIG.syncStamps(result.updatedAt, { stale: result.stale });
                 })
                 .catch(err => {
                     console.error('Unable to load reports:', err);
@@ -777,7 +778,7 @@
                                         <span class="rep-type"${typeChipStyle(item.Type)}>${escapeHtml(item.Type) || 'Document'}</span>
                                         ${sizeHtml}
                                     </div>
-                                    <h4 class="rep-title mb-1">${escapeHtml(item.Title)}</h4>
+                                    <h2 class="rep-title mb-1">${escapeHtml(item.Title)}</h2>
                                     <p class="rep-desc mb-0">${escapeHtml(item.Description)}</p>
                                 </div>
                                 <div class="d-flex flex-wrap gap-2 align-items-center">
@@ -809,5 +810,24 @@
 
         window.openPDFViewer = openPDFViewer;
     </script>
+
+        <script>
+            // Hide contact information from bots
+            (function () {
+                const waLink = document.getElementById('whatsapp-link');
+                const emailLink = document.getElementById('email-link');
+                if (waLink) {
+                    const phone = waLink.dataset.phone || '';
+                    waLink.href = 'https://wa.me/' + phone;
+                    waLink.textContent = 'Contact via WhatsApp';
+                }
+                if (emailLink) {
+                    const user = emailLink.dataset.email || '';
+                    const domain = emailLink.dataset.domain || '';
+                    emailLink.href = 'mailto:' + user + '@' + domain;
+                    emailLink.textContent = 'Contact via Email';
+                }
+            })();
+        </script>
 </body>
 </html>

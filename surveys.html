@@ -25,14 +25,14 @@
 
     <title>Data & Delivery | The Health Screening Project</title>
     <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="%23ff6900"/><path d="M18 52h16l8-16 12 30 8-14h20" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>' />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Medium.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Demibold.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Heavy.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="hig.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="hig.css?v=20261031y" />
     <style>
         /* ---------- Milestone status dots (page-specific) ---------- */
         .status-dot {
@@ -64,6 +64,35 @@
             font-size: .8rem;
             font-weight: 600;
             letter-spacing: .02em;
+        }
+
+        /* ---------- Data entrance animations ---------- */
+        @keyframes miRowIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes miChipIn {
+            from { opacity: 0; transform: translateY(6px) scale(.92); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes miDotPop {
+            0%   { opacity: 0; transform: scale(.15); }
+            55%  { opacity: 1; transform: scale(1.22); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        #table-body tr.mi-row {
+            animation: miRowIn .55s cubic-bezier(.22, 1, .36, 1) both;
+            animation-delay: calc(var(--row, 0) * 60ms);
+        }
+        #table-body tr.mi-row .ind-chip {
+            animation: miChipIn .45s cubic-bezier(.22, 1, .36, 1) both;
+            animation-delay: calc(90ms + var(--row, 0) * 60ms);
+        }
+        .dot-wrap {
+            display: inline-flex;
+            animation: miDotPop .5s cubic-bezier(.34, 1.56, .64, 1) both;
+            animation-delay: calc(150ms + var(--seq, 0) * 40ms);
         }
 
         /* ---------- Milestone table ---------- */
@@ -126,6 +155,27 @@
             color: var(--text-tertiary);
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            #table-body tr.mi-row,
+            #table-body .ind-chip,
+            .dot-wrap,
+            #detailModal.show .modal-body .mi-field,
+            #detailModal.show .modal-body .mi-desc { animation: none !important; }
+        }
+
+        /* Modal fields ease in one after another when the dialog opens. */
+        @keyframes miFieldIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: none; }
+        }
+        #detailModal.show .modal-body .mi-field,
+        #detailModal.show .modal-body .mi-desc {
+            animation: miFieldIn .45s cubic-bezier(.22, 1, .36, 1) both;
+        }
+        #detailModal.show .modal-body .col-6:nth-child(1) .mi-field { animation-delay: 40ms; }
+        #detailModal.show .modal-body .col-6:nth-child(2) .mi-field { animation-delay: 90ms; }
+        #detailModal.show .modal-body .mi-desc { animation-delay: 140ms; }
+
         /* ---------- Detail modal ---------- */
         #detailModal .modal-content { border: 1px solid var(--hairline); border-radius: 20px; box-shadow: 0 24px 64px rgba(0, 0, 0, .16); }
         #detailModal .modal-header {
@@ -187,6 +237,8 @@
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script>(function(){try{var t=localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="dark"||(!t&&d))document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
+    <script src="maintenance.js?v=20261102c"></script>
 </head>
 <body>
     <div class="ambient" aria-hidden="true">
@@ -218,16 +270,21 @@
             </div>
         </div>
     </nav>
+            <button type="button" class="btn-hig btn-sm-hig theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="transition: none;">
+                <i class="bi bi-moon-stars-fill text-secondary" id="themeIcon"></i>
+            </button>
+
 
     <header class="hero-section">
         <div class="container">
             <h1 class="display-hero" data-reveal data-reveal-delay="80">
                 Data & <span class="text-accent-gradient">Delivery</span>
             </h1>
-
+                <p class="sync-stamp page-stamp" data-updated-stamp data-reveal>Connecting to server…</p>
         </div>
     </header>
 
+    <main>
     <section class="section-block">
         <div class="container">
             <div class="row g-4 justify-content-center" data-reveal data-reveal-delay="100">
@@ -262,6 +319,7 @@
             </div>
         </div>
     </section>
+    </main>
 
     <div class="modal fade modal-hig" id="detailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width:600px;">
@@ -312,8 +370,8 @@
                 </div>
                 <div class="col-lg-6 text-lg-end" data-reveal data-reveal-delay="100">
                     <div class="d-inline-flex flex-column gap-2 align-items-lg-end">
-                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i> WhatsApp</a>
-                        <a class="footer-link-chip" style="--tile:#3e8bff" href="mailto:mamdouhabdalaziz952@gmail.com"><i class="bi bi-envelope-fill"></i> Email</a>
+                        <a class="footer-link-chip" style="--tile:#22ac38" href="https://wa.me/201032318537" target="_blank" rel="noopener" id="whatsapp-link" data-phone="201032318537"><i class="bi bi-whatsapp"></i> Contact via WhatsApp</a>
+                        <a class="footer-link-chip" style="--tile:#3e8bff" href="#" id="email-link" data-email="mamdouhabdalaziz952@gmail.com" data-domain="gmail.com"><i class="bi bi-envelope-fill"></i> Contact via Email</a>
                     </div>
                 </div>
             </div>
@@ -322,8 +380,9 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="hig.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="hig.js?v=20261031y"></script>
+    <script src="data.js?v=20261031y"></script>
     <script>
         const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTXwIRlW7pGXqc3TkgWm4G5prkILVG5mSFPXve0j8wczUOrcrSaocW2JDzju5shK2nDEMmk7UJJylbm/pub?gid=86792494&single=true&output=csv";
         let allPrograms = [];
@@ -365,12 +424,14 @@
                 const dotCells = phases.map((p, pi) => {
                     const dc = getDotClass(p.status);
                     const statusLabel = getStatusLabel(p.status);
-                    const delay = (ri * 4 + pi) * 40;
+                    const seq = ri * 4 + pi;
+                    const pulseDelay = Math.min(seq, 16) * 40;
                     return `<td class="text-center">
+                        <span class="dot-wrap" style="--seq:${seq}">
                         <button type="button" class="status-dot ${dc}"
                         aria-label="${HIG.escapeHtml(row.Program_Name)} — ${p.label}: ${statusLabel}. Open details."
                         aria-haspopup="dialog"
-                        style="animation-delay:${delay}ms;"
+                        style="animation-delay:${pulseDelay}ms;"
                         data-bs-toggle="modal" data-bs-target="#detailModal"
                             data-program="${HIG.escapeHtml(row.Program_Name)}"
                             data-stage="${HIG.escapeHtml(p.label)}"
@@ -379,11 +440,12 @@
                             data-status="${statusLabel}"
                             data-date="${HIG.escapeHtml(p.date || 'TBD')}"
                             data-desc="${HIG.escapeHtml(p.desc || 'No details available.')}"></button>
+                        </span>
                     </td>`;
                 }).join('');
 
                 tbody.innerHTML += `
-                    <tr data-reveal data-reveal-delay="${Math.min(ri * 60, 400)}">
+                    <tr class="mi-row" style="--row:${Math.min(ri, 10)}">
                         <td><div class="milestone-name">${HIG.escapeHtml(row.Program_Name)}</div></td>
                         <td>${row.Indicator ? `<span class="ind-chip">${HIG.escapeHtml(row.Indicator)}</span>` : '<span class="miui-dash">—</span>'}</td>
                         ${dotCells}
@@ -410,13 +472,13 @@
         function fetchData() {
             const table = document.getElementById('screeningTable');
             table.setAttribute('aria-busy', 'true');
-            Papa.parse(sheetURL, {
-                download: true, header: true, dynamicTyping: true,
-                complete: r => {
-                    allPrograms = r.data.filter(row => row.Program_Name);
+            HIGData.get('surveys')
+                .then(result => {
+                    allPrograms = result.rows.filter(row => row.Program_Name);
                     renderTable(allPrograms);
-                },
-                error: err => {
+                    HIG.syncStamps(result.updatedAt, { stale: result.stale });
+                })
+                .catch(err => {
                     console.error('Failed to load program milestones:', err);
                     document.getElementById('table-body').innerHTML = `
                         <tr>
@@ -434,8 +496,7 @@
                     table.setAttribute('aria-busy', 'false');
                     document.getElementById('retryPrograms').addEventListener('click', fetchData);
                     HIG.refreshReveals(document.getElementById('table-body'));
-                }
-            });
+                });
         }
 
         document.getElementById('detailModal').addEventListener('show.bs.modal', e => {
@@ -462,5 +523,24 @@
             fetchData();
         });
     </script>
+
+        <script>
+            // Hide contact information from bots
+            (function () {
+                const waLink = document.getElementById('whatsapp-link');
+                const emailLink = document.getElementById('email-link');
+                if (waLink) {
+                    const phone = waLink.dataset.phone || '';
+                    waLink.href = 'https://wa.me/' + phone;
+                    waLink.textContent = 'Contact via WhatsApp';
+                }
+                if (emailLink) {
+                    const user = emailLink.dataset.email || '';
+                    const domain = emailLink.dataset.domain || '';
+                    emailLink.href = 'mailto:' + user + '@' + domain;
+                    emailLink.textContent = 'Contact via Email';
+                }
+            })();
+        </script>
 </body>
 </html>

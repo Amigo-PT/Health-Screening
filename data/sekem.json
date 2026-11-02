@@ -1,0 +1,123 @@
+[
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Atos Pharma",
+    "Total": 27,
+    "Total_Count": 27,
+    "Under_weight": 0,
+    "Normal_Weight": 8,
+    "Over_weight": 17,
+    "Obesity": 2
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Biodynamic Association",
+    "Total": 148,
+    "Total_Count": 148,
+    "Under_weight": 0,
+    "Normal_Weight": 99,
+    "Over_weight": 38,
+    "Obesity": 11
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Eco Energy",
+    "Total": 49,
+    "Total_Count": 49,
+    "Under_weight": 0,
+    "Normal_Weight": 29,
+    "Over_weight": 12,
+    "Obesity": 8
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Eco Health",
+    "Total": 3,
+    "Total_Count": 3,
+    "Under_weight": 0,
+    "Normal_Weight": 0,
+    "Over_weight": 3,
+    "Obesity": 0
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Eco Village",
+    "Total": 27,
+    "Total_Count": 27,
+    "Under_weight": 0,
+    "Normal_Weight": 14,
+    "Over_weight": 3,
+    "Obesity": 10
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "ISIS Foods",
+    "Total": 571,
+    "Total_Count": 571,
+    "Under_weight": 62,
+    "Normal_Weight": 20,
+    "Over_weight": 236,
+    "Obesity": 138
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Lotus Organic",
+    "Total": 79,
+    "Total_Count": 79,
+    "Under_weight": 0,
+    "Normal_Weight": 9,
+    "Over_weight": 52,
+    "Obesity": 18
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Naturetex",
+    "Total": 198,
+    "Total_Count": 198,
+    "Under_weight": 0,
+    "Normal_Weight": 54,
+    "Over_weight": 74,
+    "Obesity": 70
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "SDF Association",
+    "Total": 143,
+    "Total_Count": 143,
+    "Under_weight": 0,
+    "Normal_Weight": 0,
+    "Over_weight": 0,
+    "Obesity": 0
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Sekem Lab",
+    "Total": 50,
+    "Total_Count": 50,
+    "Under_weight": 0,
+    "Normal_Weight": 17,
+    "Over_weight": 17,
+    "Obesity": 16
+  },
+  {
+    "Year": 2025,
+    "Month": 9,
+    "Company": "Sekem Reclamation",
+    "Total": 98,
+    "Total_Count": 98,
+    "Under_weight": 0,
+    "Normal_Weight": 45,
+    "Over_weight": 29,
+    "Obesity": 24
+  }
+]
